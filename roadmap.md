@@ -17,3 +17,4 @@
 - [ ] Real human faces with Seedance (authorized asset route)
 - [ ] Add Apple sign-in button to sign-in page
 - [ ] Implement the uploaded Video Studio specification in stages; track individual functional requirements and honest limitations in `docs/VIDEO_STUDIO_CHECKLIST.md`. Browser playback and private generated-scene watch pages are now built; final rendering, pixel-level effects, and full signed-in generation test with the song remain open (AI credits required).
+- [ ] Build the protected Aurora Command Center with evidence-based product, workflow, provider, recovery, documentation, and launch-gate auditing.
