@@ -17,7 +17,7 @@ import { shouldShowRegisterSecretWarning } from "@/lib/worker-register-warning";
 import { issuePromoCode, listPromoCodes, setPromoCodeActive, type PromoCodeRow } from "@/lib/promo.functions";
 import { PROFIT_SPLIT_PCT } from "@/lib/profit-split";
 import { ModelBadge } from "@/components/ModelBadge";
-import { Shield, Sparkles, Loader2, Users, DollarSign, ImagePlay, Coins, ArrowRight, Server, Trash2, Activity, TrendingUp, Gift, Pause, Play, Zap, Store, Wallet, Tag, Copy, BookOpen, Image, CheckCircle, XCircle, Clock, Radar, ChevronDown, ChevronRight, RotateCcw, AlertTriangle, AlertCircle } from "lucide-react";
+import { Shield, Sparkles, Loader2, Users, DollarSign, ImagePlay, Coins, ArrowRight, Server, Trash2, Activity, TrendingUp, Gift, Pause, Play, Zap, Store, Wallet, Tag, Copy, BookOpen, Image, CheckCircle, XCircle, Clock, Radar, ChevronDown, ChevronRight, RotateCcw, AlertTriangle, AlertCircle, Gauge } from "lucide-react";
 import type { WorkerAlert } from "@/lib/worker-registration-alerts.server";
 import { supabase } from "@/integrations/supabase/client";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
