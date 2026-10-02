@@ -1,1 +1,0 @@
-DROP FUNCTION IF EXISTS public.__aurora_setup_exec(text);
