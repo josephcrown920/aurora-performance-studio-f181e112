@@ -25,7 +25,7 @@ export type CommandCenterSnapshot = {
   generatedAt: string;
   latestRun: { id: string; startedAt: string; finishedAt: string | null; passed: number; total: number } | null;
   checks: CommandCenterCheck[];
-  providerHealth: Array<{ kind: string; provider: string | null; status: string; detail: string | null; checkedAt: string }>;
+  providerHealth: Array<{ kind: string; status: string; detail: string | null; checkedAt: string | null }>;
   restoreEvidence: RestoreEvidence[];
 };
 
@@ -47,8 +47,9 @@ export const getCommandCenterSnapshot = createServerFn({ method: "GET" })
         .limit(20),
       supabaseAdmin
         .from("generation_health_state")
-        .select("kind, provider, status, detail, checked_at")
-        .order("checked_at", { ascending: false }),
+        .select("kind, consecutive_ok, consecutive_errors, last_error_summary, last_check_at")
+        .not("kind", "like", "\\_\\_%")
+        .order("last_check_at", { ascending: false }),
     ]);
     if (runError) throw new Error(runError.message);
     if (healthError) throw new Error(healthError.message);
@@ -96,10 +97,9 @@ export const getCommandCenterSnapshot = createServerFn({ method: "GET" })
       checks: [...latestByName.values()],
       providerHealth: (health ?? []).map((row) => ({
         kind: row.kind,
-        provider: row.provider,
-        status: row.status,
-        detail: row.detail,
-        checkedAt: row.checked_at,
+        status: row.consecutive_errors > 0 ? "degraded" : row.consecutive_ok > 0 ? "healthy" : "untested",
+        detail: row.last_error_summary,
+        checkedAt: row.last_check_at,
       })),
       restoreEvidence: ["Build", "Database", "Storage"].map((kind) => ({
         kind: kind as RestoreEvidence["kind"],
