@@ -16,3 +16,4 @@
 - Drive the Video Agent program monitor from the shared timeline document and source offsets, not a separate playlist; this keeps scrub/playback aligned with manual and agent edits.
 - Store completed music-video scenes in each creator's private studio storage and resolve library watch pages from that creator's path; this prevents one creator from watching another's scene by guessing an ID.
 - Keep Aurora Command Center statuses evidence-derived: only recorded successful workflow checks may produce PROVEN; this prevents UI-only claims from passing launch gates.
+- Keep one shared Aurora Director implementation with skills, workflows, and providers beneath it; duplicate feature-specific directors create drift and are not separate agents.
