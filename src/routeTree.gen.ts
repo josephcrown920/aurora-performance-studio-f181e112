@@ -20,6 +20,7 @@ import { Route as AffiliateRouteImport } from './routes/affiliate'
 import { Route as AgentRouteImport } from './routes/agent'
 import { Route as AuroraAdultRouteImport } from './routes/aurora-adult'
 import { Route as AuroraCanvasRouteImport } from './routes/aurora-canvas'
+import { Route as AuroraCommandCenterRouteImport } from './routes/aurora-command-center'
 import { Route as AuroraStudioShellRouteImport } from './routes/aurora-studio-shell'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AvatarRouteImport } from './routes/avatar'
@@ -272,6 +273,13 @@ const AuroraCanvasRoute = AuroraCanvasRouteImport.update({
   path: '/aurora-canvas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuroraCommandCenterRoute = AuroraCommandCenterRouteImport.update({
+  id: '/aurora-command-center',
+  path: '/aurora-command-center',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/aurora-command-center.lazy').then((d) => d.Route),
+)
 const AuroraStudioShellRoute = AuroraStudioShellRouteImport.update({
   id: '/aurora-studio-shell',
   path: '/aurora-studio-shell',
@@ -1352,6 +1360,7 @@ export interface FileRoutesByFullPath {
   '/agent': typeof AgentRoute
   '/aurora-adult': typeof AuroraAdultRoute
   '/aurora-canvas': typeof AuroraCanvasRoute
+  '/aurora-command-center': typeof AuroraCommandCenterRoute
   '/aurora-studio-shell': typeof AuroraStudioShellRoute
   '/auth': typeof AuthRoute
   '/avatar': typeof AvatarRoute
@@ -1565,6 +1574,7 @@ export interface FileRoutesByTo {
   '/agent': typeof AgentRoute
   '/aurora-adult': typeof AuroraAdultRoute
   '/aurora-canvas': typeof AuroraCanvasRoute
+  '/aurora-command-center': typeof AuroraCommandCenterRoute
   '/aurora-studio-shell': typeof AuroraStudioShellRoute
   '/auth': typeof AuthRoute
   '/avatar': typeof AvatarRoute
@@ -1780,6 +1790,7 @@ export interface FileRoutesById {
   '/agent': typeof AgentRoute
   '/aurora-adult': typeof AuroraAdultRoute
   '/aurora-canvas': typeof AuroraCanvasRoute
+  '/aurora-command-center': typeof AuroraCommandCenterRoute
   '/aurora-studio-shell': typeof AuroraStudioShellRoute
   '/auth': typeof AuthRoute
   '/avatar': typeof AvatarRoute
@@ -1996,6 +2007,7 @@ export interface FileRouteTypes {
     | '/agent'
     | '/aurora-adult'
     | '/aurora-canvas'
+    | '/aurora-command-center'
     | '/aurora-studio-shell'
     | '/auth'
     | '/avatar'
@@ -2209,6 +2221,7 @@ export interface FileRouteTypes {
     | '/agent'
     | '/aurora-adult'
     | '/aurora-canvas'
+    | '/aurora-command-center'
     | '/aurora-studio-shell'
     | '/auth'
     | '/avatar'
@@ -2423,6 +2436,7 @@ export interface FileRouteTypes {
     | '/agent'
     | '/aurora-adult'
     | '/aurora-canvas'
+    | '/aurora-command-center'
     | '/aurora-studio-shell'
     | '/auth'
     | '/avatar'
@@ -2638,6 +2652,7 @@ export interface RootRouteChildren {
   AgentRoute: typeof AgentRoute
   AuroraAdultRoute: typeof AuroraAdultRoute
   AuroraCanvasRoute: typeof AuroraCanvasRoute
+  AuroraCommandCenterRoute: typeof AuroraCommandCenterRoute
   AuroraStudioShellRoute: typeof AuroraStudioShellRoute
   AuthRoute: typeof AuthRoute
   AvatarRoute: typeof AvatarRoute
@@ -2883,6 +2898,13 @@ declare module '@tanstack/react-router' {
       path: '/aurora-canvas'
       fullPath: '/aurora-canvas'
       preLoaderRoute: typeof AuroraCanvasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aurora-command-center': {
+      id: '/aurora-command-center'
+      path: '/aurora-command-center'
+      fullPath: '/aurora-command-center'
+      preLoaderRoute: typeof AuroraCommandCenterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/aurora-studio-shell': {
@@ -4410,6 +4432,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgentRoute: AgentRoute,
   AuroraAdultRoute: AuroraAdultRoute,
   AuroraCanvasRoute: AuroraCanvasRoute,
+  AuroraCommandCenterRoute: AuroraCommandCenterRoute,
   AuroraStudioShellRoute: AuroraStudioShellRoute,
   AuthRoute: AuthRoute,
   AvatarRoute: AvatarRoute,
