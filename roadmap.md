@@ -18,6 +18,6 @@
 - [ ] Add Apple sign-in button to sign-in page
 - [ ] Implement the uploaded Video Studio specification in stages; track individual functional requirements and honest limitations in `docs/VIDEO_STUDIO_CHECKLIST.md`. Browser playback and private generated-scene watch pages are now built; final rendering, pixel-level effects, and full signed-in generation test with the song remain open (AI credits required).
 - [x] Build the protected Aurora Command Center with evidence-based product, workflow, provider, recovery, documentation, and launch-gate auditing.
-- [ ] Fix the landing-page section and Partners page that show the "Something went wrong" screen.
-- [ ] Package Aurora Performance Studio for Google Play internal testing; blocked because this checkout has no Expo/EAS configuration or Android project, and the failing EAS output is not yet available.
+- [x] Fix the landing-page section and Partners page that show the "Something went wrong" screen.
+- [ ] Package Aurora Performance Studio for Google Play internal testing; blocked because this checkout has no Expo/EAS configuration or Android project, and EAS fails because the mobile lockfile points at an unreachable Replit package mirror; the mobile app lives only in the GitHub repo.
 - [ ] Apply the final-launch checklist on the dedicated launch branch, preserving one Aurora Director with skills and workflows beneath it.
