@@ -5,7 +5,9 @@
 - [x] Verify the updated Perform Anywhere workflow.
 
 - [x] Remove Lyric Video from both Music Video entry points.
-- [x] Redesign Aurora Canvas in the approved Director-first luminous workspace direction.
+- [x] Verify Control glass Canvas, private Josh reference persistence, AI Gateway full-brief generation, and approved four-shot graph handoff in a signed-in session; Canvas browser run had no page errors and two ownership/motion-input tests passed.
+- [ ] Restore live shared Director replies: signed-in test returned ModelArk HTTP 403 and free fallback unavailable; input is preserved for retry, with no unapproved paid fallback. Browser voice toggle added; spoken reply remains unverified until provider recovery.
+- [ ] Save Josh's supplied photos as the creator's private main character and run a real motion test (requires a motion video; depth screenshots are planning guides, not executable depth controls).
 - [x] Replace Aurora Canvas with the production node-and-connector workflow canvas.
 - [x] Rebuild the Video Agent editor as the uploaded desktop-style multi-track studio with drag-and-drop effects, presets, and agent orchestration.
 - [x] Make the new `/video-agent` studio visibly surface its timeline and AI editor, with working navigation.

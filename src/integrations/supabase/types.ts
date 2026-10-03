@@ -694,6 +694,39 @@ export type Database = {
         }
         Relationships: []
       }
+      canvas_context: {
+        Row: {
+          brief_json: Json | null
+          character_name: string
+          created_at: string
+          intent: string
+          motion_tests: Json
+          references_json: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brief_json?: Json | null
+          character_name?: string
+          created_at?: string
+          intent?: string
+          motion_tests?: Json
+          references_json?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brief_json?: Json | null
+          character_name?: string
+          created_at?: string
+          intent?: string
+          motion_tests?: Json
+          references_json?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_threads: {
         Row: {
           board_id: string | null

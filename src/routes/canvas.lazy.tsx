@@ -103,6 +103,7 @@ import { toast } from "sonner";
 import { ShareMenu } from "@/components/share/ShareMenu";
 
 import { TrendingTemplatesMenu, type TemplateGraph, getTemplateById } from "@/components/canvas/TrendingTemplatesMenu";
+import { CanvasProductionContext } from "@/components/canvas/CanvasProductionContext";
 import { AuroraAgentPanel } from "@/components/canvas/AuroraAgentPanel";
 import { FinishedWorkflowsGallery, defaultGraphFor } from "@/components/canvas/FinishedWorkflowsGallery";
 import { GeneratedAssetGallery } from "@/components/canvas/GeneratedAssetGallery";
@@ -890,7 +891,7 @@ function AuroraNode({ id, data }: NodeProps<Node<NodeData>>) {
       data-error={data.status === "error" ? "1" : "0"}
       data-blocked={data.status === "blocked" ? "1" : "0"}
     >
-      <div className="overflow-hidden rounded-[16px] border border-white/10 bg-[rgba(18,17,26,0.92)] shadow-[0_22px_70px_-36px_rgba(0,0,0,0.95)] backdrop-blur-xl transition-shadow duration-300 group-hover:border-violet-300/30 group-hover:shadow-[0_24px_80px_-34px_rgba(139,92,246,0.45)]">
+      <div className="control-node-body">
         {showTarget && (
           <Handle
             type="target"
@@ -1387,6 +1388,8 @@ function CanvasPage() {
   const runActiveRef = useRef(false);
   const loadInFlightRef = useRef(false);
   const [agentOpen, setAgentOpen] = useState(false);
+  const [directorContext, setDirectorContext] = useState("");
+  const [graphRevision, setGraphRevision] = useState(0);
   const [examplesOpen, setExamplesOpen] = useState(false);
   const [coachTplName, setCoachTplName] = useState<string | null>(null);
   const [lastTemplateId, setLastTemplateId] = useState<string | null>(null);
@@ -1997,23 +2000,15 @@ function CanvasPage() {
   if (!user) return <AuthRedirect />;
 
   return (
-    <main className="h-screen flex flex-col bg-[#06060c] relative overflow-hidden">
-      {/* ambient fuchsia halo at top, matching xyflow dark aesthetic */}
-      <div className="pointer-events-none absolute inset-0 -z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_40%_at_50%_0%,oklch(0.70_0.27_295/0.10),transparent)]" />
-        <div className="absolute inset-x-0 top-14 h-px bg-gradient-to-r from-transparent via-[oklch(0.70_0.27_295/0.4)] to-transparent" />
-      </div>
-
-      <header className="relative z-10 flex items-center justify-between gap-2 px-3 py-2 border-b border-white/10 bg-background/70 backdrop-blur-xl">
-        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight shrink-0">
-          <span className="size-8 rounded-xl flex items-center justify-center shadow-[0_0_24px_oklch(0.78_0.18_295/0.65)]" style={{ background: "var(--gradient-hero)" }}>
-            <Sparkles className="size-4 text-primary-foreground" />
-          </span>
-          <span className="uppercase tracking-[0.2em] text-xs text-foreground/90">Canvas</span>
+    <main className="control-canvas">
+      <header className="control-header">
+        <Link to="/" className="control-brand">
+          <span className="control-brand-icon"><Boxes className="size-4" /></span>
+          <span>Director Canvas</span><span className="text-muted-foreground">/ Production workspace</span>
         </Link>
         <div className="flex items-center gap-1.5 shrink-0">
-          <Button size="sm" variant="premium" onClick={() => setAgentOpen(true)} className="h-8">
-            <Sparkles className="size-3.5 mr-1" /> Agent
+          <Button size="sm" variant="outline" onClick={() => setAgentOpen(true)} className="h-8">
+            <Sparkles className="size-3.5 mr-1" /> Director
           </Button>
           <Button
             size="sm"
@@ -2031,8 +2026,7 @@ function CanvasPage() {
             }}
             disabled={runMut.isPending}
             title={graphWarnings.length ? graphWarnings[0] : undefined}
-            style={{ background: "var(--gradient-hero)" }}
-            className="h-8 text-primary-foreground shadow-[0_0_24px_oklch(0.78_0.18_295/0.55)]"
+            className="h-8"
           >
             {runMut.isPending ? <><Loader2 className="size-3.5 mr-1 animate-spin" /> Running</> : <><Play className="size-3.5 mr-1" /> Run</>}
           </Button>
@@ -2097,11 +2091,29 @@ function CanvasPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <div className="flex-1 relative z-0">
+      <div className="control-workspace">
+        <CanvasProductionContext
+          onDirector={(context) => { setDirectorContext(context); setAgentOpen(true); }}
+          onContextChange={setDirectorContext}
+          onApply={(brief, characterUrl) => {
+            const generated: Node<NodeData>[] = [{ id: "character", type: "aurora", position: { x: 0, y: 120 }, data: { kind: "input", label: "Character lock", url: characterUrl } }];
+            const links: Edge[] = [];
+            brief.shots.forEach((shot, i) => {
+              const id = `brief-shot-${i}`;
+              generated.push({ id, type: "aurora", position: { x: 400, y: i * 520 }, data: { kind: "image", label: shot.title, prompt: `${brief.characterLock}. ${brief.visualStyle}. ${shot.prompt}`, model: MODEL_LIST[0].value, status: "idle" } });
+              links.push({ id: `character-${id}`, source: "character", target: id });
+            });
+            setWfId(undefined); setNodes(generated); setEdges(links); setMarketplaceTemplateId(null); setGraphRevision((v) => v + 1);
+          }}
+        />
+        <section className="control-production" aria-label="Production graph">
+        <div className="control-section-heading"><span>03 / Production graph</span><span>{nodes.length} nodes</span></div>
+        <div className="control-graph-area">
         <HeyGenTplCtx.Provider value={auroraTemplates}>
         <ComfyCtx.Provider value={comfyTemplates}>
         <HandlersCtx.Provider value={handlers}>
           <ReactFlow
+            key={graphRevision}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -2111,16 +2123,17 @@ function CanvasPage() {
             defaultEdgeOptions={{
               animated: true,
               style: {
-                stroke: "rgba(255,255,255,0.55)",
+                stroke: "var(--control-edge)",
                 strokeWidth: 1.5,
                 strokeDasharray: "6 4",
-                filter: "drop-shadow(0 0 2px rgba(255,255,255,0.3))",
+                
               },
             }}
             fitView
+            fitViewOptions={{ padding: 0.2 }}
             proOptions={{ hideAttribution: true }}
           >
-            <Background variant={BackgroundVariant.Dots} gap={24} size={1.5} color="oklch(0.70 0.32 28 / 0.28)" />
+            <Background variant={BackgroundVariant.Dots} gap={24} size={1.5} color="var(--control-rule)" />
             <Controls position="bottom-right" className="!bottom-16 !bg-[oklch(0.13_0.02_295/0.8)] !border-white/10 [&>button]:!bg-transparent [&>button]:!border-white/10 [&>button]:!text-foreground" />
           </ReactFlow>
         </HandlersCtx.Provider>
@@ -2137,7 +2150,7 @@ function CanvasPage() {
           isPaused={batchPaused}
         />
         {/* Floating glass toolbar — templates + finished-work gallery live over the canvas */}
-        <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full border border-white/10 bg-[oklch(0.13_0.02_295/0.85)] backdrop-blur-xl shadow-lg p-1.5">
+        <div className="control-templates">
           <TrendingTemplatesMenu
             onPick={(g: TemplateGraph & { id?: string }) => {
               setWfId(undefined);
@@ -2198,7 +2211,7 @@ function CanvasPage() {
         <ProgressPanel nodes={nodes} edges={edges} running={runMut.isPending} />
         {/* Export / share dock */}
         <ExportShareDock nodes={nodes} edges={edges} />
-        <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-2 py-2 rounded-full border border-white/10 bg-[oklch(0.13_0.02_295/0.92)] backdrop-blur-xl shadow-[0_0_30px_oklch(0.78_0.18_295/0.5)] animate-fade-in max-w-[calc(100%-1rem)] overflow-x-auto">
+        <div className="control-node-dock">
           <button onClick={() => addNode("input")} className="size-9 shrink-0 rounded-full grid place-items-center text-white/80 hover:text-white hover:bg-white/10" title="Image"><ImageIcon className="size-4" /></button>
           <button onClick={() => addNode("audio")} className="size-9 shrink-0 rounded-full grid place-items-center text-white/80 hover:text-white hover:bg-white/10" title="Audio"><Music className="size-4" /></button>
           <button onClick={() => addNode("image")} className="size-9 shrink-0 rounded-full grid place-items-center text-white/80 hover:text-white hover:bg-white/10" title="Image gen"><Wand2 className="size-4" /></button>
@@ -2214,13 +2227,15 @@ function CanvasPage() {
             }}
             disabled={runMut.isPending}
             title={graphWarnings.length ? graphWarnings[0] : undefined}
-            className="ml-1 h-9 px-4 shrink-0 rounded-full text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 shadow-[0_0_24px_oklch(0.78_0.18_295/0.8)] disabled:opacity-60"
-            style={{ background: "var(--gradient-hero)" }}
+            className="ml-1 h-9 px-4 shrink-0 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 disabled:opacity-60"
           >
             {runMut.isPending ? <Loader2 className="size-3.5 animate-spin" /> : <Play className="size-3.5" />} Run
           </button>
         </div>
+        </div>
+        </section>
       </div>
+      <footer className="control-footer"><span>AURORA / CONTROL GLASS</span><span>{runMut.isPending ? "PRODUCTION RUNNING" : "AWAITING EXECUTION"}</span></footer>
 
       {/* Docked, collapsible session asset gallery — rendered at the top level so its
           fixed toggle/panel isn't trapped under the header by the canvas area's z-0 stacking context */}
@@ -2241,6 +2256,7 @@ function CanvasPage() {
       </Dialog>
 
       <AuroraAgentPanel
+        projectContext={directorContext}
         open={agentOpen}
         onClose={() => setAgentOpen(false)}
         onSendToCanvas={(g) => { setWfId(undefined); setNodes(g.nodes as Node<NodeData>[]); setEdges(g.edges); setMarketplaceTemplateId(null); }}
