@@ -1,5 +1,10 @@
 # Roadmap
 
+- [ ] Remove Canvas and its embedded video agent, Music Video Studio, and the current standalone video editor without removing shared Layers/Lagos40 editing tools.
+- [ ] Make Studio shortcut rows span the available width.
+- [ ] Remove TikTok30 photo galleries, retain the proof bar, and redesign the section after visual direction approval.
+- [ ] Redesign Perform Anywhere with minimal copy and real visual examples after visual direction approval.
+
 - [x] Integrate the public Aurora Layers studio natively with private saves and the shared editor; signed-in render, restore, PNG, composite and ZIP exports verified.
 - [x] Check GitHub sign-in availability; creator chose Layers only and deferred separate GitHub login.
 
