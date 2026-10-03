@@ -21,3 +21,5 @@
 - [x] Fix the landing-page section and Partners page that show the "Something went wrong" screen.
 - [ ] Package Aurora Performance Studio for Google Play internal testing; blocked because this checkout has no Expo/EAS configuration or Android project, and EAS fails because the mobile lockfile points at an unreachable Replit package mirror; the mobile app lives only in the GitHub repo.
 - [ ] Apply the final-launch checklist on the dedicated launch branch, preserving one Aurora Director with skills and workflows beneath it.
+- [x] Music Video Builder: suggest matching scene prompts from a creator reference image (AI Gateway).
+- [ ] Merge josephcrown920/Auroraglobal into this project — awaiting choice of what to bring over (repo is 581 MB; mobile app is 4 MB).
