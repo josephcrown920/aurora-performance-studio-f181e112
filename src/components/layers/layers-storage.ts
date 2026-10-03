@@ -39,6 +39,14 @@ export async function layerImageUrl(asset: LayerAsset) {
   if (error || !data) throw new Error(error?.message ?? 'Image unavailable.');
   return data.signedUrl;
 }
+export async function freshLayerImageUrl(src: string) {
+  if (!src.startsWith('https:')) return src;
+  const parsed = new URL(src);
+  const owner = await studioOwner();
+  const prefix = `/storage/v1/object/sign/layers-private/${owner}/layers/`;
+  if (parsed.origin !== new URL(import.meta.env.VITE_SUPABASE_URL).origin || !parsed.pathname.startsWith(prefix) || /%2e|%2f|\.\./i.test(parsed.pathname)) return src;
+  return layerImageUrl({ path: decodeURIComponent(parsed.pathname.slice('/storage/v1/object/sign/layers-private/'.length)), name: 'Layer' });
+}
 export async function listLayersProjects() {
   const owner = await studioOwner();
   const { data, error } = await supabase.storage.from('layers-private').list(`${owner}/layers-projects`, { limit: 100, sortBy: { column: 'updated_at', order: 'desc' } });

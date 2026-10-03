@@ -10,6 +10,8 @@ import { renderLayersImage } from '@/lib/layers.functions';
 import { SCENE_BUILDER_COST_BASE } from '@/lib/scene-builder.templates';
 import { layerImageUrl, listLayersProjects, loadLayersProject, removeLayersProject, saveLayersProject, uploadLayerImage, type LayerAsset, type LayersProject } from './layers-storage';
 import { exportContactSheet, exportLayerPng, exportLayersZip } from './layers-export';
+import { freshLayerImageUrl } from './layers-storage';
+import '@/features/creative-studio/editor-workstation.css';
 
 const TARGETS = [
   { id: 'background', name: 'Background', icon: '▦', region: 'the environment behind the subjects', sample: 'Night block party, neon signage, wet asphalt reflections' },
@@ -66,6 +68,13 @@ function Studio() {
     window.addEventListener('aurora:timeline-change', update);
     return () => { window.removeEventListener('aurora:timeline-change', update); temporaryUrls.current.forEach(url => URL.revokeObjectURL(url)); };
   }, []);
+  useEffect(() => {
+    const retained = new Set([source?.src, character?.src, ...doc.clips.map(clip => clip.src)]);
+    temporaryUrls.current = temporaryUrls.current.filter(url => {
+      if (retained.has(url)) return true;
+      URL.revokeObjectURL(url); return false;
+    });
+  }, [source, character, doc]);
   function apply(next: TimelineDoc) { window.dispatchEvent(new CustomEvent('aurora:apply-doc', { detail: next })); }
   async function task(label: string, run: () => Promise<void>) {
     if (busy) return;
@@ -91,7 +100,7 @@ function Studio() {
       if (!source || !prompt.trim()) throw new Error('Add a source photo and an edit prompt first.');
       const sourceAsset = await persist(source);
       setSource({ ...source, asset: sourceAsset });
-      const baseUrl = result?.src ?? await layerImageUrl(sourceAsset);
+      const baseUrl = result?.src ? await freshLayerImageUrl(result.src) : await layerImageUrl(sourceAsset);
       const refs = [baseUrl];
       if (character) { const asset = await persist(character); setCharacter({ ...character, asset }); refs.push(await layerImageUrl(asset)); }
       const fullPrompt = [
@@ -200,7 +209,7 @@ function Studio() {
           <div className="border-t border-border pt-4"><p className="layers-label">Step 04 — Save &amp; export</p><div className="mt-3 flex flex-wrap gap-2"><Button variant="outline" size="sm" onClick={() => void save()} disabled={!source || !!busy}>{busy === 'save' ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}Save + sync</Button><Button variant="outline" size="sm" disabled={!display || !!busy} onClick={() => void task('png', async () => { if (display) await exportLayerPng(display); })}><Download className="size-4" />PNG</Button><Button variant="outline" size="sm" disabled={!shots.length || !!busy} onClick={() => void task('sheet', () => exportContactSheet(doc))}><Layers3 className="size-4" />Composite sheet</Button><Button className="layers-gradient" size="sm" disabled={!shots.length || !!busy} onClick={() => void task('zip', () => exportLayersZip(doc, name))}><Download className="size-4" />Export ZIP</Button></div></div>
         </section>
       </div>
-      <section className="mt-8 min-w-0 border-t border-border pt-6"><h2 className="mb-4 text-lg font-bold">Shared timeline</h2><div className="min-w-0 overflow-x-auto"><MultiTrackTimeline /></div><details className="mt-4"><summary className="cursor-pointer py-2 text-sm font-semibold">Timeline layers</summary><LayersEditor /></details></section>
+      <section className="aurora-editor-workstation mt-8 min-w-0 border-t border-border pt-6"><h2 className="mb-4 text-lg font-bold">Shared timeline</h2><div className="min-w-0 overflow-x-auto"><MultiTrackTimeline /></div><details className="mt-4"><summary className="cursor-pointer py-2 text-sm font-semibold">Timeline layers</summary><LayersEditor /></details></section>
     </div>
   </main>;
 }

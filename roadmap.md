@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Integrate the public Aurora Layers repository appearance with the existing shared editor.
+- [x] Integrate the public Aurora Layers studio natively with private saves and the shared editor; signed-in render, restore, PNG, composite and ZIP exports verified.
 - [x] Check GitHub sign-in availability; creator chose Layers only and deferred separate GitHub login.
 
 - [x] Make the approved glass Canvas open on a full-width node-and-connector workspace, with references and brief available from its toolbar; signed-in view switch verified and build OK.
