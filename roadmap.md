@@ -33,3 +33,4 @@
 - [x] Music Video Builder: suggest matching scene prompts from a creator reference image (AI Gateway).
 - [x] Bring the Auroraglobal mobile app and side apps into `artifacts/` (adult app and large archives left out).
 - [ ] Separate creator workflows clearly: TikTok30 is a 30-post campaign from one topic and never a hook feature; multi-angle photos belong inside Perform Anywhere and Colors for shot reference, not TikTok30.
+- [x] Lagos 40 page (NBA Josh script) at /lagos40

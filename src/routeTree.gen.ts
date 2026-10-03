@@ -49,6 +49,7 @@ import { Route as HeygenTemplatesRouteImport } from './routes/heygen-templates'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as KidsRouteImport } from './routes/kids'
+import { Route as Lagos40RouteImport } from './routes/lagos40'
 import { Route as LayersRouteImport } from './routes/layers'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LikenessRouteImport } from './routes/likeness'
@@ -431,6 +432,11 @@ const KidsRoute = KidsRouteImport.update({
   path: '/kids',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/kids.lazy').then((d) => d.Route))
+const Lagos40Route = Lagos40RouteImport.update({
+  id: '/lagos40',
+  path: '/lagos40',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LayersRoute = LayersRouteImport.update({
   id: '/layers',
   path: '/layers',
@@ -1389,6 +1395,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
   '/kids': typeof KidsRoute
+  '/lagos40': typeof Lagos40Route
   '/layers': typeof LayersRoute
   '/library': typeof LibraryRouteWithChildren
   '/likeness': typeof LikenessRoute
@@ -1603,6 +1610,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
   '/kids': typeof KidsRoute
+  '/lagos40': typeof Lagos40Route
   '/layers': typeof LayersRoute
   '/library': typeof LibraryRouteWithChildren
   '/likeness': typeof LikenessRoute
@@ -1819,6 +1827,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
   '/kids': typeof KidsRoute
+  '/lagos40': typeof Lagos40Route
   '/layers': typeof LayersRoute
   '/library': typeof LibraryRouteWithChildren
   '/likeness': typeof LikenessRoute
@@ -2036,6 +2045,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/jobs'
     | '/kids'
+    | '/lagos40'
     | '/layers'
     | '/library'
     | '/likeness'
@@ -2250,6 +2260,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/jobs'
     | '/kids'
+    | '/lagos40'
     | '/layers'
     | '/library'
     | '/likeness'
@@ -2465,6 +2476,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/jobs'
     | '/kids'
+    | '/lagos40'
     | '/layers'
     | '/library'
     | '/likeness'
@@ -2681,6 +2693,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   JobsRoute: typeof JobsRoute
   KidsRoute: typeof KidsRoute
+  Lagos40Route: typeof Lagos40Route
   LayersRoute: typeof LayersRoute
   LibraryRoute: typeof LibraryRouteWithChildren
   LikenessRoute: typeof LikenessRoute
@@ -3108,6 +3121,13 @@ declare module '@tanstack/react-router' {
       path: '/kids'
       fullPath: '/kids'
       preLoaderRoute: typeof KidsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lagos40': {
+      id: '/lagos40'
+      path: '/lagos40'
+      fullPath: '/lagos40'
+      preLoaderRoute: typeof Lagos40RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/layers': {
@@ -4461,6 +4481,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   JobsRoute: JobsRoute,
   KidsRoute: KidsRoute,
+  Lagos40Route: Lagos40Route,
   LayersRoute: LayersRoute,
   LibraryRoute: LibraryRouteWithChildren,
   LikenessRoute: LikenessRoute,
