@@ -108,14 +108,6 @@ function AuthPage() {
   // Passkeys only work in a real browser tab — in-app/embedded webviews deny
   // the Face ID prompt before we can authenticate.
   const canUsePasskeys = biometricSupported && !embeddedBrowser;
-  const inIframe = (() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return window.self !== window.top;
-    } catch {
-      return true;
-    }
-  })();
   // Which OAuth providers are actually enabled on the Supabase project.
   // Clicking a disabled provider's button just errors with "provider is not
   // enabled", so we ask Supabase's public settings endpoint and only render
@@ -832,20 +824,6 @@ function AuthPage() {
           >
             {appleBusy ? "Signing in..." : <><AppleIcon className="mr-2 size-4" /> Continue with Apple</>}
           </Button>
-        )}
-        {hydrated && inIframe && anyOAuthEnabled && (
-          <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-            Google and Apple can't finish inside this preview window.{" "}
-            <a
-              href={typeof window !== "undefined" ? window.location.href : "/auth"}
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary underline underline-offset-2"
-            >
-              Open sign-in in your browser
-            </a>{" "}
-            or use email and password here.
-          </p>
         )}
 
         <div className="mt-6 flex items-center justify-between text-sm text-muted-foreground">
