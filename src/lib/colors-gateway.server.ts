@@ -11,7 +11,7 @@ async function gateway(path: string, key: string, init?: RequestInit) {
   });
   if (!response.ok) {
     const error = await response.json().catch(() => null) as { message?: string } | null;
-    throw new Error(error?.message ?? `Video request failed (${response.status})`);
+    throw Object.assign(new Error(error?.message ?? `Video request failed (${response.status})`), { status: response.status });
   }
   return response;
 }
@@ -50,17 +50,22 @@ export async function createColorsPreview(userId: string, imagePath: string, vid
   return { jobId: job.id, status: job.status ?? "queued" };
 }
 
-export async function createMusicScene(userId: string, imagePath: string, brief: string, sceneIndex: number, sceneCount: number, imageMime: string) {
+export async function createMusicScene(userId: string, imagePath: string, brief: string, sceneIndex: number, sceneCount: number, imageMime: string, options?: { identityOnly: boolean; references: Array<{ path: string; mediaType: string }> }) {
   ownPath(imagePath, userId);
   const key = process.env["LOVABLE_API_KEY"];
   if (!key) throw new Error("AI video generation is not configured");
-  const image = await media(imagePath, imageMime, 12 * 1024 * 1024);
+  const references = options?.references.slice(0, 4) ?? [{ path: imagePath, mediaType: imageMime }];
+  const images = await Promise.all(references.map(async (ref) => {
+    ownPath(ref.path, userId);
+    return { type: "image", ...await media(ref.path, ref.mediaType, 12 * 1024 * 1024) };
+  }));
   const beat = sceneIndex === 0 ? "opening shot that establishes the world" : sceneIndex === sceneCount - 1 ? "closing shot that lands the emotion" : "middle performance shot with energy";
-  const prompt = `[# Sources <IMAGE_REF_0>@Image1] Music video scene ${sceneIndex + 1} of ${sceneCount}: the ${beat}. Use Image1 as the performer's identity and wardrobe reference; preserve face, hair, clothes and proportions. Creative brief: ${brief}. Wholesome, warm, family-friendly tone. Vertical 9:16 cinematic shot, one continuous take, performer moving and lip-syncing to music. No subtitles or on-screen words. Audio: none, the song is added in the editor.`;
+  const identity = options?.identityOnly ? "Use all supplied photos only as identity references for ONE performer. Preserve face, hair, skin tone and body proportions. Replace original clothing and environment with the specified outfit and location. Do not create multiple people." : "Use Image1 as the performer's identity and wardrobe reference; preserve face, hair, clothes and proportions.";
+  const prompt = `[# Sources ${images.map((_, i) => `<IMAGE_REF_${i}>@Image${i + 1}`).join(", ")}] Music video scene ${sceneIndex + 1} of ${sceneCount}: the ${beat}. ${identity} Creative brief: ${brief}. Vertical 9:16 cinematic shot, one continuous take, performer moving naturally to music. No subtitles or on-screen words. Audio: none, the song is added in the editor.`;
   const response = await gateway("", key, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: MODEL, input: [{ type: "text", text: prompt }, { type: "image", ...image }], response_format: { type: "video", resolution: "360p", duration: "3s" } }),
+    body: JSON.stringify({ model: MODEL, input: [{ type: "text", text: prompt }, ...images], response_format: { type: "video", resolution: "360p", duration: "3s" } }),
   });
   const job = await response.json() as { id?: string; status?: string };
   if (!job.id) throw new Error("Video service did not return a job");

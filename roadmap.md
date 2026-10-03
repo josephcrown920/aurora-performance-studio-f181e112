@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Wire Perform Anywhere into the Video Agent with saved Josh identity references, a private 30-shot outfit/location/scene plan, explicit scene renders, and shared timeline handoff; signed-in planning/persistence and one real 3-second render/import verified. Four unit tests passed; build harness OK. Remaining 29 shots are not rendered; sandbox Chromium playback failed, although downloaded H.264/AAC MP4 decoded successfully with FFmpeg.
+
 - [x] Make the approved glass Canvas open on a full-width node-and-connector workspace, with references and brief available from its toolbar; signed-in view switch verified and build OK.
 
 - [x] Add a chat-controlled editing timeline to Music Video.
