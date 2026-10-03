@@ -46,7 +46,7 @@ export const suggestScenePrompts = createServerFn({ method: "POST" })
               type: "text",
               text: `Write exactly ${data.count} scene prompts for a ${data.videoType} music video. ${data.brief?.trim() ? `Creator's brief: ${data.brief.trim()}` : ""} Also give a one-sentence summary of the visual look in "look".`,
             },
-            { type: "image", image: new URL(signed.signedUrl) },
+            { type: "image", image: bytes, mediaType },
           ],
         },
       ],
