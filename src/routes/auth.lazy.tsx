@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Github, MailCheck, Fingerprint, Loader2, Eye, EyeOff, KeyRound, Mic2, Clapperboard, Sparkles } from "lucide-react";
-  const [githubBusy, setGithubBusy] = useState(false);
+import { MailCheck, Fingerprint, Loader2, Eye, EyeOff, KeyRound, Mic2, Clapperboard, Sparkles } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerLifecycleEmail } from "@/lib/emails.functions";
 
@@ -133,9 +132,9 @@ function AuthPage() {
       });
     return () => controller.abort();
   }, []);
-  const providerEnabled = (name: "google" | "github" | "apple") =>
+  const providerEnabled = (name: "google" | "apple") =>
     enabledProviders === null || enabledProviders[name] === true;
-  const anyOAuthEnabled = providerEnabled("google") || providerEnabled("github") || providerEnabled("apple");
+  const anyOAuthEnabled = providerEnabled("google") || providerEnabled("apple");
 
   useEffect(() => {
     setHydrated(true);
@@ -187,7 +186,7 @@ function AuthPage() {
         const provider = sessionStorage.getItem(OAUTH_SIGNUP_INTENT_KEY);
         if (provider) {
           sessionStorage.removeItem(OAUTH_SIGNUP_INTENT_KEY);
-          trackSignUp(provider as "google" | "github" | "apple");
+          trackSignUp(provider as "google" | "apple");
           isNewOAuthAccount = true;
         }
       }
@@ -333,7 +332,7 @@ function AuthPage() {
 
   // Shared OAuth helper — handles frame detection, intent tracking, redirect.
   const handleOAuth = async (
-    provider: "google" | "github" | "apple",
+    provider: "google" | "apple",
     setBusy: (v: boolean) => void,
   ) => {
     if (!authAvailable) {
@@ -345,40 +344,15 @@ function AuthPage() {
       if (mode === "signup" && typeof window !== "undefined") {
         sessionStorage.setItem(OAUTH_SIGNUP_INTENT_KEY, provider);
       }
-      if (provider === "google" || provider === "apple") {
-        const { lovable } = await import("@/integrations/lovable/index");
-        const result = await lovable.auth.signInWithOAuth(provider, {
-          redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
-        });
-        if (result.error) throw result.error;
-        if (result.redirected) return;
-        window.location.assign(search.next ?? "/studio");
-        return;
-      }
-      const isInFrame = typeof window !== "undefined" && window.self !== window.top;
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
-          skipBrowserRedirect: isInFrame,
-        },
+      const { lovable } = await import("@/integrations/lovable/index");
+      const result = await lovable.auth.signInWithOAuth(provider, {
+        redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
       });
-      if (error) {
-        if (typeof window !== "undefined") sessionStorage.removeItem(OAUTH_SIGNUP_INTENT_KEY);
-        throw error;
-      }
-      if (isInFrame && data?.url) {
-        window.open(data.url, "_blank", "noopener,noreferrer");
-        toast.info("Complete sign-in in the new tab, then come back here.");
-      }
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+      window.location.assign(search.next ?? "/studio");
     } catch (err) {
-      const label = provider === "google" ? "Google" : provider === "apple" ? "Apple" : "GitHub";
-  const handleGithubSignIn = () => handleOAuth("github", setGithubBusy);
-        {providerEnabled("github") && (
-          <Button type="button" variant="outline" disabled={githubBusy} onClick={handleGithubSignIn} className="mt-2 w-full h-11">
-            {githubBusy ? "Signing in..." : <><Github className="mr-2 size-4" /> Continue with GitHub</>}
-          </Button>
-        )}
+      const label = provider === "google" ? "Google" : "Apple";
       toast.error(describeAuthError(err, `${label} sign-in failed`));
     } finally {
       setBusy(false);

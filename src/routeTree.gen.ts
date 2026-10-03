@@ -134,7 +134,6 @@ import { Route as SoulTrainRouteImport } from './routes/soul.train'
 import { Route as SoulVibeRouteImport } from './routes/soul.vibe'
 import { Route as VideoAgentBeatDirectorRouteImport } from './routes/video-agent_.beat-director'
 import { Route as VideoAgentMusicVideoRouteImport } from './routes/video-agent_.music-video'
-import { Route as VideoAgentPerformAnywhereRouteImport } from './routes/video-agent_.perform-anywhere'
 import { Route as VideoAgentPhotoLabRouteImport } from './routes/video-agent_.photo-lab'
 import { Route as VideoAgentTimelineRouteImport } from './routes/video-agent_.timeline'
 import { Route as VideoAgentWorkflowsRouteImport } from './routes/video-agent_.workflows'
@@ -894,12 +893,6 @@ const VideoAgentMusicVideoRoute = VideoAgentMusicVideoRouteImport.update({
   path: '/video-agent/music-video',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VideoAgentPerformAnywhereRoute =
-  VideoAgentPerformAnywhereRouteImport.update({
-    id: '/video-agent_/perform-anywhere',
-    path: '/video-agent/perform-anywhere',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const VideoAgentPhotoLabRoute = VideoAgentPhotoLabRouteImport.update({
   id: '/video-agent_/photo-lab',
   path: '/video-agent/photo-lab',
@@ -1480,7 +1473,6 @@ export interface FileRoutesByFullPath {
   '/soul/vibe': typeof SoulVibeRoute
   '/video-agent/beat-director': typeof VideoAgentBeatDirectorRoute
   '/video-agent/music-video': typeof VideoAgentMusicVideoRoute
-  '/video-agent/perform-anywhere': typeof VideoAgentPerformAnywhereRoute
   '/video-agent/photo-lab': typeof VideoAgentPhotoLabRoute
   '/video-agent/timeline': typeof VideoAgentTimelineRoute
   '/video-agent/workflows': typeof VideoAgentWorkflowsRoute
@@ -1695,7 +1687,6 @@ export interface FileRoutesByTo {
   '/soul/vibe': typeof SoulVibeRoute
   '/video-agent/beat-director': typeof VideoAgentBeatDirectorRoute
   '/video-agent/music-video': typeof VideoAgentMusicVideoRoute
-  '/video-agent/perform-anywhere': typeof VideoAgentPerformAnywhereRoute
   '/video-agent/photo-lab': typeof VideoAgentPhotoLabRoute
   '/video-agent/timeline': typeof VideoAgentTimelineRoute
   '/video-agent/workflows': typeof VideoAgentWorkflowsRoute
@@ -1912,7 +1903,6 @@ export interface FileRoutesById {
   '/soul/vibe': typeof SoulVibeRoute
   '/video-agent_/beat-director': typeof VideoAgentBeatDirectorRoute
   '/video-agent_/music-video': typeof VideoAgentMusicVideoRoute
-  '/video-agent_/perform-anywhere': typeof VideoAgentPerformAnywhereRoute
   '/video-agent_/photo-lab': typeof VideoAgentPhotoLabRoute
   '/video-agent_/timeline': typeof VideoAgentTimelineRoute
   '/video-agent_/workflows': typeof VideoAgentWorkflowsRoute
@@ -2130,7 +2120,6 @@ export interface FileRouteTypes {
     | '/soul/vibe'
     | '/video-agent/beat-director'
     | '/video-agent/music-video'
-    | '/video-agent/perform-anywhere'
     | '/video-agent/photo-lab'
     | '/video-agent/timeline'
     | '/video-agent/workflows'
@@ -2345,7 +2334,6 @@ export interface FileRouteTypes {
     | '/soul/vibe'
     | '/video-agent/beat-director'
     | '/video-agent/music-video'
-    | '/video-agent/perform-anywhere'
     | '/video-agent/photo-lab'
     | '/video-agent/timeline'
     | '/video-agent/workflows'
@@ -2561,7 +2549,6 @@ export interface FileRouteTypes {
     | '/soul/vibe'
     | '/video-agent_/beat-director'
     | '/video-agent_/music-video'
-    | '/video-agent_/perform-anywhere'
     | '/video-agent_/photo-lab'
     | '/video-agent_/timeline'
     | '/video-agent_/workflows'
@@ -2759,7 +2746,6 @@ export interface RootRouteChildren {
   RTokenRoute: typeof RTokenRoute
   VideoAgentBeatDirectorRoute: typeof VideoAgentBeatDirectorRoute
   VideoAgentMusicVideoRoute: typeof VideoAgentMusicVideoRoute
-  VideoAgentPerformAnywhereRoute: typeof VideoAgentPerformAnywhereRoute
   VideoAgentPhotoLabRoute: typeof VideoAgentPhotoLabRoute
   VideoAgentTimelineRoute: typeof VideoAgentTimelineRoute
   VideoAgentWorkflowsRoute: typeof VideoAgentWorkflowsRoute
@@ -3733,13 +3719,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VideoAgentMusicVideoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/video-agent_/perform-anywhere': {
-      id: '/video-agent_/perform-anywhere'
-      path: '/video-agent/perform-anywhere'
-      fullPath: '/video-agent/perform-anywhere'
-      preLoaderRoute: typeof VideoAgentPerformAnywhereRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/video-agent_/photo-lab': {
       id: '/video-agent_/photo-lab'
       path: '/video-agent/photo-lab'
@@ -4548,7 +4527,6 @@ const rootRouteChildren: RootRouteChildren = {
   RTokenRoute: RTokenRoute,
   VideoAgentBeatDirectorRoute: VideoAgentBeatDirectorRoute,
   VideoAgentMusicVideoRoute: VideoAgentMusicVideoRoute,
-  VideoAgentPerformAnywhereRoute: VideoAgentPerformAnywhereRoute,
   VideoAgentPhotoLabRoute: VideoAgentPhotoLabRoute,
   VideoAgentTimelineRoute: VideoAgentTimelineRoute,
   VideoAgentWorkflowsRoute: VideoAgentWorkflowsRoute,

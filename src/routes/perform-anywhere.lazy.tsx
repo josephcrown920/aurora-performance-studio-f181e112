@@ -1,7 +1,6 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Crown, Sparkles, Upload, Zap } from "lucide-react";
 import { WorkflowSelectorVisual } from "@/components/performance/WorkflowVisualGuide";
-import { Button } from "@/components/ui/button";
 
 const MODELS = ["Seedance 5.9", "Kling", "Gemini Omni", "Grok Imagine"];
 
@@ -16,7 +15,6 @@ function PerformAnywhere() {
         <Link to="/" className="flex items-center gap-2 text-sm font-bold text-white no-underline"><span className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-fuchsia-500 to-violet-600"><Sparkles size={14} /></span>Aurora</Link>
         <div className="flex gap-2"><Link to="/scene-builder" className="hidden rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/60 no-underline hover:text-white sm:inline-flex">Scene Builder</Link><Link to="/colors-show" search={{ mode: "anywhere" }} className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-violet-600 px-4 py-2 text-xs font-bold text-white no-underline"><Upload size={13} /> Start guided performance</Link></div>
       </header>
-      <div className="flex justify-center border-b border-border bg-background p-4 text-foreground"><Button asChild><Link to="/video-agent/perform-anywhere"><Sparkles size={16} /> Josh · 30 scenes in Video Agent</Link></Button></div>
       <section className="relative overflow-hidden px-5 pb-16 pt-16 text-center sm:pt-24">
         <img src="/hero/hero-perform-anywhere.png" alt="" className="pointer-events-none absolute right-[-8%] top-0 h-full max-h-[760px] w-auto opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         <div className="relative mx-auto max-w-3xl">
