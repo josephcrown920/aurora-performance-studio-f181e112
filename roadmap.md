@@ -1,5 +1,10 @@
 # Roadmap
 
+- [ ] Remove the screenshot-identified Aurora sections after confirming removal scope.
+- [ ] Redesign Aurora using the creator’s selected visual direction.
+- [ ] Apply licensed Canela headings and Neue Montreal body/control fonts across every page; blocked on real font files.
+- [ ] Connect real scene previs frames, camera motion and action previews to the node canvas before final video generation.
+
 - [x] Repair Previs browser dependency loading, workspace entry and New controls; signed-out entry verified without errors, authenticated generation remains unverified.
 - [x] Simplify Director’s Room with optional Director/Inspector panels and direct native Layers navigation; browser navigation verified.
 - [x] Build a new Canvas with movable nodes and connectors; node creation, movement, disconnection, reload persistence and mobile overflow checked.
