@@ -158,7 +158,7 @@ function Studio() {
   const IconAction = ({ title, children, onClick, disabled = false }: { title: string; children: React.ReactNode; onClick: () => void; disabled?: boolean }) => <Button size="icon" variant="ghost" title={title} aria-label={title} onClick={onClick} disabled={disabled || !!busy}>{children}</Button>;
 
   return <main className="layers-studio min-h-[100dvh] bg-background text-foreground">
-    <div className="mx-auto w-full max-w-[1680px] px-4 py-6 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-[1680px] px-4 py-6 sm:px-6 lg:pl-32 lg:pr-8">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
         <div className="flex items-center gap-3"><Layers3 className="size-8 text-primary" /><h1 className="text-2xl font-bold sm:text-3xl">Aurora Layers</h1></div>
         <div className="flex items-center gap-2"><span className="text-xs text-muted-foreground">Image studio</span><Button asChild variant="outline" size="sm"><Link to="/video-agent/timeline">Video editor</Link></Button></div>
