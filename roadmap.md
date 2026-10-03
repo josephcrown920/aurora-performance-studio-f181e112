@@ -1,5 +1,9 @@
 # Roadmap
 
+- [ ] Repair Previs workspace entry and project controls.
+- [ ] Simplify Director’s Room and expose the native Layers studio.
+- [ ] Build and verify a new Canvas with movable nodes and connectors.
+
 - [x] Remove Canvas and its embedded video agent, Music Video Studio, and the current standalone video editor without removing shared Layers/Lagos40 editing tools; retired URLs redirect to Studio.
 - [x] Make Studio shortcut rows span the available width by moving them outside the centered composer column.
 - [x] Remove TikTok30 promotional photo galleries, retain the proof bar, and apply the approved purple/black split layout with Bebas Neue headings.
