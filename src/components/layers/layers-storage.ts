@@ -15,6 +15,13 @@ export async function studioOwner() {
 }
 export async function uploadLayerImage(src: string, name: string): Promise<LayerAsset> {
   const owner = await studioOwner();
+  if (src.startsWith('https:')) {
+    const parsed = new URL(src);
+    const prefix = `/storage/v1/object/sign/layers-private/${owner}/layers/`;
+    if (parsed.origin === new URL(import.meta.env.VITE_SUPABASE_URL).origin && parsed.pathname.startsWith(prefix) && !/%2e|%2f|\.\./i.test(parsed.pathname)) {
+      return { path: decodeURIComponent(parsed.pathname.slice('/storage/v1/object/sign/layers-private/'.length)), name };
+    }
+  }
   const response = await fetch(src);
   if (!response.ok) throw new Error('Could not read the image.');
   const blob = await response.blob();

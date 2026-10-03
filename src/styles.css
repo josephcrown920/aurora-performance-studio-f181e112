@@ -2351,3 +2351,7 @@ html[data-theme="light"] {
 .layers-studio { padding-bottom: 100px; }
 
 @media (min-width: 640px) { .layers-studio .layers-target-grid { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+
+.layers-studio .layers-target-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media (min-width: 640px) { .layers-studio .layers-target-grid { grid-template-columns: repeat(4,minmax(0,1fr)) !important; } }
+.layers-studio header > div:last-child { margin-left: 84px; }
