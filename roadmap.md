@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Integrate the public Aurora Layers repository appearance with the existing shared editor.
+- [ ] Resolve requested GitHub sign-in availability without substituting repository access for app login.
+
 - [x] Make the approved glass Canvas open on a full-width node-and-connector workspace, with references and brief available from its toolbar; signed-in view switch verified and build OK.
 
 - [x] Add a chat-controlled editing timeline to Music Video.
