@@ -1,7 +1,7 @@
 # Roadmap
 
 - [ ] Integrate the public Aurora Layers repository appearance with the existing shared editor.
-- [ ] Resolve requested GitHub sign-in availability without substituting repository access for app login.
+- [x] Check GitHub sign-in availability; creator chose Layers only and deferred separate GitHub login.
 
 - [x] Make the approved glass Canvas open on a full-width node-and-connector workspace, with references and brief available from its toolbar; signed-in view switch verified and build OK.
 
