@@ -7,6 +7,8 @@ export type ShotNode = {
   previsFrames?: string[];
   previsApproved?: boolean;
   motionPreviewUrl?: string | null;
+  motionPreviewId?: string | null;
+  motionPreviewRequest?: { imageUrl: string; prompt: string; duration: number; resolution: "720p"; modelKey: string } | null;
   title: string;
   scene: string;
   shotType: string;

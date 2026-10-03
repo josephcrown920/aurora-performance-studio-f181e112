@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Download, Layers3, MessageSquare, PanelRightClose, PanelRightOpen, X } from "lucide-react";
+import { Download, Layers3, MessageSquare, PanelRightClose, PanelRightOpen, X, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBoard, chainOrder, uid, type Edge } from "@/lib/board-store";
 import { exportBoardZip } from "@/lib/export-zip";
@@ -51,8 +51,9 @@ export function StudioPage({ canvasOnly = false }: { canvasOnly?: boolean }) {
   const graphVisible = canvasOnly || panel === "storyboard" || panel === "flows";
   return <main className="director-clean-shell bg-background text-foreground">
     <header className="director-clean-header border-b border-border">
-      <div className="director-clean-title"><Link to="/studio" className="text-sm font-bold">{canvasOnly ? "Canvas" : "Director’s Room"}</Link><input aria-label="Board title" value={board.title} onChange={e => setBoard(b => ({...b,title:e.target.value}))} className="min-w-0 bg-transparent text-sm text-muted-foreground outline-none" /></div>
+      <div className="director-clean-title"><Link to="/" className="text-lg font-semibold">Aurora</Link><input aria-label="Board title" value={board.title} onChange={e => setBoard(b => ({...b,title:e.target.value}))} className="min-w-0 bg-transparent text-sm text-muted-foreground outline-none" /></div>
       <nav aria-label="Workspace actions" className="flex items-center gap-2">
+        <Button variant="outline" size="icon" title="Add character reference" aria-label="Add character reference" onClick={() => {setSelectedId(addShot({kind:"reference",title:"Character Lock"}));setInspectorOpen(true);}}><UserRound /></Button>
         <Button asChild variant="outline" size="sm"><Link to="/layers"><Layers3 /> Layers</Link></Button>
         <Button variant="outline" size="icon" title="Inspector" aria-label="Inspector" aria-pressed={inspectorOpen} onClick={() => { setInspectorOpen(v => !v); setChatOpen(false); }}>{inspectorOpen ? <PanelRightClose /> : <PanelRightOpen />}</Button>
         <Button variant="outline" size="icon" title="Director" aria-label="Director" aria-pressed={chatOpen} onClick={() => {setChatOpen(v => !v);setInspectorOpen(false);}}><MessageSquare /></Button>
@@ -65,11 +66,11 @@ export function StudioPage({ canvasOnly = false }: { canvasOnly?: boolean }) {
       <div className={`director-canvas-layout ${inspectorOpen || chatOpen ? "with-inspector" : ""}`}>
         <div className="flex min-h-0 min-w-0 flex-col overflow-hidden">
           {graphVisible ? <>
-            <FlowCanvas board={board} selectedId={selectedId} onSelect={id => setSelectedId(id)} onMove={(id,x,y) => updateShot(id,{x,y})} onConnect={connect} onDisconnect={disconnect} onAdd={() => setSelectedId(addShot({title:"New scene"}))} onAddVideo={() => setSelectedId(addShot({kind:"video",title:"Motion shot",videoModel:"seedance-2.5"}))} />
-            <Timeline board={board} selectedId={selectedId} onSelect={id => {setSelectedId(id);setInspectorOpen(true);setChatOpen(false);}} onReorder={reorder} />
+            <FlowCanvas board={board} selectedId={selectedId} onSelect={id => {setSelectedId(id);setInspectorOpen(!!id);setChatOpen(false);}} onMove={(id,x,y) => updateShot(id,{x,y})} onConnect={connect} onDisconnect={disconnect} onDelete={removeShot} onAdd={() => {setSelectedId(addShot({title:"New scene"}));setInspectorOpen(true);}} onAddVideo={() => {setSelectedId(addShot({kind:"video",title:"Motion shot",videoModel:"seedance-2.5"}));setInspectorOpen(true);}} />
+            {!canvasOnly && <Timeline board={board} selectedId={selectedId} onSelect={id => {setSelectedId(id);setInspectorOpen(true);setChatOpen(false);}} onReorder={reorder} />}
           </> : panel === "wardrobe" ? <div className="overflow-auto"><CharactersPanel board={board} onChange={characters => setBoard(b => ({...b,characters}))} /></div> : panel === "moodboard" ? <MoodboardPanel /> : panel === "layers" ? <div className="p-6"><Button asChild><Link to="/layers">Open Layers Studio</Link></Button></div> : <section className="overflow-auto p-4"><h1 className="mb-4 text-xl font-bold">Scenes</h1><div className="director-scene-grid">{chainOrder(board).map(shot => <article key={shot.id} className="overflow-hidden rounded-lg border border-border bg-card">{shot.imageUrl && <img src={shot.imageUrl} alt={shot.title} className="aspect-video w-full object-cover" />}<div className="p-3"><h2 className="text-sm font-bold">{shot.title}</h2><Button className="mt-2" size="sm" variant="outline" onClick={() => {selectPanel("storyboard");setSelectedId(shot.id);setInspectorOpen(true);}}>Open shot</Button></div></article>)}</div></section>}
         </div>
-        {(inspectorOpen || chatOpen) && <aside className="director-detail-panel border-l border-border bg-background"><div className="flex items-center justify-between border-b border-border p-3"><h2 className="text-sm font-bold">{chatOpen ? "Aurora Director" : "Inspector"}</h2><Button variant="ghost" size="icon" aria-label="Close panel" onClick={() => {setInspectorOpen(false);setChatOpen(false);}}><X /></Button></div><div className="min-h-0 flex-1 overflow-auto">{chatOpen ? <DirectorChat board={board} onAccept={patch => {setSelectedId(addShot(patch));selectPanel("storyboard");}} /> : selected ? <Inspector shot={selected} board={board} onChange={patch => updateShot(selected.id,patch)} onDelete={() => {removeShot(selected.id);setSelectedId(null);}} /> : <p className="p-4 text-sm text-muted-foreground">No shot selected.</p>}</div></aside>}
+        {(inspectorOpen || chatOpen) && <aside className="director-detail-panel border-l border-border bg-background"><div className="flex items-center justify-between border-b border-border p-3"><h2 className="text-sm font-bold">{chatOpen ? "Aurora Director" : "Inspector"}</h2><Button variant="ghost" size="icon" aria-label="Close panel" onClick={() => {setInspectorOpen(false);setChatOpen(false);}}><X /></Button></div><div className="min-h-0 flex-1 overflow-auto">{chatOpen ? <DirectorChat board={board} onAccept={patch => {setSelectedId(addShot(patch));selectPanel("storyboard");}} /> : selected ? <Inspector key={selected.id} shot={selected} board={board} onChange={patch => updateShot(selected.id,patch)} onDelete={() => {removeShot(selected.id);setSelectedId(null);}} /> : <p className="p-4 text-sm text-muted-foreground">No shot selected.</p>}</div></aside>}
       </div>
     </div>
   </main>;
