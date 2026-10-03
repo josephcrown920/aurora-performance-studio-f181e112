@@ -140,6 +140,7 @@ function PrevisWorkspace() {
   // Restore area
   const [restoring, setRestoring]   = useState<string | null>(null);
   const [workspaceMode, setWorkspaceMode] = useState<"multishot" | "classic">("classic");
+  const [multishotKey, setMultishotKey] = useState(0);
 
   // Projects list
   const projectsQuery = useQuery({
@@ -526,7 +527,7 @@ function PrevisWorkspace() {
     return (
       <div className="previs-shell aurora-route-enter">
         <PrevisHeader
-          onNewProject={() => setWorkspaceMode("classic")}
+          onNewProject={() => setMultishotKey(key => key + 1)}
           exporting={false}
           hasProject={false}
         />
@@ -536,7 +537,7 @@ function PrevisWorkspace() {
             Classic previs
           </button>
         </div>
-        <MultishotStudio userId={user.id} />
+        <MultishotStudio key={multishotKey} userId={user.id} />
       </div>
     );
   }
