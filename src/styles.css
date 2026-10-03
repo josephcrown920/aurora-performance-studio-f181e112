@@ -2400,3 +2400,8 @@ html[data-theme="light"] {
 .campaign-proof h1 { font-family:var(--font-display) !important; font-size:30px !important; line-height:1.1 !important; }
 .campaign-proof { max-height:none; }
 .workspace-duo:has(.campaign-proof) > div > section { grid-column:1/-1; }
+
+/* Heavier studio text — no skinny type */
+body { font-weight: 500; }
+.font-light, .font-extralight, .font-thin { font-weight: 500 !important; }
+p, span, label, input, textarea { -webkit-font-smoothing: auto; }
