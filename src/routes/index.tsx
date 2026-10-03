@@ -16,10 +16,6 @@ import { EditableStaggeredHeadline } from "@/components/visual/EditableStaggered
 import { DEMO_ASSETS } from "@/lib/demo-assets";
 import { LANDING_IMAGE_SRCSET } from "@/lib/landing-image-manifest";
 import { TOOL_DIRECTORY } from "@/lib/tool-directory";
-// Motion-reel clip: a real Aurora music-video render (see TikTokSection for
-// the rest of the set). Imported as URLs only — no runtime weight.
-import reelClip from "@/assets/josh/generated/clip-15-alley-neon.mp4";
-import reelPoster from "@/assets/josh/generated/still-15-alley-neon.jpg";
 import {
   COST_TIKTOK_REMIX_CUT,
   COST_UGC_AD,
@@ -42,9 +38,6 @@ const PRICE_AVATAR = lipsyncEngineCost("heygen-photo");
 
 // Below-fold sections — lazy-loaded so the landing page hero ships without
 // pulling in framer-motion, spin-engine, server-fn hooks, and media assets.
-const ViralEngine = lazy(() =>
-  import("@/components/landing/ViralEngine").then((m) => ({ default: m.ViralEngine })),
-);
 const BalloonLipsync = lazy(() =>
   import("@/components/landing/BalloonLipsync").then((m) => ({ default: m.BalloonLipsync })),
 );
@@ -790,7 +783,6 @@ function LandingPage() {
       {/* ── Viral Engine (TikTok30/Spin — gateable) ──────────────────── */}
       {showFeature("spin") && (
         <ScrollReveal>
-          <Suspense fallback={null}><ViralEngine /></Suspense>
           <OutputGallery
             items={DEMO_ASSETS.landing.spin}
             kicker="TikTok30 proof"
@@ -918,112 +910,6 @@ function LandingPage() {
             <span>Plans and Aura top-ups available anytime</span>
             <Link to="/tools" className="font-semibold text-violet-300 hover:text-white">Explore all tools →</Link>
           </div>
-        </div>
-      </section>
-
-      {/* ── Video Reel ──────────────────────────────────────────────────── */}
-      <section className="py-20 px-5">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#8b5cf6]">
-              Motion generation
-            </span>
-            <h2 className="mt-3 text-3xl font-semibold leading-tight">
-              From still to <span className="bg-gradient-to-r from-violet-200 via-violet-400 to-fuchsia-300 bg-clip-text font-sans font-semibold text-transparent">cinema</span>.
-            </h2>
-          </div>
-          <Link
-            to="/motion"
-            className="inline-flex items-center gap-1 text-sm font-medium text-zinc-400 hover:text-zinc-100 shrink-0 transition-colors"
-          >
-            See more <ArrowUpRight className="size-4" />
-          </Link>
-        </div>
-        <div className="relative overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/5">
-          {/* Poster image paints instantly while the video buffers. The clip is
-              a real Aurora music-video render (9:16); a 4:5 frame keeps the
-              artist and the neon alley readable instead of a 16:9 mid-crop. */}
-          <img
-            src={reelPoster}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            aria-hidden
-          />
-          <video
-            src={reelClip}
-            poster={reelPoster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="aspect-[4/5] w-full object-cover relative"
-            aria-label="Aurora-generated cinematic music video — artist in a neon rain-soaked alley"
-          />
-          {/* Subtle gradient + CTA at bottom */}
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
-          <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/80">
-              Reel 001 · Motion v1
-            </span>
-            <Link
-              to={ctaTo}
-              onClick={() => void track("hero_video_cta_click")}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-white/15 backdrop-blur-md ring-1 ring-white/25 text-white no-underline hover:bg-white/25 transition-colors"
-            >
-              <Sparkles className="size-3" /> Create yours
-            </Link>
-          </div>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Link
-              to="/studio"
-              onClick={() => void track("hero_start_click")}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full text-white no-underline bg-[image:var(--gradient-hero)] shadow-[var(--shadow-glow-soft)] hover:brightness-110"
-            >
-              <Sparkles className="size-4" /> Explore the studio
-            </Link>
-            <Link
-              to="/templates"
-              onClick={() => void track("hero_templates_click")}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full no-underline aurora-glass-strong text-foreground hover:brightness-110"
-            >
-              <Wand2 className="size-4" /> Try a template
-            </Link>
-            <button
-              type="button"
-              onClick={() => setDemoOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:border-white/20 transition-colors"
-            >
-              <Play className="size-3.5 fill-current" /> See it in action
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Social Proof / Testimonials ──────────────────────────────────── */}
-      <section className="border-y border-white/5 px-5 py-12">
-        <div className="mb-7">
-          <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#8b5cf6]">
-            30-day transformation
-          </span>
-          <h2 className="mt-2 text-3xl font-semibold leading-tight">
-            Make the next release feel{" "}
-            <span className="bg-gradient-to-r from-violet-200 via-violet-400 to-fuchsia-300 bg-clip-text font-sans font-semibold text-transparent">impossible to ignore.</span>
-          </h2>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-3">
-          {[
-            { quote: "“I can test three visual directions before I book a single shoot. That changes every release meeting.”", role: "Independent artist · Visual rollout" },
-            { quote: "“The moodboard finally became a real world I could send to my team — not another folder of references.”", role: "Creative director · Music & culture" },
-            { quote: "“I made a week of release assets in one night, then spent the rest of it making the music better.”", role: "Recording artist · Campaign launch" },
-          ].map((testimonial) => (
-            <figure key={testimonial.role} className="rounded-2xl border border-white/8 bg-zinc-900/70 p-5">
-              <div className="mb-4 flex items-center gap-1 text-[#8b5cf6]" aria-label="Five star review">★★★★★</div>
-              <blockquote className="font-serif text-base leading-snug text-zinc-100">{testimonial.quote}</blockquote>
-              <figcaption className="mt-5 border-t border-white/8 pt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-500">{testimonial.role}</figcaption>
-            </figure>
-          ))}
         </div>
       </section>
 
