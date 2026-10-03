@@ -191,6 +191,9 @@ export default defineConfig({
         "class-variance-authority",
         "zod",
         "@simplewebauthn/browser",
+        // Gemini Live is used by Previs in the browser. Its CommonJS retry
+        // dependency needs interop even while the SDK itself stays excluded.
+        "p-retry",
       ],
       // These are server-only packages that leak into the dep-optimizer crawl
       // through SSR server-fn transforms. Excluding them stops Vite from adding

@@ -1,6 +1,5 @@
-import { authNextSearch } from "@/lib/auth-return-path";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useRef, useState, useCallback } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -105,7 +104,6 @@ function sceneToShot(scene: SceneDraft): VideoShot {
 // ── Main workspace ────────────────────────────────────────────────────────
 
 function PrevisWorkspace() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, loading: authLoading } = useAuth();
 
