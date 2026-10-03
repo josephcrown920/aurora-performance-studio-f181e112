@@ -16,10 +16,11 @@ import joshPrimary from "@/assets/josh-reference/josh-primary.webp.asset.json";
 type Props = {
   onApply: (brief: CanvasBrief, characterUrl: string) => void;
   onDirector: (context: string) => void;
+  onContextChange: (context: string) => void;
 };
 const empty: CanvasContext = { characterName: "Josh", references: [], intent: "", brief: null, motionTests: [] };
 
-export function CanvasProductionContext({ onApply, onDirector }: Props) {
+export function CanvasProductionContext({ onApply, onDirector, onContextChange }: Props) {
   const { user } = useAuth();
   const get = useServerFn(getCanvasContext);
   const save = useServerFn(saveCanvasContext);
@@ -35,6 +36,9 @@ export function CanvasProductionContext({ onApply, onDirector }: Props) {
   const [role, setRole] = useState<CanvasReference["role"]>("identity");
   const fileRef = useRef<HTMLInputElement>(null);
   const loaded = useRef(false);
+  useEffect(() => {
+    onContextChange(JSON.stringify({ character: project.characterName, brief: project.brief, intent: project.intent, references: project.references.map(({ name, role }) => ({ name, role })) }).slice(0, 2400));
+  }, [project, onContextChange]);
   useEffect(() => {
     if (!saved.isSuccess || loaded.current) return;
     loaded.current = true;
@@ -127,7 +131,8 @@ export function CanvasProductionContext({ onApply, onDirector }: Props) {
         <div className="control-motion mt-6"><div className="flex justify-between items-center"><span className="control-eyebrow">Motion test / 5s</span><span className="text-xs text-muted-foreground">Seedance</span></div>
           <div className="control-tags"><span>{ready.identity ? "Photo ready" : "Photo missing"}</span><span>{ready.motion ? "Video ready" : "Video missing"}</span></div>
           <label className="flex gap-2 mt-3 text-xs text-muted-foreground"><input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} /> I have permission to use these references and approve a paid provider test.</label>
-          <Button variant="outline" className="w-full mt-3" disabled={!!busy || !ready.identity || !ready.motion || !brief || !consent} onClick={() => action("motion", async () => {
+          {ready.depth && <p className="text-xs text-muted-foreground mt-3">Depth-conditioned motion is unsupported by this provider. Remove the depth reference to run a motion-only test; the brief retains your depth plan.</p>}
+          <Button variant="outline" className="w-full mt-3" disabled={!!busy || !ready.identity || !ready.motion || ready.depth || !brief || !consent} onClick={() => action("motion", async () => {
             const id = crypto.randomUUID();
             try { const result = await runMotion({ data: { project, consent: true } }); const next: CanvasContext = { ...project, motionTests: [{ id, at: new Date().toISOString(), status: "passed" as const, videoPath: result.path, detail: `${result.provider} · ${Math.round(result.latencyMs / 1000)}s render` }, ...project.motionTests].slice(0, 20) }; setProject(next); await persist(next); }
             catch (e) { const detail = e instanceof Error ? e.message : "Motion test failed"; const next: CanvasContext = { ...project, motionTests: [{ id, at: new Date().toISOString(), status: "failed" as const, videoPath: null, detail }, ...project.motionTests].slice(0, 20) }; setProject(next); await persist(next); throw e; }

@@ -2094,6 +2094,7 @@ function CanvasPage() {
       <div className="control-workspace">
         <CanvasProductionContext
           onDirector={(context) => { setDirectorContext(context); setAgentOpen(true); }}
+          onContextChange={setDirectorContext}
           onApply={(brief, characterUrl) => {
             const generated: Node<NodeData>[] = [{ id: "character", type: "aurora", position: { x: 0, y: 120 }, data: { kind: "input", label: "Character lock", url: characterUrl } }];
             const links: Edge[] = [];
