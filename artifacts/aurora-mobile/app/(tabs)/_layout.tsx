@@ -59,6 +59,13 @@ export default function TabLayout() {
           tab bar (visible placeholders fail app review). Still routable. */}
       <Tabs.Screen name="canvas" options={{ href: null }} />
       <Tabs.Screen
+        name="comfy"
+        options={{
+          title: "ComfyUI",
+          tabBarIcon: ({ color, size }) => <Feather name="cpu" size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="gallery"
         options={{
           title: "Gallery",
