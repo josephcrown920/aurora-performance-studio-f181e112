@@ -18,7 +18,7 @@ FAIL=0
 # 1. No bun lockfiles inside the mobile app. The web app's root bun.lock is
 # excluded from the EAS upload by the root .easignore, so it is safe.
 FOUND_BUN=$(find "$MOBILE_DIR" -maxdepth 3 \( -name 'bun.lock' -o -name 'bun.lockb' \) 2>/dev/null | grep -v node_modules || true)
-if [ -f "$ROOT/bun.lock" ] && ! grep -qx '/\*' "$ROOT/.easignore" 2>/dev/null; then
+if [ -f "$ROOT/bun.lock" ] && ! grep -qE '^/\*\s*$' "$ROOT/.easignore" 2>/dev/null; then
   FOUND_BUN="$FOUND_BUN $ROOT/bun.lock (not excluded by .easignore)"
 fi
 if [ -n "$FOUND_BUN" ]; then
