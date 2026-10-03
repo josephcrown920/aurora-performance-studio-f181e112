@@ -62,6 +62,7 @@ import {
   Music,
   SplitSquareHorizontal,
   Boxes,
+  FileText as FileTextIcon,
   Undo2,
   Redo2,
   RotateCcw,
@@ -1390,6 +1391,7 @@ function CanvasPage() {
   const [agentOpen, setAgentOpen] = useState(false);
   const [directorContext, setDirectorContext] = useState("");
   const [graphRevision, setGraphRevision] = useState(0);
+  const [graphFocused, setGraphFocused] = useState(true);
   const [examplesOpen, setExamplesOpen] = useState(false);
   const [coachTplName, setCoachTplName] = useState<string | null>(null);
   const [lastTemplateId, setLastTemplateId] = useState<string | null>(null);
@@ -2007,6 +2009,9 @@ function CanvasPage() {
           <span>Director Canvas</span><span className="text-muted-foreground">/ Production workspace</span>
         </Link>
         <div className="flex items-center gap-1.5 shrink-0">
+          <Button size="sm" variant="outline" aria-pressed={!graphFocused} onClick={() => { setGraphFocused((v) => !v); setGraphRevision((v) => v + 1); }} className="h-8">
+            {graphFocused ? <FileTextIcon className="size-3.5 mr-1" /> : <Boxes className="size-3.5 mr-1" />} {graphFocused ? "References & brief" : "Node workspace"}
+          </Button>
           <Button size="sm" variant="outline" onClick={() => setAgentOpen(true)} className="h-8">
             <Sparkles className="size-3.5 mr-1" /> Director
           </Button>
@@ -2091,7 +2096,7 @@ function CanvasPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <div className="control-workspace">
+      <div className={`control-workspace${graphFocused ? " control-workspace-focused" : ""}`}>
         <CanvasProductionContext
           onDirector={(context) => { setDirectorContext(context); setAgentOpen(true); }}
           onContextChange={setDirectorContext}
@@ -2103,7 +2108,7 @@ function CanvasPage() {
               generated.push({ id, type: "aurora", position: { x: 400, y: i * 520 }, data: { kind: "image", label: shot.title, prompt: `${brief.characterLock}. ${brief.visualStyle}. ${shot.prompt}`, model: MODEL_LIST[0].value, status: "idle" } });
               links.push({ id: `character-${id}`, source: "character", target: id });
             });
-            setWfId(undefined); setNodes(generated); setEdges(links); setMarketplaceTemplateId(null); setGraphRevision((v) => v + 1);
+            setWfId(undefined); setNodes(generated); setEdges(links); setMarketplaceTemplateId(null); setGraphFocused(true); setGraphRevision((v) => v + 1);
           }}
         />
         <section className="control-production" aria-label="Production graph">
@@ -2125,7 +2130,6 @@ function CanvasPage() {
               style: {
                 stroke: "var(--control-edge)",
                 strokeWidth: 1.5,
-                strokeDasharray: "6 4",
                 
               },
             }}
@@ -2134,7 +2138,7 @@ function CanvasPage() {
             proOptions={{ hideAttribution: true }}
           >
             <Background variant={BackgroundVariant.Dots} gap={24} size={1.5} color="var(--control-rule)" />
-            <Controls position="bottom-right" className="!bottom-16 !bg-[oklch(0.13_0.02_295/0.8)] !border-white/10 [&>button]:!bg-transparent [&>button]:!border-white/10 [&>button]:!text-foreground" />
+            <Controls position="bottom-right" className="!bottom-16" />
           </ReactFlow>
         </HandlersCtx.Provider>
         </ComfyCtx.Provider>

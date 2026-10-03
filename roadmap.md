@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Make the approved glass Canvas open on a full-width node-and-connector workspace, with references and brief available from its toolbar; signed-in view switch verified and build OK.
+
 - [x] Add a chat-controlled editing timeline to Music Video.
 - [x] Support a motion-control test using the creator’s uploaded image and performance video.
 - [x] Verify the updated Perform Anywhere workflow.
