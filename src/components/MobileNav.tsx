@@ -56,7 +56,7 @@ type Feature = {
 // Note: Video Agent and TikTok30 are pinned in the bottom tab bar (TAB_ITEMS)
 // — keep them OUT of CORE_FEATURES to avoid showing the same entry twice.
 const CORE_FEATURES: Feature[] = [
-  { to: "/motion",        label: "Perform Anywhere",   icon: Wand2,        previewImg: "/nav-previews/perform-anywhere.jpg", starred: true },
+  { to: "/perform-anywhere",        label: "Perform Anywhere",   icon: Wand2,        previewImg: "/nav-previews/perform-anywhere.jpg", starred: true },
   { to: "/colors",        label: "Colors Studio",      icon: Palette,      previewImg: "/nav-previews/colors.jpg",          starred: true },
   { to: "/lipsync",       label: "Lip Sync",           icon: Mic,          previewImg: "/nav-previews/lipsync.jpg",         starred: true },
   { to: "/director-room", label: "Director's Room",     icon: Clapperboard, previewImg: "/nav-previews/music-video.jpg",     starred: true, badge: "$20k Look" },
@@ -74,16 +74,13 @@ const STUDIO_FEATURES: Feature[] = [
   { to: "/previs",          label: "Previs Workspace",      icon: Clapperboard, previewImg: "/nav-previews/music-video.jpg", badge: "New" },
   { to: "/likeness",        label: "Locked Likeness Shoot", icon: Camera,   previewImg: "/nav-previews/avatar.jpg",        badge: "New" },
   { to: "/reshoot",         label: "Multi-Angle Photoshoot", icon: Camera,  previewImg: "/nav-previews/avatar.jpg",        badge: "New" },
-  { to: "/video-agent/music-video", label: "Music Video Builder", icon: Camera, badge: "New" },
   { to: "/library",         label: "My Video Library", icon: Camera },
   { to: "/scene-builder",   label: "Scene Builder",         icon: Layers,   previewImg: "/nav-previews/scene-builder.jpg" },
-  { to: "/agent",           label: "Video Agent",           icon: Film,     badge: "New" },
   { to: "/comfy",           label: "ComfyUI Workflow Studio", icon: Workflow, badge: "New" },
 ];
 
 // ── Music & audio ──────────────────────────────────────────────────────────
 const MUSIC_FEATURES: Feature[] = [
-  { to: "/music-video", label: "Music Video Studio", icon: Film, previewImg: "/nav-previews/music-video.jpg" },
   { to: "/puremix",     label: "PureMix",     icon: Music2, previewImg: "/nav-previews/music-video.jpg", badge: "New" },
 ];
 
@@ -126,14 +123,12 @@ const ACCOUNT_FEATURES: Feature[] = [
 export const ARCHIVED_FEATURES: Feature[] = [
   // ── Studio tools (coming soon) ────────────────────────────────────────
   { to: "/photo-edit",      label: "Photo Editor",     icon: Brush },
-  { to: "/canvas",          label: "Infinity Canvas",  icon: Workflow },
   { to: "/split-reality",   label: "Split Reality",    icon: Wand2 },
   { to: "/live-studio",     label: "Live Studios",     icon: Music2 },
   { to: "/scene-weaver",    label: "Scene Weaver",     icon: Camera },
   { to: "/storyboard",      label: "Storyboard",       icon: Clapperboard },
   // ── Legacy / dev tools ───────────────────────────────────────────────
   { to: "/colors-show",      label: "Colors Show Creator", icon: Film },
-  { to: "/editor",           label: "Playground",       icon: Sparkles },
   { to: "/heygen-templates", label: "HeyGen Templates", icon: Film },
   { to: "/growth",           label: "Growth Tools",     icon: Sparkles },
   { to: "/guides",           label: "Viral Guides",     icon: Sparkles },
@@ -149,7 +144,6 @@ export const ARCHIVED_FEATURES: Feature[] = [
 
 // Bottom tab — flagship trio with premium badge treatment.
 const TAB_ITEMS: (Feature & { premium?: boolean })[] = [
-  { to: "/video-agent",  label: "Video Agent",     icon: Film,     premium: true },
   { to: "/spin",         label: "TikTok30",        icon: Flame,    premium: true },
 ];
 

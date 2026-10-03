@@ -29,7 +29,7 @@ import {
   type SpinTemplateId,
 } from "@/lib/spin-engine";
 import { PageHeroBanner } from "@/components/visual/PageHeroBanner";
-import { OutputGallery } from "@/components/visual/OutputGallery";
+import { Button } from "@/components/ui/button";
 import { DEMO_ASSETS } from "@/lib/demo-assets";
 
 // Artist-only mode: this feature is hidden from regular users by default.
@@ -54,15 +54,6 @@ type Variant = {
 };
 
 type AvatarOption = { id: string; name: string; previewUrl: string | null };
-
-const SPIN_GALLERY_PREVIEWS: Record<SpinTemplateId, string> = {
-  default: "/gallery/ski-selfie.jpg",
-  rapper: "/gallery/rapper-grid.jpg",
-  product_showcase: "/gallery/coca-cola-kling.jpg",
-  fitness_creator: "/gallery/josh-blue-portrait.png",
-  fashion_lookbook: "/gallery/josh-pink-mic.png",
-  beauty_glam: "/gallery/glitter-bath.jpg",
-};
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -405,82 +396,30 @@ function SpinPage() {
   const active = busy || planning;
 
   return (
-    <main className="aurora-page-shell text-foreground">
-      <span aria-hidden className="aurora-ambient" />
+    <main className="workspace-duo min-h-screen text-foreground">
+      
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 md:px-8 md:py-14">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground no-underline">
           <ArrowLeft className="size-4" /> Back
         </Link>
 
-        <div className="mt-6 flex items-center gap-2">
-          <span className="inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary">
-            <Flame className="size-3.5" /> TikTok30
-          </span>
-        </div>
-        <h1 className="mt-3 text-4xl md:text-5xl font-extrabold tracking-tight">
-          One prompt. <span className="aurora-gradient-text">{SPIN_COUNT} unique posts.</span>
-        </h1>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          Describe your idea once. Aurora writes a full viral campaign — every post a different location, outfit, angle,
-          lighting and mood — then renders them all with the <span className="text-foreground">same face</span>.
-        </p>
-
+        <header className="workspace-heading"><h1>TIKTOK30</h1><span>30 shots · one person</span></header>
         <PageHeroBanner
           compact
           kicker="Campaign proof"
           headline="One concept, 30 scroll-stopping posts."
-          sub="Choose the visual lane first, then let Spin build the release run."
+          sub=""
           media={DEMO_ASSETS.spin.hero}
-          className="mt-7 rounded-2xl border border-white/10"
+          className="campaign-proof mt-5"
         />
 
-        {/* Template picker */}
-        <div className="mt-8">
-          <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            <Sparkles className="size-3.5" /> Pick a template
+        <div className="workspace-controls">
+        <section className="mt-5">
+          <h2 className="mb-3 text-sm font-semibold">Campaign style</h2>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {templates.map((t) => <Button key={t.id} type="button" variant="outline" disabled={active} aria-pressed={templateId === t.id} onClick={() => pickTemplate(t.id)} className={`h-12 justify-start whitespace-normal text-left text-xs ${templateId === t.id ? "workspace-active" : ""}`}><span aria-hidden>{t.emoji}</span>{t.label}</Button>)}
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
-            {templates.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => pickTemplate(t.id)}
-                disabled={active}
-                className={`group relative flex flex-col items-start justify-end gap-0.5 overflow-hidden rounded-xl border p-3 text-left transition aspect-[3/4] ${
-                  templateId === t.id ? "border-primary" : "border-white/10 hover:border-white/25"
-                }`}
-              >
-                {SPIN_GALLERY_PREVIEWS[t.id] || t.image ? (
-                  <img
-                    src={SPIN_GALLERY_PREVIEWS[t.id] ?? t.image ?? ""}
-                    alt={`${t.label} example creator post`}
-                    className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-105"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-white/5" />
-                )}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 ${
-                    templateId === t.id ? "ring-2 ring-inset ring-primary" : ""
-                  }`}
-                />
-                <span className="relative text-lg leading-none">{t.emoji}</span>
-                <span className="relative text-xs font-semibold text-white">{t.label}</span>
-                <span className="relative text-[10px] leading-tight text-white/70">{t.blurb}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <OutputGallery
-          items={DEMO_ASSETS.spin.gallery}
-          kicker="Real post patterns"
-          title="A campaign reads before it is explained."
-          subtitle="Template, framing, and finished motion from Aurora Spin."
-          showGalleryLink
-        />
-
+        </section>
         {/* Video ratio slider — 0 to 30 clips (budget i2v, 5 Aura each) */}
         {mode !== "video" && (
           <div className="mt-6 rounded-xl border border-white/10 bg-white/3 p-4">
@@ -614,11 +553,9 @@ function SpinPage() {
         {/* Identity picker */}
         <div className="mt-6">
           <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            <User className="size-3.5" /> Keep this face across every post
+            <User className="size-3.5" /> Character reference
           </div>
-          <p className="mb-3 text-sm text-muted-foreground">
-            Upload a reference photo and Spin locks that exact face across all {SPIN_COUNT} posts — nothing else to set up.
-          </p>
+
           <input
             ref={faceInputRef}
             type="file"
@@ -715,6 +652,7 @@ function SpinPage() {
                 : `Spin ${SPIN_COUNT} · ${spinTotalCost(SPIN_COUNT - videoCount, videoCount)} Aura`}
           </button>
         </form>
+        </div>
 
         {/* ── HeyGen Template: one-click talking-head video ──────────────── */}
         <div className="mt-4 rounded-2xl border border-pink-400/20 bg-pink-500/5">

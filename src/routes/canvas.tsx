@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/canvas")({
+  beforeLoad: () => { throw redirect({ to: "/studio" }); },
   // All optional so existing plain canvas links remain type-safe.
   validateSearch: (search: Record<string, unknown>): {
     template?: string; marketplaceTemplateId?: string; workflow?: string; run?: boolean;

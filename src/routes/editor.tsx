@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/editor")({
+  beforeLoad: () => { throw redirect({ to: "/studio" }); },
   head: () => ({
     meta: [
       { title: "Aurora Playground — script the studio with code" },

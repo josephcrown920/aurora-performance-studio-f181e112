@@ -6,7 +6,7 @@ import {
   Mic2,
   Palette,
   Wand2,
-  Workflow,
+  
   type LucideIcon,
 } from "lucide-react";
 import { TOOL_DIRECTORY, type ToolDirectoryItem } from "@/lib/tool-directory";
@@ -79,21 +79,6 @@ const ACCENTS = {
 
 const studioToolRows: StudioToolRow[] = [
   (() => {
-    const tool = TOOL_DIRECTORY.find((item) => item.name === "Aurora Video Agent")!;
-    return {
-      key: "video-agent",
-      name: "Video Agent",
-      description: tool.description,
-      to: tool.to,
-      price: tool.price,
-      badge: "Director",
-      image: "/nav-previews/video-agent.jpg",
-      alt: "Aurora Video Agent storyboard and production preview",
-      icon: Clapperboard,
-      accent: ACCENTS.violet,
-    };
-  })(),
-  (() => {
     const tool = TOOL_DIRECTORY.find((item) => item.name === "TikTok30")!;
     return {
       key: "tiktok30",
@@ -161,20 +146,6 @@ const studioToolRows: StudioToolRow[] = [
       accent: ACCENTS.pink,
     };
   })(),
-  (() => {
-    const tool = TOOL_DIRECTORY.find((item) => item.to === "/canvas")!;
-    return {
-      key: "infinity-canvas",
-      name: "Infinity Canvas",
-      description: tool.description,
-      to: tool.to,
-      price: tool.price,
-      image: "/nav-previews/canvas.jpg",
-      alt: "Infinity Canvas connected creative workflow preview",
-      icon: Workflow,
-      accent: ACCENTS.lavender,
-    };
-  })(),
 ];
 
 export function StudioToolRows() {
@@ -187,10 +158,10 @@ export function StudioToolRows() {
             Pick a direction.
           </h2>
         </div>
-        <span className="pb-0.5 text-[10px] uppercase tracking-[0.16em] text-zinc-600">7 tools</span>
+        <span className="pb-0.5 text-[10px] uppercase tracking-[0.16em] text-zinc-600">{studioToolRows.length} tools</span>
       </div>
 
-      <div className="space-y-3">
+      <div className="w-full space-y-3">
         {studioToolRows.map((tool, index) => {
           const Icon = tool.icon;
           return (
@@ -198,7 +169,7 @@ export function StudioToolRows() {
               key={tool.key}
               to={tool.to}
               className={cn(
-                "group block overflow-hidden rounded-2xl border bg-zinc-900/80 no-underline transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5",
+                "group block w-full overflow-hidden rounded-2xl border bg-zinc-900/80 no-underline transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5",
                 tool.accent.border,
                 tool.accent.glow,
               )}
