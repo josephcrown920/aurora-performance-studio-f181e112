@@ -25,8 +25,11 @@ export const suggestScenePrompts = createServerFn({ method: "POST" })
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("AI is not configured for this app yet.");
 
-    const { data: signed, error } = await context.supabase.storage.from("studio").createSignedUrl(data.imagePath, 600);
-    if (error || !signed?.signedUrl) throw new Error("Could not read the reference image. Upload it again.");
+    // Send the image bytes inline so the model never depends on fetching a link.
+    const { data: blob, error } = await context.supabase.storage.from("studio").download(data.imagePath);
+    if (error || !blob) throw new Error("Could not read the reference image. Upload it again.");
+    const mediaType = blob.type && blob.type.startsWith("image/") ? blob.type : "image/jpeg";
+    const bytes = new Uint8Array(await blob.arrayBuffer());
 
     const { structuredResponsesCall } = await import("@/features/creative-studio/lib/ai-gateway.server");
     const { data: result } = await structuredResponsesCall({
