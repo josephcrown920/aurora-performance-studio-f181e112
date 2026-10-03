@@ -666,23 +666,17 @@ const VideoAgentClassicRoute = VideoAgentClassicRouteImport.update({
   id: '/video-agent-classic',
   path: '/video-agent-classic',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/video-agent-classic.lazy').then((d) => d.Route),
-)
+} as any)
 const VideoAgentEditRoute = VideoAgentEditRouteImport.update({
   id: '/video-agent-edit',
   path: '/video-agent-edit',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/video-agent-edit.lazy').then((d) => d.Route),
-)
+} as any)
 const VideoAgentProcessRoute = VideoAgentProcessRouteImport.update({
   id: '/video-agent-process',
   path: '/video-agent-process',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/video-agent-process.lazy').then((d) => d.Route),
-)
+} as any)
 const VideoEditorRoute = VideoEditorRouteImport.update({
   id: '/video-editor',
   path: '/video-editor',
