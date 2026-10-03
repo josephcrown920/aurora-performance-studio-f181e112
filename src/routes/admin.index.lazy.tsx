@@ -149,6 +149,7 @@ function AdminPage() {
           <Link to="/admin/models" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"><Radar className="size-3.5" /> Model Watch</Link>
           <Link to="/admin/workflows" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"><BookOpen className="size-3.5" /> Guides</Link>
           <Link to="/admin/gpu" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"><Zap className="size-3.5" /> GPU launch</Link>
+          <Link to="/admin/modelark" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"><Zap className="size-3.5" /> ModelArk videos</Link>
           <Link to="/admin/ledger" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"><Coins className="size-3.5" /> Ledger</Link>
           <Link to="/admin/design" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"><Store className="size-3.5" /> Design</Link>
            <Link to="/admin/site-map" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"><BookOpen className="size-3.5" /> Site map</Link>
