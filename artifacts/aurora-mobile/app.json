@@ -1,0 +1,91 @@
+{
+  "expo": {
+    "name": "Aurora Performance Studio",
+    "slug": "aurora-performance-studio",
+    "version": "1.0.0",
+    "description": "Create cinematic AI performance images and videos from your own photos, clips, and creative direction. Aurora Performance Studio helps artists stage scenes, direct camera movement, and share studio-quality work from one mobile workspace.",
+    "keywords": [
+      "AI video",
+      "AI image generator",
+      "performance video",
+      "creative studio",
+      "music video",
+      "creator tools",
+      "cinematic",
+      "Aurora Performance Studio"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "aurora-studio",
+    "userInterfaceStyle": "dark",
+    "primaryColor": "#8B5CF6",
+    "privacyPolicyUrl": "https://auroraperformancestudio.com/privacy",
+    "supportUrl": "https://auroraperformancestudio.com",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0b0b14"
+    },
+    "android": {
+      "package": "com.auroraperformancestudio.app",
+      "versionCode": 4,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#0b0b14"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "android.permission.READ_MEDIA_IMAGES"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.aurorastudio.app",
+      "buildNumber": "1",
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Aurora uses Face ID to unlock your signed-in session on this device.",
+        "NSCameraUsageDescription": "Aurora uses your camera to capture photos for AI generation.",
+        "NSPhotoLibraryUsageDescription": "Aurora accesses your photo library to use images as reference for AI generation.",
+        "NSPhotoLibraryAddUsageDescription": "Aurora saves your AI-generated images to your photo library.",
+        "NSMicrophoneUsageDescription": "Aurora may use the microphone for voice-assisted features.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": []
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://auroraperformancestudio.com/"
+        }
+      ],
+      "expo-font",
+      "expo-local-authentication",
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Aurora Performance Studio to access your photos to use as reference images for AI generation.",
+          "cameraPermission": "Allow Aurora Performance Studio to use your camera to capture photos for AI generation."
+        }
+      ],
+      "expo-video"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9927fad2-c399-4ae3-8727-614a2c751184"
+      }
+    }
+  }
+}

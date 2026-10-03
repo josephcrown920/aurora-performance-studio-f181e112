@@ -17,3 +17,4 @@
 - Store completed music-video scenes in each creator's private studio storage and resolve library watch pages from that creator's path; this prevents one creator from watching another's scene by guessing an ID.
 - Keep Aurora Command Center statuses evidence-derived: only recorded successful workflow checks may produce PROVEN; this prevents UI-only claims from passing launch gates.
 - Keep one shared Aurora Director implementation with skills, workflows, and providers beneath it; duplicate feature-specific directors create drift and are not separate agents.
+- Keep the Expo Android app and side apps under `artifacts/`, outside the web app's source; the root .easignore uploads only `artifacts/aurora-mobile` to EAS so the web bun.lock never reaches the mobile builder.
