@@ -1389,6 +1389,7 @@ function CanvasPage() {
   const loadInFlightRef = useRef(false);
   const [agentOpen, setAgentOpen] = useState(false);
   const [directorContext, setDirectorContext] = useState("");
+  const [graphRevision, setGraphRevision] = useState(0);
   const [examplesOpen, setExamplesOpen] = useState(false);
   const [coachTplName, setCoachTplName] = useState<string | null>(null);
   const [lastTemplateId, setLastTemplateId] = useState<string | null>(null);
@@ -2101,7 +2102,7 @@ function CanvasPage() {
               generated.push({ id, type: "aurora", position: { x: 400, y: i * 520 }, data: { kind: "image", label: shot.title, prompt: `${brief.characterLock}. ${brief.visualStyle}. ${shot.prompt}`, model: MODEL_LIST[0].value, status: "idle" } });
               links.push({ id: `character-${id}`, source: "character", target: id });
             });
-            setWfId(undefined); setNodes(generated); setEdges(links); setMarketplaceTemplateId(null);
+            setWfId(undefined); setNodes(generated); setEdges(links); setMarketplaceTemplateId(null); setGraphRevision((v) => v + 1);
           }}
         />
         <section className="control-production" aria-label="Production graph">
@@ -2111,6 +2112,7 @@ function CanvasPage() {
         <ComfyCtx.Provider value={comfyTemplates}>
         <HandlersCtx.Provider value={handlers}>
           <ReactFlow
+            key={graphRevision}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -2127,6 +2129,7 @@ function CanvasPage() {
               },
             }}
             fitView
+            fitViewOptions={{ padding: 0.2 }}
             proOptions={{ hideAttribution: true }}
           >
             <Background variant={BackgroundVariant.Dots} gap={24} size={1.5} color="var(--control-rule)" />
@@ -2223,8 +2226,7 @@ function CanvasPage() {
             }}
             disabled={runMut.isPending}
             title={graphWarnings.length ? graphWarnings[0] : undefined}
-            className="ml-1 h-9 px-4 shrink-0 rounded-full text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 shadow-[0_0_24px_oklch(0.78_0.18_295/0.8)] disabled:opacity-60"
-            style={{ background: "var(--gradient-hero)" }}
+            className="ml-1 h-9 px-4 shrink-0 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 disabled:opacity-60"
           >
             {runMut.isPending ? <Loader2 className="size-3.5 animate-spin" /> : <Play className="size-3.5" />} Run
           </button>
