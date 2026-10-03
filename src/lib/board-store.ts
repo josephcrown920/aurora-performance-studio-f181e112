@@ -180,7 +180,7 @@ export function useBoard() {
     (id: string, patch: Partial<ShotNode>) =>
       setBoard((b) => ({
         ...b,
-        shots: b.shots.map((s) => (s.id === id ? { ...s, ...patch, ...(["prompt", "frame", "action", "imageUrl"].some(key => key in patch) && !("previsFrames" in patch) ? { previsApproved: false } : {}) } : s)),
+        shots: b.shots.map((s) => (s.id === id ? { ...s, ...patch, ...(["prompt", "frame", "action", "imageUrl", "shotType", "wardrobe", "mood", "note"].some(key => key in patch) && !("previsFrames" in patch) ? { previsApproved: false } : {}) } : s)),
       })),
     [setBoard],
   );

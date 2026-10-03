@@ -1,4 +1,5 @@
 import { authNextSearch } from "@/lib/auth-return-path";
+import { Button } from "@/components/ui/button";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { AutoplayVideo } from "@/components/ui/AutoplayVideo";
 import { useEffect, useMemo, useRef, useState } from "react";

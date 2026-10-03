@@ -1,9 +1,10 @@
 # Roadmap
 
-- [ ] Replace Aurora’s home and Studio sections with the actual shared node-and-connector canvas; retire the shown Urban Cuts screen.
-- [ ] Make the canvas directly editable with node creation, branching connections, deletion, previews and optional inspector; no further static mockups.
+- [x] Replace Aurora’s home and Studio sections with the actual shared node-and-connector canvas; retire the shown Urban Cuts screen.
+- [x] Make the canvas directly editable with node creation, branching connections, deletion and optional inspector; editing, reload persistence and mobile layout verified.
 - [ ] Apply licensed Canela headings and Neue Montreal body/control fonts across every page; blocked on real font files.
-- [ ] Connect real scene previs frames, camera motion and action previews to the node canvas before final video generation.
+- [x] Connect real scene previs-frame actions and the existing motion-preview/confirmed-final generation services to nodes; prices shown and no automatic renders.
+- [ ] Verify authenticated reference upload and real previs → motion → final rendering; blocked on a selected signed-in test account and permission to spend Aura.
 
 - [x] Repair Previs browser dependency loading, workspace entry and New controls; signed-out entry verified without errors, authenticated generation remains unverified.
 - [x] Simplify Director’s Room with optional Director/Inspector panels and direct native Layers navigation; browser navigation verified.

@@ -1,11 +1,16 @@
 // @ts-nocheck
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/tiktok")({
+  beforeLoad: () => { throw redirect({ to: "/canvas" }); },
   head: () => ({
     meta: [
-      { title: "Urban Cuts — Aurora" },
-      { name: "description", content: "Upload one video. Aurora remixes it into up to 10 TikTok-ready cuts from different hooks, angles, and beats." },
+      { title: "Aurora — Canvas workspace" },
+      { name: "description", content: "Continue your production on Aurora’s node canvas." },
+      { property: "og:title", content: "Aurora — Canvas workspace" },
+      { property: "og:description", content: "Connected scene planning and previews in Aurora." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://auroraperformancestudio.com/tiktok" }],
   }),

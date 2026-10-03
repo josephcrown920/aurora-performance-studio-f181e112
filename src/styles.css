@@ -2419,6 +2419,7 @@ html[data-theme="light"] {
 .production-flow .react-flow__handle { width:14px; height:14px; background:var(--primary); border:3px solid var(--card); }
 .production-flow .react-flow__edge-path { stroke:var(--primary); stroke-width:2; }
 .production-flow .react-flow__controls-button { background:var(--card); border-color:var(--border); color:var(--foreground); fill:var(--foreground); }
+.production-flow .react-flow__controls-button svg { fill:currentColor; max-width:14px; max-height:14px; }
 .director-detail-panel { display:flex; flex-direction:column; position:absolute; right:0; top:0; bottom:0; width:min(360px,92%); z-index:30; }
 .director-scene-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
 @media (min-width:960px) {
