@@ -27,7 +27,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { getColorStudio } from "@/lib/colors.studios";
 import { computeCost } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Loader2, Palette, Wand2, ArrowLeft, ArrowRight, Check, ImagePlus, X, ChevronDown, Music2, Mic2, Download, Film, Layers } from "lucide-react";
+import { Sparkles, Loader2, Palette, Wand2, ArrowLeft, ArrowRight, Check, ImagePlus, X, ChevronDown, Music2, Mic2, Download, Film, Layers, Camera } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -545,6 +545,21 @@ function ColorsStudio() {
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 Compose your set, wardrobe, props, and camera angles.
               </p>
+              </div>
+            </Link>
+            <Link
+              to="/reshoot"
+              className="group col-span-2 aurora-glass rounded-2xl border border-white/10 p-4 no-underline transition-all hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                  <Camera className="size-5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-sm font-semibold text-foreground">Multi-Angle Photoshoot</h2>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Create six identity-consistent camera angles from one approved Colors reference, ready to reuse in shots.</p>
+                </div>
+                <ArrowRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
               </div>
             </Link>
           </div>

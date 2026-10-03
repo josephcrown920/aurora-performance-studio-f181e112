@@ -161,15 +161,15 @@ export function ViralEngine() {
         <div className="mb-8">
           <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em] text-brand">
             <Flame className="size-3.5" />
-            Go viral on TikTok
+            TikTok30 campaign builder
           </span>
           <h2 className="mt-3 text-4xl font-semibold leading-tight">
-            Type a hook.{" "}
-            <span className="font-serif italic">See your 50 posts.</span>
+            Start with one topic.{" "}
+            <span className="font-serif italic">Build 30 posts.</span>
           </h2>
           <p className="mt-3 text-sm text-zinc-400 max-w-[38ch] leading-relaxed">
-            Pick a topic below or type your own — Aurora generates a scroll-stopping
-            preview before you even sign in.
+            Pick a campaign topic below or type your own — Aurora previews a varied
+            30-post month before you sign in.
           </p>
 
           {/* Real output showcase */}
@@ -229,7 +229,7 @@ export function ViralEngine() {
                 setActiveChip(HOOK_CHIPS[0].topic);
               }
             }}
-            placeholder="Or type your own hook topic…"
+            placeholder="Or type your campaign topic…"
             maxLength={120}
             className="w-full rounded-2xl border border-white/10 bg-zinc-900/80 px-4 py-3.5 pr-14 text-sm text-zinc-100 placeholder-zinc-600 outline-none ring-0 transition-all duration-150 focus:border-brand/50 focus:ring-2 focus:ring-brand/20"
           />
@@ -299,7 +299,7 @@ export function ViralEngine() {
         </div>
 
         <p className="text-[11px] text-zinc-600 mb-4 text-center tracking-wide">
-          Showing {PREVIEW_COUNT} of 50 posts · all from your topic, zero repeats
+          Showing {PREVIEW_COUNT} of 30 posts · all from one topic, zero repeats
         </p>
 
         <Link
@@ -307,7 +307,7 @@ export function ViralEngine() {
           search={{ prompt: navigateTopic, jobId: undefined }}
           className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand to-violet-400 py-4 text-sm font-bold text-white shadow-[0_8px_30px_-8px] shadow-brand/60 transition-transform hover:scale-[1.01] active:scale-[0.99] no-underline"
         >
-          Generate all 50 posts
+          Build my 30-post campaign
           <ArrowRight className="size-4" />
         </Link>
 

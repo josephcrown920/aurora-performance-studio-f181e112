@@ -20,7 +20,7 @@ const beautyTemplateImg        = "/josh/generated2/colors-sunset-orange.webp";
 // 30 posts per run — (10 Aura × 30 = 300 Aura upfront).
 // The engine is count-driven; the fallback axes have LCM(10,11)=110 ≥ 30 so
 // every (location, outfit) pair is still unique across the full batch.
-export const SPIN_COUNT = 50;
+export const SPIN_COUNT = 30;
 // 10 Aura per spin piece (2026-07-19 ×10 rebase) — the single client-safe
 // source for the per-piece charge. spin.functions.ts (server) and every cost
 // label import THIS constant so the disclosed price can never drift from what
@@ -194,11 +194,11 @@ export const SPIN_PRODUCT_POSES = [
 ];
 
 export const SPIN_CONTENT_TYPES = [
-  "Talking-head hook",
+  "Talking-head post",
   "Lip-sync clip",
   "Carousel cover",
   "Story-style post",
-  "Caption hook visual",
+  "Caption-led visual",
   "Meme edit",
   "Behind-the-scenes",
   "POV scenario",
@@ -381,7 +381,7 @@ const TEMPLATE_POSE_MODE: Record<SpinTemplateId, "candid_default" | "rapper" | "
 
 const MOTION_TEMPLATES = [
   "slow push-in with a subtle hair flip",
-  "quick zoom-punch on the hook line",
+  "quick zoom-punch on the title beat",
   "handheld sway, natural micro-movements",
   "smooth pan across the scene",
   "snap cut to the outfit reveal",
@@ -391,8 +391,8 @@ const MOTION_TEMPLATES = [
 // ─── Schema ──────────────────────────────────────────────────────────────────
 
 export const SpinSpecSchema = z.object({
-  contentType: z.string().describe("One content format, e.g. Talking-head hook, Lip-sync clip, Carousel cover, POV scenario, Meme edit, Behind-the-scenes."),
-  hook: z.string().describe("The scroll-stopping first 1-2 seconds line."),
+  contentType: z.string().describe("One content format, e.g. Talking-head post, Lip-sync clip, Carousel cover, POV scenario, Meme edit, Behind-the-scenes."),
+  hook: z.string().describe("A concise post title or opening thought that supports the campaign topic."),
   scene: z.string().describe("A vivid one-line visual description of the shot's SETTING/ACTION only — never a body pose or hand gesture."),
   outfit: z.string().describe("What the creator is wearing."),
   location: z.string().describe("Where the shot takes place."),
@@ -450,19 +450,15 @@ Each post MUST differ across ALL of: location, outfit, camera angle, lighting, m
 - Framing MUST cycle across the 30 posts: mix close-ups, mid-shots, full-body, over-the-shoulder, and wide shots — never the same framing twice in a row.
 
 3. CONTENT TYPE MIX (distribute evenly across 30 posts)
-Use all 8 types — Talking-head hook, Lip-sync clip, Carousel cover, Story-style post, Caption hook visual, Meme edit, Behind-the-scenes, POV scenario — cycling so no type dominates.
+Use all 8 types — Talking-head post, Lip-sync clip, Carousel cover, Story-style post, Caption-led visual, Meme edit, Behind-the-scenes, POV scenario — cycling so no type dominates.
 
-4. VIRAL HOOK QUALITY — THIS IS THE MOST IMPORTANT FIELD
-The "hook" field is the scroll-stopper. It must be SPECIFIC, EMOTIONAL, and URGENT — never generic.
-BAD hooks: "New single out now!", "Check this out", "Day in my life"
-GOOD hooks: "I said I'd never do this, then my song hit 2M plays", "Nobody believed me. This is what happened.", "POV: You ignored your passion for 3 years then finally bet on yourself", "The moment everything changed (I didn't expect this)", "They laughed at me. Now look.", "I almost quit. Then this happened.", "The thing nobody tells you about going viral", "Warning: this might make you rethink everything"
-
-Make every hook feel like it's talking directly to the viewer's deepest fear or biggest dream.
+4. CAMPAIGN TITLE QUALITY
+The "hook" JSON field is a legacy storage key; treat it only as the post's concise title or opening thought. Do not describe TikTok30 as a hook product and do not force clickbait, urgency, fear, or exaggerated claims. Every title should naturally support the creator's topic and feel distinct within the 30-post campaign.
 
 5. VIRAL STRUCTURE PER POST
 Each post must include:
 - type: content format (one of the 8 above)
-- hook: scroll-stopping first 1-2 seconds line — see rule 4, be SPECIFIC and EMOTIONAL
+- hook: concise post title or opening thought that supports the campaign topic
 - scene: vivid cinematic SETTING/ACTION description only (no pose language)
 - outfit: exactly what the creator is wearing
 - location: exactly where the shot takes place
@@ -533,7 +529,7 @@ export function buildFallbackSpecs(base: string, count = SPIN_COUNT, templateId:
       if (isLipSync) performanceUsed += 1;
     }
     // Scene stays purely a setting/action line — the raw topic idea is used
-    // for the hook/caption text overlays only, NEVER as a literal pose here.
+    // for title/caption context only, NEVER as a literal pose here.
     specs.push({
       contentType,
       hook,
@@ -678,7 +674,7 @@ export function spinTotalCost(imageCount: number, videoCount: number): number {
 
 /** Content types that map well to short video clips (ordered by suitability). */
 const VIDEO_FRIENDLY_CONTENT_TYPES = [
-  "Talking-head hook",
+  "Talking-head post",
   "POV scenario",
   "Behind-the-scenes",
   "Story-style post",
