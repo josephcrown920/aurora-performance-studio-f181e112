@@ -12,10 +12,12 @@ export const Route = createFileRoute("/canvas")({
   }),
   head: () => ({
     meta: [
-      { title: "Canvas — Aurora Orchestration" },
-      { name: "description", content: "Node-based AI orchestration. Chain models, add lip-sync, motion and color in one trending workflow." },
-      { property: "og:title", content: "Aurora Canvas — Trending AI workflows" },
-      { property: "og:description", content: "Drag, chain and run multi-model AI workflows with an in-canvas agent." },
+      { title: "Director Canvas — Aurora Performance Studio" },
+      { name: "description", content: "Plan from character, scene and motion references; review your creative brief and execute your production graph with Aurora Director." },
+      { property: "og:title", content: "Director Canvas — Aurora Performance Studio" },
+      { property: "og:description", content: "Your references, creative brief and production graph in one private workspace." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: "https://auroraperformancestudio.com/canvas" },
     ],
     links: [{ rel: "canonical", href: "https://auroraperformancestudio.com/canvas" }],
