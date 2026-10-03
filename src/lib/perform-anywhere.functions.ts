@@ -16,7 +16,12 @@ export const loadAnywhereCampaign = createServerFn({ method: "GET" })
       .eq("user_id", context.userId).order("created_at", { ascending: false }).limit(1).maybeSingle();
     if (error) throw new Error(error.message);
     if (!data) return null;
-    return { id: data.id, characterName: data.character_name, preferences: data.preferences, plan: validateAnywherePlan(data.plan), renders: storedRenders(data.renders), blockedMessage: data.blocked_message } satisfies AnywhereCampaign;
+    const renders = storedRenders(data.renders);
+    const { readColorsPreview } = await import("./colors-gateway.server");
+    await Promise.all(Object.entries(renders).filter(([, render]) => render.status === "completed").map(async ([index, render]) => {
+      renders[index] = { ...render, ...await readColorsPreview(context.userId, render.jobId) };
+    }));
+    return { id: data.id, characterName: data.character_name, preferences: data.preferences, plan: validateAnywherePlan(data.plan), renders, blockedMessage: data.blocked_message } satisfies AnywhereCampaign;
   });
 
 export const planAnywhereCampaign = createServerFn({ method: "POST" })
