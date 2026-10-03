@@ -162,7 +162,7 @@ const studioToolRows: StudioToolRow[] = [
     };
   })(),
   (() => {
-    const tool = TOOL_DIRECTORY.find((item) => item.name === "Canvas")!;
+    const tool = TOOL_DIRECTORY.find((item) => item.to === "/canvas")!;
     return {
       key: "infinity-canvas",
       name: "Infinity Canvas",
