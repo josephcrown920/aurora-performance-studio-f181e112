@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { StudioPage as NodeWorkspace } from "@/features/storyboard/studio/StudioPage";
 import { CANONICAL_ORIGIN } from "@/lib/seo";
 import { Plus, Play, Pause, SkipForward, SkipBack, ArrowUpRight, ChevronDown, Sparkles, Palette, Film, Wand2, Mic, Music2, Brush, Megaphone, UserCircle2, Workflow, Layers, Flame, Clapperboard, Check, Download, type LucideIcon } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
@@ -83,10 +84,10 @@ const CollaboratorsStrip = lazy(() =>
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aurora — Turn Your Phone Recording into a Cinematic Music Video" },
-      { name: "description", content: "Create videos that look like a $50,000 production — for a fraction of the cost. Aurora is the AI studio built for music artists and creators. No crew, no studio, no waiting." },
-      { property: "og:title", content: "Aurora — Turn Your Phone Recording into a Cinematic Music Video" },
-      { property: "og:description", content: "Create videos that look like a $50,000 production — for a fraction of the cost. Aurora is the AI studio built for music artists and creators. No crew, no studio, no waiting." },
+      { title: "Aurora — Production Canvas" },
+      { name: "description", content: "Connect character references, scenes and motion on Aurora’s editable production canvas." },
+      { property: "og:title", content: "Aurora — Production Canvas" },
+      { property: "og:description", content: "An editable node workspace for scene planning, previews and video production." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: CANONICAL_ORIGIN },
@@ -158,7 +159,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: LandingPage,
+  component: () => <NodeWorkspace canvasOnly />,
 });
 
 const HERO_SLIDES: ReadonlyArray<{

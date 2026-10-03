@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { authNextSearch } from "@/lib/auth-return-path";
+import { StudioPage as NodeWorkspace } from "@/features/storyboard/studio/StudioPage";
 import { createLazyFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -75,7 +76,7 @@ import { PageHeroBanner } from "@/components/visual/PageHeroBanner";
 import { OutputGallery } from "@/components/visual/OutputGallery";
 import { DEMO_ASSETS } from "@/lib/demo-assets";
 
-export const Route = createLazyFileRoute("/studio")({ component: StudioPage });
+export const Route = createLazyFileRoute("/studio")({ component: () => <NodeWorkspace canvasOnly /> });
 
 const MODELS = MODEL_LIST;
 

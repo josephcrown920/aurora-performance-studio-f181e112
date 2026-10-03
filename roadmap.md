@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Remove the screenshot-identified Aurora sections after confirming removal scope.
-- [ ] Redesign Aurora using the creator’s selected visual direction.
+- [ ] Replace Aurora’s home and Studio sections with the actual shared node-and-connector canvas; retire the shown Urban Cuts screen.
+- [ ] Make the canvas directly editable with node creation, branching connections, deletion, previews and optional inspector; no further static mockups.
 - [ ] Apply licensed Canela headings and Neue Montreal body/control fonts across every page; blocked on real font files.
 - [ ] Connect real scene previs frames, camera motion and action previews to the node canvas before final video generation.
 

@@ -306,6 +306,7 @@ function RootComponent() {
   // (h-dvh stage + timeline + tool dock), so the tab bar and chat bubble
   // would overlap its dock — hide them there, like on the video agent.
   const isFullScreenEditor = pathname === "/edit";
+  const isNodeWorkspace = ["/", "/studio", "/canvas", "/directors-room"].includes(pathname);
   // The persistent sidebar / tab-bar chrome is app navigation for signed-in
   // creators only. Logged-out visitors (landing, public pages) get each page's
   // own nav — never the studio sidebar. While the session is still resolving,
@@ -313,7 +314,7 @@ function RootComponent() {
   // see the app shell pop in after a network round-trip; once loading settles,
   // the verified user is authoritative (an invalid stored token drops it).
   const hasPersistentNavigation =
-    !isVideoAgent && !isFullScreenEditor && (!!user || (authLoading && hasStoredAuth));
+    !isVideoAgent && !isFullScreenEditor && !isNodeWorkspace && (!!user || (authLoading && hasStoredAuth));
 
   if (isIsolated) {
     // NexusARB stays a self-contained, full-bleed page: no phone frame, no
@@ -358,7 +359,7 @@ function RootComponent() {
             </SiteImagesProvider>
             <Toaster />
             <DesignSkinApplier />
-            {!isVideoAgent && !isPrimeAgent && !isFullScreenEditor && <AuroraChatbot />}
+            {!isVideoAgent && !isPrimeAgent && !isFullScreenEditor && !isNodeWorkspace && <AuroraChatbot />}
             <AdminHotkey />
             <ReferralAttacher />
             {hasPersistentNavigation && <MobileNav />}
