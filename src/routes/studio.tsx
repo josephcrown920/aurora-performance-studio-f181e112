@@ -48,6 +48,8 @@ export const Route = createFileRoute("/studio")({
       { property: "og:description", content: "Run image and video generations across every top model from one canvas." },
       { property: "og:url", content: "https://aurorastudiostar.lovable.app/studio" },
       { name: "robots", content: "noindex" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://aurorastudiostar.lovable.app/studio" }],
   }),
