@@ -23,3 +23,4 @@
 - [ ] Apply the final-launch checklist on the dedicated launch branch, preserving one Aurora Director with skills and workflows beneath it.
 - [x] Music Video Builder: suggest matching scene prompts from a creator reference image (AI Gateway).
 - [x] Bring the Auroraglobal mobile app and side apps into `artifacts/` (adult app and large archives left out).
+- [ ] Separate creator workflows clearly: TikTok30 is hook-to-30-post campaign generation only; multi-angle photos belong inside Perform Anywhere and Colors for shot reference, not TikTok30.
