@@ -227,7 +227,7 @@ const SpinInput = z.object({
   mode: z.enum(["photo", "video"]).optional().default("photo"),
   script: z.string().trim().min(1).max(600).optional(),
   productUrl: z.string().url().optional(),
-  // Per-variant video slider: 0–50 posts rendered as short i2v clips (budget
+  // Per-variant video slider: 0–30 posts rendered as short i2v clips (budget
   // seedance-2.0-fast, 5 Aura each) instead of stills. Orthogonal to `mode`
   // (which controls the premium Product Showcase video pipeline). Only applies
   // when mode === "photo" — ignored for the full video mode batch.
@@ -353,7 +353,7 @@ export const spinThirty = createServerFn({ method: "POST" })
         system: VIRAL_SYSTEM_PROMPT,
         prompt:
           `Creator: ${avatarName ?? "one single creator"} — keep the EXACT same person (same face/identity) in every post. ` +
-          `Topic / hook idea: "${base}". Platform: TikTok / Reels / Shorts. ` +
+          `Campaign topic: "${base}". One locked person, 30 different outfits, locations and scenes. Platform: TikTok / Reels / Shorts. ` +
           (template && template.id !== "default"
             ? `Template aesthetic: "${template.label}" — ${template.blurb} Every outfit, location and pose choice must fit this aesthetic. `
             : "") +
