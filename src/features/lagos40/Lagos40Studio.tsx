@@ -4,21 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { MultiTrackTimeline } from '@/features/creative-studio/components/video/MultiTrackTimeline';
 import { LayersEditor } from '@/features/creative-studio/components/video/LayersEditor';
-import { newId, type Clip, type TimelineDoc } from '@/features/creative-studio/lib/timeline-state';
 import { studioOwner, uploadLayerImage, type LayerAsset } from '@/components/layers/layers-storage';
 import { downloadBlob } from '@/components/layers/layers-export';
 import { renderLagos40Shot, LAGOS40_VIDEO_COST } from '@/lib/lagos40.functions';
-import { JOSH_CHARACTER, LAGOS40_LOCATIONS, LYRIC_LINES, type Lagos40Location } from './data';
+import { JOSH_CHARACTER, LAGOS40_LOCATIONS, LYRIC_LINES } from './data';
+import { breakdown, finalCut, scenePrompt, CAMERA_MOVES, type Card, type Scene } from './pipeline';
 
-type Card = Lagos40Location & { enabled: boolean; status: 'idle' | 'rendering' | 'done' | 'failed'; videoUrl?: string; error?: string };
 type Campaign = { version: 1; character: string; face?: LayerAsset; body?: LayerAsset; song?: { path: string; name: string }; songSeconds: number; lyrics: string[]; cards: Card[] };
 
-const fresh = (): Campaign => ({ version: 1, character: JOSH_CHARACTER, songSeconds: 24, lyrics: LYRIC_LINES, cards: LAGOS40_LOCATIONS.map(l => ({ ...l, enabled: true, status: 'idle' })) });
+const fresh = (): Campaign => ({ version: 1, character: JOSH_CHARACTER, songSeconds: 24, lyrics: LYRIC_LINES, cards: LAGOS40_LOCATIONS.map(l => ({ ...l, enabled: true, scenes: breakdown(l, 24, LYRIC_LINES) })) });
+const cardDone = (k: Card) => k.scenes.length > 0 && k.scenes.every(s => s.status === 'done');
 const campaignPath = (owner: string) => `${owner}/lagos40/campaign.json`;
-
-function shotPrompt(c: Campaign, card: Card) {
-  return `Vertical 9:16 music video shot. Keep the person identical to the reference photos.\n\nCHARACTER LOCK:\n${c.character}\n\nLocation: ${card.location}, Lagos, Nigeria.\nOutfit: ${card.outfit}.\nNearby spot: ${card.eatery}.\nMood and light: ${card.vibe}.\nBackground detail: ${card.flair}.\nAction: he walks toward camera performing with confident swagger, then ${card.ending}.\nAll tattoos and text read correctly, never mirrored. Realistic, cinematic, handheld.`;
-}
 
 export function Lagos40Studio() {
   const render = useServerFn(renderLagos40Shot);
@@ -36,7 +32,7 @@ export function Lagos40Studio() {
       if (!data) return;
       const saved: Campaign = JSON.parse(await data.text());
       if (saved.version !== 1) return;
-      setC({ ...saved, cards: saved.cards.map(k => k.status === 'rendering' ? { ...k, status: 'idle' } : k) });
+      setC({ ...saved, cards: saved.cards.map(k => ({ ...k, scenes: (k.scenes ?? breakdown(k, saved.songSeconds, saved.lyrics)).map(sc => sc.status === 'rendering' ? { ...sc, status: 'idle' as const } : sc) })) });
       const sign = async (p?: string) => p ? (await supabase.storage.from('layers-private').createSignedUrl(p, 86400)).data?.signedUrl : undefined;
       setPreview({ face: await sign(saved.face?.path), body: await sign(saved.body?.path), song: await sign(saved.song?.path) });
     } catch { /* signed out or nothing saved yet */ }
@@ -80,49 +76,56 @@ export function Lagos40Studio() {
     setC(next); return next;
   }
 
-  async function makeVideos(only?: number) {
+  function updateScene(cardId: number, sceneId: string, patch: Partial<Scene>, base = c) {
+    const next = { ...base, cards: base.cards.map(k => k.id === cardId ? { ...k, scenes: k.scenes.map(sc => sc.id === sceneId ? { ...sc, ...patch } : sc) } : k) };
+    setC(next); return next;
+  }
+
+  function rebreak(cardId: number) {
+    const card = c.cards.find(k => k.id === cardId); if (!card) return;
+    persist(updateCard(cardId, { scenes: breakdown(card, c.songSeconds, c.lyrics) }));
+  }
+
+  /** Renders every unfinished scene of the chosen cards in order, stopping at the first failure. */
+  async function renderCards(cards: Card[], redo = false) {
     const refs = [c.face?.path, c.body?.path].filter(Boolean) as string[];
-    if (!refs.length) { setNote('Add Josh’s face or full-body photo first.'); return; }
-    const queue = only ? c.cards.filter(k => k.id === only) : c.cards.filter(k => k.enabled && k.status !== 'done').slice(0, count);
-    if (!queue.length) { setNote('No shots left to make.'); return; }
+    if (!refs.length) { setNote('Step 1: add Josh’s face or full-body photo first.'); return; }
+    if (!cards.length) { setNote('No locations left to render.'); return; }
     setBusy(true); setNote('');
     let state = c;
-    for (const card of queue) {
-      state = updateCard(card.id, { status: 'rendering', error: undefined }, state);
-      try {
-        const res = await render({ data: { prompt: shotPrompt(state, card), referencePaths: refs, idempotencyKey: crypto.randomUUID() } });
-        state = updateCard(card.id, res.ok ? { status: 'done', videoUrl: res.url } : { status: 'failed', error: res.error }, state);
-        if (!res.ok) { await persist(state); setNote(res.error); break; }
-      } catch (e) {
-        state = updateCard(card.id, { status: 'failed', error: e instanceof Error ? e.message : 'Render failed.' }, state);
-        await persist(state); setNote(e instanceof Error ? e.message : 'Render failed.'); break;
+    outer: for (const card of cards) {
+      const scenes = state.cards.find(k => k.id === card.id)!.scenes;
+      for (const [index, scene] of scenes.entries()) {
+        if (scene.status === 'done' && !redo) continue;
+        state = updateScene(card.id, scene.id, { status: 'rendering', error: undefined }, state);
+        const live = state.cards.find(k => k.id === card.id)!;
+        try {
+          const res = await render({ data: { prompt: scenePrompt(state.character, live, scene, index), referencePaths: refs, duration: Math.min(10, Math.max(3, Math.round(scene.duration))), idempotencyKey: crypto.randomUUID() } });
+          state = updateScene(card.id, scene.id, res.ok ? { status: 'done', videoUrl: res.url } : { status: 'failed', error: res.error }, state);
+          await persist(state);
+          if (!res.ok) { setNote(res.error); break outer; }
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : 'Render failed.';
+          state = updateScene(card.id, scene.id, { status: 'failed', error: msg }, state);
+          await persist(state); setNote(msg); break outer;
+        }
       }
-      await persist(state);
     }
     setBusy(false);
   }
 
   function openInTimeline(card: Card) {
-    if (!card.videoUrl) return;
-    const secs = c.songSeconds || 24;
-    const step = secs / Math.max(1, c.lyrics.length);
-    const clips: Clip[] = [
-      { id: newId(), track: 'V1', start: 0, duration: secs, name: card.location, kind: 'video', src: card.videoUrl },
-      ...c.lyrics.map((line, i): Clip => ({ id: newId(), track: 'V3', start: +(i * step).toFixed(2), duration: +step.toFixed(2), name: line, kind: 'text', prompt: line })),
-    ];
-    if (preview.song) clips.push({ id: newId(), track: 'A1', start: 0, duration: secs, name: c.song?.name ?? 'Song clip', kind: 'audio', src: preview.song });
-    const doc: TimelineDoc = { name: `Lagos 40 — ${card.id}`, ratio: '9:16', bpm: 140, genre: 'drill', seconds: secs, clips, hits: [] };
-    window.dispatchEvent(new CustomEvent('aurora:apply-doc', { detail: doc }));
+    window.dispatchEvent(new CustomEvent('aurora:apply-doc', { detail: finalCut(card, c.songSeconds || 24, preview.song, c.song?.name) }));
     document.getElementById('lagos40-timeline')?.scrollIntoView({ behavior: 'smooth' });
   }
 
   function exportCsv() {
     const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-    const rows = [['id', 'location', 'outfit', 'status', 'video_url', 'error'], ...c.cards.map(k => [k.id, k.location, k.outfit, k.status, k.videoUrl, k.error])];
+    const rows = [['location_id', 'location', 'scene', 'start', 'camera', 'action', 'status', 'video_url', 'error'], ...c.cards.flatMap(k => k.scenes.map((sc, i) => [k.id, k.location, i + 1, sc.start, sc.camera, sc.action, sc.status, sc.videoUrl, sc.error]))];
     downloadBlob(new Blob([rows.map(r => r.map(esc).join(',')).join('\n')], { type: 'text/csv' }), 'lagos40-log.csv');
   }
 
-  const done = useMemo(() => c.cards.filter(k => k.status === 'done').length, [c.cards]);
+  const done = useMemo(() => c.cards.filter(cardDone).length, [c.cards]);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 pt-24 pb-28">
@@ -161,10 +164,10 @@ export function Lagos40Studio() {
 
       <section className="mb-8">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-bold">3 · Locations</h2>
+          <h2 className="text-lg font-bold">3 · Scenes, motion and render</h2>
           <div className="flex flex-wrap items-center gap-2">
             <label className="text-sm">Make <input type="number" min={1} max={40} value={count} onChange={e => setCount(Math.min(40, Math.max(1, Number(e.target.value) || 1)))} className="w-16 rounded-md border border-input bg-background px-2 py-1" /> videos</label>
-            <Button disabled={busy} onClick={() => makeVideos()}>{busy ? 'Making…' : `Make (${LAGOS40_VIDEO_COST} Aura each)`}</Button>
+            <Button disabled={busy} onClick={() => renderCards(c.cards.filter(k => k.enabled && !cardDone(k)).slice(0, count))}>{busy ? 'Rendering…' : `Render (${LAGOS40_VIDEO_COST} Aura per scene)`}</Button>
             <Button variant="outline" onClick={exportCsv}>Download log</Button>
           </div>
         </div>
@@ -177,8 +180,9 @@ export function Lagos40Studio() {
                 <input type="checkbox" checked={card.enabled} aria-label={`Include ${card.location}`} onChange={e => persist(updateCard(card.id, { enabled: e.target.checked }))} />
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{card.vibe}</p>
-              {card.videoUrl && <video src={card.videoUrl} controls playsInline className="mt-2 aspect-[9/16] w-full rounded bg-muted object-cover" />}
-              {card.status === 'failed' && <p className="mt-2 text-xs text-destructive">{card.error}</p>}
+              <p className="mt-1 text-xs">{card.scenes.filter(sc => sc.status === 'done').length}/{card.scenes.length} scenes rendered</p>
+              <div className="mt-2 flex gap-1 overflow-x-auto">{card.scenes.map(sc => sc.videoUrl ? <video key={sc.id} src={sc.videoUrl} muted playsInline className="aspect-[9/16] w-14 shrink-0 rounded bg-muted object-cover" /> : <span key={sc.id} className={`aspect-[9/16] w-14 shrink-0 rounded border border-border ${sc.status === 'rendering' ? 'animate-pulse bg-muted' : sc.status === 'failed' ? 'bg-destructive/30' : ''}`} />)}</div>
+              {card.scenes.find(sc => sc.status === 'failed') && <p className="mt-2 text-xs text-destructive">{card.scenes.find(sc => sc.status === 'failed')?.error}</p>}
               {open === card.id && (
                 <div className="mt-2 space-y-2">
                   {(['outfit', 'eatery', 'vibe', 'ending', 'flair'] as const).map(f => (
@@ -186,12 +190,22 @@ export function Lagos40Studio() {
                       <textarea className="mt-1 w-full rounded-md border border-input bg-background p-2" value={card[f]} onChange={e => updateCard(card.id, { [f]: e.target.value })} onBlur={() => persist(c)} />
                     </label>
                   ))}
+                  <div className="flex items-center justify-between pt-2"><h4 className="text-xs font-semibold uppercase">Scene breakdown and motion plan</h4><Button size="sm" variant="outline" disabled={busy} onClick={() => rebreak(card.id)}>Rebuild scenes</Button></div>
+                  {card.scenes.map((sc, i) => (
+                    <div key={sc.id} className="space-y-1 rounded-md border border-border p-2 text-xs">
+                      <div className="flex justify-between font-semibold"><span>Scene {i + 1} · {sc.start}s–{+(sc.start + sc.duration).toFixed(2)}s</span><span className="text-muted-foreground">{sc.status}</span></div>
+                      {sc.lyrics.length > 0 && <p className="italic text-muted-foreground">“{sc.lyrics.join(' / ')}”</p>}
+                      <label className="block">Camera<select className="mt-1 w-full rounded-md border border-input bg-background p-1" value={sc.camera} onChange={e => persist(updateScene(card.id, sc.id, { camera: e.target.value }))}>{CAMERA_MOVES.map(m => <option key={m}>{m}</option>)}</select></label>
+                      <label className="block">Action<textarea className="mt-1 w-full rounded-md border border-input bg-background p-1" value={sc.action} onChange={e => updateScene(card.id, sc.id, { action: e.target.value })} onBlur={() => persist(c)} /></label>
+                      <Button size="sm" variant="outline" disabled={busy} onClick={() => { const next = updateScene(card.id, sc.id, { status: 'idle' }); renderCards(next.cards.filter(k => k.id === card.id)); }}>{sc.status === 'done' ? 'Redo scene' : 'Render scene'}</Button>
+                    </div>
+                  ))}
                 </div>
               )}
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button size="sm" variant="outline" onClick={() => setOpen(open === card.id ? null : card.id)}>{open === card.id ? 'Close' : 'Edit'}</Button>
-                <Button size="sm" variant="outline" disabled={busy} onClick={() => makeVideos(card.id)}>{card.status === 'done' ? 'Redo' : card.status === 'rendering' ? 'Making…' : 'Make'}</Button>
-                {card.videoUrl && <Button size="sm" onClick={() => openInTimeline(card)}>Edit in timeline</Button>}
+                <Button size="sm" variant="outline" disabled={busy || cardDone(card)} onClick={() => renderCards([card])}>Render all scenes</Button>
+                {card.scenes.some(sc => sc.videoUrl) && <Button size="sm" onClick={() => openInTimeline(card)}>Final cut</Button>}
               </div>
             </article>
           ))}
@@ -199,7 +213,7 @@ export function Lagos40Studio() {
       </section>
 
       <section id="lagos40-timeline" className="border-t border-border pt-6">
-        <h2 className="mb-4 text-lg font-bold">4 · Edit and export</h2>
+        <h2 className="mb-4 text-lg font-bold">4 · Final cut and export</h2>
         <div className="min-w-0 overflow-x-auto"><MultiTrackTimeline /></div>
         <details className="mt-4"><summary className="cursor-pointer py-2 text-sm font-semibold">Timeline layers</summary><LayersEditor /></details>
       </section>
