@@ -6,7 +6,6 @@ import { hasAnalyticsConsent } from "@/lib/consent";
 import { identifyPosthogUser, resetPosthogUser } from "@/lib/posthog";
 
 // Supabase stores the session under this key in localStorage.
-// Project ref is derived from VITE_SUPABASE_URL: tpzmvbczwahxajujvnrq
 function storageKey(): string {
   const ref = (import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefined)
     ?? new URL((import.meta.env.VITE_SUPABASE_URL as string) || "https://x.supabase.co").hostname.split(".")[0];
