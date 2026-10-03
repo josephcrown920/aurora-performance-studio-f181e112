@@ -108,6 +108,14 @@ function AuthPage() {
   // Passkeys only work in a real browser tab — in-app/embedded webviews deny
   // the Face ID prompt before we can authenticate.
   const canUsePasskeys = biometricSupported && !embeddedBrowser;
+  const inIframe = (() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
   // Which OAuth providers are actually enabled on the Supabase project.
   // Clicking a disabled provider's button just errors with "provider is not
   // enabled", so we ask Supabase's public settings endpoint and only render
