@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { pollColorsGatewayPreview, startMusicScene } from "@/lib/colors-gateway.functions";
+import { SceneIdeasFromImage } from "@/components/music-video/SceneIdeasFromImage";
 
 export const Route = createFileRoute("/video-agent_/music-video")({
   head: () => ({
@@ -135,6 +136,7 @@ function MusicVideoPage() {
         <Step n={3} title="Video type & creative brief" icon={<Film className="h-4 w-4" />}>
           <div className="flex gap-2">{(["Narrative", "Lyrics", "Visualizer"] as const).map((t) => <Button key={t} size="sm" variant={mvType === t ? "default" : "outline"} onClick={() => setMvType(t)}>{t}</Button>)}</div>
           <textarea rows={4} className="w-full rounded-md border border-input bg-background p-3 text-sm" placeholder="e.g. Sunny 1950s seaside town, pastel outfits, friends dancing on the boardwalk, golden hour…" value={brief} onChange={(e) => setBrief(e.target.value)} />
+          <SceneIdeasFromImage userId={user?.id ?? null} videoType={mvType} brief={brief} count={count} onUse={(t) => setBrief((b) => (b.trim() ? `${b.trim()}\n${t}` : t).slice(0, 2000))} />
           <label className="flex items-center gap-2 text-sm">Scenes
             <select className="rounded-md border border-input bg-background p-1" value={count} onChange={(e) => setCount(Number(e.target.value))}>
               {[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n}</option>)}
