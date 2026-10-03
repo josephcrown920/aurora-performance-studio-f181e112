@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { generateMimicMotion, generatePerformanceReskin, listGenerations } from "@/lib/studio.functions";
 import { loadPerformanceVariant, savePerformanceVariant, type PerformanceVariantPayload } from "@/lib/performance-variant.functions";
 import { computeCost } from "@/lib/pricing";
+import { REANGLE_PRESETS } from "@/lib/performance-variant-workflows";
 
 type Transform = "sync" | "transfer";
 
@@ -39,7 +40,7 @@ export function GetReadyWithMeWorkflow() {
       setRevision(result.revision);
       setDraft(result.payload ?? {
         version: 1, kind: "build_scene", mode: "anywhere", references: {}, settings: {},
-        selectedAngles: ["wide", "medium", "closeup"], base: null, angles: [], motions: [],
+        selectedAngles: REANGLE_PRESETS.slice(0, 3).map(preset => preset.id), base: null, angles: [], motions: [],
         phoneVideoUrl: null, angleVideoOverrides: {}, motionDirections: {}, audioUrl: null,
       });
     }).catch(e => { if (!cancelled) setError(e instanceof Error ? e.message : "Could not restore your scene"); });
