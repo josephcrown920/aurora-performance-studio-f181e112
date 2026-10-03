@@ -20,6 +20,11 @@ Turn `/canvas` into a vivid, professional production workspace inspired by the u
 - Use layered glass surfaces, refracted highlights, solar gold/white energy, deep near-black contrast, crisp green execution paths, and restrained motion so it feels alive without hiding controls.
 - Make desktop the dense editing experience and collapse the library/inspector into usable sheets on phones.
 
+### 2a. Restore clear product boundaries
+- Keep TikTok30 focused on one idea or hook becoming 30 coordinated social posts; rename unclear labels so the screen never implies it owns multi-angle photos.
+- Keep multi-angle reference generation inside Colors and Perform Anywhere, where the resulting identity-consistent angles feed shot planning and generation.
+- Remove or relocate any cross-linked cards, screenshots, or copy that currently makes these three workflows look merged.
+
 ### 3. Add reference-led direction
 - Add explicit reference roles: Character, Motion, Depth, Wardrobe/Product, Environment, and Style.
 - Let creators upload multiple references privately and assign each one a role.
