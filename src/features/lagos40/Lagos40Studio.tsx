@@ -125,7 +125,7 @@ export function Lagos40Studio() {
   const done = useMemo(() => c.cards.filter(k => k.status === 'done').length, [c.cards]);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8 pb-28">
+    <main className="mx-auto w-full max-w-6xl px-4 pt-24 pb-28">
       <header className="mb-8">
         <p className="text-xs font-semibold uppercase text-muted-foreground">NBA Josh · Out the Mud</p>
         <h1 className="mt-1 text-3xl font-bold">Lagos 40</h1>
