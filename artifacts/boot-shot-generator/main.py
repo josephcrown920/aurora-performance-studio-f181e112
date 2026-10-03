@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 import time
 import csv
 import requests
@@ -342,7 +344,7 @@ def validate_config():
     if NUM_VIDEOS < 1 or NUM_VIDEOS > len(VIDEO_DB):
         raise ValueError(f"NUM_VIDEOS must be between 1 and {len(VIDEO_DB)}")
     
-    if MODELARK_API_KEY == "YOUR_MODELARK_API_KEY_HERE":
+    if not MODELARK_API_KEY:
         raise ValueError("Please set your MODELARK_API_KEY in the config section")
     
     if len(HOOK_LYRIC_LINES) != 8:
