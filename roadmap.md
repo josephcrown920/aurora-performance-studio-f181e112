@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Wire Perform Anywhere into the Video Agent with saved Josh identity references, a private 30-shot outfit/location/scene plan, explicit scene renders, and shared timeline handoff; verify signed in.
+
 - [x] Make the approved glass Canvas open on a full-width node-and-connector workspace, with references and brief available from its toolbar; signed-in view switch verified and build OK.
 
 - [x] Add a chat-controlled editing timeline to Music Video.
