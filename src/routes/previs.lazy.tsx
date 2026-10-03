@@ -1,6 +1,5 @@
-import { authNextSearch } from "@/lib/auth-return-path";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useRef, useState, useCallback } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -105,7 +104,6 @@ function sceneToShot(scene: SceneDraft): VideoShot {
 // ── Main workspace ────────────────────────────────────────────────────────
 
 function PrevisWorkspace() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, loading: authLoading } = useAuth();
 
@@ -139,7 +137,8 @@ function PrevisWorkspace() {
 
   // Restore area
   const [restoring, setRestoring]   = useState<string | null>(null);
-  const [workspaceMode, setWorkspaceMode] = useState<"multishot" | "classic">("multishot");
+  const [workspaceMode, setWorkspaceMode] = useState<"multishot" | "classic">("classic");
+  const [multishotKey, setMultishotKey] = useState(0);
 
   // Projects list
   const projectsQuery = useQuery({
@@ -150,10 +149,6 @@ function PrevisWorkspace() {
   });
   const refetchProjects = projectsQuery.refetch;
   const projects = (projectsQuery.data ?? []).filter((p) => p.scenes.length > 0);
-
-  useEffect(() => {
-    if (!authLoading && !user) void navigate({ to: "/auth", search: authNextSearch() });
-  }, [authLoading, user, navigate]);
 
   // ── Analyze brief → plan ──────────────────────────────────────────────
 
@@ -171,7 +166,7 @@ function PrevisWorkspace() {
         new Promise<never>((_, reject) => {
           window.setTimeout(
             () => reject(new Error("Shot planning is taking too long. Your brief is safe — retry when the agent is available.")),
-            75_000,
+            125_000,
           );
         }),
       ]);
@@ -520,11 +515,13 @@ function PrevisWorkspace() {
     );
   }
 
-  if (user && workspaceMode === "multishot") {
+  if (!user) return <div className="previs-shell flex min-h-dvh items-center justify-center"><a href="/auth?next=%2Fprevis" className="previs-analyze-btn">Sign in to Previs</a></div>;
+
+  if (workspaceMode === "multishot") {
     return (
       <div className="previs-shell aurora-route-enter">
         <PrevisHeader
-          onNewProject={() => undefined}
+          onNewProject={() => setMultishotKey(key => key + 1)}
           exporting={false}
           hasProject={false}
         />
@@ -534,7 +531,7 @@ function PrevisWorkspace() {
             Classic previs
           </button>
         </div>
-        <MultishotStudio userId={user.id} />
+        <MultishotStudio key={multishotKey} userId={user.id} />
       </div>
     );
   }

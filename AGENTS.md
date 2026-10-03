@@ -10,7 +10,8 @@
 <!-- LOVABLE:END -->
 
 - Reuse the Creative Studio `MultiTrackTimeline` and `LayersEditor` for music-video editing so manual and Codex-directed cuts share one editor system.
-- Retired Canvas, Music Video Studio, and standalone editor URLs redirect to Studio; never restore those screens without a new request. Keep shared Layers/Lagos40 timeline modules intact.
+- Canvas now shares the Director’s Room board and React Flow graph editor by explicit creator request; Music Video Studio and standalone editor URLs remain retired. Preserve shared Layers/Lagos40 timelines.
+- Director’s Room opens on the graph with optional inspector and Director panels; its Layers link opens the native /layers studio rather than the decorative shot-stack panel.
 - Perform Anywhere uses the existing owner-scoped Build Your Scene draft for scene references, phone recording, and final-render previews so the compact strip reflects the actual workflow.
 - Keep the agent editor's layers and multi-track timeline synchronized; imported local media uses temporary browser URLs and needs reimport after refresh.
 - Drive the Video Agent program monitor from the shared timeline document and source offsets, not a separate playlist; this keeps scrub/playback aligned with manual and agent edits.

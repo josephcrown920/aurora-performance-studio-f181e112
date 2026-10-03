@@ -46,9 +46,9 @@ export function PrevisHeader({ onNewProject, onExport, exporting, hasProject }: 
           New
         </button>
         <Link
-          to="/video-agent"
+          to="/canvas"
           className="inline-flex size-8 items-center justify-center rounded-full border border-[oklch(1_0_0/11%)] bg-[oklch(1_0_0/3%)] text-[oklch(0.7_0.01_285)] transition-colors hover:border-[oklch(1_0_0/20%)] hover:text-[oklch(0.88_0.01_285)]"
-          aria-label="Video Agent projects"
+          aria-label="Open Canvas"
         >
           <Film className="size-4" />
         </Link>

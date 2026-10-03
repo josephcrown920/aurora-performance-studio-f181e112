@@ -48,6 +48,9 @@ export function DirectorRoomAtmosphere({
   panel: AtmosphereKey;
   children: ReactNode;
 }) {
+  if (panel === "storyboard" || panel === "flows") {
+    return <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-background">{children}</div>;
+  }
   const atmosphere = ATMOSPHERES[panel];
 
   return (

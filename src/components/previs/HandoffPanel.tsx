@@ -2,6 +2,8 @@ import { ArrowRight, Download, Loader2, Film } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { VideoAgentProjectDto } from "@/lib/video-agent-projects.functions";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { STORAGE_KEY, emptyShot, uid, type Board } from "@/lib/board-store";
 
 type HandoffPanelProps = {
   project: VideoAgentProjectDto | null;
@@ -13,13 +15,30 @@ export function HandoffPanel({ project, onExport, exporting }: HandoffPanelProps
   const hasProject = !!project;
   const shotCount = project?.scenes.length ?? 0;
   const platedCount = project?.scenes.filter((s) => s.frame).length ?? 0;
+  function sendToCanvas(event: React.MouseEvent) {
+    if (!project) return;
+    const shots = project.scenes.map((scene, index) => emptyShot({
+      id: scene.id, title: scene.title, scene: scene.purpose ?? "Scene",
+      prompt: scene.modelPrompt ?? scene.description, imageUrl: scene.frame,
+      duration: scene.duration, x: 60 + (index % 4) * 320, y: 60 + Math.floor(index / 4) * 300,
+    }));
+    const board: Board = { id: project.id, title: project.title, treatment: project.prompt,
+      stylePreset: project.style, shots, characters: [], updatedAt: new Date().toISOString(),
+      edges: shots.slice(0, -1).flatMap((shot, index) => {
+        const next = shots[index + 1];
+        return next ? [{ id: uid(), from: shot.id, to: next.id }] : [];
+      }),
+    };
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(board)); }
+    catch { event.preventDefault(); window.alert("Canvas could not save this handoff. Export the package instead."); }
+  }
 
   return (
     <div className="previs-handoff-panel">
       <div className="previs-handoff-header">
         <p className="previs-field-label">Ready to produce?</p>
         <p className="text-xs text-ink-dim/60 leading-relaxed mt-1">
-          Export a package (storyboard, CSV, JSON, prompts, plates) or hand off directly to the Video Agent editor.
+          Export a package (storyboard, CSV, JSON, prompts, plates) or continue planning on Canvas.
         </p>
       </div>
 
@@ -43,7 +62,7 @@ export function HandoffPanel({ project, onExport, exporting }: HandoffPanelProps
       )}
 
       <div className="previs-handoff-actions">
-        <button
+        <Button variant="outline"
           type="button"
           onClick={() => void onExport()}
           disabled={exporting || !hasProject}
@@ -56,29 +75,29 @@ export function HandoffPanel({ project, onExport, exporting }: HandoffPanelProps
             <Download className="size-4" />
           )}
           Export Package
-        </button>
+        </Button>
 
         {hasProject ? (
           <Link
-            to="/video-agent-edit"
-            search={{ id: project!.id }}
+            to="/canvas"
+            onClick={sendToCanvas}
             className="previs-handoff-btn previs-handoff-btn--editor"
             data-testid="link-handoff-editor"
           >
             <Film className="size-4" />
-            Open in Editor
+            Open Canvas
             <ArrowRight className="size-3.5 ml-auto" />
           </Link>
         ) : (
-          <button
+          <Button variant="outline"
             type="button"
             disabled
             className="previs-handoff-btn previs-handoff-btn--editor opacity-40 cursor-not-allowed"
           >
             <Film className="size-4" />
-            Open in Editor
+            Open Canvas
             <ArrowRight className="size-3.5 ml-auto" />
-          </button>
+          </Button>
         )}
       </div>
     </div>

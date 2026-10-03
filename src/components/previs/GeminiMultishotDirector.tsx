@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { GoogleGenAI, Modality, type LiveServerMessage, type Session } from "@google/genai";
+import { GoogleGenAI, Modality, type LiveServerMessage, type Session } from "@google/genai/web";
 import { Loader2, Mic, MicOff, Sparkles, Square } from "lucide-react";
 import { toast } from "sonner";
 import {

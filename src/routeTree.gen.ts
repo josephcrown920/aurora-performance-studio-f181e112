@@ -311,7 +311,7 @@ const CanvasRoute = CanvasRouteImport.update({
   id: '/canvas',
   path: '/canvas',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/canvas.lazy').then((d) => d.Route))
 const ClipsRoute = ClipsRouteImport.update({
   id: '/clips',
   path: '/clips',
