@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 type VideoEditorSearch = { session?: string };
 
 export const Route = createFileRoute("/video-editor")({
+  beforeLoad: () => { throw redirect({ to: "/studio" }); },
   validateSearch: (search: Record<string, unknown>): VideoEditorSearch => ({
     session: typeof search.session === "string" ? search.session : undefined,
   }),

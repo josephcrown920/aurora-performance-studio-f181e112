@@ -264,7 +264,7 @@ const AgentRoute = AgentRouteImport.update({
   id: '/agent',
   path: '/agent',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/agent.lazy').then((d) => d.Route))
+} as any)
 const AuroraAdultRoute = AuroraAdultRouteImport.update({
   id: '/aurora-adult',
   path: '/aurora-adult',
@@ -311,7 +311,7 @@ const CanvasRoute = CanvasRouteImport.update({
   id: '/canvas',
   path: '/canvas',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/canvas.lazy').then((d) => d.Route))
+} as any)
 const ClipsRoute = ClipsRouteImport.update({
   id: '/clips',
   path: '/clips',
@@ -390,7 +390,7 @@ const EditorRoute = EditorRouteImport.update({
   id: '/editor',
   path: '/editor',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/editor.lazy').then((d) => d.Route))
+} as any)
 const EromifyRoute = EromifyRouteImport.update({
   id: '/eromify',
   path: '/eromify',
@@ -487,7 +487,7 @@ const MusicVideoRoute = MusicVideoRouteImport.update({
   id: '/music-video',
   path: '/music-video',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/music-video.lazy').then((d) => d.Route))
+} as any)
 const NexusarbRoute = NexusarbRouteImport.update({
   id: '/nexusarb',
   path: '/nexusarb',
@@ -666,28 +666,22 @@ const VideoAgentClassicRoute = VideoAgentClassicRouteImport.update({
   id: '/video-agent-classic',
   path: '/video-agent-classic',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/video-agent-classic.lazy').then((d) => d.Route),
-)
+} as any)
 const VideoAgentEditRoute = VideoAgentEditRouteImport.update({
   id: '/video-agent-edit',
   path: '/video-agent-edit',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/video-agent-edit.lazy').then((d) => d.Route),
-)
+} as any)
 const VideoAgentProcessRoute = VideoAgentProcessRouteImport.update({
   id: '/video-agent-process',
   path: '/video-agent-process',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/video-agent-process.lazy').then((d) => d.Route),
-)
+} as any)
 const VideoEditorRoute = VideoEditorRouteImport.update({
   id: '/video-editor',
   path: '/video-editor',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/video-editor.lazy').then((d) => d.Route))
+} as any)
 const WorkflowsRoute = WorkflowsRouteImport.update({
   id: '/workflows',
   path: '/workflows',

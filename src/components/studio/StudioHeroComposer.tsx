@@ -188,12 +188,13 @@ export function StudioHeroComposer(p: Props) {
           </div>
         </div>
 
-        <StudioToolRows />
+
 
         <p className="mt-4 text-[11px] text-zinc-600">
           Every render lands in your Gallery · Aura never expires
         </p>
       </div>
+      <div className="relative z-10 w-full"><StudioToolRows /></div>
     </section>
   );
 }

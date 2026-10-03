@@ -4,18 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { LLMS, type LlmId } from "@/features/creative-studio/lib/pro-presets";
 
 export const WORKSPACES = [
-  { to: "/video-agent", icon: "🎨", name: "Generator & Director", note: "Images, video and the creative director" },
-  { to: "/video-agent/timeline", icon: "🎬", name: "Multi-Track Timeline", note: "V1–V4, A1–A3, beat markers, effects" },
-  { to: "/video-agent/beat-director", icon: "⚡", name: "Beat Sync Director", note: "Upload a track, get a cut on the beat" },
-  { to: "/video-agent/workflows", icon: "🧩", name: "Workflow Builder", note: "Import ComfyUI JSON and build node pipelines" },
-  { to: "/video-agent/photo-lab", icon: "📸", name: "Photo Lab", note: "Filters, retouch and upscale" },
+  { to: "/studio", icon: "🎨", name: "Studio", note: "Images and video" },
+  { to: "/layers", icon: "🎬", name: "Layers", note: "Image layers" },
 ] as const;
 
 const CREATOR_TOOLS = [
   { to: "/comfy", name: "ComfyUI Apps" },
   { to: "/lipsync", name: "Lip Sync" },
-  { to: "/motion", name: "Perform Anywhere" },
-  { to: "/canvas", name: "Node Canvas" },
+  { to: "/perform-anywhere", name: "Perform Anywhere" },
   { to: "/spin", name: "TikTok30" },
 ] as const;
 
@@ -57,7 +53,7 @@ export function StudioNav() {
 
   return (
     <div className="aurora-nav" ref={wrap}>
-      <Link to="/video-agent" className="aurora-nav-brand" aria-label="Aurora Studio home">
+      <Link to="/studio" className="aurora-nav-brand" aria-label="Aurora Studio home">
         <img src="/icons/aurora-icon-192.png" alt="" width={34} height={34} /> <span>Aurora Studio</span>
       </Link>
 

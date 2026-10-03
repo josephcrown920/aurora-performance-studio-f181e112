@@ -1,5 +1,6 @@
 @import "tailwindcss" source(none);
 @import "tw-animate-css";
+@import "@fontsource/bebas-neue/400.css";
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
@@ -2355,3 +2356,47 @@ html[data-theme="light"] {
 .layers-studio .layers-target-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 @media (min-width: 640px) { .layers-studio .layers-target-grid { grid-template-columns: repeat(4,minmax(0,1fr)) !important; } }
 .layers-studio header > div:last-child { margin-left: 84px; }
+
+/* Owner-selected Studio workspace duo: black, purple, Bebas Neue. */
+@theme { --font-display: "Bebas Neue", sans-serif; }
+.workspace-duo {
+  --background: #000000; --foreground: #ffffff;
+  --card: #18181b; --card-foreground: #ffffff;
+  --muted: #18181b; --muted-foreground: #a1a1aa;
+  --primary: #a855f7; --primary-foreground: #ffffff;
+  --secondary: #27272a; --secondary-foreground: #ffffff;
+  --accent: #27272a; --accent-foreground: #ffffff;
+  --border: #27272a; --input: #27272a; --ring: #a855f7;
+  --workspace-glow: #a855f733;
+  background: var(--background); font-family: "Inter", sans-serif;
+}
+.workspace-heading { display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px solid var(--border); padding:24px 0 16px; }
+.workspace-heading h1 { font-family:var(--font-display); font-size:48px; line-height:1; color:var(--foreground); }
+.workspace-heading > span { color:var(--primary); font-size:10px; font-weight:700; text-transform:uppercase; text-align:right; }
+.workspace-active { border-color:var(--primary) !important; animation:workspace-glow 3s ease-in-out infinite; }
+@keyframes workspace-glow { 0%,100% { box-shadow:0 0 0 1px var(--workspace-glow),0 0 8px var(--workspace-glow); } 50% { box-shadow:0 0 0 1px var(--primary),0 0 18px var(--workspace-glow); } }
+.perform-workspace-grid { display:grid; gap:28px; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:start; }
+.performance-example { overflow:hidden; border:1px solid var(--border); border-radius:12px; background:var(--card); }
+.performance-example video { width:100%; aspect-ratio:9/16; object-fit:cover; display:block; max-height:380px; }
+.performance-source-strip { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.source-cell { min-width:0; background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.source-cell > span { display:flex; align-items:center; gap:4px; padding:8px 6px; font-size:10px; font-weight:600; }
+.source-cell > span svg { flex-shrink:0; color:var(--primary); }
+.source-preview { height:66px; background:var(--background); }
+.source-preview video { width:100%; height:100%; object-fit:contain; }
+.source-empty { display:flex; height:100%; align-items:center; justify-content:center; flex-direction:column; gap:4px; color:var(--muted-foreground); font-size:10px; text-align:center; }
+.reference-tile { border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--card); }
+.compact-performance { background:transparent; }
+.compact-performance input:not([type=file]) { padding:8px; border-radius:6px; }
+.compact-performance h2 { font-size:14px; }
+.workspace-controls { max-width:100%; }
+.campaign-proof { min-height:135px !important; max-height:180px; border-radius:8px !important; border:1px solid var(--border); }
+.campaign-proof h2 { font-family:var(--font-display); font-size:30px !important; line-height:1.1; }
+.campaign-proof p { font-size:10px; }
+@media(min-width:900px) { .workspace-duo:has(.campaign-proof) > div { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 28px; align-items:start; } .workspace-duo:has(.campaign-proof) > div > a,.workspace-duo:has(.campaign-proof) .workspace-heading { grid-column:1/-1; } .workspace-controls { grid-column:2; grid-row:3 / span 3; } }
+@media(max-width:767px) { .perform-workspace-grid { grid-template-columns:minmax(0,1fr); gap:24px; } .workspace-heading h1 { font-size:36px; } .workspace-heading > span { max-width:85px; } .performance-example video { max-height:230px; } }
+@media(prefers-reduced-motion:reduce) { .workspace-active { animation:none; box-shadow:0 0 0 1px var(--primary); } }
+
+.campaign-proof h1 { font-family:var(--font-display) !important; font-size:30px !important; line-height:1.1 !important; }
+.campaign-proof { max-height:none; }
+.workspace-duo:has(.campaign-proof) > div > section { grid-column:1/-1; }

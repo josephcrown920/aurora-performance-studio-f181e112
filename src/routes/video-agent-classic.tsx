@@ -1,4 +1,2 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-// Route definition only — component is in video-agent.lazy.tsx
-export const Route = createFileRoute("/video-agent-classic")({});
+import { createFileRoute, redirect } from "@tanstack/react-router";
+export const Route = createFileRoute("/video-agent-classic")({ beforeLoad: () => { throw redirect({ to: "/studio" }); } });

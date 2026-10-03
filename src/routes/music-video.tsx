@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { CANONICAL_ORIGIN } from "@/lib/seo";
 
 export const Route = createFileRoute("/music-video")({
+  beforeLoad: () => { throw redirect({ to: "/studio" }); },
   head: () => ({
     meta: [
       { title: "Music Video Studio — Aurora" },
