@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { shots as sampleShots } from "@/features/storyboard/shots";
 
 export type ShotNode = {
   id: string;
-  kind?: "shot" | "video";
+  kind?: "shot" | "video" | "reference";
+  action?: string;
+  previsFrames?: string[];
+  previsApproved?: boolean;
+  motionPreviewUrl?: string | null;
+  motionPreviewId?: string | null;
+  motionPreviewRequest?: { imageUrl: string; prompt: string; duration: number; resolution: "720p"; modelKey: string } | null;
   title: string;
   scene: string;
   shotType: string;
@@ -89,23 +94,11 @@ const SCENES = [
 ];
 
 export function seedBoard(): Board {
-  const nodes = sampleShots.map((s, i) =>
-    emptyShot({
-      id: `seed-${s.id}`,
-      title: s.title,
-      scene: SCENES[i] ?? "Verse",
-      shotType: s.type,
-      frame: s.frame,
-      wardrobe: s.wardrobe,
-      mood: s.mood,
-      note: s.note,
-      prompt: `${s.title}. ${s.frame}. Wardrobe: ${s.wardrobe}. Mood: ${s.mood}.`,
-      imageUrl: s.image,
-      duration: 4,
-      x: 60 + (i % 4) * 320,
-      y: 60 + Math.floor(i / 4) * 300,
-    }),
-  );
+  const nodes = [
+    emptyShot({ id: "character-reference", kind: "reference", title: "Character Lock", x: 60, y: 100 }),
+    emptyShot({ id: "scene-one", title: "Scene 01", x: 400, y: 100 }),
+    emptyShot({ id: "motion-one", kind: "video", title: "Motion 01", x: 740, y: 100 }),
+  ];
   const edges: Edge[] = nodes.slice(0, -1).map((n, i) => ({
     id: uid(),
     from: n.id,
@@ -113,20 +106,12 @@ export function seedBoard(): Board {
   }));
   return {
     id: uid(),
-    title: "My first storyboard",
-    treatment: "Neon Miami night, streetwear fashion, high-contrast performance energy.",
-    stylePreset: "miami-neon",
+    title: "Untitled production",
+    treatment: "",
+    stylePreset: "cinematic",
     shots: nodes,
     edges,
-    characters: [
-      {
-        id: uid(),
-        name: "The Artist",
-        description: "Lead performer, confident, camera-aware.",
-        wardrobe: "Puffer jackets, layered chains, signature red shades",
-        props: "Diamond pendant, pink microphone",
-      },
-    ],
+    characters: [],
     updatedAt: new Date().toISOString(),
   };
 }
@@ -138,6 +123,7 @@ function load(): Board {
     if (!raw) return seedBoard();
     const parsed = JSON.parse(raw) as Board;
     if (!parsed?.shots) return seedBoard();
+    if (parsed.title === "My first storyboard" && parsed.shots.every(s => s.id.startsWith("seed-") && !s.videoUrl)) return seedBoard();
     return parsed;
   } catch {
     return seedBoard();
@@ -194,7 +180,7 @@ export function useBoard() {
     (id: string, patch: Partial<ShotNode>) =>
       setBoard((b) => ({
         ...b,
-        shots: b.shots.map((s) => (s.id === id ? { ...s, ...patch } : s)),
+        shots: b.shots.map((s) => (s.id === id ? { ...s, ...patch, ...(["prompt", "frame", "action", "imageUrl", "shotType", "wardrobe", "mood", "note"].some(key => key in patch) && !("previsFrames" in patch) ? { previsApproved: false } : {}) } : s)),
       })),
     [setBoard],
   );
@@ -239,7 +225,7 @@ export function useBoard() {
         return {
           ...b,
           edges: [
-            ...b.edges.filter((e) => e.from !== from && e.to !== to),
+            ...b.edges,
             { id: uid(), from, to },
           ],
         };

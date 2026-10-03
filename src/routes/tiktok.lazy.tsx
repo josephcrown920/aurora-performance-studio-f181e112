@@ -1,4 +1,5 @@
 import { authNextSearch } from "@/lib/auth-return-path";
+import { Button } from "@/components/ui/button";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { AutoplayVideo } from "@/components/ui/AutoplayVideo";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -115,7 +116,11 @@ const STYLE_OPTIONS: { value: CutStyle; label: string; hint: string }[] = [
   { value: "grwm", label: "Get Ready With Me", hint: "Getting-ready arc — mirror, outfit picks, styling, the reveal." },
 ];
 
-export const Route = createLazyFileRoute("/tiktok")({ component: TiktokRemixPage });
+export const Route = createLazyFileRoute("/tiktok")({ component: () => <RetiredCuts /> });
+
+function RetiredCuts() {
+  return <main className="grid min-h-dvh place-items-center bg-background"><Button asChild><Link to="/canvas">Open Canvas</Link></Button></main>;
+}
 
 function TiktokRemixPage() {
   const { user } = useAuth();
