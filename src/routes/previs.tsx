@@ -14,6 +14,8 @@ export const Route = createFileRoute("/previs")({
         property: "og:description",
         content: "Turn a creative brief into an editable visual shot sequence before spending on final renders.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: `${CANONICAL_ORIGIN}/previs` },
     ],
     links: [{ rel: "canonical", href: `${CANONICAL_ORIGIN}/previs` }],

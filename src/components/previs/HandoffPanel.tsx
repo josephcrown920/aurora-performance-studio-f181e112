@@ -19,7 +19,7 @@ export function HandoffPanel({ project, onExport, exporting }: HandoffPanelProps
       <div className="previs-handoff-header">
         <p className="previs-field-label">Ready to produce?</p>
         <p className="text-xs text-ink-dim/60 leading-relaxed mt-1">
-          Export a package (storyboard, CSV, JSON, prompts, plates) or hand off directly to the Video Agent editor.
+          Export a package (storyboard, CSV, JSON, prompts, plates) or continue planning on Canvas.
         </p>
       </div>
 
@@ -60,13 +60,12 @@ export function HandoffPanel({ project, onExport, exporting }: HandoffPanelProps
 
         {hasProject ? (
           <Link
-            to="/video-agent-edit"
-            search={{ id: project!.id }}
+            to="/canvas"
             className="previs-handoff-btn previs-handoff-btn--editor"
             data-testid="link-handoff-editor"
           >
             <Film className="size-4" />
-            Open in Editor
+            Open Canvas
             <ArrowRight className="size-3.5 ml-auto" />
           </Link>
         ) : (
@@ -76,7 +75,7 @@ export function HandoffPanel({ project, onExport, exporting }: HandoffPanelProps
             className="previs-handoff-btn previs-handoff-btn--editor opacity-40 cursor-not-allowed"
           >
             <Film className="size-4" />
-            Open in Editor
+            Open Canvas
             <ArrowRight className="size-3.5 ml-auto" />
           </button>
         )}

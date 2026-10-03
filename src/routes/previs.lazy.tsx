@@ -139,7 +139,7 @@ function PrevisWorkspace() {
 
   // Restore area
   const [restoring, setRestoring]   = useState<string | null>(null);
-  const [workspaceMode, setWorkspaceMode] = useState<"multishot" | "classic">("multishot");
+  const [workspaceMode, setWorkspaceMode] = useState<"multishot" | "classic">("classic");
 
   // Projects list
   const projectsQuery = useQuery({
@@ -171,7 +171,7 @@ function PrevisWorkspace() {
         new Promise<never>((_, reject) => {
           window.setTimeout(
             () => reject(new Error("Shot planning is taking too long. Your brief is safe — retry when the agent is available.")),
-            75_000,
+            125_000,
           );
         }),
       ]);
@@ -520,11 +520,13 @@ function PrevisWorkspace() {
     );
   }
 
-  if (user && workspaceMode === "multishot") {
+  if (!user) return <div className="previs-shell flex min-h-dvh items-center justify-center"><a href="/auth?next=%2Fprevis" className="previs-analyze-btn">Sign in to Previs</a></div>;
+
+  if (workspaceMode === "multishot") {
     return (
       <div className="previs-shell aurora-route-enter">
         <PrevisHeader
-          onNewProject={() => undefined}
+          onNewProject={() => setWorkspaceMode("classic")}
           exporting={false}
           hasProject={false}
         />
