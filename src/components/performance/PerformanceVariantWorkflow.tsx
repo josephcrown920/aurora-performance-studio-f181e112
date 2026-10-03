@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Check, Loader2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import {
   savePerformanceVariant,
   type PerformanceVariantPayload,
 } from "@/lib/performance-variant.functions";
-import { createPerformanceEditHandoff } from "@/lib/performance-workflow.functions";
 import {
   PERFORMANCE_VARIANT_CATALOG,
   LUXURY_INTERIOR_PRESETS,
@@ -39,7 +38,6 @@ function initial(kind: PerformanceVariantKind, mode: "colors" | "anywhere"): Per
 
 export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { kind: PerformanceVariantKind; mode: "colors" | "anywhere"; compact?: boolean }) {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const catalog = PERFORMANCE_VARIANT_CATALOG[kind];
   const [draft, setDraft] = useState(() => initial(kind, mode));
   const [revision, setRevision] = useState(0);
@@ -49,7 +47,6 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   const saveFn = useServerFn(savePerformanceVariant);
   const generateFn = useServerFn(generatePerformanceVariantPlate);
   const motionFn = useServerFn(generateMimicMotion);
-  const handoffFn = useServerFn(createPerformanceEditHandoff);
   const listFn = useServerFn(listGenerations);
   const generations = useQuery({
     queryKey: ["performance-variant-generations", user?.id],
@@ -150,18 +147,11 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
     })),
     onError: (error) => toast.error(error instanceof Error ? error.message : "Motion enqueue failed"),
   });
-  const handoffMutation = useMutation({
-    mutationFn: ({ generationId, label }: { generationId: string; label: string }) =>
-      handoffFn({ data: { generationId, label, ...(draft.audioUrl ? { audioUrl: draft.audioUrl } : {}) } }),
-    onSuccess: ({ sessionId }) => navigate({ to: "/video-editor", search: { session: sessionId } }),
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Editor handoff failed"),
-  });
-
   const requiredReady = catalog.references.every((item) => draft.references[item.id]);
   const finishedMotion = draft.motions.find((item) => item.generationId !== item.previewId && generations.data?.items.some((g) => g.id === item.generationId && !!g.result_video_url && ["succeeded", "complete"].includes(g.status ?? "")));
   const finalUrl = finishedMotion ? generations.data?.items.find((g) => g.id === finishedMotion.generationId)?.result_video_url : null;
   return (
-    <main className={compact ? "compact-performance text-foreground" : "workspace-duo min-h-screen text-foreground"}>
+    <div className={compact ? "compact-performance text-foreground" : "workspace-duo min-h-screen text-foreground"}>
       <div className={compact ? "space-y-4" : "relative z-10 mx-auto max-w-6xl space-y-6 px-5 py-8"}>
         {!compact && <WorkflowVisualGuide kind={kind} />}
         {mode === "anywhere" && <PerformanceSourceStrip references={draft.references} phoneVideoUrl={draft.phoneVideoUrl} finalUrl={finalUrl} onUpload={(file) => { void upload(file, "original-performance", "video").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); }} />}
@@ -199,11 +189,11 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
         <section className="space-y-4">
           
           <Button disabled={!requiredReady || plateMutation.isPending} onClick={() => plateMutation.mutate(undefined)}>{plateMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}Generate base scene</Button>
-          {draft.base && <PlateCard label="Base scene" plate={draft.base} motion={draft.motions.find((item) => item.presetId === "base")} generations={generations.data?.items ?? []} busy={motionMutation.isPending || handoffMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, base: d.base && { ...d.base, approved: true } }))} onAnimate={() => motionMutation.mutate("base")} onEdit={(generationId) => handoffMutation.mutate({ generationId, label: `${catalog.label} · Base scene` })} />}
+          {draft.base && <PlateCard label="Base scene" plate={draft.base} motion={draft.motions.find((item) => item.presetId === "base")} generations={generations.data?.items ?? []} busy={motionMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, base: d.base && { ...d.base, approved: true } }))} onAnimate={() => motionMutation.mutate("base")} />}
           {draft.base?.approved && draft.selectedAngles.map((id) => {
             const preset = [...REANGLE_PRESETS, ...LUXURY_INTERIOR_PRESETS].find((item) => item.id === id)!;
             const plate = draft.angles.find((item) => item.presetId === id);
-            return plate ? <PlateCard key={id} label={preset.label} plate={plate} motion={draft.motions.find((item) => item.presetId === id)} generations={generations.data?.items ?? []} busy={motionMutation.isPending || handoffMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, angles: d.angles.map((item) => item.presetId === id ? { ...item, approved: true } : item) }))} onAnimate={() => motionMutation.mutate(id)} onEdit={(generationId) => handoffMutation.mutate({ generationId, label: `${catalog.label} · ${preset.label}` })} /> : <Button key={id} variant="outline" disabled={plateMutation.isPending} onClick={() => plateMutation.mutate(id)}>Generate {preset.label}</Button>;
+            return plate ? <PlateCard key={id} label={preset.label} plate={plate} motion={draft.motions.find((item) => item.presetId === id)} generations={generations.data?.items ?? []} busy={motionMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, angles: d.angles.map((item) => item.presetId === id ? { ...item, approved: true } : item) }))} onAnimate={() => motionMutation.mutate(id)} /> : <Button key={id} variant="outline" disabled={plateMutation.isPending} onClick={() => plateMutation.mutate(id)}>Generate {preset.label}</Button>;
           })}
         </section>
 
@@ -224,11 +214,11 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
           
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 
-function PlateCard({ label, plate, motion, generations, busy, onApprove, onAnimate, onEdit }: {
+function PlateCard({ label, plate, motion, generations, busy, onApprove, onAnimate }: {
   label: string;
   plate: { url: string; approved: boolean };
   motion?: { generationId: string; previewId: string | null };
@@ -236,7 +226,6 @@ function PlateCard({ label, plate, motion, generations, busy, onApprove, onAnima
   busy: boolean;
   onApprove: () => void;
   onAnimate: () => void;
-  onEdit: (generationId: string) => void;
 }) {
   const current = motion ? generations.find((item) => item.id === motion.generationId) : undefined;
   const preview = motion?.previewId ? generations.find((item) => item.id === motion.previewId) : undefined;

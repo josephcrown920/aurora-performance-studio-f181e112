@@ -46,7 +46,6 @@ const PLANNING_TOOLS: Array<PanelTool | RouteTool> = [
   { kind: "route", label: "AutoCut", icon: Scissors, to: "/edit" },
   { kind: "panel", id: "storyboard", label: "Storyboard", icon: Grid2X2, tab: "canvas" },
   { kind: "panel", id: "moodboard", label: "Moodboard", icon: Palette, tab: "canvas" },
-  { kind: "route", label: "Infinity Canvas", icon: Workflow, to: "/canvas" },
   { kind: "route", label: "Scene Weaver", icon: Wand2, to: "/scene-weaver" },
   { kind: "route", label: "Style Transfer", icon: Sparkles, to: "/photo-edit" },
   { kind: "route", label: "Soundweaver", icon: Music2, to: "/puremix" },
@@ -55,8 +54,6 @@ const PLANNING_TOOLS: Array<PanelTool | RouteTool> = [
 ];
 
 const AGENTS: RouteTool[] = [
-  { kind: "route", label: "Video Agent Projects", icon: Clapperboard, to: "/video-agent" },
-  { kind: "route", label: "Aurora AI Director", icon: Bot, to: "/agent" },
 ];
 
 function RailHeading({ children }: { children: React.ReactNode }) {
@@ -109,7 +106,7 @@ export function DirectorRoomRail({
           )}
         </div>
 
-        <RailHeading>Agents</RailHeading>
+        {AGENTS.length > 0 && <RailHeading>Agents</RailHeading>}
         <div className="director-room-rail-list">
           {AGENTS.map((agent) => (
             <Link key={agent.label} to={agent.to} className="director-room-rail-item director-room-agent-item">

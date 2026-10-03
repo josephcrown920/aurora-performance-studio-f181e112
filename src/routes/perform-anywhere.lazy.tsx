@@ -7,9 +7,9 @@ import { PerformanceVariantWorkflow } from "@/components/performance/Performance
 import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 
 export const Route = createLazyFileRoute("/perform-anywhere")({ component: PerformAnywhere });
-import streetClip from "@/assets/josh/generated/clip-15-alley-neon.mp4";
+import streetClip from "@/assets/josh/generated/clip-15-alley-neon.webm";
 import streetPoster from "@/assets/josh/generated/still-15-alley-neon.jpg";
-import studioClip from "@/assets/josh/generated/clip-05-studio-gel.mp4";
+import studioClip from "@/assets/josh/generated/clip-05-studio-gel.webm";
 import studioPoster from "@/assets/josh/generated/still-05-studio-gel.jpg";
 const EXAMPLES = [
   { label: "Neon street", src: streetClip, poster: streetPoster },
