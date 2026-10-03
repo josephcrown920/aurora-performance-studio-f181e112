@@ -114,7 +114,6 @@ function MusicVideoPage() {
           <div>
             <Link to="/video-agent" className="text-xs uppercase tracking-widest text-muted-foreground">← Video Agent</Link>
             <h1 className="text-3xl font-semibold">Music Video Builder</h1>
-            <Link to="/video-agent/perform-anywhere" className="inline-flex items-center gap-2 text-sm text-primary"><Film className="size-4" />Josh · Perform Anywhere · 30 scenes</Link>
             <p className="text-sm text-muted-foreground">Song → performer → brief → scenes → edit on the timeline.</p>
           </div>
           <Link to="/library" className="inline-flex items-center gap-2 text-sm text-primary"><Library className="h-4 w-4" /> My video library</Link>

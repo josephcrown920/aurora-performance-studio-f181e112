@@ -12,8 +12,6 @@ export const Route = createFileRoute("/perform-anywhere")({
       { property: "og:title", content: "Perform Anywhere — Aurora" },
       { property: "og:description", content: "Real movement in. Cinematic performance video out." },
       { property: "og:url", content: `${CANONICAL_ORIGIN}/perform-anywhere` },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: `${CANONICAL_ORIGIN}/perform-anywhere` }],
   }),
