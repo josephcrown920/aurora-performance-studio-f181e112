@@ -2349,3 +2349,5 @@ html[data-theme="light"] {
 
 @media (min-width: 1000px) { .layers-studio .layers-workspace { grid-template-columns: minmax(0,0.95fr) minmax(0,1.05fr); } }
 .layers-studio { padding-bottom: 100px; }
+
+@media (min-width: 640px) { .layers-studio .layers-target-grid { grid-template-columns: repeat(4,minmax(0,1fr)); } }
