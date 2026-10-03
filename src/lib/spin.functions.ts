@@ -353,7 +353,7 @@ export const spinThirty = createServerFn({ method: "POST" })
         system: VIRAL_SYSTEM_PROMPT,
         prompt:
           `Creator: ${avatarName ?? "one single creator"} — keep the EXACT same person (same face/identity) in every post. ` +
-          `Topic / hook idea: "${base}". Platform: TikTok / Reels / Shorts. ` +
+          `Campaign topic: "${base}". Platform: TikTok. ` +
           (template && template.id !== "default"
             ? `Template aesthetic: "${template.label}" — ${template.blurb} Every outfit, location and pose choice must fit this aesthetic. `
             : "") +
@@ -361,7 +361,7 @@ export const spinThirty = createServerFn({ method: "POST" })
             ? "The reference photo shows the creator holding a specific product — every post must keep that exact same product visibly in her hand/frame, varying only outfit/location/angle/pose around it. "
             : "") +
           (effectiveVideoCount > 0
-            ? `${effectiveVideoCount} of the ${SPIN_COUNT} posts will be rendered as short VIDEO CLIPS — prefer these content types for those slots: Talking-head hook, POV scenario, Behind-the-scenes, Story-style post. The remaining ${SPIN_COUNT - effectiveVideoCount} will be STILL IMAGES — prefer: Carousel cover, Caption hook visual, Meme edit. `
+            ? `${effectiveVideoCount} of the ${SPIN_COUNT} posts will be rendered as short VIDEO CLIPS — prefer these content types for those slots: Talking-head post, POV scenario, Behind-the-scenes, Story-style post. The remaining ${SPIN_COUNT - effectiveVideoCount} will be STILL IMAGES — prefer: Carousel cover, Caption-led visual, Meme edit. `
             : "") +
           `Generate exactly ${SPIN_COUNT} unique posts with MAXIMUM variation as JSON.`,
         schema: SpinPlanSchema,

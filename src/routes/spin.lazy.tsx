@@ -155,7 +155,7 @@ function SpinPage() {
   const [planning, setPlanning] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // Per-variant video slider: 0–50 posts as short 5s i2v clips (budget
+  // Per-variant video slider: 0–30 posts as short 5s i2v clips (budget
   // seedance-2.0-fast). Separate from the premium Product Showcase Video Mode.
   const [videoCount, setVideoCount] = useState(0);
 
@@ -429,7 +429,7 @@ function SpinPage() {
           compact
           kicker="Campaign proof"
           headline="One concept, 30 scroll-stopping posts."
-          sub="Choose the visual lane first, then let Spin build the release run."
+          sub="Choose the campaign lane first, then let TikTok30 build the full month."
           media={DEMO_ASSETS.spin.hero}
           className="mt-7 rounded-2xl border border-white/10"
         />
@@ -475,9 +475,9 @@ function SpinPage() {
 
         <OutputGallery
           items={DEMO_ASSETS.spin.gallery}
-          kicker="Real post patterns"
-          title="A campaign reads before it is explained."
-          subtitle="Template, framing, and finished motion from Aurora Spin."
+          kicker="TikTok30 examples"
+          title="Thirty distinct posts from one campaign topic."
+          subtitle="Different formats, locations, styling, and pacing—without mixing in multi-angle photoshoots."
           showGalleryLink
         />
 

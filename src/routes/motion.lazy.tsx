@@ -1701,6 +1701,18 @@ function MotionStudio() {
               </p>
             </div>
 
+            <Link
+              to="/reshoot"
+              className="flex items-center gap-3 rounded-2xl border border-primary/25 bg-primary/5 p-4 no-underline transition-colors hover:border-primary/50"
+            >
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary"><Camera className="size-5" /></span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-bold text-foreground">Multi-Angle Photoshoot</span>
+                <span className="mt-1 block text-xs text-muted-foreground">Create reusable wide, profile, low, overhead, Dutch, and detail references before motion generation.</span>
+              </span>
+              <ArrowRight className="size-4 shrink-0 text-primary" />
+            </Link>
+
             <div className="grid gap-3 sm:grid-cols-2">
               {[
                 {
