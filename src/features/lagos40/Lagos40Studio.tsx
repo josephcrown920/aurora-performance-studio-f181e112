@@ -9,6 +9,7 @@ import { downloadBlob } from '@/components/layers/layers-export';
 import { renderLagos40Shot, LAGOS40_VIDEO_COST } from '@/lib/lagos40.functions';
 import { JOSH_CHARACTER, LAGOS40_LOCATIONS, LYRIC_LINES } from './data';
 import { breakdown, finalCut, scenePrompt, CAMERA_MOVES, type Card, type Scene } from './pipeline';
+import THE_ONE_HOOK from '@/assets/the-one-hook.mp3.asset.json';
 
 type Campaign = { version: 1; character: string; face?: LayerAsset; body?: LayerAsset; song?: { path: string; name: string }; songSeconds: number; lyrics: string[]; cards: Card[] };
 
@@ -156,6 +157,7 @@ export function Lagos40Studio() {
         <h2 className="text-lg font-bold">2 · Song clip</h2>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <label className="cursor-pointer rounded-md border border-border px-3 py-2 text-sm">{c.song ? `Replace (${c.song.name})` : 'Upload song clip'}<input type="file" accept="audio/*" className="sr-only" onChange={e => addSong(e.target.files?.[0])} /></label>
+          {c.song?.name !== THE_ONE_HOOK.original_filename && <Button size="sm" variant="outline" onClick={async () => { try { const b = await (await fetch(THE_ONE_HOOK.url)).blob(); await addSong(new File([b], THE_ONE_HOOK.original_filename, { type: 'audio/mpeg' })); } catch { setNote('Could not load the hook.'); } }}>Use "The One" hook</Button>}
           {preview.song && <audio controls src={preview.song} className="h-9" />}
           <label className="text-sm">Length (seconds) <input type="number" min={5} max={60} value={c.songSeconds} onChange={e => setC({ ...c, songSeconds: Number(e.target.value) || 24 })} onBlur={() => persist(c)} className="ml-1 w-20 rounded-md border border-input bg-background px-2 py-1" /></label>
         </div>
