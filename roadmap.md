@@ -21,7 +21,7 @@
 - [x] Fix the landing-page section and Partners page that show the "Something went wrong" screen.
 - [x] Android Play Store production build succeeded on EAS (build fa7e2f3a, version 1.0.0, versionCode 4); creator downloaded the .aab.
 - [ ] Upload the Android .aab to Play Console Internal testing (creator action in Play Console).
-- [ ] Fix the failed iOS App Store build (failed in ~58s — likely credentials/signing; check EAS logs).
+- [ ] Fix the failed iOS App Store build: confirmed the Expo project has zero iOS credentials (no Apple team, certificate, or provisioning profile), so the non-interactive store build fails at 'Resolve build configuration'. Blocked on the creator's Apple Developer account / App Store Connect API key.
 - [ ] Apply the final-launch checklist on the dedicated launch branch, preserving one Aurora Director with skills and workflows beneath it.
 - [x] Music Video Builder: suggest matching scene prompts from a creator reference image (AI Gateway).
 - [x] Bring the Auroraglobal mobile app and side apps into `artifacts/` (adult app and large archives left out).
