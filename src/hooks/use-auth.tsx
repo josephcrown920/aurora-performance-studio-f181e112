@@ -7,7 +7,11 @@ import { identifyPosthogUser, resetPosthogUser } from "@/lib/posthog";
 
 // Supabase stores the session under this key in localStorage.
 // Project ref is derived from VITE_SUPABASE_URL: tpzmvbczwahxajujvnrq
-const SUPABASE_STORAGE_KEY = "sb-tpzmvbczwahxajujvnrq-auth-token";
+function storageKey(): string {
+  const ref = (import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefined)
+    ?? new URL((import.meta.env.VITE_SUPABASE_URL as string) || "https://x.supabase.co").hostname.split(".")[0];
+  return `sb-${ref}-auth-token`;
+}
 
 /** Synchronously checks whether a Supabase session token is already stored in
  *  localStorage.  When true, getSession() is performing a background network
@@ -17,7 +21,7 @@ const SUPABASE_STORAGE_KEY = "sb-tpzmvbczwahxajujvnrq-auth-token";
 export function hasStoredSession(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    const raw = localStorage.getItem(SUPABASE_STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey());
     if (!raw) return false;
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     return Boolean(parsed?.access_token || parsed?.refresh_token);
@@ -86,7 +90,7 @@ export function useAuth() {
     // • Stored session found → getSession is doing a background token-refresh
     //   network call.  Give it 30 s before giving up so a slow connection never
     //   incorrectly evicts a perfectly valid signed-in user.
-    const safetyMs = hasStoredSession() ? 30_000 : 5_000;
+    const safetyMs = 30_000;
     const timeout = setTimeout(() => setLoading(false), safetyMs);
 
     return () => {
