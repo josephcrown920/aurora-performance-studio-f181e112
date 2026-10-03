@@ -2402,6 +2402,10 @@ html[data-theme="light"] {
 .workspace-duo:has(.campaign-proof) > div > section { grid-column:1/-1; }
 
 /* Heavier studio text — no skinny type */
-body { font-weight: 500; }
+body { font-weight: 600; }
+.font-normal { font-weight: 600; }
+.font-medium { font-weight: 700; }
+.font-semibold { font-weight: 700; }
+button, input, select, textarea, label, p, span, li, a { font-weight: inherit; }
 .font-light, .font-extralight, .font-thin { font-weight: 500 !important; }
 p, span, label, input, textarea { -webkit-font-smoothing: auto; }
