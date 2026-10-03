@@ -13,6 +13,7 @@ import {
   Workflow,
   type LucideIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type DirectorRoomPanel =
@@ -35,26 +36,17 @@ type RouteTool = {
   kind: "route";
   label: string;
   icon: LucideIcon;
-  to: "/edit" | "/canvas" | "/scene-weaver" | "/photo-edit" | "/puremix" | "/video-agent" | "/agent" | "/layers";
+  to: "/edit" | "/canvas" | "/scene-weaver" | "/photo-edit" | "/puremix" | "/video-agent" | "/agent" | "/layers" | "/previs";
 };
 
 const PLANNING_TOOLS: Array<PanelTool | RouteTool> = [
-  { kind: "panel", id: "wardrobe", label: "Wardrobe", icon: Camera, tab: "characters" },
+  { kind: "panel", id: "storyboard", label: "Canvas", icon: Workflow, tab: "canvas" },
   { kind: "panel", id: "scenes", label: "Scenes", icon: Clapperboard, tab: "canvas" },
-  { kind: "panel", id: "layers", label: "Layers", icon: Layers3, tab: "canvas" },
-  { kind: "route", label: "Layers Studio", icon: Layers3, to: "/layers" },
-  { kind: "route", label: "AutoCut", icon: Scissors, to: "/edit" },
-  { kind: "panel", id: "storyboard", label: "Storyboard", icon: Grid2X2, tab: "canvas" },
-  { kind: "panel", id: "moodboard", label: "Moodboard", icon: Palette, tab: "canvas" },
-  { kind: "route", label: "Scene Weaver", icon: Wand2, to: "/scene-weaver" },
-  { kind: "route", label: "Style Transfer", icon: Sparkles, to: "/photo-edit" },
-  { kind: "route", label: "Soundweaver", icon: Music2, to: "/puremix" },
-  { kind: "panel", id: "flows", label: "Flows", icon: Workflow, tab: "canvas" },
-  { kind: "route", label: "Edits", icon: Scissors, to: "/edit" },
+  { kind: "panel", id: "wardrobe", label: "Character Lock", icon: Camera, tab: "characters" },
+  { kind: "route", label: "Layers", icon: Layers3, to: "/layers" },
+  { kind: "route", label: "Previs", icon: Grid2X2, to: "/previs" },
 ];
-
-const AGENTS: RouteTool[] = [
-];
+const AGENTS: RouteTool[] = [];
 
 function RailHeading({ children }: { children: React.ReactNode }) {
   return <p className="director-room-rail-heading">{children}</p>;
@@ -80,11 +72,11 @@ export function DirectorRoomRail({
           </span>
         </div>
 
-        <RailHeading>Plan & build</RailHeading>
+        
         <div className="director-room-rail-list">
           {PLANNING_TOOLS.map((tool) =>
             tool.kind === "panel" ? (
-              <button
+              <Button variant="ghost"
                 key={`${tool.label}-${tool.id}`}
                 type="button"
                 onClick={() => onPanelChange(tool.id, tool.tab)}
@@ -96,7 +88,7 @@ export function DirectorRoomRail({
               >
                 <tool.icon className="size-3.5 shrink-0" />
                 <span>{tool.label}</span>
-              </button>
+              </Button>
             ) : (
               <Link key={tool.label} to={tool.to} className="director-room-rail-item">
                 <tool.icon className="size-3.5 shrink-0" />
