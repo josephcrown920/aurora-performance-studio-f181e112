@@ -2325,3 +2325,33 @@ html[data-theme="light"] {
   color: oklch(0.72 0.18 295);
   background: oklch(0.68 0.25 295 / 5%);
 }
+
+/* Supplied Aurora Layers appearance, scoped to the native image studio. */
+.layers-studio {
+  --background: oklch(0.11 0.03 300); --foreground: oklch(0.97 0.005 300);
+  --card: oklch(0.16 0.05 300); --card-foreground: var(--foreground);
+  --primary: oklch(0.62 0.26 300); --primary-foreground: oklch(0.98 0.01 300);
+  --secondary: oklch(0.24 0.06 300); --secondary-foreground: var(--foreground);
+  --muted: oklch(0.22 0.05 300); --muted-foreground: oklch(0.72 0.03 300);
+  --accent: oklch(0.68 0.22 330); --accent-foreground: var(--foreground);
+  --border: oklch(0.3 0.06 300); --input: var(--border); --ring: var(--primary);
+  --layers-gradient: linear-gradient(120deg, oklch(0.62 0.26 300), oklch(0.68 0.22 330) 55%, oklch(0.66 0.2 20));
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0;
+}
+.layers-studio .layers-gradient, .layers-studio .layers-chip { background: var(--layers-gradient); color: var(--primary-foreground); }
+.layers-studio .layers-chip { display: inline-flex; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.layers-studio .layers-label { font-family: ui-monospace, monospace; font-size: 11px; text-transform: uppercase; color: var(--muted-foreground); }
+.layers-studio button, .layers-studio input, .layers-studio textarea { letter-spacing: 0; }
+.layers-studio .layers-output { min-height: 220px; }
+.layers-studio button:hover { transform: none; }
+@media (prefers-reduced-motion: reduce) { .layers-studio * { animation: none !important; transition: none !important; } }
+
+@media (min-width: 1000px) { .layers-studio .layers-workspace { grid-template-columns: minmax(0,0.95fr) minmax(0,1.05fr); } }
+.layers-studio { padding-bottom: 100px; }
+
+@media (min-width: 640px) { .layers-studio .layers-target-grid { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+
+.layers-studio .layers-target-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media (min-width: 640px) { .layers-studio .layers-target-grid { grid-template-columns: repeat(4,minmax(0,1fr)) !important; } }
+.layers-studio header > div:last-child { margin-left: 84px; }
