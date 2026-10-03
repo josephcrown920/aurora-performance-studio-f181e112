@@ -22,6 +22,7 @@ import {
   VEHICLES,
   type PerformanceVariantKind,
 } from "@/lib/performance-variant-workflows";
+import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 import { RecordingReferenceGuide, WorkflowVisualGuide } from "@/components/performance/WorkflowVisualGuide";
 
 function initial(kind: PerformanceVariantKind, mode: "colors" | "anywhere"): PerformanceVariantPayload {
@@ -36,7 +37,7 @@ function initial(kind: PerformanceVariantKind, mode: "colors" | "anywhere"): Per
   };
 }
 
-export function PerformanceVariantWorkflow({ kind, mode }: { kind: PerformanceVariantKind; mode: "colors" | "anywhere" }) {
+export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { kind: PerformanceVariantKind; mode: "colors" | "anywhere"; compact?: boolean }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const catalog = PERFORMANCE_VARIANT_CATALOG[kind];
@@ -157,26 +158,31 @@ export function PerformanceVariantWorkflow({ kind, mode }: { kind: PerformanceVa
   });
 
   const requiredReady = catalog.references.every((item) => draft.references[item.id]);
+  const finishedMotion = draft.motions.find((item) => item.generationId !== item.previewId && generations.data?.items.some((g) => g.id === item.generationId && !!g.result_video_url && ["succeeded", "complete"].includes(g.status ?? "")));
+  const finalUrl = finishedMotion ? generations.data?.items.find((g) => g.id === finishedMotion.generationId)?.result_video_url : null;
   return (
-    <main className="aurora-page-shell text-foreground">
-      <div className="relative z-10 mx-auto max-w-6xl space-y-8 px-5 py-10">
-        <WorkflowVisualGuide kind={kind} />
+    <main className={compact ? "compact-performance text-foreground" : "workspace-duo min-h-screen text-foreground"}>
+      <div className={compact ? "space-y-4" : "relative z-10 mx-auto max-w-6xl space-y-6 px-5 py-8"}>
+        {!compact && <WorkflowVisualGuide kind={kind} />}
+        {mode === "anywhere" && <PerformanceSourceStrip references={draft.references} phoneVideoUrl={draft.phoneVideoUrl} finalUrl={finalUrl} onUpload={(file) => { void upload(file, "original-performance", "video").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); }} />}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div><p className="aurora-kicker">{mode === "anywhere" ? "Perform Anywhere" : "Colors Studio"}</p><h1 className="text-3xl font-black">{catalog.label}</h1><p className="text-sm text-muted-foreground">{catalog.description}</p></div>
+          <div><p className="aurora-kicker">{mode === "anywhere" ? "Perform Anywhere" : "Colors Studio"}</p><h1 className="font-display text-3xl">{catalog.label}</h1></div>
           <Link to="/colors-show" search={mode === "anywhere" ? { mode: "anywhere" } : {}}><Button variant="outline">Two-angle workflow</Button></Link>
         </div>
 
-        <section className="grid gap-3 md:grid-cols-3">
+        <section className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {catalog.references.map((reference) => (
-            <button key={reference.id} onClick={() => fileRefs.current[reference.id]?.click()} className="rounded-2xl border border-border bg-card p-4 text-left">
-              <input ref={(node) => { fileRefs.current[reference.id] = node; }} hidden type="file" accept="image/*" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, reference.id, "image"); }} />
-              {draft.references[reference.id] ? <Check className="mb-3 size-5 text-emerald-400" /> : <Upload className="mb-3 size-5 text-primary" />}
-              <p className="font-semibold">{reference.label} · required</p><p className="text-xs text-muted-foreground">{reference.guidance}</p>
-            </button>
+            <div key={reference.id} className={`reference-tile ${draft.references[reference.id] ? "workspace-active" : ""}`}>
+              <input ref={(node) => { fileRefs.current[reference.id] = node; }} hidden type="file" accept="image/*" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, reference.id, "image").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); event.target.value = ""; }} />
+              <Button variant="ghost" onClick={() => fileRefs.current[reference.id]?.click()} className="h-16 w-full justify-start overflow-hidden text-left">
+                {draft.references[reference.id] ? <img src={draft.references[reference.id] ?? ""} alt={reference.label} className="size-10 shrink-0 rounded object-cover" /> : <Upload className="size-4 shrink-0 text-primary" />}
+                <span className="whitespace-normal text-xs">{reference.label}</span>
+              </Button>
+            </div>
           ))}
         </section>
 
-        <section className="rounded-2xl border border-border bg-card p-5">
+        <section className="border-t border-border pt-4">
           <h2 className="mb-4 text-lg font-bold">Personalize the scene</h2>
           <div className="grid gap-3 md:grid-cols-2">
             {Object.entries(draft.settings).map(([key, value]) => key === "vehicle" ? (
@@ -191,7 +197,7 @@ export function PerformanceVariantWorkflow({ kind, mode }: { kind: PerformanceVa
         {kind === "luxury_interior" && <section><h2 className="mb-3 text-lg font-bold">Alternate interiors using the same identity and performance</h2><div className="flex flex-wrap gap-2">{LUXURY_INTERIOR_PRESETS.map((preset) => <Button key={preset.id} size="sm" variant={draft.selectedAngles.includes(preset.id) ? "default" : "outline"} onClick={() => setDraft((d) => ({ ...d, selectedAngles: d.selectedAngles.includes(preset.id) ? d.selectedAngles.filter((id) => id !== preset.id) : [...d.selectedAngles, preset.id] }))}>{preset.label}</Button>)}</div></section>}
 
         <section className="space-y-4">
-          <p className="text-xs text-muted-foreground">Reference-safe image generation: automatic serving fallback is limited to image providers that receive the same role references and continuity prompt.</p>
+          
           <Button disabled={!requiredReady || plateMutation.isPending} onClick={() => plateMutation.mutate(undefined)}>{plateMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}Generate base scene</Button>
           {draft.base && <PlateCard label="Base scene" plate={draft.base} motion={draft.motions.find((item) => item.presetId === "base")} generations={generations.data?.items ?? []} busy={motionMutation.isPending || handoffMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, base: d.base && { ...d.base, approved: true } }))} onAnimate={() => motionMutation.mutate("base")} onEdit={(generationId) => handoffMutation.mutate({ generationId, label: `${catalog.label} · Base scene` })} />}
           {draft.base?.approved && draft.selectedAngles.map((id) => {
@@ -201,12 +207,12 @@ export function PerformanceVariantWorkflow({ kind, mode }: { kind: PerformanceVa
           })}
         </section>
 
-        <section className="rounded-2xl border border-border bg-card p-5">
-          <h2 className="font-bold">Original phone performance</h2>
+        <section className="border-t border-border pt-4">
+          <h2 className="font-bold">Performance controls</h2>
           {kind === "luxury_interior" && <p className="my-2 text-sm text-amber-300">Record seated at the same angle and position. Keep gestures contained within the window frame. Mandatory context: performer rapping inside the vehicle.</p>}
-          <RecordingReferenceGuide kind={kind} className="my-3 max-w-md" />
+          {!compact && <RecordingReferenceGuide kind={kind} className="my-3 max-w-md" />}
           <input type="file" accept="video/*" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, "original-performance", "video"); }} />
-          <p className="mt-2 text-xs text-muted-foreground">The same recording animates every approved plate. Per-angle overrides are supported by the saved workflow contract.</p>
+          
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             {["base", ...draft.selectedAngles].map((id) => {
               const label = id === "base" ? "Base scene" : [...REANGLE_PRESETS, ...LUXURY_INTERIOR_PRESETS].find((item) => item.id === id)?.label ?? id;
@@ -215,7 +221,7 @@ export function PerformanceVariantWorkflow({ kind, mode }: { kind: PerformanceVa
           </div>
           <h3 className="mt-5 font-semibold">Optional soundtrack</h3>
           <input type="file" accept="audio/*" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, "soundtrack", "audio"); }} />
-          <p className="mt-1 text-xs text-muted-foreground">Saved for the dedicated soundtrack export helper; never represented as motion-transfer lip-sync.</p>
+          
         </section>
       </div>
     </main>
@@ -240,5 +246,5 @@ function PlateCard({ label, plate, motion, generations, busy, onApprove, onAnima
   const labelText = previewReady
     ? (motion?.generationId === motion?.previewId ? "Approve preview · render full" : failed ? "Retry full render" : "Render full again")
     : failed ? "Retry fresh preview" : processing ? "Motion rendering…" : "Generate motion preview";
-  return <article className="grid gap-4 rounded-2xl border border-border bg-card p-4 md:grid-cols-[220px_1fr]"><img src={plate.url} alt={label} className="aspect-[9/16] w-full rounded-xl object-cover" /><div><h3 className="text-lg font-bold">{label}</h3><p className="mt-2 text-sm text-muted-foreground">{plate.approved ? "Approved for continuity and motion." : "Review this plate independently."}</p>{current?.result_video_url && <video src={current.result_video_url} controls playsInline className="mt-3 max-h-72 rounded-xl" />}{failed && <p className="mt-2 text-xs text-destructive">{current?.error ?? "Motion render failed; this angle can retry independently."}</p>}<div className="mt-4 flex flex-wrap gap-2">{!plate.approved && <Button onClick={onApprove}>Approve</Button>}<Button variant="outline" disabled={!plate.approved || busy || processing} onClick={onAnimate}>{labelText}</Button>{current?.result_video_url && motion?.generationId !== motion?.previewId && <Button disabled={busy} onClick={() => onEdit(motion!.generationId)}>Attach soundtrack &amp; edit/export</Button>}</div></div></article>;
+  return <article className="grid gap-4 rounded-2xl border border-border bg-card p-4 md:grid-cols-[120px_1fr]"><img src={plate.url} alt={label} className="aspect-video w-full rounded-lg object-cover md:aspect-[3/4]" /><div><h3 className="text-lg font-bold">{label}</h3><p className="mt-2 text-sm text-muted-foreground">{plate.approved ? "Approved for continuity and motion." : "Review this plate independently."}</p>{current?.result_video_url && <video src={current.result_video_url} controls playsInline className="mt-3 max-h-72 rounded-xl" />}{failed && <p className="mt-2 text-xs text-destructive">{current?.error ?? "Motion render failed; this angle can retry independently."}</p>}<div className="mt-4 flex flex-wrap gap-2">{!plate.approved && <Button onClick={onApprove}>Approve</Button>}<Button variant="outline" disabled={!plate.approved || busy || processing} onClick={onAnimate}>{labelText}</Button>{current?.result_video_url && motion?.generationId !== motion?.previewId && <Button asChild variant="outline"><a href={current.result_video_url} download>Download render</a></Button>}</div></div></article>;
 }

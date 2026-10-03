@@ -10,8 +10,8 @@
 <!-- LOVABLE:END -->
 
 - Reuse the Creative Studio `MultiTrackTimeline` and `LayersEditor` for music-video editing so manual and Codex-directed cuts share one editor system.
-- Use `/canvas` as the single Aurora Canvas: a node-and-connector workspace powered by the existing production workflow engine; redirect legacy `/aurora-canvas` links there to avoid two competing editors.
-- Keep `/video-agent/timeline` as the desktop-style agent editor, reusing `MultiTrackTimeline` and `LayersEditor`; effects and presets must operate on that shared timeline so manual and AI edits stay reversible.
+- Retired Canvas, Music Video Studio, and standalone editor URLs redirect to Studio; never restore those screens without a new request. Keep shared Layers/Lagos40 timeline modules intact.
+- Perform Anywhere uses the existing owner-scoped Build Your Scene draft for scene references, phone recording, and final-render previews so the compact strip reflects the actual workflow.
 - Keep the agent editor's layers and multi-track timeline synchronized; imported local media uses temporary browser URLs and needs reimport after refresh.
 - Drive the Video Agent program monitor from the shared timeline document and source offsets, not a separate playlist; this keeps scrub/playback aligned with manual and agent edits.
 - Store completed music-video scenes in each creator's private studio storage and resolve library watch pages from that creator's path; this prevents one creator from watching another's scene by guessing an ID.
