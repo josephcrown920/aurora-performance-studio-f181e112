@@ -1,8 +1,9 @@
 # Roadmap
 
-- [ ] Add Get Ready With Me within Perform Anywhere for a 30-second dressing clip and existing motion workflows; expose it on Aurora’s opening canvas.
-- [ ] Make Admin discoverable without changing its authorization checks.
-- [ ] Verify Aurora CLI and run one bounded generation per feature where inputs, access, and provider balance allow; record actual outcomes and blockers.
+- [x] Add Get Ready With Me within Perform Anywhere using the shared private source draft and existing motion services; opening-canvas link, experience switching, signed-out entry and mobile layout verified. Current output is a 5-second preview / up to 15-second reviewed render, not a full 30-second render.
+- [x] Make Admin discoverable from the opening canvas; signed-out navigation still reaches the protected sign-in gate.
+- [x] Verify Aurora CLI version and live price estimate; allow side-effect-free image dry runs without sign-in.
+- [ ] Run one real generation per feature and verify authenticated GRWM uploads/outputs; automatic self-session mint failed because no account matched the requester. Requires the creator to sign in or identify the account to test. No generations or provider charges were started.
 
 - [x] Replace Aurora’s home and Studio sections with the actual shared node-and-connector canvas; retire the shown Urban Cuts screen.
 - [x] Make the canvas directly editable with node creation, branching connections, deletion and optional inspector; editing, reload persistence and mobile layout verified.
