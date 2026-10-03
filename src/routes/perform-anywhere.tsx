@@ -2,12 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CANONICAL_ORIGIN } from "@/lib/seo";
 
 export const Route = createFileRoute("/perform-anywhere")({
+  validateSearch: (search: Record<string, unknown>): { experience?: "grwm" } => ({ experience: search.experience === "grwm" ? "grwm" : undefined }),
   head: () => ({
     meta: [
       { title: "Perform Anywhere — Aurora" },
       {
         name: "description",
-        content: "Film yourself on your phone and let Aurora build the cinematic world around your performance.",
+        content: "Transform phone performances and Get Ready With Me dressing clips with Aurora’s motion workflows.",
       },
       { property: "og:title", content: "Perform Anywhere — Aurora" },
       { property: "og:description", content: "Real movement in. Cinematic performance video out." },

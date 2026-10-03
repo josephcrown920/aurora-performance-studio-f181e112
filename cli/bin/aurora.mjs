@@ -309,11 +309,6 @@ if (cmd === 'vast') {
 }
 
 if (cmd === 'generate') {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    console.error('✗ Not logged in. Run: aurora login');
-    process.exit(1);
-  }
   const promptIdx = args.indexOf('--prompt');
   if (promptIdx === -1) {
     console.error('✗ --prompt is required');
@@ -330,6 +325,11 @@ if (cmd === 'generate') {
       console.error('✗ Estimate failed:', e.message);
       process.exit(1);
     }
+  }
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    console.error('✗ Not logged in. Run: aurora login');
+    process.exit(1);
   }
   console.log(`\n  Generating: "${prompt}"`);
   try {

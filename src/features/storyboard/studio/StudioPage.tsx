@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Download, Layers3, MessageSquare, PanelRightClose, PanelRightOpen, X, UserRound } from "lucide-react";
+import { Download, Layers3, MessageSquare, PanelRightClose, PanelRightOpen, X, UserRound, Shirt, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBoard, chainOrder, uid, type Edge } from "@/lib/board-store";
 import { exportBoardZip } from "@/lib/export-zip";
@@ -52,7 +52,9 @@ export function StudioPage({ canvasOnly = false }: { canvasOnly?: boolean }) {
   return <main className="director-clean-shell bg-background text-foreground">
     <header className="director-clean-header border-b border-border">
       <div className="director-clean-title"><Link to="/" className="text-lg font-semibold">Aurora</Link><input aria-label="Board title" value={board.title} onChange={e => setBoard(b => ({...b,title:e.target.value}))} className="min-w-0 bg-transparent text-sm text-muted-foreground outline-none" /></div>
-      <nav aria-label="Workspace actions" className="flex items-center gap-2">
+      <nav aria-label="Workspace actions" className="flex flex-wrap items-center gap-2">
+        <Button asChild variant="outline" size="sm"><Link to="/perform-anywhere" search={{ experience: "grwm" }}><Shirt />Get Ready With Me</Link></Button>
+        <Button asChild variant="outline" size="sm"><Link to="/admin"><Shield />Admin</Link></Button>
         <Button variant="outline" size="icon" title="Add character reference" aria-label="Add character reference" onClick={() => {setSelectedId(addShot({kind:"reference",title:"Character Lock"}));setInspectorOpen(true);}}><UserRound /></Button>
         <Button asChild variant="outline" size="sm"><Link to="/layers"><Layers3 /> Layers</Link></Button>
         <Button variant="outline" size="icon" title="Inspector" aria-label="Inspector" aria-pressed={inspectorOpen} onClick={() => { setInspectorOpen(v => !v); setChatOpen(false); }}>{inspectorOpen ? <PanelRightClose /> : <PanelRightOpen />}</Button>
