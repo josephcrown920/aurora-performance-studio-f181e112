@@ -15,8 +15,12 @@ MOBILE_DIR="$ROOT/artifacts/aurora-mobile"
 LOCK="$MOBILE_DIR/package-lock.json"
 FAIL=0
 
-# 1. No bun lockfiles anywhere that EAS or the deployer could pick up
-FOUND_BUN=$(find "$ROOT" -maxdepth 3 -name 'bun.lock' -o -maxdepth 3 -name 'bun.lockb' 2>/dev/null | grep -v node_modules || true)
+# 1. No bun lockfiles inside the mobile app. The web app's root bun.lock is
+# excluded from the EAS upload by the root .easignore, so it is safe.
+FOUND_BUN=$(find "$MOBILE_DIR" -maxdepth 3 \( -name 'bun.lock' -o -name 'bun.lockb' \) 2>/dev/null | grep -v node_modules || true)
+if [ -f "$ROOT/bun.lock" ] && ! grep -qx '/\*' "$ROOT/.easignore" 2>/dev/null; then
+  FOUND_BUN="$FOUND_BUN $ROOT/bun.lock (not excluded by .easignore)"
+fi
 if [ -n "$FOUND_BUN" ]; then
   echo "FAIL: bun lockfile(s) present — remote builders will use bun and break:"
   echo "$FOUND_BUN"
