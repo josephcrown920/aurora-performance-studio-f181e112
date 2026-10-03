@@ -108,6 +108,14 @@ function AuthPage() {
   // Passkeys only work in a real browser tab — in-app/embedded webviews deny
   // the Face ID prompt before we can authenticate.
   const canUsePasskeys = biometricSupported && !embeddedBrowser;
+  const inIframe = (() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
   // Which OAuth providers are actually enabled on the Supabase project.
   // Clicking a disabled provider's button just errors with "provider is not
   // enabled", so we ask Supabase's public settings endpoint and only render
@@ -340,21 +348,43 @@ function AuthPage() {
       return;
     }
     setBusy(true);
+    const label = provider === "google" ? "Google" : "Apple";
+    // Inside an embedded preview (e.g. the Lovable phone app) the sign-in
+    // window opens in a separate tab whose completion we can't always detect,
+    // which left the button stuck on "Signing in..." forever. Cap the wait and
+    // let the user retry or continue in a full browser tab.
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error("OAUTH_TIMEOUT")), 45_000);
+    });
     try {
       if (mode === "signup" && typeof window !== "undefined") {
         sessionStorage.setItem(OAUTH_SIGNUP_INTENT_KEY, provider);
       }
       const { lovable } = await import("@/integrations/lovable/index");
-      const result = await lovable.auth.signInWithOAuth(provider, {
-        redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
-      });
+      const result = await Promise.race([
+        lovable.auth.signInWithOAuth(provider, {
+          redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
+        }),
+        timeout,
+      ]);
       if (result.error) throw result.error;
       if (result.redirected) return;
-      window.location.assign(search.next ?? "/studio");
+      navigateToReturnPath();
     } catch (err) {
-      const label = provider === "google" ? "Google" : "Apple";
-      toast.error(describeAuthError(err, `${label} sign-in failed`));
+      const message = err instanceof Error ? err.message : "";
+      if (message === "OAUTH_TIMEOUT" || /popup was blocked|timed out/i.test(message)) {
+        toast.error(`${label} sign-in didn't finish here. Open the app in its own browser tab and try again.`, {
+          action: inIframe
+            ? { label: "Open tab", onClick: () => window.open(window.location.href, "_blank", "noopener") }
+            : undefined,
+          duration: 12_000,
+        });
+      } else if (!/cancelled/i.test(message)) {
+        toast.error(describeAuthError(err, `${label} sign-in failed`));
+      }
     } finally {
+      if (timeoutId) clearTimeout(timeoutId);
       setBusy(false);
     }
   };
