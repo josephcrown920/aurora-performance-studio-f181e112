@@ -62,6 +62,7 @@ import {
   Music,
   SplitSquareHorizontal,
   Boxes,
+  FileText as FileTextIcon,
   Undo2,
   Redo2,
   RotateCcw,
