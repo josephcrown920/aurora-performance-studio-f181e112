@@ -225,7 +225,7 @@ const HERO_SLIDES: ReadonlyArray<{
     headline: "Look Like The Biggest Artist In Your City.",
     sub: "Create magazine-quality press photos, tour posters, album covers, and promotional visuals in minutes—not weeks.",
     cta: "Create Press Photos →",
-    ctaTo: "/music-video",
+    ctaTo: "/studio",
     refPrompt: "Magazine-quality press photo, editorial lighting, tour poster energy",
   },
 ];
@@ -249,16 +249,9 @@ const FEATURED_TOOLS: ReadonlyArray<{
   {
     label: "Perform Anywhere",
     desc: "Phone performance + avatar + outfit + scene → cinematic video, anywhere.",
-    to: "/perform",
+    to: "/perform-anywhere",
     icon: Film,
     price: `From ${PRICE_PERFORMANCE} Aura`,
-  },
-  {
-    label: "Aurora Video Agent",
-    desc: "Plan, storyboard, edit, and render a complete cinematic video.",
-    to: "/video-agent",
-    icon: Clapperboard,
-    price: `From ${PRICE_VIDEO_AGENT} Aura`,
   },
   {
     label: "Colors Performance Sessions",
@@ -679,7 +672,7 @@ function LandingPage() {
       <div className="border-y border-white/8 bg-zinc-950">
         <div className="flex items-center justify-center gap-4 py-4 px-5 overflow-x-auto">
           {[
-            { label: "MUSIC VIDEO STILLS", to: "/music-video" },
+            { label: "SCENE STILLS", to: "/studio" },
             { label: "TOUR POSTERS", to: "/studio" },
             { label: "PRESS PHOTOS", to: "/studio" },
           ].map((item, i, arr) => (
@@ -875,10 +868,10 @@ function LandingPage() {
             </div>
 
             <Link
-              to="/editor"
+              to="/studio"
               className="self-start inline-flex items-center gap-2 rounded-full bg-violet-600 px-6 py-3 text-sm font-bold text-white shadow-[0_6px_24px_-4px_rgba(139,92,246,0.55)] transition-transform hover:scale-[1.02] active:scale-95 no-underline"
             >
-              Open Playground <ArrowUpRight className="size-4" />
+              Open Studio <ArrowUpRight className="size-4" />
             </Link>
           </div>
         </div>
@@ -939,7 +932,7 @@ function LandingPage() {
             </h2>
           </div>
           <Link
-            to="/music-video"
+            to="/motion"
             className="inline-flex items-center gap-1 text-sm font-medium text-zinc-400 hover:text-zinc-100 shrink-0 transition-colors"
           >
             See more <ArrowUpRight className="size-4" />
@@ -1132,8 +1125,6 @@ function LandingPage() {
             title="Product"
             links={[
               { label: "Studio", to: "/studio" },
-              { label: "Canvas", to: "/canvas" },
-              { label: "Video", to: "/music-video" },
               { label: "Pricing", to: "/billing" },
               { label: "Partners", to: "/partners" },
             ]}
@@ -1151,7 +1142,6 @@ function LandingPage() {
           <FooterCol
             title="Develop"
             links={[
-              { label: "Playground", to: "/editor" },
               { label: "CLI", to: "/cli" },
               { label: "MCP", to: "/studio" },
               { label: "Privacy", to: "/" },

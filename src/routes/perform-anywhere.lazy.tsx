@@ -7,9 +7,13 @@ import { PerformanceVariantWorkflow } from "@/components/performance/Performance
 import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 
 export const Route = createLazyFileRoute("/perform-anywhere")({ component: PerformAnywhere });
+import streetClip from "@/assets/josh/generated/clip-15-alley-neon.mp4";
+import streetPoster from "@/assets/josh/generated/still-15-alley-neon.jpg";
+import studioClip from "@/assets/josh/generated/clip-05-studio-gel.mp4";
+import studioPoster from "@/assets/josh/generated/still-05-studio-gel.jpg";
 const EXAMPLES = [
-  { label: "Cinematic performance", src: "/videos/landing-demo-reel.mp4", poster: "/videos/landing-demo-reel-poster.jpg" },
-  { label: "Portrait performance", src: "/videos/face-sings-hero.mp4", poster: "/videos/face-sings-hero-poster.jpg" },
+  { label: "Neon street", src: streetClip, poster: streetPoster },
+  { label: "Studio performance", src: studioClip, poster: studioPoster },
 ];
 function PerformAnywhere() {
   const { user } = useAuth();
