@@ -90,7 +90,7 @@
 .control-node-dock { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:4px; max-width:calc(100% - 20px); overflow-x:auto; z-index:30; border:1px solid var(--border); background:var(--card); padding:6px; border-radius:8px; backdrop-filter:blur(24px); }
 .control-templates { position:absolute; top:12px; left:12px; z-index:20; display:flex; gap:4px; background:var(--card); border:1px solid var(--border); border-radius:6px; padding:4px; }
 .control-templates button { color:var(--foreground); background:var(--control-glass); border-color:var(--border); }
-.control-director { background:var(--card) !important; border-color:var(--border) !important; color:var(--foreground); }
+.control-director.phone-panel-col { left:auto; right:0; background:var(--card) !important; border-color:var(--border) !important; color:var(--foreground); }
 .control-director header > div > span { background:var(--muted) !important; box-shadow:none !important; }
 .control-director footer > button,.control-director footer > div > button:last-child { background:var(--primary) !important; color:var(--primary-foreground) !important; box-shadow:none !important; }
 @media (max-width:1000px) { .control-workspace { grid-template-columns:24% 34% minmax(0,1fr); } .control-scroll { padding:12px; } .control-header { padding:0 16px 0 108px; } }
