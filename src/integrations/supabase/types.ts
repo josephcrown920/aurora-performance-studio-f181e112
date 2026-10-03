@@ -2755,6 +2755,48 @@ export type Database = {
           },
         ]
       }
+      perform_anywhere_campaigns: {
+        Row: {
+          active_shot: number | null
+          blocked_message: string | null
+          character_name: string
+          created_at: string
+          id: string
+          plan: Json
+          preferences: string
+          reference_paths: Json
+          renders: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_shot?: number | null
+          blocked_message?: string | null
+          character_name: string
+          created_at?: string
+          id?: string
+          plan: Json
+          preferences: string
+          reference_paths?: Json
+          renders?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_shot?: number | null
+          blocked_message?: string | null
+          character_name?: string
+          created_at?: string
+          id?: string
+          plan?: Json
+          preferences?: string
+          reference_paths?: Json
+          renders?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       performance_variant_drafts: {
         Row: {
           created_at: string
