@@ -1,5 +1,4 @@
 import { Image, Smartphone, Film, Upload } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export function PerformanceSourceStrip({ references, phoneVideoUrl, finalUrl, onUpload }: {
   references: Record<string, string | null>;
@@ -15,7 +14,7 @@ export function PerformanceSourceStrip({ references, phoneVideoUrl, finalUrl, on
     </div>
     <div className={`source-cell ${phoneVideoUrl ? "workspace-active" : ""}`}>
       <span><Smartphone size={13} />Phone recording</span>
-      <div className="source-preview">{phoneVideoUrl ? <video src={phoneVideoUrl} controls playsInline preload="metadata" aria-label="Phone base clip" /> : <label className="source-empty cursor-pointer"><Upload size={16} /><span>Base clip</span>{onUpload && <input aria-label="Upload phone base clip" type="file" accept="video/*" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) onUpload(file); event.target.value = ""; }} />}</label>}</div>
+      <div className="source-preview">{phoneVideoUrl ? <video src={phoneVideoUrl} controls playsInline preload="metadata" aria-label="Phone base clip" /> : <label className={`source-empty ${onUpload ? "cursor-pointer" : ""}`}><Upload size={16} /><span>Base clip</span>{onUpload && <input aria-label="Upload phone base clip" type="file" accept="video/*" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) onUpload(file); event.target.value = ""; }} />}</label>}</div>
     </div>
     <div className={`source-cell ${finalUrl ? "workspace-active" : ""}`}>
       <span><Film size={13} />Final render</span>
