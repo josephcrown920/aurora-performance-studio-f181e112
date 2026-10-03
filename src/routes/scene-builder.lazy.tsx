@@ -369,7 +369,7 @@ function SceneBuilderPage() {
           <div>
             <h1 className="text-2xl font-bold text-white mb-1">Direct your shoot.</h1>
             <p className="text-sm text-white/60 leading-relaxed">
-              Drop your references — we'll stage the studio. Upload your selfie, outfit, location and prop, then generate. Optionally animate with your phone performance using Motion Control. Powered by <span className="text-white/80 font-medium">Seedance 5.9 · Kling · Gemini Omni · Grok Imagine</span>.
+              Drop your references — we'll stage the studio. Upload your selfie, outfit, location and prop, then generate. Optionally animate with your phone performance using Motion Control. Powered by <span className="text-white/80 font-medium">ModelArk Seedream · ModelArk Seedance 2.5 · Kling · Gemini Omni · Grok Imagine</span>.
             </p>
             {/* Lavender slot preview row — mirrors the reference slots below */}
             <div className="flex items-center gap-2.5 mt-3">
@@ -390,7 +390,7 @@ function SceneBuilderPage() {
             </div>
             {/* Model badges */}
             <div className="flex flex-wrap gap-1.5 mt-3">
-              {["Seedance 5.9", "Kling", "Gemini Omni", "Grok Imagine"].map((m) => (
+              {["ModelArk Seedream", "ModelArk Seedance 2.5", "Kling", "Gemini Omni", "Grok Imagine"].map((m) => (
                 <span key={m} className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary/80">
                   <span className="size-1 rounded-full bg-primary animate-pulse" />
                   {m}
@@ -468,6 +468,106 @@ function SceneBuilderPage() {
                 e.target.value = "";
               }}
             />
+          </section>
+
+          {/* ── Phone Performance — optional motion control ── */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Smartphone className="w-3.5 h-3.5 text-primary/70" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-white/50">
+                  Phone Performance
+                </span>
+                <span className="text-[10px] rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-white/35">Optional</span>
+              </div>
+              {phoneVideoUrl && (
+                <button
+                  type="button"
+                  onClick={() => setPhoneVideoUrl(null)}
+                  className="text-[10px] text-white/30 hover:text-white/60 transition-colors"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <p className="text-xs text-white/35 leading-relaxed mb-3">
+              Drop a 30-second phone recording of yourself performing. Once you have a scene generated above, tap <span className="text-primary/70">Animate with Motion Control</span> to transfer your real movement into the AI scene.
+            </p>
+
+            {/* Video upload / preview */}
+            <button
+              type="button"
+              onClick={() => phoneVideoRef.current?.click()}
+              disabled={phoneVideoUploading}
+              className={cn(
+                "w-full rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all overflow-hidden relative",
+                phoneVideoUrl
+                  ? "border-primary/40 bg-primary/5 p-0"
+                  : "border-white/20 bg-white/5 hover:border-white/35 py-8",
+              )}
+            >
+              {phoneVideoUploading ? (
+                <><RefreshCw className="w-6 h-6 text-primary animate-spin" /><span className="text-xs text-white/50">Uploading…</span></>
+              ) : phoneVideoUrl ? (
+                <video
+                  src={phoneVideoUrl}
+                  className="w-full rounded-xl"
+                  style={{ maxHeight: 200, objectFit: "cover" }}
+                  muted
+                  playsInline
+                  controls
+                />
+              ) : (
+                <>
+                  <Smartphone className="w-8 h-8 text-white/25" />
+                  <span className="text-sm font-medium text-white/40">Tap to upload phone video</span>
+                  <span className="text-[11px] text-white/25">30 s · MP4, MOV, WebM · up to 200 MB</span>
+                </>
+              )}
+            </button>
+            <input
+              ref={phoneVideoRef}
+              type="file"
+              accept="video/*"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) void handlePhoneVideoUpload(f);
+                e.target.value = "";
+              }}
+            />
+
+            {/* Animate button — enabled when base scene is ready */}
+            {baseResult && (
+              <Link
+                to="/motion"
+                search={{ image: toAbsoluteUrl(baseResult.url) }}
+                className={cn(
+                  "mt-3 flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold transition-all",
+                  "bg-cyan-500/15 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-500/25",
+                )}
+              >
+                <Play className="w-4 h-4" />
+                Animate with Motion Control →
+              </Link>
+            )}
+            {!baseResult && (
+              <p className="mt-2 text-[11px] text-center text-white/25">
+                Generate your base scene first, then animate it here
+              </p>
+            )}
+
+            {/* Output video placeholder */}
+            {baseResult && (
+              <div className="mt-3 rounded-xl border border-white/10 bg-white/3 p-4 flex flex-col items-center gap-2">
+                <Video className="w-6 h-6 text-white/20" />
+                <p className="text-xs text-white/30 text-center leading-relaxed">
+                  Your animated output video will appear in Motion Control after generation.
+                  <br />
+                  <Link to="/motion" className="text-primary/60 underline underline-offset-2">Open Motion Control →</Link>
+                </p>
+              </div>
+            )}
           </section>
 
           {/* ── Swap fields: {outfit}, {location}, {prop} ── */}
@@ -589,105 +689,6 @@ function SceneBuilderPage() {
             )}
           </section>
 
-          {/* ── Phone Performance — optional motion control ── */}
-          <section>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Smartphone className="w-3.5 h-3.5 text-primary/70" />
-                <span className="text-xs font-semibold uppercase tracking-wider text-white/50">
-                  Phone Performance
-                </span>
-                <span className="text-[10px] rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-white/35">Optional</span>
-              </div>
-              {phoneVideoUrl && (
-                <button
-                  type="button"
-                  onClick={() => setPhoneVideoUrl(null)}
-                  className="text-[10px] text-white/30 hover:text-white/60 transition-colors"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-            <p className="text-xs text-white/35 leading-relaxed mb-3">
-              Drop a 30-second phone recording of yourself performing. Once you have a scene generated above, tap <span className="text-primary/70">Animate with Motion Control</span> to transfer your real movement into the AI scene.
-            </p>
-
-            {/* Video upload / preview */}
-            <button
-              type="button"
-              onClick={() => phoneVideoRef.current?.click()}
-              disabled={phoneVideoUploading}
-              className={cn(
-                "w-full rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all overflow-hidden relative",
-                phoneVideoUrl
-                  ? "border-primary/40 bg-primary/5 p-0"
-                  : "border-white/20 bg-white/5 hover:border-white/35 py-8",
-              )}
-            >
-              {phoneVideoUploading ? (
-                <><RefreshCw className="w-6 h-6 text-primary animate-spin" /><span className="text-xs text-white/50">Uploading…</span></>
-              ) : phoneVideoUrl ? (
-                <video
-                  src={phoneVideoUrl}
-                  className="w-full rounded-xl"
-                  style={{ maxHeight: 200, objectFit: "cover" }}
-                  muted
-                  playsInline
-                  controls
-                />
-              ) : (
-                <>
-                  <Smartphone className="w-8 h-8 text-white/25" />
-                  <span className="text-sm font-medium text-white/40">Tap to upload phone video</span>
-                  <span className="text-[11px] text-white/25">30 s · MP4, MOV, WebM · up to 200 MB</span>
-                </>
-              )}
-            </button>
-            <input
-              ref={phoneVideoRef}
-              type="file"
-              accept="video/*"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) void handlePhoneVideoUpload(f);
-                e.target.value = "";
-              }}
-            />
-
-            {/* Animate button — enabled when base scene is ready */}
-            {baseResult && (
-              <Link
-                to="/motion"
-                search={{ image: toAbsoluteUrl(baseResult.url) }}
-                className={cn(
-                  "mt-3 flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold transition-all",
-                  "bg-cyan-500/15 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-500/25",
-                )}
-              >
-                <Play className="w-4 h-4" />
-                Animate with Motion Control →
-              </Link>
-            )}
-            {!baseResult && (
-              <p className="mt-2 text-[11px] text-center text-white/25">
-                Generate your base scene first, then animate it here
-              </p>
-            )}
-
-            {/* Output video placeholder */}
-            {baseResult && (
-              <div className="mt-3 rounded-xl border border-white/10 bg-white/3 p-4 flex flex-col items-center gap-2">
-                <Video className="w-6 h-6 text-white/20" />
-                <p className="text-xs text-white/30 text-center leading-relaxed">
-                  Your animated output video will appear in Motion Control after generation.
-                  <br />
-                  <Link to="/motion" className="text-primary/60 underline underline-offset-2">Open Motion Control →</Link>
-                </p>
-              </div>
-            )}
-          </section>
 
           {/* ── Add Angle — only visible after base scene is generated ── */}
           {baseResult && (
