@@ -8,6 +8,7 @@ export const renderLayersImage = createServerFn({ method: 'POST' })
   .inputValidator((input: unknown) => z.object({ prompt: z.string().min(10).max(3000), referenceUrls: z.array(z.string().url()).min(1).max(2) }).parse(input))
   .handler(async ({ data, context }) => {
     const { assertOwnedReferenceImage } = await import('@/lib/url-guard');
+    const referenceUrls: string[] = [];
     for (const url of data.referenceUrls) {
       const parsed = new URL(url);
       const storageOrigin = new URL(process.env['SUPABASE_URL'] ?? '').origin;
@@ -16,12 +17,18 @@ export const renderLayersImage = createServerFn({ method: 'POST' })
         const path = decodeURIComponent(parsed.pathname.slice('/storage/v1/object/sign/layers-private/'.length));
         const { error } = await context.supabase.storage.from('layers-private').download(path);
         if (error) throw new Error('Reference image is unavailable or not yours.');
-      } else await assertOwnedReferenceImage(url, context.userId);
+        const signed = await context.supabase.storage.from('layers-private').createSignedUrl(path, 3600);
+        if (signed.error || !signed.data) throw new Error('Reference image could not be refreshed.');
+        referenceUrls.push(signed.data.signedUrl);
+      } else {
+        await assertOwnedReferenceImage(url, context.userId);
+        referenceUrls.push(url);
+      }
     }
     const { reserveOrchestrateRecord } = await import('@/lib/generate-core.server');
     const result = await reserveOrchestrateRecord({
       userId: context.userId, kind: 'image', prompt: `[Aurora Layers]\n${data.prompt}`,
-      model: 'google/gemini-3.1-flash-image-preview', imageUrls: data.referenceUrls,
+      model: 'google/gemini-3.1-flash-image-preview', imageUrls: referenceUrls,
       cost: SCENE_BUILDER_COST_BASE, reason: 'layers_image_edit', editStrict: true,
       pinnedModelOnly: true,
     });
