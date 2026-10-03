@@ -155,7 +155,7 @@ function SpinPage() {
   const [planning, setPlanning] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // Per-variant video slider: 0–50 posts as short 5s i2v clips (budget
+  // Per-variant video slider: 0–30 posts as short 5s i2v clips (budget
   // seedance-2.0-fast). Separate from the premium Product Showcase Video Mode.
   const [videoCount, setVideoCount] = useState(0);
 
@@ -481,7 +481,7 @@ function SpinPage() {
           showGalleryLink
         />
 
-        {/* Video ratio slider — 0 to 50 clips (budget i2v, 5 Aura each) */}
+        {/* Video ratio slider — 0 to 30 clips (budget i2v, 5 Aura each) */}
         {mode !== "video" && (
           <div className="mt-6 rounded-xl border border-white/10 bg-white/3 p-4">
             <div className="flex items-center justify-between gap-3 mb-3">
