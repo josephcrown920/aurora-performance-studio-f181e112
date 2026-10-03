@@ -18,4 +18,5 @@
 - Keep Aurora Command Center statuses evidence-derived: only recorded successful workflow checks may produce PROVEN; this prevents UI-only claims from passing launch gates.
 - Keep one shared Aurora Director implementation with skills, workflows, and providers beneath it; duplicate feature-specific directors create drift and are not separate agents.
 - Keep Canvas reference roles and briefs in owner-scoped Canvas context; motion tests must reject unsupported depth conditioning rather than silently dropping it.
+- Keep Perform Anywhere's 30-shot production inside the Video Agent, reusing Canvas identity context and the private music-scene renderer; identity-only references must allow wardrobe changes without creating a second Director.
 - Keep the Expo Android app and side apps under `artifacts/`, outside the web app's source; the root .easignore uploads only `artifacts/aurora-mobile` to EAS so the web bun.lock never reaches the mobile builder.
