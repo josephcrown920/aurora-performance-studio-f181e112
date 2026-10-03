@@ -852,6 +852,20 @@ function AuthPage() {
             {appleBusy ? "Signing in..." : <><AppleIcon className="mr-2 size-4" /> Continue with Apple</>}
           </Button>
         )}
+        {hydrated && inIframe && anyOAuthEnabled && (
+          <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+            Google and Apple can't finish inside this preview window.{" "}
+            <a
+              href={typeof window !== "undefined" ? window.location.href : "/auth"}
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline underline-offset-2"
+            >
+              Open sign-in in your browser
+            </a>{" "}
+            or use email and password here.
+          </p>
+        )}
 
         <div className="mt-6 flex items-center justify-between text-sm text-muted-foreground">
           <span />
