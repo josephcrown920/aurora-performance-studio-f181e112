@@ -1,5 +1,9 @@
 # Roadmap
 
+- [ ] Add Get Ready With Me within Perform Anywhere for a 30-second dressing clip and existing motion workflows; expose it on Aurora’s opening canvas.
+- [ ] Make Admin discoverable without changing its authorization checks.
+- [ ] Verify Aurora CLI and run one bounded generation per feature where inputs, access, and provider balance allow; record actual outcomes and blockers.
+
 - [x] Replace Aurora’s home and Studio sections with the actual shared node-and-connector canvas; retire the shown Urban Cuts screen.
 - [x] Make the canvas directly editable with node creation, branching connections, deletion and optional inspector; editing, reload persistence and mobile layout verified.
 - [ ] Apply licensed Canela headings and Neue Montreal body/control fonts across every page; blocked on real font files.
