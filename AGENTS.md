@@ -20,4 +20,4 @@
 - Keep Canvas reference roles and briefs in owner-scoped Canvas context; motion tests must reject unsupported depth conditioning rather than silently dropping it.
 - Keep the Expo Android app and side apps under `artifacts/`, outside the web app's source; the root .easignore uploads only `artifacts/aurora-mobile` to EAS so the web bun.lock never reaches the mobile builder.
 
-- Keep the native Layers image studio scoped to its feature and reuse authenticated credit-reserved generation, owner-scoped studio storage, and the existing TimelineDoc events; this avoids external session forwarding and competing video editors.
+- Keep the native Layers image studio scoped to its feature and reuse authenticated credit-reserved generation, owner-scoped private Layers storage, and the existing TimelineDoc events; this avoids external session forwarding and competing video editors.

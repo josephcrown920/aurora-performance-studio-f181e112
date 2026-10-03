@@ -36,7 +36,7 @@ export function AuroraLayersStudio() {
 }
 function Studio() {
   const [name, setName] = useState('Untitled shoot');
-  const [id, setId] = useState(() => crypto.randomUUID());
+  const [id, setId] = useState<string>(() => crypto.randomUUID());
   const [source, setSource] = useState<ImageState>();
   const [character, setCharacter] = useState<ImageState>();
   const [prompt, setPrompt] = useState(PRESETS[0] ?? '');
@@ -102,12 +102,14 @@ function Studio() {
       ].filter(Boolean).join('\n\n');
       const outcome = await renderImage({ data: { prompt: fullPrompt, referenceUrls: refs } });
       if (!outcome.ok) throw new Error(outcome.error);
+      const resultAsset = await uploadLayerImage(outcome.url, definition ? `${definition.name} edit` : 'Layer edit');
+      const privateResultUrl = await layerImageUrl(resultAsset);
       const clipId = crypto.randomUUID();
       const start = Math.max(0, ...doc.clips.map(clip => clip.start + clip.duration));
-      const clip: Clip = { id: clipId, track: 'V1', kind: 'image', start, duration: 5, name: definition ? `${definition.name} edit` : `Shot ${shots.length + 1}`, src: outcome.url, prompt };
+      const clip: Clip = { id: clipId, track: 'V1', kind: 'image', start, duration: 5, name: definition ? `${definition.name} edit` : `Shot ${shots.length + 1}`, src: privateResultUrl, prompt };
       apply({ ...doc, seconds: Math.max(doc.seconds, start + 5), clips: [...doc.clips, clip] });
       setActive(clipId); setOriginal(false);
-      if (target) setEdits(current => ({ ...current, [target]: { prompt, image: { src: outcome.url, name: clip.name } } }));
+      if (target) setEdits(current => ({ ...current, [target]: { prompt, image: { src: privateResultUrl, name: clip.name, asset: resultAsset } } }));
       setNote('Frame rendered and added to the shared timeline.');
     });
   }
@@ -161,7 +163,7 @@ function Studio() {
         <div className="flex items-center gap-3"><Layers3 className="size-8 text-primary" /><h1 className="text-2xl font-bold sm:text-3xl">Aurora Layers</h1></div>
         <div className="flex items-center gap-2"><span className="text-xs text-muted-foreground">Image studio</span><Button asChild variant="outline" size="sm"><Link to="/video-agent/timeline">Video editor</Link></Button></div>
       </header>
-      <div className="grid items-start gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="layers-workspace grid items-start gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <section className="min-w-0">
           <div className="flex items-center gap-2 border-b border-border pb-4"><input aria-label="Project name" className="min-w-0 flex-1 rounded-md border border-transparent bg-transparent px-2 py-2 text-base font-bold focus:border-primary focus:outline-none" value={name} onChange={event => setName(event.target.value)} /><IconAction title="New project" onClick={newProject}><Plus className="size-4" /></IconAction></div>
           <p className="layers-label mt-5">Context Lock — Character sheet</p>

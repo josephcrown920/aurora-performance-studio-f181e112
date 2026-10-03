@@ -87,6 +87,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Create videos that look like a $50,000 production — for a fraction of the cost. Aurora is the AI studio built for music artists and creators. No crew, no studio, no waiting." },
       { property: "og:title", content: "Aurora — Turn Your Phone Recording into a Cinematic Music Video" },
       { property: "og:description", content: "Create videos that look like a $50,000 production — for a fraction of the cost. Aurora is the AI studio built for music artists and creators. No crew, no studio, no waiting." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: CANONICAL_ORIGIN },
     ],
     links: [

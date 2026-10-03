@@ -21,33 +21,33 @@ export async function uploadLayerImage(src: string, name: string): Promise<Layer
   if (!['image/png', 'image/jpeg', 'image/webp'].includes(blob.type)) throw new Error('Use a JPG, PNG or WebP image.');
   if (blob.size > 20 * 1024 * 1024) throw new Error('Images must be smaller than 20 MB.');
   const path = `${owner}/layers/${crypto.randomUUID()}.${blob.type === 'image/jpeg' ? 'jpg' : blob.type === 'image/webp' ? 'webp' : 'png'}`;
-  const { error } = await supabase.storage.from('studio').upload(path, blob, { contentType: blob.type });
+  const { error } = await supabase.storage.from('layers-private').upload(path, blob, { contentType: blob.type });
   if (error) throw new Error(error.message);
   return { path, name };
 }
 export async function layerImageUrl(asset: LayerAsset) {
   const owner = await studioOwner();
   if (!asset.path.startsWith(`${owner}/layers/`)) throw new Error('This image belongs to a different project owner.');
-  const { data, error } = await supabase.storage.from('studio').createSignedUrl(asset.path, 86400);
+  const { data, error } = await supabase.storage.from('layers-private').createSignedUrl(asset.path, 86400);
   if (error || !data) throw new Error(error?.message ?? 'Image unavailable.');
   return data.signedUrl;
 }
 export async function listLayersProjects() {
   const owner = await studioOwner();
-  const { data, error } = await supabase.storage.from('studio').list(`${owner}/layers-projects`, { limit: 100, sortBy: { column: 'updated_at', order: 'desc' } });
+  const { data, error } = await supabase.storage.from('layers-private').list(`${owner}/layers-projects`, { limit: 100, sortBy: { column: 'updated_at', order: 'desc' } });
   if (error) throw new Error(error.message);
   return data.filter(file => file.name.endsWith('.json')).map(file => ({ id: file.name.slice(0, -5), name: file.name.slice(0, -5) }));
 }
 export async function saveLayersProject(project: LayersProject) {
   const owner = await studioOwner();
   if (!/^[a-zA-Z0-9-]+$/.test(project.id)) throw new Error('Invalid project ID.');
-  const { error } = await supabase.storage.from('studio').upload(`${owner}/layers-projects/${project.id}.json`, new Blob([JSON.stringify(project)], { type: 'application/json' }), { upsert: true, contentType: 'application/json' });
+  const { error } = await supabase.storage.from('layers-private').upload(`${owner}/layers-projects/${project.id}.json`, new Blob([JSON.stringify(project)], { type: 'application/json' }), { upsert: true, contentType: 'application/json' });
   if (error) throw new Error(error.message);
 }
 export async function loadLayersProject(id: string): Promise<LayersProject> {
   const owner = await studioOwner();
   if (!/^[a-zA-Z0-9-]+$/.test(id)) throw new Error('Invalid project ID.');
-  const { data, error } = await supabase.storage.from('studio').download(`${owner}/layers-projects/${id}.json`);
+  const { data, error } = await supabase.storage.from('layers-private').download(`${owner}/layers-projects/${id}.json`);
   if (error || !data) throw new Error(error?.message ?? 'Project unavailable.');
   const project: LayersProject = JSON.parse(await data.text());
   if (project.version !== 1 || project.id !== id || !Array.isArray(project.timeline?.clips)) throw new Error('Unsupported project format.');
@@ -56,6 +56,6 @@ export async function loadLayersProject(id: string): Promise<LayersProject> {
 export async function removeLayersProject(id: string) {
   const owner = await studioOwner();
   if (!/^[a-zA-Z0-9-]+$/.test(id)) throw new Error('Invalid project ID.');
-  const { error } = await supabase.storage.from('studio').remove([`${owner}/layers-projects/${id}.json`]);
+  const { error } = await supabase.storage.from('layers-private').remove([`${owner}/layers-projects/${id}.json`]);
   if (error) throw new Error(error.message);
 }

@@ -2346,3 +2346,6 @@ html[data-theme="light"] {
 .layers-studio .layers-output { min-height: 220px; }
 .layers-studio button:hover { transform: none; }
 @media (prefers-reduced-motion: reduce) { .layers-studio * { animation: none !important; transition: none !important; } }
+
+@media (min-width: 1000px) { .layers-studio .layers-workspace { grid-template-columns: minmax(0,0.95fr) minmax(0,1.05fr); } }
+.layers-studio { padding-bottom: 100px; }
