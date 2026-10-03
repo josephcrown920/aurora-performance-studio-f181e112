@@ -152,10 +152,6 @@ function PrevisWorkspace() {
   const refetchProjects = projectsQuery.refetch;
   const projects = (projectsQuery.data ?? []).filter((p) => p.scenes.length > 0);
 
-  useEffect(() => {
-    if (!authLoading && !user) void navigate({ to: "/auth", search: authNextSearch() });
-  }, [authLoading, user, navigate]);
-
   // ── Analyze brief → plan ──────────────────────────────────────────────
 
   async function handleAnalyze(idea: string, format: string) {

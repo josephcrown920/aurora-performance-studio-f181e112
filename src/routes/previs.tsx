@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CANONICAL_ORIGIN } from "@/lib/seo";
 
 export const Route = createFileRoute("/previs")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Multishot Studio & Previs — Aurora" },
