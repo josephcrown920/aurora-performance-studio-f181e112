@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { StudioPage as NodeWorkspace } from "@/features/storyboard/studio/StudioPage";
 import { CANONICAL_ORIGIN } from "@/lib/seo";
 import { Plus, Play, Pause, SkipForward, SkipBack, ArrowUpRight, ChevronDown, Sparkles, Palette, Film, Wand2, Mic, Music2, Brush, Megaphone, UserCircle2, Workflow, Layers, Flame, Clapperboard, Check, Download, type LucideIcon } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
@@ -152,7 +151,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: () => <NodeWorkspace canvasOnly />,
+  component: LandingPage,
 });
 
 const HERO_SLIDES: ReadonlyArray<{
