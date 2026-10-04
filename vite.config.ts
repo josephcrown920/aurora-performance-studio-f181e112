@@ -260,27 +260,9 @@ export default defineConfig({
     // each used by only a handful of routes (admin/creator dashboard, the
     // playground editor, canvas), so keeping them isolated means the landing
     // page and other common routes don't pay for their weight on first load.
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks(id: string) {
-            // Move eagerly-imported route metadata files (loaders, beforeLoad,
-            // validateSearch) out of the generic "index" entry chunk into a
-            // dedicated "routes-meta" sync chunk so the landing-page entry is
-            // smaller.  The actual component code lives in the per-route async
-            // *.lazy.tsx chunks — those are NOT grouped here so each route
-            // remains independently loadable on first navigation.
-            if (id.includes("src/routes/") && !id.includes(".lazy.")) return "routes-meta";
-            if (!id.includes("node_modules")) return undefined;
-            if (id.includes("monaco-editor") || id.includes("@monaco-editor")) return "vendor-monaco";
-            if (id.includes("recharts") || id.includes("d3-")) return "vendor-charts";
-            if (id.includes("@xyflow")) return "vendor-xyflow";
-            if (id.includes("@supabase")) return "vendor-supabase";
-            return undefined;
-          },
-        },
-      },
-    },
+    // Manual chunk grouping removed: splitting d3/recharts/xyflow/route-meta
+    // into fixed chunks created circular chunk imports that crashed startup
+    // ("Cannot access uninitialized variable") and left pages stuck loading.
     plugins: extraPlugins,
   },
 });
