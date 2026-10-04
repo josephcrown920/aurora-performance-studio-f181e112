@@ -152,7 +152,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: () => <NodeWorkspace canvasOnly />,
+  component: LandingPage,
 });
 
 const HERO_SLIDES: ReadonlyArray<{
