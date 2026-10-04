@@ -2,6 +2,10 @@
 
 https://github.com/josephcrown920/Auroraglobal.git SET UP THIS PROJECT
 
+## Lovable handoff (start here)
+
+See [`lovable-updates/HANDOFF.md`](lovable-updates/HANDOFF.md) for the full work log, where development stopped, open blockers, and page screenshots in `lovable-updates/screenshots/`.
+
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
