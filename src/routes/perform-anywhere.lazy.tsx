@@ -1,6 +1,6 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowLeft, ArrowUpRight, Film } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowUpRight, Film, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { PerformanceVariantWorkflow } from "@/components/performance/PerformanceVariantWorkflow";
@@ -8,14 +8,54 @@ import { PerformanceSourceStrip } from "@/components/performance/PerformanceSour
 import { GetReadyWithMeWorkflow } from "@/components/performance/GetReadyWithMeWorkflow";
 
 export const Route = createLazyFileRoute("/perform-anywhere")({ component: PerformAnywhere });
-import streetClip from "@/assets/josh/generated/clip-15-alley-neon.webm";
-import streetPoster from "@/assets/josh/generated/still-15-alley-neon.jpg";
 import studioClip from "@/assets/josh/generated/clip-05-studio-gel.webm";
 import studioPoster from "@/assets/josh/generated/still-05-studio-gel.jpg";
-const EXAMPLES = [
-  { label: "Neon street", src: streetClip, poster: streetPoster },
-  { label: "Studio performance", src: studioClip, poster: studioPoster },
-];
+
+function PhoneRecordingSlot({ active, onActivate }: { active: boolean; onActivate: () => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [url, setUrl] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  return (
+    <article className={`performance-example ${active ? "workspace-active" : ""}`}>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="video/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          if (url) URL.revokeObjectURL(url);
+          setUrl(URL.createObjectURL(file));
+          setName(file.name);
+          onActivate();
+        }}
+      />
+      {url ? (
+        <video src={url} controls playsInline preload="metadata" aria-label="FG3 phone recording" onPlay={onActivate} />
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border bg-muted/40 text-muted-foreground transition hover:text-foreground"
+        >
+          <Smartphone size={22} />
+          <span className="px-3 text-center text-xs">Record or pick a phone clip</span>
+        </button>
+      )}
+      <Button
+        variant="ghost"
+        onClick={() => (url ? onActivate() : inputRef.current?.click())}
+        aria-pressed={active}
+        className="h-11 w-full justify-start whitespace-normal text-left text-xs"
+      >
+        {name ? `FG3 phone recording — ${name}` : "FG3 phone recording"}
+      </Button>
+    </article>
+  );
+}
+
 function PerformAnywhere() {
   const { user } = useAuth();
   const search = Route.useSearch();
@@ -31,10 +71,11 @@ function PerformAnywhere() {
         <section aria-label="Performance examples" className="min-w-0">
           <div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-semibold">Performance examples</h2><span className="text-xs text-muted-foreground">Existing Aurora clips</span></div>
           <div className="grid grid-cols-2 gap-3">
-            {EXAMPLES.map((example, index) => <article key={example.src} className={`performance-example ${active === index ? "workspace-active" : ""}`}>
-              <video src={example.src} poster={example.poster} controls playsInline preload="metadata" aria-label={example.label} onPlay={() => setActive(index)} />
-              <Button variant="ghost" onClick={() => setActive(index)} aria-pressed={active === index} className="h-11 w-full justify-start whitespace-normal text-left text-xs">{example.label}</Button>
-            </article>)}
+            <article className={`performance-example ${active === 0 ? "workspace-active" : ""}`}>
+              <video src={studioClip} poster={studioPoster} controls playsInline preload="metadata" aria-label="Studio performance" onPlay={() => setActive(0)} />
+              <Button variant="ghost" onClick={() => setActive(0)} aria-pressed={active === 0} className="h-11 w-full justify-start whitespace-normal text-left text-xs">Studio performance</Button>
+            </article>
+            <PhoneRecordingSlot active={active === 1} onActivate={() => setActive(1)} />
           </div>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-y border-border py-3"><span className="flex items-center gap-2 text-xs text-muted-foreground"><Film size={14} />Your scene. Your performance.</span><Button asChild size="sm" variant="outline"><Link to="/motion">Motion controls<ArrowUpRight size={13} /></Link></Button></div>
         </section>
