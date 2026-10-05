@@ -120,7 +120,7 @@ export function BalloonLipsync() {
     rafRef.current = requestAnimationFrame(loop);
   };
 
-  const ensureAnalyser = () => {
+  const ensureAnalyser = async () => {
     const audio = audioRef.current;
     if (!audio) return;
     if (audioCtxRef.current && sourceRef.current) return;
@@ -129,6 +129,13 @@ export function BalloonLipsync() {
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AC();
+      // Resume BEFORE createMediaElementSource: once the element is routed
+      // through the context, a suspended context swallows all sound.
+      if (ctx.state === "suspended") await ctx.resume();
+      if (ctx.state !== "running") {
+        await ctx.close().catch(() => {});
+        return; // fall back to direct element playback + simulated bars
+      }
       const src = ctx.createMediaElementSource(audio);
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 1024;
@@ -150,7 +157,7 @@ export function BalloonLipsync() {
     if (!audio) return;
     if (audio.paused) {
       try {
-        ensureAnalyser();
+        await ensureAnalyser();
         if (audioCtxRef.current?.state === "suspended") await audioCtxRef.current.resume();
         await audio.play();
         setPlaying(true);
