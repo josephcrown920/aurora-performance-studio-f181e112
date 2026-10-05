@@ -7,7 +7,7 @@ import readline from 'readline';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8'));
 
-const API_BASE = process.env.AURORA_API_BASE || 'https://aurora-sparkle-charm.lovable.app';
+const API_BASE = process.env.AURORA_API_BASE || 'https://project--4d67404d-927d-4ce6-b425-f5006d88fe02.lovable.app';
 const CONFIG_DIR = path.join(process.env.HOME || process.env.USERPROFILE || '.', '.aurora');
 const CONFIG_PATH = path.join(CONFIG_DIR, 'config.json');
 
