@@ -364,7 +364,13 @@ function LandingPage() {
   const featuredTools = FEATURED_TOOLS.filter((t) => showFeature(t.feature ?? featureKeyForRoute(t.to)));
   const toolDirectory = TOOL_DIRECTORY.filter((t) => showFeature(featureKeyForRoute(t.to)));
 
-  const [introVisible, setIntroVisible] = useState(shouldShowIntro);
+  // Start hidden so SSR and the client's first render agree; reading
+  // localStorage in the useState initializer causes a hydration mismatch
+  // (server renders no intro, client renders the dialog).
+  const [introVisible, setIntroVisible] = useState(false);
+  useEffect(() => {
+    if (shouldShowIntro()) setIntroVisible(true);
+  }, []);
   const [slideIdx, setSlideIdx] = useState(0);
   const [demoOpen, setDemoOpen] = useState(false);
   const slideCount = heroSlides.length;
