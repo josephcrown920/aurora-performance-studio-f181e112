@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { newDeviceCode, newUserCode } from "@/lib/cli-device.server";
 
-const BASE = process.env.SITE_URL?.trim() || "https://auroraperformancestudio.com";
-
 export const Route = createFileRoute("/api/public/cli/device/start")({
   server: {
     handlers: {
@@ -15,7 +13,8 @@ export const Route = createFileRoute("/api/public/cli/device/start")({
             "Access-Control-Allow-Headers": "Content-Type",
           },
         }),
-      POST: async () => {
+      POST: async ({ request }) => {
+        const BASE = process.env.SITE_URL?.trim() || new URL(request.url).origin;
         const cors = { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" };
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const device_code = newDeviceCode();

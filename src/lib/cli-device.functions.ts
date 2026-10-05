@@ -5,8 +5,11 @@ import { z } from "zod";
 export const lookupDeviceCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ userCode: z.string().min(4).max(20) }).parse(d))
-  .handler(async ({ data, context }) => {
-    const { data: row } = await context.supabase
+  .handler(async ({ data }) => {
+    // Pending codes have no owner yet, so the signed-in user's own view can't
+    // see them; look up by the exact code with the server client instead.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
       .from("cli_device_codes")
       .select("id, status, expires_at")
       .eq("user_code", data.userCode.toUpperCase().trim())
