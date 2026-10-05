@@ -58,6 +58,8 @@ Snapshot date: 2026-10-05. Read this first. It covers what the Lovable agent bui
 - **Fonts:** waiting on the licensed Canela and Neue Montreal `.woff2` files.
 - **Mobile:** Play Store internal testing and Apple Developer/App Store Connect access are external blockers.
 - **Library import:** the 5 sample files are not in the private library yet, because no signed-in Aurora account matched.
+- **Depth maps:** not wired into Motion Control or Perform Anywhere. To add them for real: (1) a depth-estimation step that renders a depth map from the reference image/scene, (2) a generation provider that accepts depth conditioning (e.g. a ControlNet depth model via the ComfyUI workers), (3) a visible depth-map preview in both UIs. Until then, per project rule, motion tests must reject unsupported depth conditioning rather than silently drop it.
+- **CLI:** `aurora login` fix is in code but needs publish + an end-to-end approve-and-generate test (spends Aura).
 
 ## Rules to keep (see also AGENTS.md and project knowledge)
 - One shared timeline and Layers editor. Do not build competing editors.
