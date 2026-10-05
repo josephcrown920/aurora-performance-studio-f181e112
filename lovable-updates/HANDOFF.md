@@ -1,6 +1,6 @@
 # Aurora — Lovable Work Log & Developer Handoff
 
-Snapshot date: 2026-10-04. Read this first. It covers what the Lovable agent built and changed, where the work stopped, and what is still open.
+Snapshot date: 2026-10-05. Read this first. It covers what the Lovable agent built and changed, where the work stopped, and what is still open.
 
 ## Screenshots
 - `screenshots/pages/`: one desktop (1280px) capture per main page, signed out. Pages: home, studio, canvas, layers, lagos40, perform-anywhere, director-room, video-agent, motion, lipsync, library, colors, previs, tools, billing, auth, pricing, guides, contact, admin.
@@ -42,6 +42,12 @@ Snapshot date: 2026-10-04. Read this first. It covers what the Lovable agent bui
 32. Made 5 sample generations with Lovable tools outside the app (`/mnt/documents/aurora-test-generations/`). These do not prove the app's own generation works.
 33. Removed the black "Untitled production" canvas from the homepage. `/` is the landing page again, and the canvas lives at `/studio`.
 34. Created this handoff folder and its screenshots.
+35. Added an iframe embed toggle for the external Layers app (`build-it-magic-49.lovable.app/embed`) so the Layers landing experience can be embedded with its own styling.
+36. Replaced the "Neon street" example in Perform Anywhere with an FG3 phone recording slot: record from the phone camera or pick a video file, with inline playback. The Studio performance clip remains alongside it.
+37. Fixed CLI sign-in (`aurora login`): the device-code lookup now uses the server admin client (pending unowned codes were invisible under RLS), the verification URL derives from the request origin instead of a dead hardcoded site, and the CLI default base URL points at this project. Local test of `/api/public/cli/device/start` returns a code and correct authorize URL. Full approve-and-generate flow not yet tested end to end; the CLI generates images only, not video/lip sync.
+38. Fixed the landing-page balloon-head lip sync demo playing silently: the audio was routed through a Web Audio `MediaElementAudioSourceNode` while the AudioContext was still suspended (autoplay policy), swallowing all sound while the lips kept animating on the simulated fallback. The context now resumes before the source is created, and if it can't run, playback falls back to the plain audio element. Verified in the browser: "Play the hook" plays the track.
+39. Fixed a blank-screen crash/hydration failure on the homepage: `shouldShowIntro()` read `localStorage` inside a `useState` initializer, so the server rendered no intro overlay while the client rendered one. The intro now starts hidden and is shown from a `useEffect`, so server and client first renders match. Verified: no page errors, page renders fully.
+40. Investigated depth maps in Motion Control and Perform Anywhere: **depth-map conditioning is not implemented anywhere in those pipelines.** The only "depth" in the code is "depth of field" prompt text, and ControlNet/depth models are only listed in the ComfyUI admin studio (`/admin/comfy`), never passed to Segmind Seedance, BytePlus, or any generation call. Building it for real needs a depth-estimation step plus a provider that accepts depth input — see open items.
 
 ## Where it stopped (open items)
 - **Security:** the Canvas ARK and ComfyUI submit endpoints need in-handler auth, spending limits and safe error messages. After that, run a fresh security scan.
