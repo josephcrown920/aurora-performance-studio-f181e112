@@ -54,3 +54,5 @@
 - [x] Bring the Auroraglobal mobile app and side apps into `artifacts/` (adult app and large archives left out).
 - [ ] Separate creator workflows clearly: TikTok30 is a 30-post campaign from one topic and never a hook feature; multi-angle photos belong inside Perform Anywhere and Colors for shot reference, not TikTok30.
 - [x] Lagos 40 page (NBA Josh script) at /lagos40
+- [ ] Update lovable-updates/HANDOFF.md with all work from the last 5 days (lip sync audio fix, hydration crash fix, CLI auth fix, GRWM, handoff snapshots, etc.)
+- [ ] Depth maps: verify surface in Motion Control and Perform Anywhere UI (user doesn't see them); memory says motion tests must reject unsupported depth conditioning rather than silently dropping it
