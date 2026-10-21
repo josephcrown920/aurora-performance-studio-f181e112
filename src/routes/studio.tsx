@@ -430,6 +430,11 @@ function StudioPage() {
         </div>
       </header>
 
+      {editing ? (
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 py-6">
+          <VideoStudio />
+        </div>
+      ) : (
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 py-10 grid lg:grid-cols-[1fr_1.1fr] gap-10">
         {/* Control panel */}
         <section className="space-y-5">
