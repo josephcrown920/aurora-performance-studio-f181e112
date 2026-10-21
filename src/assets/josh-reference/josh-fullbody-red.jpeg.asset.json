@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "29602f17-e4b0-4372-87e5-eff1ad520d3a",
-  "project_id": "4d67404d-927d-4ce6-b425-f5006d88fe02",
-  "url": "/__l5e/assets-v1/29602f17-e4b0-4372-87e5-eff1ad520d3a/josh-fullbody-red.jpeg",
-  "r2_key": "a/v1/4d67404d-927d-4ce6-b425-f5006d88fe02/29602f17-e4b0-4372-87e5-eff1ad520d3a/josh-fullbody-red.jpeg",
-  "original_filename": "josh-fullbody-red.jpeg",
-  "size": 215628,
   "content_type": "image/jpeg",
-  "created_at": "2026-10-03T08:51:23Z"
+  "created_at": "2026-10-03T08:51:23Z",
+  "original_filename": "josh-fullbody-red.jpeg",
+  "project_id": "e84c86a8-749e-41bc-a578-0647310e18aa",
+  "r2_key": "a/v1/e84c86a8-749e-41bc-a578-0647310e18aa/29602f17-e4b0-4372-87e5-eff1ad520d3a/josh-fullbody-red.jpeg",
+  "size": 215628,
+  "url": "/__l5e/assets-v1/29602f17-e4b0-4372-87e5-eff1ad520d3a/josh-fullbody-red.jpeg",
+  "version": 1
 }

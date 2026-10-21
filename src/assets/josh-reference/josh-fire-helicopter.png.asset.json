@@ -1,11 +1,11 @@
 {
-  "version": 1,
   "asset_id": "34ae7a09-c9cf-4aa5-bf15-6665575f1117",
-  "project_id": "4d67404d-927d-4ce6-b425-f5006d88fe02",
-  "url": "/__l5e/assets-v1/34ae7a09-c9cf-4aa5-bf15-6665575f1117/josh-fire-helicopter.png",
-  "r2_key": "a/v1/4d67404d-927d-4ce6-b425-f5006d88fe02/34ae7a09-c9cf-4aa5-bf15-6665575f1117/josh-fire-helicopter.png",
-  "original_filename": "josh-fire-helicopter.png",
-  "size": 1718639,
   "content_type": "image/png",
-  "created_at": "2026-10-03T08:51:11Z"
+  "created_at": "2026-10-03T08:51:11Z",
+  "original_filename": "josh-fire-helicopter.png",
+  "project_id": "e84c86a8-749e-41bc-a578-0647310e18aa",
+  "r2_key": "a/v1/e84c86a8-749e-41bc-a578-0647310e18aa/34ae7a09-c9cf-4aa5-bf15-6665575f1117/josh-fire-helicopter.png",
+  "size": 1718639,
+  "url": "/__l5e/assets-v1/34ae7a09-c9cf-4aa5-bf15-6665575f1117/josh-fire-helicopter.png",
+  "version": 1
 }
