@@ -234,3 +234,69 @@ describe("free transport cost boundary", () => {
     expect(requests).toHaveLength(0);
   });
 });
+
+describe("Ollama Cloud free tier in the agent brain chain", () => {
+  it("serves from Ollama Cloud when ModelArk fails, before the OpenRouter free pool", async () => {
+    process.env.OLLAMA_API_KEY = "test-ollama";
+    resetProviderRegistry();
+    intercept((r) => r.url.startsWith(OLLAMA_CLOUD_BASE)
+      ? completion("gpt-oss:120b")
+      : Response.json({ error: { message: "Provider unavailable" } }, { status: 500 }));
+    const result = await routedGenerate(args, noLogs);
+    expect(result).toMatchObject({ provider: "ollama-cloud", model: "gpt-oss:120b", fallbackCount: 1 });
+    expect(requests).toHaveLength(2);
+    expect(requests[1].url).toBe(`${OLLAMA_CLOUD_BASE}/chat/completions`);
+    expect(requests[1].body.model).toBe("gpt-oss:120b");
+    expect(requests[1].authorization).toBe("Bearer test-ollama");
+  });
+
+  it("falls through to the OpenRouter free pool when Ollama Cloud also fails", async () => {
+    process.env.OLLAMA_API_KEY = "test-ollama";
+    resetProviderRegistry();
+    intercept((r) => r.url.startsWith(FREE_OPENROUTER_BASE)
+      ? completion("pool/free")
+      : Response.json({ error: { message: "Unavailable" } }, { status: 503 }));
+    const result = await routedGenerate(args, noLogs);
+    expect(result.provider).toBe("openrouter-free");
+    expect(requests.map((r) => r.body.model)).toEqual(["test-modelark", "gpt-oss:120b", "openrouter/free"]);
+  });
+
+  it("honours OLLAMA_CLOUD_MODEL only when it is on the free-usage allowlist", async () => {
+    process.env.OLLAMA_API_KEY = "test-ollama";
+    process.env.OLLAMA_CLOUD_MODEL = "gemma4:31b";
+    resetProviderRegistry();
+    intercept((r) => r.url.startsWith(OLLAMA_CLOUD_BASE)
+      ? completion("gemma4:31b")
+      : Response.json({ error: { message: "Unavailable" } }, { status: 500 }));
+    const result = await routedGenerate(args, noLogs);
+    expect(result.provider).toBe("ollama-cloud");
+    expect(requests[1].body.model).toBe("gemma4:31b");
+  });
+
+  it("rejects a non-allowlisted OLLAMA_CLOUD_MODEL before any network call", async () => {
+    process.env.OLLAMA_API_KEY = "test-ollama";
+    process.env.OLLAMA_CLOUD_MODEL = "some-paid-model";
+    resetProviderRegistry();
+    intercept(() => completion("should-not-run"));
+    await expect(freeOllamaFetch(`${OLLAMA_CLOUD_BASE}/chat/completions`, {
+      method: "POST", body: '{"model":"some-paid-model"}',
+    })).rejects.toThrow("free-usage");
+    expect(requests).toHaveLength(0);
+  });
+
+  it("rejects routing overrides and alternate endpoints at the transport boundary", async () => {
+    process.env.OLLAMA_API_KEY = "test-ollama";
+    intercept(() => completion("should-not-run"));
+    await expect(freeOllamaFetch(`${OLLAMA_CLOUD_BASE}/chat/completions`, {
+      method: "POST", body: '{"model":"gpt-oss:120b","route":"fallback"}',
+    })).rejects.toThrow();
+    await expect(freeOllamaFetch("https://proxy.example/v1/chat/completions", {
+      method: "POST", body: '{"model":"gpt-oss:120b"}',
+    })).rejects.toThrow("unexpected request");
+    expect(requests).toHaveLength(0);
+  });
+
+  it("is disabled without OLLAMA_API_KEY so the chain is unchanged", () => {
+    expect(buildProviderRegistry().get("ollama-cloud")?.enabled).toBe(false);
+  });
+});
