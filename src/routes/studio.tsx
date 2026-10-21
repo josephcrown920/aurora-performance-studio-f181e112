@@ -889,6 +889,7 @@ function StudioPage() {
           </div>
         </section>
       </div>
+      )}
     </main>
   );
 }
