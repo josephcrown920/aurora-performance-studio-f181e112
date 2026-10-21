@@ -36,9 +36,16 @@ import { Share2 } from "lucide-react";
 import { saveAssetToDisk } from "@/lib/save";
 import { ConnectReplicateBanner } from "@/components/ConnectReplicateBanner";
 import { JoshSlideshow } from "@/components/studio/JoshSlideshow";
+import { VideoStudio } from "@/features/video-studio/VideoStudio";
 import auroraLogo from "@/assets/aurora-logo.png.asset.json";
 
+type StudioSearch = { mode?: string; q?: string };
+
 export const Route = createFileRoute("/studio")({
+  validateSearch: (search: Record<string, unknown>): StudioSearch => ({
+    mode: typeof search.mode === "string" ? search.mode : undefined,
+    q: typeof search.q === "string" ? search.q : undefined,
+  }),
   component: StudioPage,
   head: () => ({
     meta: [
@@ -95,6 +102,8 @@ function StudioPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { mode } = Route.useSearch();
+  const editing = mode === "edit";
 
   const [selfie, setSelfie] = useState<string | null>(null);
   const [outfit, setOutfit] = useState<string | null>(null);
@@ -364,6 +373,23 @@ function StudioPage() {
           Aurora Studio
         </Link>
         <div className="flex items-center gap-3">
+          <div className="flex items-center rounded-full border border-border bg-card/60 p-0.5 text-xs font-semibold">
+            <Link
+              to="/studio"
+              search={{ mode: undefined }}
+              className={`rounded-full px-3 py-1 ${editing ? "text-muted-foreground hover:text-foreground" : "bg-primary text-primary-foreground"}`}
+            >
+              Create
+            </Link>
+            <Link
+              to="/studio"
+              search={{ mode: "edit" }}
+              data-testid="studio-edit-mode"
+              className={`rounded-full px-3 py-1 ${editing ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Edit
+            </Link>
+          </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-card/60 text-sm">
             <Coins className="size-3.5 text-primary" />
             <span className="font-medium">{profile?.credits ?? "—"}</span>
@@ -405,6 +431,11 @@ function StudioPage() {
         </div>
       </header>
 
+      {editing ? (
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 py-6">
+          <VideoStudio />
+        </div>
+      ) : (
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 py-10 grid lg:grid-cols-[1fr_1.1fr] gap-10">
         {/* Control panel */}
         <section className="space-y-5">
@@ -859,6 +890,7 @@ function StudioPage() {
           </div>
         </section>
       </div>
+      )}
     </main>
   );
 }
