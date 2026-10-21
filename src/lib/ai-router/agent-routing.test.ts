@@ -2,10 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { z } from "zod";
 import { routedGenerate } from "./index";
 import {
+  freeOllamaFetch,
   freeOpenRouterFetch,
   FREE_OPENROUTER_BASE,
   modelArkTextFetch,
   normalizeModelArkTextModel,
+  OLLAMA_CLOUD_BASE,
 } from "./agent-routing";
 import { buildProviderRegistry, resetProviderRegistry } from "./providers";
 import { resetHealthMap, recordOutcome } from "./health";
@@ -13,7 +15,7 @@ import { resetHealthMap, recordOutcome } from "./health";
 const keys = [
   "MODELARK_TEXT_MODEL", "BYTEPLUS_API_KEY", "ARK_API_KEY", "BYTEPLUS_BASE_URL",
   "ARK_BASE_URL", "OPENROUTER_API_KEY", "AI_INTEGRATIONS_OPENROUTER_API_KEY",
-  "AI_INTEGRATIONS_OPENROUTER_BASE_URL",
+  "AI_INTEGRATIONS_OPENROUTER_BASE_URL", "OLLAMA_API_KEY", "OLLAMA_CLOUD_MODEL",
 ] as const;
 const originalEnv = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
 const originalFetch = globalThis.fetch;
