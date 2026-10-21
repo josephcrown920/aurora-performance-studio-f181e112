@@ -38,7 +38,12 @@ import { ConnectReplicateBanner } from "@/components/ConnectReplicateBanner";
 import { JoshSlideshow } from "@/components/studio/JoshSlideshow";
 import auroraLogo from "@/assets/aurora-logo.png.asset.json";
 
+type StudioSearch = { mode?: string };
+
 export const Route = createFileRoute("/studio")({
+  validateSearch: (search: Record<string, unknown>): StudioSearch => ({
+    mode: typeof search.mode === "string" ? search.mode : undefined,
+  }),
   component: StudioPage,
   head: () => ({
     meta: [
