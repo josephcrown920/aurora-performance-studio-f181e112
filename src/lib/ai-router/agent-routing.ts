@@ -117,3 +117,32 @@ export const freeOpenRouterFetch: Fetcher = async (input, init) => {
     body: JSON.stringify(body),
   });
 };
+
+/**
+ * Free-usage boundary for Ollama Cloud. Only the allowlisted free-usage models
+ * may leave this process; any other model, endpoint, or routing override is
+ * rejected before the network call so the creator's paid quota is never spent.
+ */
+export const freeOllamaFetch: Fetcher = async (input, init) => {
+  const body = requestBody(input, init, `${OLLAMA_CLOUD_BASE}/chat/completions`);
+  const model = ollamaCloudModel();
+  if (
+    !model ||
+    body.model !== model ||
+    !(OLLAMA_FREE_MODELS as readonly string[]).includes(model) ||
+    body.models || body.route || body.provider
+  ) {
+    throw new Error("Ollama Cloud fallback permits only allowlisted free-usage models.");
+  }
+  if (!process.env.OLLAMA_API_KEY) {
+    throw new Error("OLLAMA_API_KEY is missing for the Ollama Cloud free tier.");
+  }
+  const headers = new Headers(init?.headers);
+  headers.set("Authorization", `Bearer ${process.env.OLLAMA_API_KEY}`);
+  return globalThis.fetch(input, {
+    ...init,
+    headers,
+    redirect: "error",
+    body: JSON.stringify(body),
+  });
+};
