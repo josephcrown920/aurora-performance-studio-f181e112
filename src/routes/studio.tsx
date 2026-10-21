@@ -372,6 +372,23 @@ function StudioPage() {
           Aurora Studio
         </Link>
         <div className="flex items-center gap-3">
+          <div className="flex items-center rounded-full border border-border bg-card/60 p-0.5 text-xs font-semibold">
+            <Link
+              to="/studio"
+              search={{ mode: undefined }}
+              className={`rounded-full px-3 py-1 ${editing ? "text-muted-foreground hover:text-foreground" : "bg-primary text-primary-foreground"}`}
+            >
+              Create
+            </Link>
+            <Link
+              to="/studio"
+              search={{ mode: "edit" }}
+              data-testid="studio-edit-mode"
+              className={`rounded-full px-3 py-1 ${editing ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Edit
+            </Link>
+          </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-card/60 text-sm">
             <Coins className="size-3.5 text-primary" />
             <span className="font-medium">{profile?.credits ?? "—"}</span>
