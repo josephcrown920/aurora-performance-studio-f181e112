@@ -2,9 +2,32 @@ import type { OpenAICompatibleProviderSettings } from "@ai-sdk/openai-compatible
 import { bytePlusBaseUrl, fetchWithCredentialFallback } from "../byteplus.server";
 
 /** Only the agent's text brain uses this chain; media selection is independent. */
-export const AGENT_BRAIN_CHAIN = ["modelark", "openrouter-free"] as const;
+export const AGENT_BRAIN_CHAIN = ["modelark", "ollama-cloud", "openrouter-free"] as const;
 export const FREE_OPENROUTER_MODEL = "openrouter/free";
 export const FREE_OPENROUTER_BASE = "https://openrouter.ai/api/v1";
+
+/**
+ * Ollama Cloud free-usage tier (OpenAI-compatible). These models draw from the
+ * account's free usage allowance, so the adapter hard-allowlists them and
+ * refuses any other model, endpoint, or routing override — same cost boundary
+ * as the OpenRouter free adapter. The creator's OLLAMA_API_KEY authenticates.
+ */
+export const OLLAMA_CLOUD_BASE = "https://ollama.com/v1";
+export const OLLAMA_FREE_MODELS = [
+  "gpt-oss:120b",
+  "gpt-oss:20b",
+  "gemma4:31b",
+  "nemotron-3-nano:30b",
+  "nemotron-3-super",
+  "nemotron-3-ultra",
+  "minimax-m3.1-flash",
+] as const;
+export const DEFAULT_OLLAMA_CLOUD_MODEL = "gpt-oss:120b";
+
+export function ollamaCloudModel(): string {
+  const configured = process.env.OLLAMA_CLOUD_MODEL?.trim() ?? "";
+  return configured || DEFAULT_OLLAMA_CLOUD_MODEL;
+}
 
 /**
  * Canonical ModelArk IDs used by the international BytePlus OpenAI-compatible
