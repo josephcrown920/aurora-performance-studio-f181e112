@@ -15,6 +15,7 @@ export const FREE_OPENROUTER_BASE = "https://openrouter.ai/api/v1";
 export const OLLAMA_CLOUD_BASE = "https://ollama.com/v1";
 export const OLLAMA_FREE_MODELS = [
   "gpt-oss:120b",
+  "beam",
   "gpt-oss:20b",
   "gemma4:31b",
   "nemotron-3-nano:30b",
