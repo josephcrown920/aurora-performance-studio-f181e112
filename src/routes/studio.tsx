@@ -36,6 +36,7 @@ import { Share2 } from "lucide-react";
 import { saveAssetToDisk } from "@/lib/save";
 import { ConnectReplicateBanner } from "@/components/ConnectReplicateBanner";
 import { JoshSlideshow } from "@/components/studio/JoshSlideshow";
+import { VideoStudio } from "@/features/video-studio/VideoStudio";
 import auroraLogo from "@/assets/aurora-logo.png.asset.json";
 
 type StudioSearch = { mode?: string };
