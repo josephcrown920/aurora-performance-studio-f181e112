@@ -2,9 +2,32 @@ import type { OpenAICompatibleProviderSettings } from "@ai-sdk/openai-compatible
 import { bytePlusBaseUrl, fetchWithCredentialFallback } from "../byteplus.server";
 
 /** Only the agent's text brain uses this chain; media selection is independent. */
-export const AGENT_BRAIN_CHAIN = ["modelark", "openrouter-free"] as const;
+export const AGENT_BRAIN_CHAIN = ["modelark", "ollama-cloud", "openrouter-free"] as const;
 export const FREE_OPENROUTER_MODEL = "openrouter/free";
 export const FREE_OPENROUTER_BASE = "https://openrouter.ai/api/v1";
+
+/**
+ * Ollama Cloud free-usage tier (OpenAI-compatible). These models draw from the
+ * account's free usage allowance, so the adapter hard-allowlists them and
+ * refuses any other model, endpoint, or routing override — same cost boundary
+ * as the OpenRouter free adapter. The creator's OLLAMA_API_KEY authenticates.
+ */
+export const OLLAMA_CLOUD_BASE = "https://ollama.com/v1";
+export const OLLAMA_FREE_MODELS = [
+  "gpt-oss:120b",
+  "gpt-oss:20b",
+  "gemma4:31b",
+  "nemotron-3-nano:30b",
+  "nemotron-3-super",
+  "nemotron-3-ultra",
+  "minimax-m3.1-flash",
+] as const;
+export const DEFAULT_OLLAMA_CLOUD_MODEL = "gpt-oss:120b";
+
+export function ollamaCloudModel(): string {
+  const configured = process.env.OLLAMA_CLOUD_MODEL?.trim() ?? "";
+  return configured || DEFAULT_OLLAMA_CLOUD_MODEL;
+}
 
 /**
  * Canonical ModelArk IDs used by the international BytePlus OpenAI-compatible
@@ -87,6 +110,35 @@ export const freeOpenRouterFetch: Fetcher = async (input, init) => {
   };
   const headers = new Headers(init?.headers);
   headers.set("Authorization", `Bearer ${process.env.OPENROUTER_API_KEY}`);
+  return globalThis.fetch(input, {
+    ...init,
+    headers,
+    redirect: "error",
+    body: JSON.stringify(body),
+  });
+};
+
+/**
+ * Free-usage boundary for Ollama Cloud. Only the allowlisted free-usage models
+ * may leave this process; any other model, endpoint, or routing override is
+ * rejected before the network call so the creator's paid quota is never spent.
+ */
+export const freeOllamaFetch: Fetcher = async (input, init) => {
+  const body = requestBody(input, init, `${OLLAMA_CLOUD_BASE}/chat/completions`);
+  const model = ollamaCloudModel();
+  if (
+    !model ||
+    body.model !== model ||
+    !(OLLAMA_FREE_MODELS as readonly string[]).includes(model) ||
+    body.models || body.route || body.provider
+  ) {
+    throw new Error("Ollama Cloud fallback permits only allowlisted free-usage models.");
+  }
+  if (!process.env.OLLAMA_API_KEY) {
+    throw new Error("OLLAMA_API_KEY is missing for the Ollama Cloud free tier.");
+  }
+  const headers = new Headers(init?.headers);
+  headers.set("Authorization", `Bearer ${process.env.OLLAMA_API_KEY}`);
   return globalThis.fetch(input, {
     ...init,
     headers,

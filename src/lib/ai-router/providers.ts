@@ -10,9 +10,12 @@ import { bytePlusBaseUrl, getBytePlusKey } from "../byteplus.server";
 import {
   FREE_OPENROUTER_BASE,
   FREE_OPENROUTER_MODEL,
+  OLLAMA_CLOUD_BASE,
+  freeOllamaFetch,
   freeOpenRouterFetch,
   modelArkTextFetch,
   modelArkTextModel,
+  ollamaCloudModel,
 } from "./agent-routing";
 
 /** A provider gateway: call it with a model id to get an AI SDK language model. */
@@ -101,6 +104,19 @@ export function buildProviderRegistry(): Map<string, RouterProvider> {
       name: "modelark",
       baseURL: bytePlusBaseUrl(),
       fetch: modelArkTextFetch,
+      supportsStructuredOutputs: true,
+    }),
+  });
+  add({
+    name: "ollama-cloud",
+    displayName: "Ollama Cloud (free tier)",
+    enabled: !!process.env.OLLAMA_API_KEY,
+    model: ollamaCloudModel(),
+    providerOptions: NON_STRICT_SCHEMA("ollama-cloud"),
+    make: () => createOpenAICompatible({
+      name: "ollama-cloud",
+      baseURL: OLLAMA_CLOUD_BASE,
+      fetch: freeOllamaFetch,
       supportsStructuredOutputs: true,
     }),
   });
