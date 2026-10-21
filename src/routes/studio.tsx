@@ -101,6 +101,8 @@ function StudioPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { mode } = Route.useSearch();
+  const editing = mode === "edit";
 
   const [selfie, setSelfie] = useState<string | null>(null);
   const [outfit, setOutfit] = useState<string | null>(null);
