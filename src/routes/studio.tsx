@@ -39,11 +39,12 @@ import { JoshSlideshow } from "@/components/studio/JoshSlideshow";
 import { VideoStudio } from "@/features/video-studio/VideoStudio";
 import auroraLogo from "@/assets/aurora-logo.png.asset.json";
 
-type StudioSearch = { mode?: string };
+type StudioSearch = { mode?: string; q?: string };
 
 export const Route = createFileRoute("/studio")({
   validateSearch: (search: Record<string, unknown>): StudioSearch => ({
     mode: typeof search.mode === "string" ? search.mode : undefined,
+    q: typeof search.q === "string" ? search.q : undefined,
   }),
   component: StudioPage,
   head: () => ({
