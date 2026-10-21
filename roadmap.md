@@ -56,3 +56,7 @@
 - [x] Lagos 40 page (NBA Josh script) at /lagos40
 - [ ] Update lovable-updates/HANDOFF.md with all work from the last 5 days (lip sync audio fix, hydration crash fix, CLI auth fix, GRWM, handoff snapshots, etc.)
 - [ ] Depth maps: verify surface in Motion Control and Perform Anywhere UI (user doesn't see them); memory says motion tests must reject unsupported depth conditioning rather than silently dropping it
+
+- [ ] Port Remix Video Agent editor (timeline, monitor, tools) into /studio with canvas⇄timeline sync
+- [ ] Depth-map conditioning in Motion Control & Perform Anywhere (after editor)
+- [ ] Add APPETIZE_API_TOKEN + OLLAMA_API_KEY secrets (waiting on user)
