@@ -17,7 +17,7 @@ function resolve(engine?: string) {
 }
 
 // JSON {prompt, engine} = generate; multipart (prompt + image + engine) = edit by prompt
-export const Route = createFileRoute("/api/image")({
+export const Route = createFileRoute("/api/guy/image")({
   server: {
     handlers: {
       POST: async ({ request }) => {

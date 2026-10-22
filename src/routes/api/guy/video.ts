@@ -8,7 +8,7 @@ type Media = { data: string; mime: string };
 type Body = { prompt: string; engine?: string; motion?: string; duration?: string; resolution?: string; draft?: boolean; image?: Media; lastFrame?: Media; video?: Media; audio?: Media; depth?: Media; refs?: Media[] };
 
 // Creates a video job. Client polls /api/video/$id.
-export const Route = createFileRoute("/api/video")({
+export const Route = createFileRoute("/api/guy/video")({
   server: {
     handlers: {
       POST: async ({ request }) => {

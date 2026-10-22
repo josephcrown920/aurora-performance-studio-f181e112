@@ -215,7 +215,7 @@ async function runClaudeKey(model: string, system: string, user: string, history
   return text ? { text } : { error: "Empty reply", status: 502 };
 }
 
-export const Route = createFileRoute("/api/crew-agent")({
+export const Route = createFileRoute("/api/guy/crew-agent")({
   server: {
     handlers: {
       POST: async ({ request }) => {

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { GATEWAY, apiKey, passthrough } from "@/lib/guy/gateway.server";
 import { arkFetch, arkError } from "@/lib/guy/ark.server";
 
-export const Route = createFileRoute("/api/video/$id")({
+export const Route = createFileRoute("/api/guy/video/$id")({
   server: {
     handlers: {
       GET: async ({ params }) => {
