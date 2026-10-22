@@ -3,6 +3,7 @@
 // and audio clips) in sync with the multi-track timeline. Scrubbing here moves
 // the timeline playhead and vice versa via the aurora:* window events.
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Pause, Play, SkipBack, Volume2, VolumeX } from "lucide-react";
 import {
   fmtTime,
@@ -46,9 +47,11 @@ export function ProgramMonitor() {
     };
     window.addEventListener("aurora:timeline-change", onChange);
     window.addEventListener("aurora:playhead-change", onPlayhead);
+    window.addEventListener("aurora:seek", onPlayhead);
     return () => {
       window.removeEventListener("aurora:timeline-change", onChange);
       window.removeEventListener("aurora:playhead-change", onPlayhead);
+      window.removeEventListener("aurora:seek", onPlayhead);
     };
   }, []);
 
@@ -59,7 +62,7 @@ export function ProgramMonitor() {
     for (const clip of doc.clips) {
       if (!clip.src || (clip.kind !== "video" && clip.kind !== "audio")) continue;
       seen.add(clip.id);
-      if (!media.has(clip.id)) {
+      if (clip.kind === "audio" && !media.has(clip.id)) {
         const el =
           clip.kind === "audio"
             ? new Audio()
@@ -121,9 +124,9 @@ export function ProgramMonitor() {
 
   useEffect(() => {
     mediaRef.current.forEach((el) => {
-      if (el instanceof HTMLAudioElement) el.muted = muted;
+      el.muted = muted;
     });
-  }, [muted]);
+  }, [muted, doc.clips]);
 
   const activeVisuals = useMemo(
     () =>
@@ -150,14 +153,14 @@ export function ProgramMonitor() {
   return (
     <div className="flex h-full min-h-0 flex-col items-center gap-3">
       <div
-        className={`relative ${ratioClass} max-h-full w-auto max-w-full flex-1 overflow-hidden rounded-xl border border-border bg-black`}
-        style={{ minHeight: 240 }}
+        className={`relative ${ratioClass} w-full overflow-hidden rounded-lg border border-border bg-background`}
+        style={{ maxWidth: doc.ratio === "9:16" ? 304 : 720 }}
         data-testid="program-monitor"
       >
         {!hasMedia && (
           <div className="absolute inset-0 grid place-items-center p-6 text-center">
             <p className="max-w-xs text-sm text-muted-foreground">
-              Import clips below to build your cut — the monitor plays whatever is under the playhead.
+              No clips
             </p>
           </div>
         )}
@@ -169,7 +172,7 @@ export function ProgramMonitor() {
                 className="pointer-events-none absolute inset-x-0 bottom-8 z-20 text-center"
                 style={{ filter: filterFor(clip) }}
               >
-                <span className="inline-block rounded bg-black/60 px-3 py-1 text-lg font-bold text-white">
+                <span className="inline-block rounded bg-background/80 px-3 py-1 text-lg font-bold text-foreground">
                   {clip.name}
                 </span>
               </div>
@@ -194,22 +197,22 @@ export function ProgramMonitor() {
           return null;
         })}
         {playing && (
-          <div className="absolute left-2 top-2 z-30 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white">
+          <div className="absolute left-2 top-2 z-30 rounded-full bg-background/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-foreground">
             Playing
           </div>
         )}
       </div>
 
       <div className="flex w-full max-w-xl items-center gap-3">
-        <button
+        <Button
           type="button"
           aria-label="Back to start"
           className="grid size-8 place-items-center rounded-md border border-border text-muted-foreground hover:text-foreground"
           onClick={() => seek(0)}
         >
           <SkipBack className="size-4" />
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           aria-label={playing ? "Pause" : "Play"}
           data-testid="monitor-play"
@@ -220,7 +223,7 @@ export function ProgramMonitor() {
           }}
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
-        </button>
+        </Button>
         <span className="w-20 text-xs tabular-nums text-muted-foreground">
           {fmtTime(time)}
         </span>
@@ -237,39 +240,29 @@ export function ProgramMonitor() {
         <span className="w-20 text-right text-xs tabular-nums text-muted-foreground">
           {fmtTime(doc.seconds)}
         </span>
-        <button
+        <Button
           type="button"
           aria-label={muted ? "Unmute" : "Mute"}
           className="grid size-8 place-items-center rounded-md border border-border text-muted-foreground hover:text-foreground"
           onClick={() => setMuted((v) => !v)}
         >
           {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
-        </button>
+        </Button>
       </div>
     </div>
   );
 }
 
-function MonitorVideo({
-  clip,
-  mediaRef,
-}: {
-  clip: Clip;
-  mediaRef: React.RefObject<Map<string, HTMLVideoElement | HTMLAudioElement>>;
-}) {
-  const hostRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = mediaRef.current?.get(clip.id);
-    const host = hostRef.current;
-    if (!el || !host || !(el instanceof HTMLVideoElement)) return;
-    el.className = "h-full w-full object-cover";
-    el.style.filter = filterFor(clip);
-    host.appendChild(el);
-    return () => {
-      if (el.parentElement === host) host.removeChild(el);
-    };
-  }, [clip.id, clip.effect, clip.look, mediaRef]);
-
-  return <div ref={hostRef} className="absolute inset-0" />;
+function MonitorVideo({ clip, mediaRef }: { clip: Clip; mediaRef: React.RefObject<Map<string, HTMLVideoElement | HTMLAudioElement>> }) {
+  return <video
+    ref={el => {
+      if (el) mediaRef.current?.set(clip.id, el);
+      else { mediaRef.current?.get(clip.id)?.pause(); mediaRef.current?.delete(clip.id); }
+    }}
+    src={clip.src}
+    playsInline
+    preload="auto"
+    className="absolute inset-0 h-full w-full object-cover"
+    style={{ filter: filterFor(clip) }}
+  />;
 }

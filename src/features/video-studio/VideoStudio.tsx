@@ -2,6 +2,7 @@
 // Video Studio: the shared multi-track editor inside /studio. Program monitor
 // on top, multi-track timeline below, media import and WebM export in the bar.
 import { useRef, useState, type ChangeEvent } from "react";
+import { Button } from "@/components/ui/button";
 import { Download, HardDriveUpload, Layers, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { MultiTrackTimeline } from "@/features/creative-studio/components/video/MultiTrackTimeline";
@@ -73,22 +74,22 @@ export function VideoStudio() {
           className="hidden"
           onChange={importFiles}
         />
-        <button
+        <Button
           type="button"
           data-testid="video-studio-import"
           onClick={() => fileRef.current?.click()}
           className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:border-primary/50"
         >
           <HardDriveUpload className="size-3.5" /> Import media
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={() => setShowLayers((v) => !v)}
           className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:border-primary/50"
         >
           <Layers className="size-3.5" /> {showLayers ? "Hide layers" : "Layers"}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           data-testid="video-studio-export"
           onClick={exportVideo}
@@ -97,19 +98,19 @@ export function VideoStudio() {
         >
           {exporting ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />}
           {exporting ? `Exporting ${Math.round(progress * 100)}%` : "Export video"}
-        </button>
+        </Button>
       </div>
 
-      <div className="min-h-[320px] flex-1 rounded-2xl border border-border bg-card/40 p-4">
+      <div className="min-h-[320px] flex-1 rounded-lg border border-border bg-card/40 p-4">
         <ProgramMonitor />
       </div>
 
-      <div className="min-w-0 overflow-x-auto rounded-2xl border border-border bg-card/40 p-2">
+      <div className="min-w-0 overflow-x-auto rounded-lg border border-border bg-card/40 p-2">
         <MultiTrackTimeline />
       </div>
 
       {showLayers && (
-        <div className="rounded-2xl border border-border bg-card/40 p-4">
+        <div className="rounded-lg border border-border bg-card/40 p-4">
           <LayersEditor />
         </div>
       )}
