@@ -1,6 +1,6 @@
 # Aurora — Lovable Work Log & Developer Handoff
 
-Snapshot date: 2026-10-05. Read this first. It covers what the Lovable agent built and changed, where the work stopped, and what is still open.
+Snapshot date: 2026-10-05; latest work update: 2026-10-22. Read this first. It covers what the Lovable agent built and changed, where the work stopped, and what is still open.
 
 ## Screenshots
 - `screenshots/pages/`: one desktop (1280px) capture per main page, signed out. Pages: home, studio, canvas, layers, lagos40, perform-anywhere, director-room, video-agent, motion, lipsync, library, colors, previs, tools, billing, auth, pricing, guides, contact, admin.
@@ -48,6 +48,16 @@ Snapshot date: 2026-10-05. Read this first. It covers what the Lovable agent bui
 38. Fixed the landing-page balloon-head lip sync demo playing silently: the audio was routed through a Web Audio `MediaElementAudioSourceNode` while the AudioContext was still suspended (autoplay policy), swallowing all sound while the lips kept animating on the simulated fallback. The context now resumes before the source is created, and if it can't run, playback falls back to the plain audio element. Verified in the browser: "Play the hook" plays the track.
 39. Fixed a blank-screen crash/hydration failure on the homepage: `shouldShowIntro()` read `localStorage` inside a `useState` initializer, so the server rendered no intro overlay while the client rendered one. The intro now starts hidden and is shown from a `useEffect`, so server and client first renders match. Verified: no page errors, page renders fully.
 40. Investigated depth maps in Motion Control and Perform Anywhere: **depth-map conditioning is not implemented anywhere in those pipelines.** The only "depth" in the code is "depth of field" prompt text, and ControlNet/depth models are only listed in the ComfyUI admin studio (`/admin/comfy`), never passed to Segmind Seedance, BytePlus, or any generation call. Building it for real needs a depth-estimation step plus a provider that accepts depth input — see open items.
+
+## Studio editor continuation — 2026-10-22
+- `/studio` still opens the node canvas. Its **Video editor** link now opens `/studio?mode=edit`, through the actual lazy route rather than the previously unreachable non-lazy page.
+- The editor reuses Aurora's `MultiTrackTimeline` and `LayersEditor`, with `ProgramMonitor`, sequential local-media imports using metadata durations, scrub/play/pause/mute and downloadable WebM export. This is a native integration, not a verbatim port of the Remix's separate server implementation.
+- Entering the editor from Canvas appends completed `videoUrl` scenes in connector order. Stable scene IDs prevent duplicate imports; existing manually trimmed clips remain untouched. Motion previews and reference nodes are excluded. Editing is preserved in the shared timeline; timeline trims are not written back into the graph's shot definitions.
+- Fixed the monitor's video registration so React updates do not pause/recreate the playing element every frame. The monitor follows both timeline seek and playhead events and honors source offsets.
+- Verified with an actual two-second local video with audio: import, visible moving picture, unmuted playing video, pause, Layers panel, WebM download, Canvas → editor return and mobile overflow. Browser reported no page errors. Export has a 720×1280 video track and an audio track. Current renderer exports portrait WebM, not MP4 and not other aspect ratios.
+- Focused checks: 36 tests passed (34 existing model-routing tests plus two new canvas handoff tests); latest automatic build reports build OK. `beam` already exists in the Ollama free allowlist.
+- No paid generations were attempted; this local-media check does not verify authenticated generation, private-library persistence or provider availability. Local file URLs need reimport after refresh.
+- Next priority remains real depth conditioning in Motion Control / Perform Anywhere. Appetize helper scripts were not found during this continuation; previous installation claims are not evidence of a working device-test setup. APPETIZE_API_TOKEN and OLLAMA_API_KEY remain pending from the creator.
 
 ## Where it stopped (open items)
 - **Security:** the Canvas ARK and ComfyUI submit endpoints need in-handler auth, spending limits and safe error messages. After that, run a fresh security scan.

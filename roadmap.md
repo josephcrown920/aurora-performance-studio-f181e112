@@ -57,6 +57,7 @@
 - [ ] Update lovable-updates/HANDOFF.md with all work from the last 5 days (lip sync audio fix, hydration crash fix, CLI auth fix, GRWM, handoff snapshots, etc.)
 - [ ] Depth maps: verify surface in Motion Control and Perform Anywhere UI (user doesn't see them); memory says motion tests must reject unsupported depth conditioning rather than silently dropping it
 
-- [ ] Port Remix Video Agent editor (timeline, monitor, tools) into /studio with canvas⇄timeline sync
+- [x] Finish and verify Studio editor entry, shared monitor, imports, portrait WebM export and completed canvas-scene handoff; native timeline integration, 36 focused tests and local-media browser flow passed. Authenticated generation and private-library tests remain separate open tasks.
 - [ ] Depth-map conditioning in Motion Control & Perform Anywhere (after editor)
 - [ ] Add APPETIZE_API_TOKEN + OLLAMA_API_KEY secrets (waiting on user)
+- [ ] Verify Appetize installation and add Expo Android preview/test helper scripts; actual remote-device tests require APPETIZE_API_TOKEN.

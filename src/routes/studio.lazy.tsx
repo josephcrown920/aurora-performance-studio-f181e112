@@ -1,7 +1,8 @@
 // @ts-nocheck
 import { authNextSearch } from "@/lib/auth-return-path";
 import { StudioPage as NodeWorkspace } from "@/features/storyboard/studio/StudioPage";
-import { createLazyFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
+import { VideoStudio } from "@/features/video-studio/VideoStudio";
+import { ClientOnly, createLazyFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertDialog,
@@ -76,7 +77,22 @@ import { PageHeroBanner } from "@/components/visual/PageHeroBanner";
 import { OutputGallery } from "@/components/visual/OutputGallery";
 import { DEMO_ASSETS } from "@/lib/demo-assets";
 
-export const Route = createLazyFileRoute("/studio")({ component: () => <NodeWorkspace canvasOnly /> });
+export const Route = createLazyFileRoute("/studio")({ component: StudioWorkspace });
+
+function StudioWorkspace() {
+  const { mode } = Route.useSearch();
+  if (mode !== "edit") return <NodeWorkspace canvasOnly />;
+  return <main className="min-h-screen bg-background text-foreground">
+    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+      <Link to="/" className="text-lg font-semibold">Aurora</Link>
+      <nav aria-label="Studio views" className="flex items-center gap-2">
+        <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: undefined }}>Canvas</Link></Button>
+        <Button asChild size="sm"><Link to="/studio" search={{ mode: "edit" }} aria-current="page">Video editor</Link></Button>
+      </nav>
+    </header>
+    <div className="p-3 md:p-6"><ClientOnly fallback={<p role="status">Opening editor…</p>}><VideoStudio /></ClientOnly></div>
+  </main>;
+}
 
 const MODELS = MODEL_LIST;
 

@@ -2,6 +2,7 @@
 // Video Studio: the shared multi-track editor inside /studio. Program monitor
 // on top, multi-track timeline below, media import and WebM export in the bar.
 import { useRef, useState, type ChangeEvent } from "react";
+import { Button } from "@/components/ui/button";
 import { Download, HardDriveUpload, Layers, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { MultiTrackTimeline } from "@/features/creative-studio/components/video/MultiTrackTimeline";
@@ -23,15 +24,36 @@ export function VideoStudio() {
   const [progress, setProgress] = useState(0);
   const [showLayers, setShowLayers] = useState(false);
 
-  const importFiles = (event: ChangeEvent<HTMLInputElement>) => {
+  const importFiles = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    let start = Math.max(0, ...loadTimeline().clips.map(c => c.start + c.duration));
     for (const file of files) {
       const src = URL.createObjectURL(file);
+      const kind = kindFor(file);
+      let duration = 5;
+      if (kind !== "image") {
+        const media = kind === "audio" ? new Audio() : document.createElement("video");
+        media.preload = "metadata";
+        duration = await new Promise<number>(resolve => {
+          const finish = () => {
+            clearTimeout(timeout);
+            resolve(Number.isFinite(media.duration) && media.duration > 0 ? media.duration : 5);
+            media.removeAttribute("src");
+            media.load();
+          };
+          const timeout = setTimeout(finish, 5000);
+          media.onloadedmetadata = finish;
+          media.onerror = finish;
+          media.src = src;
+        });
+      }
       window.dispatchEvent(
         new CustomEvent("aurora:import-media", {
-          detail: { name: file.name.replace(/\.[^/.]+$/, ""), src, kind: kindFor(file) },
+          detail: { name: file.name.replace(/\.[^/.]+$/, ""), src, kind, start, duration },
         }),
       );
+      start += duration;
     }
     if (files.length) {
       toast.success(
@@ -39,7 +61,6 @@ export function VideoStudio() {
         { description: "Local files stay in this browser tab — reimport after a refresh." },
       );
     }
-    event.target.value = "";
   };
 
   const exportVideo = async () => {
@@ -73,22 +94,22 @@ export function VideoStudio() {
           className="hidden"
           onChange={importFiles}
         />
-        <button
+        <Button
           type="button"
           data-testid="video-studio-import"
           onClick={() => fileRef.current?.click()}
           className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:border-primary/50"
         >
           <HardDriveUpload className="size-3.5" /> Import media
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={() => setShowLayers((v) => !v)}
           className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:border-primary/50"
         >
           <Layers className="size-3.5" /> {showLayers ? "Hide layers" : "Layers"}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           data-testid="video-studio-export"
           onClick={exportVideo}
@@ -97,19 +118,19 @@ export function VideoStudio() {
         >
           {exporting ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />}
           {exporting ? `Exporting ${Math.round(progress * 100)}%` : "Export video"}
-        </button>
+        </Button>
       </div>
 
-      <div className="min-h-[320px] flex-1 rounded-2xl border border-border bg-card/40 p-4">
+      <div className="min-h-[320px] flex-1 rounded-lg border border-border bg-card/40 p-4">
         <ProgramMonitor />
       </div>
 
-      <div className="min-w-0 overflow-x-auto rounded-2xl border border-border bg-card/40 p-2">
+      <div className="min-w-0 overflow-x-auto rounded-lg border border-border bg-card/40 p-2">
         <MultiTrackTimeline />
       </div>
 
       {showLayers && (
-        <div className="rounded-2xl border border-border bg-card/40 p-4">
+        <div className="rounded-lg border border-border bg-card/40 p-4">
           <LayersEditor />
         </div>
       )}
