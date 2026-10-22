@@ -166,6 +166,9 @@ import { Route as ApiDirectorsBoardBrainRouteImport } from './routes/api/directo
 import { Route as ApiDirectorsBoardChatRouteImport } from './routes/api/directors-board/chat'
 import { Route as ApiDirectorsBoardGenerateImageRouteImport } from './routes/api/directors-board/generate-image'
 import { Route as ApiGeminiFreeRouteImport } from './routes/api/gemini/free'
+import { Route as ApiGuyCrewAgentRouteImport } from './routes/api/guy/crew-agent'
+import { Route as ApiGuyImageRouteImport } from './routes/api/guy/image'
+import { Route as ApiGuyVideoRouteImport } from './routes/api/guy/video'
 import { Route as ApiMotionEstimateCostRouteImport } from './routes/api/motion/estimate-cost'
 import { Route as ApiMotionJobsRouteImport } from './routes/api/motion/jobs'
 import { Route as ApiMotionStatusRouteImport } from './routes/api/motion/status'
@@ -203,6 +206,7 @@ import { Route as ApiVideoAgentGenerateFrameRouteImport } from './routes/api/vid
 import { Route as ApiVideoAgentGenerateScriptRouteImport } from './routes/api/video-agent/generate-script'
 import { Route as ApiVideoAgentSubmitRouteImport } from './routes/api/video-agent/submit'
 import { Route as SoulGenerateVideoRouteImport } from './routes/soul.generate.video'
+import { Route as ApiGuyVideoIdRouteImport } from './routes/api/guy/video.$id'
 import { Route as ApiJobsIdStatusRouteImport } from './routes/api/jobs/$id/status'
 import { Route as ApiPublicCliVastRouteImport } from './routes/api/public/cli/vast'
 import { Route as ApiPublicGpuClaimRouteImport } from './routes/api/public/gpu/claim'
@@ -220,6 +224,7 @@ import { Route as ApiPublicWorkersProgressRouteImport } from './routes/api/publi
 import { Route as ApiPublicWorkersRegisterRouteImport } from './routes/api/public/workers/register'
 import { Route as ApiVideoAgentStatusVideoIdRouteImport } from './routes/api/video-agent/status.$videoId'
 import { Route as ApiAudioMasterIdStatusRouteImport } from './routes/api/audio/master.$id.status'
+import { Route as ApiGuyVideoIdContentRouteImport } from './routes/api/guy/video.$id.content'
 import { Route as ApiPublicCliDevicePollRouteImport } from './routes/api/public/cli/device/poll'
 import { Route as ApiPublicCliDeviceStartRouteImport } from './routes/api/public/cli/device/start'
 import { Route as ApiPublicWorkersFilesNameRouteImport } from './routes/api/public/workers/files/$name'
@@ -1054,6 +1059,21 @@ const ApiGeminiFreeRoute = ApiGeminiFreeRouteImport.update({
   path: '/api/gemini/free',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGuyCrewAgentRoute = ApiGuyCrewAgentRouteImport.update({
+  id: '/api/guy/crew-agent',
+  path: '/api/guy/crew-agent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGuyImageRoute = ApiGuyImageRouteImport.update({
+  id: '/api/guy/image',
+  path: '/api/guy/image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGuyVideoRoute = ApiGuyVideoRouteImport.update({
+  id: '/api/guy/video',
+  path: '/api/guy/video',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMotionEstimateCostRoute = ApiMotionEstimateCostRouteImport.update({
   id: '/api/motion/estimate-cost',
   path: '/api/motion/estimate-cost',
@@ -1251,6 +1271,11 @@ const SoulGenerateVideoRoute = SoulGenerateVideoRouteImport.update({
 } as any).lazy(() =>
   import('./routes/soul.generate.video.lazy').then((d) => d.Route),
 )
+const ApiGuyVideoIdRoute = ApiGuyVideoIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiGuyVideoRoute,
+} as any)
 const ApiJobsIdStatusRoute = ApiJobsIdStatusRouteImport.update({
   id: '/api/jobs/$id/status',
   path: '/api/jobs/$id/status',
@@ -1340,6 +1365,11 @@ const ApiAudioMasterIdStatusRoute = ApiAudioMasterIdStatusRouteImport.update({
   id: '/$id/status',
   path: '/$id/status',
   getParentRoute: () => ApiAudioMasterRoute,
+} as any)
+const ApiGuyVideoIdContentRoute = ApiGuyVideoIdContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => ApiGuyVideoIdRoute,
 } as any)
 const ApiPublicCliDevicePollRoute = ApiPublicCliDevicePollRouteImport.update({
   id: '/api/public/cli/device/poll',
@@ -1517,6 +1547,9 @@ export interface FileRoutesByFullPath {
   '/api/directors-board/chat': typeof ApiDirectorsBoardChatRoute
   '/api/directors-board/generate-image': typeof ApiDirectorsBoardGenerateImageRoute
   '/api/gemini/free': typeof ApiGeminiFreeRoute
+  '/api/guy/crew-agent': typeof ApiGuyCrewAgentRoute
+  '/api/guy/image': typeof ApiGuyImageRoute
+  '/api/guy/video': typeof ApiGuyVideoRouteWithChildren
   '/api/motion/estimate-cost': typeof ApiMotionEstimateCostRoute
   '/api/motion/jobs': typeof ApiMotionJobsRoute
   '/api/motion/status': typeof ApiMotionStatusRoute
@@ -1554,6 +1587,7 @@ export interface FileRoutesByFullPath {
   '/api/video-agent/generate-script': typeof ApiVideoAgentGenerateScriptRoute
   '/api/video-agent/submit': typeof ApiVideoAgentSubmitRoute
   '/soul/generate/video': typeof SoulGenerateVideoRoute
+  '/api/guy/video/$id': typeof ApiGuyVideoIdRouteWithChildren
   '/api/jobs/$id/status': typeof ApiJobsIdStatusRoute
   '/api/public/cli/vast': typeof ApiPublicCliVastRoute
   '/api/public/gpu/claim': typeof ApiPublicGpuClaimRoute
@@ -1571,6 +1605,7 @@ export interface FileRoutesByFullPath {
   '/api/public/workers/register': typeof ApiPublicWorkersRegisterRoute
   '/api/video-agent/status/$videoId': typeof ApiVideoAgentStatusVideoIdRoute
   '/api/audio/master/$id/status': typeof ApiAudioMasterIdStatusRoute
+  '/api/guy/video/$id/content': typeof ApiGuyVideoIdContentRoute
   '/api/public/cli/device/poll': typeof ApiPublicCliDevicePollRoute
   '/api/public/cli/device/start': typeof ApiPublicCliDeviceStartRoute
   '/api/public/workers/files/$name': typeof ApiPublicWorkersFilesNameRoute
@@ -1733,6 +1768,9 @@ export interface FileRoutesByTo {
   '/api/directors-board/chat': typeof ApiDirectorsBoardChatRoute
   '/api/directors-board/generate-image': typeof ApiDirectorsBoardGenerateImageRoute
   '/api/gemini/free': typeof ApiGeminiFreeRoute
+  '/api/guy/crew-agent': typeof ApiGuyCrewAgentRoute
+  '/api/guy/image': typeof ApiGuyImageRoute
+  '/api/guy/video': typeof ApiGuyVideoRouteWithChildren
   '/api/motion/estimate-cost': typeof ApiMotionEstimateCostRoute
   '/api/motion/jobs': typeof ApiMotionJobsRoute
   '/api/motion/status': typeof ApiMotionStatusRoute
@@ -1770,6 +1808,7 @@ export interface FileRoutesByTo {
   '/api/video-agent/generate-script': typeof ApiVideoAgentGenerateScriptRoute
   '/api/video-agent/submit': typeof ApiVideoAgentSubmitRoute
   '/soul/generate/video': typeof SoulGenerateVideoRoute
+  '/api/guy/video/$id': typeof ApiGuyVideoIdRouteWithChildren
   '/api/jobs/$id/status': typeof ApiJobsIdStatusRoute
   '/api/public/cli/vast': typeof ApiPublicCliVastRoute
   '/api/public/gpu/claim': typeof ApiPublicGpuClaimRoute
@@ -1787,6 +1826,7 @@ export interface FileRoutesByTo {
   '/api/public/workers/register': typeof ApiPublicWorkersRegisterRoute
   '/api/video-agent/status/$videoId': typeof ApiVideoAgentStatusVideoIdRoute
   '/api/audio/master/$id/status': typeof ApiAudioMasterIdStatusRoute
+  '/api/guy/video/$id/content': typeof ApiGuyVideoIdContentRoute
   '/api/public/cli/device/poll': typeof ApiPublicCliDevicePollRoute
   '/api/public/cli/device/start': typeof ApiPublicCliDeviceStartRoute
   '/api/public/workers/files/$name': typeof ApiPublicWorkersFilesNameRoute
@@ -1951,6 +1991,9 @@ export interface FileRoutesById {
   '/api/directors-board/chat': typeof ApiDirectorsBoardChatRoute
   '/api/directors-board/generate-image': typeof ApiDirectorsBoardGenerateImageRoute
   '/api/gemini/free': typeof ApiGeminiFreeRoute
+  '/api/guy/crew-agent': typeof ApiGuyCrewAgentRoute
+  '/api/guy/image': typeof ApiGuyImageRoute
+  '/api/guy/video': typeof ApiGuyVideoRouteWithChildren
   '/api/motion/estimate-cost': typeof ApiMotionEstimateCostRoute
   '/api/motion/jobs': typeof ApiMotionJobsRoute
   '/api/motion/status': typeof ApiMotionStatusRoute
@@ -1988,6 +2031,7 @@ export interface FileRoutesById {
   '/api/video-agent/generate-script': typeof ApiVideoAgentGenerateScriptRoute
   '/api/video-agent/submit': typeof ApiVideoAgentSubmitRoute
   '/soul/generate/video': typeof SoulGenerateVideoRoute
+  '/api/guy/video/$id': typeof ApiGuyVideoIdRouteWithChildren
   '/api/jobs/$id/status': typeof ApiJobsIdStatusRoute
   '/api/public/cli/vast': typeof ApiPublicCliVastRoute
   '/api/public/gpu/claim': typeof ApiPublicGpuClaimRoute
@@ -2005,6 +2049,7 @@ export interface FileRoutesById {
   '/api/public/workers/register': typeof ApiPublicWorkersRegisterRoute
   '/api/video-agent/status/$videoId': typeof ApiVideoAgentStatusVideoIdRoute
   '/api/audio/master/$id/status': typeof ApiAudioMasterIdStatusRoute
+  '/api/guy/video/$id/content': typeof ApiGuyVideoIdContentRoute
   '/api/public/cli/device/poll': typeof ApiPublicCliDevicePollRoute
   '/api/public/cli/device/start': typeof ApiPublicCliDeviceStartRoute
   '/api/public/workers/files/$name': typeof ApiPublicWorkersFilesNameRoute
@@ -2170,6 +2215,9 @@ export interface FileRouteTypes {
     | '/api/directors-board/chat'
     | '/api/directors-board/generate-image'
     | '/api/gemini/free'
+    | '/api/guy/crew-agent'
+    | '/api/guy/image'
+    | '/api/guy/video'
     | '/api/motion/estimate-cost'
     | '/api/motion/jobs'
     | '/api/motion/status'
@@ -2207,6 +2255,7 @@ export interface FileRouteTypes {
     | '/api/video-agent/generate-script'
     | '/api/video-agent/submit'
     | '/soul/generate/video'
+    | '/api/guy/video/$id'
     | '/api/jobs/$id/status'
     | '/api/public/cli/vast'
     | '/api/public/gpu/claim'
@@ -2224,6 +2273,7 @@ export interface FileRouteTypes {
     | '/api/public/workers/register'
     | '/api/video-agent/status/$videoId'
     | '/api/audio/master/$id/status'
+    | '/api/guy/video/$id/content'
     | '/api/public/cli/device/poll'
     | '/api/public/cli/device/start'
     | '/api/public/workers/files/$name'
@@ -2386,6 +2436,9 @@ export interface FileRouteTypes {
     | '/api/directors-board/chat'
     | '/api/directors-board/generate-image'
     | '/api/gemini/free'
+    | '/api/guy/crew-agent'
+    | '/api/guy/image'
+    | '/api/guy/video'
     | '/api/motion/estimate-cost'
     | '/api/motion/jobs'
     | '/api/motion/status'
@@ -2423,6 +2476,7 @@ export interface FileRouteTypes {
     | '/api/video-agent/generate-script'
     | '/api/video-agent/submit'
     | '/soul/generate/video'
+    | '/api/guy/video/$id'
     | '/api/jobs/$id/status'
     | '/api/public/cli/vast'
     | '/api/public/gpu/claim'
@@ -2440,6 +2494,7 @@ export interface FileRouteTypes {
     | '/api/public/workers/register'
     | '/api/video-agent/status/$videoId'
     | '/api/audio/master/$id/status'
+    | '/api/guy/video/$id/content'
     | '/api/public/cli/device/poll'
     | '/api/public/cli/device/start'
     | '/api/public/workers/files/$name'
@@ -2603,6 +2658,9 @@ export interface FileRouteTypes {
     | '/api/directors-board/chat'
     | '/api/directors-board/generate-image'
     | '/api/gemini/free'
+    | '/api/guy/crew-agent'
+    | '/api/guy/image'
+    | '/api/guy/video'
     | '/api/motion/estimate-cost'
     | '/api/motion/jobs'
     | '/api/motion/status'
@@ -2640,6 +2698,7 @@ export interface FileRouteTypes {
     | '/api/video-agent/generate-script'
     | '/api/video-agent/submit'
     | '/soul/generate/video'
+    | '/api/guy/video/$id'
     | '/api/jobs/$id/status'
     | '/api/public/cli/vast'
     | '/api/public/gpu/claim'
@@ -2657,6 +2716,7 @@ export interface FileRouteTypes {
     | '/api/public/workers/register'
     | '/api/video-agent/status/$videoId'
     | '/api/audio/master/$id/status'
+    | '/api/guy/video/$id/content'
     | '/api/public/cli/device/poll'
     | '/api/public/cli/device/start'
     | '/api/public/workers/files/$name'
@@ -2799,6 +2859,9 @@ export interface RootRouteChildren {
   ApiDirectorsBoardChatRoute: typeof ApiDirectorsBoardChatRoute
   ApiDirectorsBoardGenerateImageRoute: typeof ApiDirectorsBoardGenerateImageRoute
   ApiGeminiFreeRoute: typeof ApiGeminiFreeRoute
+  ApiGuyCrewAgentRoute: typeof ApiGuyCrewAgentRoute
+  ApiGuyImageRoute: typeof ApiGuyImageRoute
+  ApiGuyVideoRoute: typeof ApiGuyVideoRouteWithChildren
   ApiMotionEstimateCostRoute: typeof ApiMotionEstimateCostRoute
   ApiMotionJobsRoute: typeof ApiMotionJobsRoute
   ApiMotionStatusRoute: typeof ApiMotionStatusRoute
@@ -3964,6 +4027,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGeminiFreeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/guy/crew-agent': {
+      id: '/api/guy/crew-agent'
+      path: '/api/guy/crew-agent'
+      fullPath: '/api/guy/crew-agent'
+      preLoaderRoute: typeof ApiGuyCrewAgentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/guy/image': {
+      id: '/api/guy/image'
+      path: '/api/guy/image'
+      fullPath: '/api/guy/image'
+      preLoaderRoute: typeof ApiGuyImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/guy/video': {
+      id: '/api/guy/video'
+      path: '/api/guy/video'
+      fullPath: '/api/guy/video'
+      preLoaderRoute: typeof ApiGuyVideoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/motion/estimate-cost': {
       id: '/api/motion/estimate-cost'
       path: '/api/motion/estimate-cost'
@@ -4223,6 +4307,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SoulGenerateVideoRouteImport
       parentRoute: typeof SoulGenerateRoute
     }
+    '/api/guy/video/$id': {
+      id: '/api/guy/video/$id'
+      path: '/$id'
+      fullPath: '/api/guy/video/$id'
+      preLoaderRoute: typeof ApiGuyVideoIdRouteImport
+      parentRoute: typeof ApiGuyVideoRoute
+    }
     '/api/jobs/$id/status': {
       id: '/api/jobs/$id/status'
       path: '/api/jobs/$id/status'
@@ -4342,6 +4433,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAudioMasterIdStatusRouteImport
       parentRoute: typeof ApiAudioMasterRoute
     }
+    '/api/guy/video/$id/content': {
+      id: '/api/guy/video/$id/content'
+      path: '/content'
+      fullPath: '/api/guy/video/$id/content'
+      preLoaderRoute: typeof ApiGuyVideoIdContentRouteImport
+      parentRoute: typeof ApiGuyVideoIdRoute
+    }
     '/api/public/cli/device/poll': {
       id: '/api/public/cli/device/poll'
       path: '/api/public/cli/device/poll'
@@ -4457,6 +4555,30 @@ const ApiAudioMasterRouteChildren: ApiAudioMasterRouteChildren = {
 
 const ApiAudioMasterRouteWithChildren = ApiAudioMasterRoute._addFileChildren(
   ApiAudioMasterRouteChildren,
+)
+
+interface ApiGuyVideoIdRouteChildren {
+  ApiGuyVideoIdContentRoute: typeof ApiGuyVideoIdContentRoute
+}
+
+const ApiGuyVideoIdRouteChildren: ApiGuyVideoIdRouteChildren = {
+  ApiGuyVideoIdContentRoute: ApiGuyVideoIdContentRoute,
+}
+
+const ApiGuyVideoIdRouteWithChildren = ApiGuyVideoIdRoute._addFileChildren(
+  ApiGuyVideoIdRouteChildren,
+)
+
+interface ApiGuyVideoRouteChildren {
+  ApiGuyVideoIdRoute: typeof ApiGuyVideoIdRouteWithChildren
+}
+
+const ApiGuyVideoRouteChildren: ApiGuyVideoRouteChildren = {
+  ApiGuyVideoIdRoute: ApiGuyVideoIdRouteWithChildren,
+}
+
+const ApiGuyVideoRouteWithChildren = ApiGuyVideoRoute._addFileChildren(
+  ApiGuyVideoRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
@@ -4597,6 +4719,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDirectorsBoardChatRoute: ApiDirectorsBoardChatRoute,
   ApiDirectorsBoardGenerateImageRoute: ApiDirectorsBoardGenerateImageRoute,
   ApiGeminiFreeRoute: ApiGeminiFreeRoute,
+  ApiGuyCrewAgentRoute: ApiGuyCrewAgentRoute,
+  ApiGuyImageRoute: ApiGuyImageRoute,
+  ApiGuyVideoRoute: ApiGuyVideoRouteWithChildren,
   ApiMotionEstimateCostRoute: ApiMotionEstimateCostRoute,
   ApiMotionJobsRoute: ApiMotionJobsRoute,
   ApiMotionStatusRoute: ApiMotionStatusRoute,
