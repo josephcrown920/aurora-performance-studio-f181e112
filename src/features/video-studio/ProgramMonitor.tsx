@@ -2,7 +2,7 @@
 // Program monitor: plays the shared TimelineDoc (video, image, text, overlay
 // and audio clips) in sync with the multi-track timeline. Scrubbing here moves
 // the timeline playhead and vice versa via the aurora:* window events.
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Pause, Play, SkipBack, Volume2, VolumeX } from "lucide-react";
 import {
@@ -224,7 +224,7 @@ export function ProgramMonitor() {
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4 translate-x-px" />}
         </Button>
-        <span className="w-20 text-xs tabular-nums text-muted-foreground">
+        <span className="w-16 shrink-0 text-xs tabular-nums text-muted-foreground">
           {fmtTime(time)}
         </span>
         <input
@@ -235,9 +235,9 @@ export function ProgramMonitor() {
           step={0.033}
           value={Math.min(time, doc.seconds)}
           onChange={(e) => seek(Number(e.target.value))}
-          className="h-1 flex-1 cursor-pointer accent-primary"
+          className="h-1 min-w-0 flex-1 cursor-pointer accent-primary"
         />
-        <span className="w-20 text-right text-xs tabular-nums text-muted-foreground">
+        <span className="w-16 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
           {fmtTime(doc.seconds)}
         </span>
         <Button
@@ -254,11 +254,12 @@ export function ProgramMonitor() {
 }
 
 function MonitorVideo({ clip, mediaRef }: { clip: Clip; mediaRef: React.RefObject<Map<string, HTMLVideoElement | HTMLAudioElement>> }) {
+  const register = useCallback((el: HTMLVideoElement | null) => {
+    if (el) mediaRef.current?.set(clip.id, el);
+    else { mediaRef.current?.get(clip.id)?.pause(); mediaRef.current?.delete(clip.id); }
+  }, [clip.id, mediaRef]);
   return <video
-    ref={el => {
-      if (el) mediaRef.current?.set(clip.id, el);
-      else { mediaRef.current?.get(clip.id)?.pause(); mediaRef.current?.delete(clip.id); }
-    }}
+    ref={register}
     src={clip.src}
     playsInline
     preload="auto"

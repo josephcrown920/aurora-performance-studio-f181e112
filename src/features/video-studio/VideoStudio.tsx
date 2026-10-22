@@ -24,15 +24,36 @@ export function VideoStudio() {
   const [progress, setProgress] = useState(0);
   const [showLayers, setShowLayers] = useState(false);
 
-  const importFiles = (event: ChangeEvent<HTMLInputElement>) => {
+  const importFiles = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    let start = Math.max(0, ...loadTimeline().clips.map(c => c.start + c.duration));
     for (const file of files) {
       const src = URL.createObjectURL(file);
+      const kind = kindFor(file);
+      let duration = 5;
+      if (kind !== "image") {
+        const media = kind === "audio" ? new Audio() : document.createElement("video");
+        media.preload = "metadata";
+        duration = await new Promise<number>(resolve => {
+          const finish = () => {
+            clearTimeout(timeout);
+            resolve(Number.isFinite(media.duration) && media.duration > 0 ? media.duration : 5);
+            media.removeAttribute("src");
+            media.load();
+          };
+          const timeout = setTimeout(finish, 5000);
+          media.onloadedmetadata = finish;
+          media.onerror = finish;
+          media.src = src;
+        });
+      }
       window.dispatchEvent(
         new CustomEvent("aurora:import-media", {
-          detail: { name: file.name.replace(/\.[^/.]+$/, ""), src, kind: kindFor(file) },
+          detail: { name: file.name.replace(/\.[^/.]+$/, ""), src, kind, start, duration },
         }),
       );
+      start += duration;
     }
     if (files.length) {
       toast.success(
@@ -40,7 +61,6 @@ export function VideoStudio() {
         { description: "Local files stay in this browser tab — reimport after a refresh." },
       );
     }
-    event.target.value = "";
   };
 
   const exportVideo = async () => {
