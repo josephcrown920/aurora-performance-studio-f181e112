@@ -11,6 +11,8 @@ import { CharactersPanel } from "./CharactersPanel";
 import { DirectorChat } from "./DirectorChat";
 import { DirectorRoomRail, type DirectorRoomPanel } from "./DirectorRoomRail";
 import { MoodboardPanel } from "./MoodboardPanel";
+import { appendCanvasVideos } from "@/features/video-studio/canvas-timeline";
+import { loadTimeline, saveTimeline } from "@/features/creative-studio/lib/timeline-state";
 
 export function StudioPage({ canvasOnly = false }: { canvasOnly?: boolean }) {
   const { board, setBoard, updateShot, addShot, removeShot, connect, disconnect } = useBoard();
@@ -53,6 +55,7 @@ export function StudioPage({ canvasOnly = false }: { canvasOnly?: boolean }) {
     <header className="director-clean-header border-b border-border">
       <div className="director-clean-title"><Link to="/" className="text-lg font-semibold">Aurora</Link><input aria-label="Board title" value={board.title} onChange={e => setBoard(b => ({...b,title:e.target.value}))} className="min-w-0 bg-transparent text-sm text-muted-foreground outline-none" /></div>
       <nav aria-label="Workspace actions" className="flex flex-wrap items-center gap-2">
+        <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: "edit" }} onClick={() => saveTimeline(appendCanvasVideos(loadTimeline(), board))}>Video editor</Link></Button>
         <Button asChild variant="outline" size="sm"><Link to="/perform-anywhere" search={{ experience: "grwm" }}><Shirt />Get Ready With Me</Link></Button>
         <Button asChild variant="outline" size="sm"><Link to="/admin"><Shield />Admin</Link></Button>
         <Button variant="outline" size="icon" title="Add character reference" aria-label="Add character reference" onClick={() => {setSelectedId(addShot({kind:"reference",title:"Character Lock"}));setInspectorOpen(true);}}><UserRound /></Button>
