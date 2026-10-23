@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Reduce tracked repository media size using verified Lovable Assets pointers; preserve source, required Expo assets and all working media references. Awaiting confirmation of the scanned file groups before migration.
+- [ ] Compact oversized performance reference previews and Personalize the scene controls without altering Build a Scene or Two-angle workflow.
+
 - [x] Add Get Ready With Me within Perform Anywhere using the shared private source draft and existing motion services; opening-canvas link, experience switching, signed-out entry and mobile layout verified. Current output is a 5-second preview / up to 15-second reviewed render, not a full 30-second render.
 - [x] Make Admin discoverable from the opening canvas; signed-out navigation still reaches the protected sign-in gate.
 - [x] Verify Aurora CLI version and live price estimate; allow side-effect-free image dry runs without sign-in.
