@@ -68,7 +68,7 @@ const WORKFLOW_GUIDES: Record<PerformanceVariantKind, WorkflowGuideConfig> = {
   },
 };
 
-function GuideFigure({ image, label, highlighted }: { image: GuideImage; label: string; highlighted?: boolean }) {
+function GuideFigure({ image, label, highlighted, compact = false }: { image: GuideImage; label: string; highlighted?: boolean; compact?: boolean }) {
   return (
     <figure className="min-w-0">
       <div
@@ -82,7 +82,7 @@ function GuideFigure({ image, label, highlighted }: { image: GuideImage; label: 
           alt={image.alt}
           loading="lazy"
           decoding="async"
-          className={cn("w-full object-cover", image.ratio)}
+          className={cn("w-full", compact ? "h-36 object-contain sm:h-44" : `object-cover ${image.ratio}`)}
         />
       </div>
       <figcaption className="mt-2 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -102,15 +102,15 @@ export function WorkflowVisualGuide({ kind, className }: { kind: PerformanceVari
   return (
     <section className={cn("aurora-panel overflow-hidden rounded-2xl p-4 sm:p-5", className)} aria-label="Workflow reference example">
       <p className="aurora-kicker mb-3">{guide.eyebrow}</p>
-      <div className="grid items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
-        <GuideFigure image={guide.before} label={guide.beforeLabel} />
+      <div className={cn("grid items-center gap-4", kind === "luxury_interior" ? "grid-cols-[1fr_auto_1fr] gap-2" : "md:grid-cols-[1fr_auto_1fr]")}>
+        <GuideFigure image={guide.before} label={guide.beforeLabel} compact={kind === "luxury_interior"} />
         <div className="flex items-center justify-center" aria-hidden="true">
           <span className="flex size-9 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface-glass-strong)] text-primary">
             <ArrowRight className="size-4 md:hidden" />
             <ArrowRight className="hidden size-4 md:block" />
           </span>
         </div>
-        <GuideFigure image={guide.after} label={guide.afterLabel} highlighted />
+        <GuideFigure image={guide.after} label={guide.afterLabel} highlighted compact={kind === "luxury_interior"} />
       </div>
       <div className="mt-4">
         <h2 className="text-base font-bold text-foreground">{guide.headline}</h2>

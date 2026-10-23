@@ -173,12 +173,12 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
         </section>
 
         <section className="border-t border-border pt-4">
-          <h2 className="mb-4 text-lg font-bold">Personalize the scene</h2>
-          <div className="grid gap-3 md:grid-cols-2">
+          <h2 className="mb-2 text-sm font-bold">Personalize the scene</h2>
+          <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
             {Object.entries(draft.settings).map(([key, value]) => key === "vehicle" ? (
-              <label key={key} className="text-xs font-semibold capitalize">{key}<select value={value} onChange={(e) => setDraft((d) => ({ ...d, settings: { ...d.settings, [key]: e.target.value } }))} className="mt-1 w-full rounded-xl border border-border bg-background p-3">{VEHICLES.map((vehicle) => <option key={vehicle}>{vehicle}</option>)}</select></label>
+              <label key={key} className="min-w-0 text-xs font-semibold capitalize">{key}<select value={value} onChange={(e) => setDraft((d) => ({ ...d, settings: { ...d.settings, [key]: e.target.value } }))} className="mt-1 h-9 w-full min-w-0 rounded-md border border-border bg-background px-2 text-xs">{VEHICLES.map((vehicle) => <option key={vehicle}>{vehicle}</option>)}</select></label>
             ) : (
-              <label key={key} className="text-xs font-semibold capitalize">{key}<input value={value} onChange={(e) => setDraft((d) => ({ ...d, settings: { ...d.settings, [key]: e.target.value } }))} className="mt-1 w-full rounded-xl border border-border bg-background p-3" /></label>
+              <label key={key} className="min-w-0 text-xs font-semibold capitalize">{key}<input value={value} onChange={(e) => setDraft((d) => ({ ...d, settings: { ...d.settings, [key]: e.target.value } }))} className="mt-1 h-9 w-full min-w-0 rounded-md border border-border bg-background px-2 text-xs" /></label>
             ))}
           </div>
         </section>
