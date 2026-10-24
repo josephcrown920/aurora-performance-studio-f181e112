@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { authNextSearch } from "@/lib/auth-return-path";
 import { StudioPage as NodeWorkspace } from "@/features/storyboard/studio/StudioPage";
-import { VideoStudio } from "@/features/video-studio/VideoStudio";
+import { GuyStudio } from "@/features/guy-studio/GuyStudio";
 import { ClientOnly, createLazyFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -87,10 +87,10 @@ function StudioWorkspace() {
       <Link to="/" className="text-lg font-semibold">Aurora</Link>
       <nav aria-label="Studio views" className="flex items-center gap-2">
         <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: undefined }}>Canvas</Link></Button>
-        <Button asChild size="sm"><Link to="/studio" search={{ mode: "edit" }} aria-current="page">Video editor</Link></Button>
+        <Button asChild size="sm"><Link to="/studio" search={{ mode: "edit" }} aria-current="page">Video Studio</Link></Button>
       </nav>
     </header>
-    <div className="p-3 md:p-6"><ClientOnly fallback={<p role="status">Opening editor…</p>}><VideoStudio /></ClientOnly></div>
+    <div><ClientOnly fallback={<p role="status">Opening studio…</p>}><GuyStudio /></ClientOnly></div>
   </main>;
 }
 

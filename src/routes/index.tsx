@@ -57,6 +57,13 @@ const UGCAdsSection = lazy(() =>
 const ModelSpotlight = lazy(() =>
   import("@/components/landing/ModelSpotlight").then((m) => ({ default: m.ModelSpotlight })),
 );
+const PerformAnywhereWorkspace = lazy(() =>
+  import("@/components/performance/PerformAnywhereWorkspace").then((m) => ({ default: m.PerformAnywhereWorkspace })),
+);
+function LandingPerformAnywhere() {
+  const [grwm, setGrwm] = useState(false);
+  return <section aria-label="Perform Anywhere" className="relative z-10"><Suspense fallback={null}><PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} /></Suspense></section>;
+}
 const IntroAnimation = lazy(() =>
   import("@/components/landing/IntroAnimation").then((m) => ({ default: m.IntroAnimation })),
 );
@@ -701,6 +708,8 @@ function LandingPage() {
           ))}
         </div>
       </div>
+
+      <LandingPerformAnywhere />
 
       {/* ── Process ─────────────────────────────────────────────────────── */}
       {/* Never give a landing element the id `process`: browsers expose
