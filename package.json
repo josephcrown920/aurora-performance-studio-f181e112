@@ -112,15 +112,12 @@
     "zod": "^3.24.2"
   },
   "overrides": {
-    "@tanstack/router-core": "1.171.31",
+    "@tanstack/router-core": "1.171.34",
     "minimatch@3": {
       "brace-expansion": "1.1.18"
     },
     "minimatch@10": {
       "brace-expansion": "5.0.9"
-    },
-    "monaco-editor": {
-      "dompurify": "3.4.14"
     },
     "@babel/core": "7.29.7",
     "@xmldom/xmldom": "0.9.12",
@@ -144,7 +141,8 @@
     },
     "vite": {
       "esbuild": "0.28.1"
-    }
+    },
+    "dompurify": "3.4.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
