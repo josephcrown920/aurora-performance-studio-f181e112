@@ -34,7 +34,7 @@ const SCENES: Scene[] = [
     tab: "live",
     name: "Live on KEXP",
     tagline: "Concrete warehouse · violet wash",
-    thumb: "/studio-refs/kexp-purple-studio.jpg",
+    thumb: "/__l5e/assets-v1/de456ec4-0003-48a6-9ae6-87cac137c661/kexp-purple-studio.jpg",
     accentColor: "#8b5cf6",
     prompt: [
       "You are an AI performance compositor: place the REAL person from the reference photo into this live music session environment.",
@@ -49,7 +49,7 @@ const SCENES: Scene[] = [
     tab: "live",
     name: "Blue Cyclorama Session",
     tagline: "Bright blue sweep · full band",
-    thumb: "/studio-refs/kexp-blue-studio.jpg",
+    thumb: "/__l5e/assets-v1/2b72d294-c9a5-4d4f-9fa6-4ff5eeb123ef/kexp-blue-studio.jpg",
     accentColor: "#3b82f6",
     prompt: [
       "You are an AI performance compositor: place the REAL person from the reference photo into this live session studio.",
@@ -64,7 +64,7 @@ const SCENES: Scene[] = [
     tab: "live",
     name: "ON AIR Lounge",
     tagline: "Glowing halos · cozy session",
-    thumb: "/studio-refs/kexp-on-air-studio.png",
+    thumb: "/__l5e/assets-v1/ce7d2871-3860-449e-b201-7efde6ac3f54/kexp-on-air-studio.png",
     accentColor: "#f97316",
     prompt: [
       "You are an AI performance compositor: place the REAL person from the reference photo into this intimate on-air session lounge.",
@@ -79,7 +79,7 @@ const SCENES: Scene[] = [
     tab: "live",
     name: "Black Box Theater",
     tagline: "Raw stage · single spotlight",
-    thumb: "/studio-refs/kexp-purple-studio.jpg",
+    thumb: "/__l5e/assets-v1/de456ec4-0003-48a6-9ae6-87cac137c661/kexp-purple-studio.jpg",
     accentColor: "#6b7280",
     prompt: [
       "You are an AI performance compositor: place the REAL person into this dramatic black box theater performance.",
@@ -94,7 +94,7 @@ const SCENES: Scene[] = [
     tab: "artist",
     name: "Music Video Set",
     tagline: "Warehouse · smoke · camera crew",
-    thumb: "/studio-refs/artist-shoot-production-set.png",
+    thumb: "/__l5e/assets-v1/7f332386-9c2e-4b33-83d2-ddaaa34c8cef/artist-shoot-production-set.png",
     accentColor: "#ec4899",
     prompt: [
       "You are an AI performance compositor: place the REAL person from the reference photo into this high-production music video set.",
@@ -109,7 +109,7 @@ const SCENES: Scene[] = [
     tab: "artist",
     name: "Blue Cyclorama Portrait",
     tagline: "Royal blue sweep · close-up",
-    thumb: "/studio-refs/kexp-blue-studio.jpg",
+    thumb: "/__l5e/assets-v1/2b72d294-c9a5-4d4f-9fa6-4ff5eeb123ef/kexp-blue-studio.jpg",
     accentColor: "#1e40af",
     prompt: [
       "You are an AI performance compositor: place the REAL person into this close-up blue cyclorama portrait session.",
@@ -124,7 +124,7 @@ const SCENES: Scene[] = [
     tab: "artist",
     name: "Arena Stage",
     tagline: "Massive lights · crowd · haze",
-    thumb: "/studio-refs/artist-shoot-production-set.png",
+    thumb: "/__l5e/assets-v1/7f332386-9c2e-4b33-83d2-ddaaa34c8cef/artist-shoot-production-set.png",
     accentColor: "#ef4444",
     prompt: [
       "You are an AI performance compositor: place the REAL person onto this sold-out arena concert stage.",
@@ -139,7 +139,7 @@ const SCENES: Scene[] = [
     tab: "artist",
     name: "Colored Backdrop",
     tagline: "Full Colors Studio · 13 scenes",
-    thumb: "/studio-refs/kexp-blue-studio.jpg",
+    thumb: "/__l5e/assets-v1/2b72d294-c9a5-4d4f-9fa6-4ff5eeb123ef/kexp-blue-studio.jpg",
     accentColor: "#8b5cf6",
     prompt: "See Colors Studio for the full cyclorama + color experience →",
   },
@@ -149,7 +149,7 @@ const SCENES: Scene[] = [
     tab: "tiktok-live",
     name: "Neon Arena Stage",
     tagline: "Massive LED rig · crowd energy",
-    thumb: "/studio-refs/artist-shoot-production-set.png",
+    thumb: "/__l5e/assets-v1/7f332386-9c2e-4b33-83d2-ddaaa34c8cef/artist-shoot-production-set.png",
     accentColor: "#ec4899",
     prompt: [
       "Cinematic wide-angle 16:9 landscape photograph of a massive sold-out arena concert stage — point of view from center stage looking out at the crowd.",
@@ -165,7 +165,7 @@ const SCENES: Scene[] = [
     tab: "tiktok-live",
     name: "Recording Studio",
     tagline: "Pro booth · warm low light",
-    thumb: "/studio-refs/kexp-purple-studio.jpg",
+    thumb: "/__l5e/assets-v1/de456ec4-0003-48a6-9ae6-87cac137c661/kexp-purple-studio.jpg",
     accentColor: "#a78bfa",
     prompt: [
       "Cinematic 16:9 landscape photograph of a world-class professional recording studio control room.",
@@ -182,7 +182,7 @@ const SCENES: Scene[] = [
     tab: "tiktok-live",
     name: "Rooftop Golden Hour",
     tagline: "City skyline · sunset glow",
-    thumb: "/studio-refs/kexp-on-air-studio.png",
+    thumb: "/__l5e/assets-v1/ce7d2871-3860-449e-b201-7efde6ac3f54/kexp-on-air-studio.png",
     accentColor: "#f59e0b",
     prompt: [
       "Cinematic 16:9 landscape photograph of a luxury rooftop terrace in a major city at golden hour.",
@@ -198,7 +198,7 @@ const SCENES: Scene[] = [
     tab: "tiktok-live",
     name: "Luxury Penthouse",
     tagline: "Floor-to-ceiling glass · night",
-    thumb: "/studio-refs/kexp-blue-studio.jpg",
+    thumb: "/__l5e/assets-v1/2b72d294-c9a5-4d4f-9fa6-4ff5eeb123ef/kexp-blue-studio.jpg",
     accentColor: "#06b6d4",
     prompt: [
       "Cinematic 16:9 landscape photograph of an ultra-luxury penthouse interior at night.",
@@ -214,7 +214,7 @@ const SCENES: Scene[] = [
     tab: "tiktok-live",
     name: "Underground Club",
     tagline: "Dark concrete · neon haze",
-    thumb: "/studio-refs/kexp-purple-studio.jpg",
+    thumb: "/__l5e/assets-v1/de456ec4-0003-48a6-9ae6-87cac137c661/kexp-purple-studio.jpg",
     accentColor: "#7c3aed",
     prompt: [
       "Cinematic 16:9 landscape photograph of an underground nightclub at peak night.",
@@ -230,7 +230,7 @@ const SCENES: Scene[] = [
     tab: "tiktok-live",
     name: "Tour Bus Interior",
     tagline: "Moving lights · road life",
-    thumb: "/studio-refs/artist-shoot-production-set.png",
+    thumb: "/__l5e/assets-v1/7f332386-9c2e-4b33-83d2-ddaaa34c8cef/artist-shoot-production-set.png",
     accentColor: "#10b981",
     prompt: [
       "Cinematic 16:9 landscape photograph of the interior of a luxury artist tour bus in motion at night.",

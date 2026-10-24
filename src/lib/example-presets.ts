@@ -24,7 +24,7 @@ export const STUDIO_EXAMPLE_PRESETS: ToolPreset[] = [
     label: "Tokyo Rain",
     emoji: "🌧️",
     hint: "Cinematic rainy city night",
-    imageUrl: "/demo-tokyo-rain-1.png",
+    imageUrl: "/__l5e/assets-v1/88e82182-edda-4bad-88cc-8c303adf6840/demo-tokyo-rain-1.png",
     prompt:
       "Ultra-cinematic wide shot of the subject standing on a rain-soaked rooftop at night, vast Tokyo skyline behind — thousands of illuminated windows, neon billboard signs in pink, cyan, and gold, Tokyo Tower glowing amber in the mid-distance. Heavy rain falling in volumetric streaks caught by a single hard backlight at 5600K, creating a halo of silver rain particles around the subject. Subject center-frame, confident stance, wet clothing clinging with fabric thread detail, neon reflections shimmering in the puddles beneath their feet. 24mm Cooke S4 lens, deep focus f/8 — subject and skyline both sharp. Kodak Vision3 500T film stock, deep teal shadows, cyan-grade blue-black sky, magenta neon accent hits. Individual raindrops on jacket surface, wet-pavement light reflections, breath vapor visible in cold air. Perfect anatomy, no distortion. Preserve exact facial likeness and outfit.",
   },

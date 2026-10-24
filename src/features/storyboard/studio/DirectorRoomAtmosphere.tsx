@@ -5,37 +5,37 @@ type AtmosphereKey = DirectorRoomPanel | "gpu";
 
 const ATMOSPHERES: Record<AtmosphereKey, { src: string; label: string; position: string }> = {
   wardrobe: {
-    src: "/director-room/streets-performance-close.png",
+    src: "/__l5e/assets-v1/fa6a1ba2-4e6e-4791-aa19-b60f0b5cfe52/streets-performance-close.png",
     label: "Close performance",
     position: "center 30%",
   },
   scenes: {
-    src: "/director-room/streets-performance-hero.jpeg",
+    src: "/__l5e/assets-v1/db30a888-a3b3-4125-b63f-f3e8742374be/streets-performance-hero.jpeg",
     label: "Street-scale scene",
     position: "center",
   },
   layers: {
-    src: "/director-room/streets-performance-wide.png",
+    src: "/__l5e/assets-v1/3a2a1740-a5b5-4ff8-9bb9-73f1a552f7a1/streets-performance-wide.png",
     label: "Wet street detail",
     position: "center 45%",
   },
   storyboard: {
-    src: "/director-room/streets-performance-crowd.png",
+    src: "/__l5e/assets-v1/07d7be50-a8f1-471f-8d96-9a9f488913c4/streets-performance-crowd.png",
     label: "Crowd performance",
     position: "center 35%",
   },
   moodboard: {
-    src: "/director-room/streets-performance-hero.jpeg",
+    src: "/__l5e/assets-v1/db30a888-a3b3-4125-b63f-f3e8742374be/streets-performance-hero.jpeg",
     label: "Visual language",
     position: "center 55%",
   },
   flows: {
-    src: "/director-room/streets-performance-wide.png",
+    src: "/__l5e/assets-v1/3a2a1740-a5b5-4ff8-9bb9-73f1a552f7a1/streets-performance-wide.png",
     label: "Movement flow",
     position: "center 35%",
   },
   gpu: {
-    src: "/director-room/streets-performance-close.png",
+    src: "/__l5e/assets-v1/fa6a1ba2-4e6e-4791-aa19-b60f0b5cfe52/streets-performance-close.png",
     label: "Render energy",
     position: "center 25%",
   },

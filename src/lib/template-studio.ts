@@ -855,7 +855,7 @@ export const STUDIO_TEMPLATES: StudioTemplate[] = [
     thumbnail: JOSH_LOOPING_OFFICERS_THUMB,
     kinds: ["image", "video"],
     dispatch: "studio",
-    defaultImageUrl: "/josh-ref-3.jpeg",
+    defaultImageUrl: "/__l5e/assets-v1/8214066f-d711-4840-a31c-e7d98de1e64b/josh-ref-3.jpeg",
     backgroundImageUrl: "/josh-officers-bg.webp",
     inputs: [
       IMG(

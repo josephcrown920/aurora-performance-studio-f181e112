@@ -58,7 +58,7 @@ export const AURORA_MARKETING_FEATURES: readonly AuroraMarketingFeature[] = [
     name: "Aurora Soul",
     promise: "Train a reusable identity and create consistent character imagery.",
     proof: "Identity-locked training, generation, a reference library, and visual vibe matching.",
-    preview: "/hero/hero-direct-identity.png",
+    preview: "/__l5e/assets-v1/84d9d0f6-c8f4-49de-9965-8bea94d27fff/hero-direct-identity.png",
     route: "/soul",
   },
   {
@@ -66,7 +66,7 @@ export const AURORA_MARKETING_FEATURES: readonly AuroraMarketingFeature[] = [
     name: "Director's Room",
     promise: "Plan scenes, looks, shots, and production decisions in one directing workspace.",
     proof: "Moodboards, storyboard tools, shot direction, and an inspector stay inside one project.",
-    preview: "/director-room/streets-performance-hero.jpeg",
+    preview: "/__l5e/assets-v1/db30a888-a3b3-4125-b63f-f3e8742374be/streets-performance-hero.jpeg",
     route: "/director-room",
   },
   {
@@ -74,7 +74,7 @@ export const AURORA_MARKETING_FEATURES: readonly AuroraMarketingFeature[] = [
     name: "Custom Aurora capability",
     promise: "Build a campaign around a newly launched or operator-supplied Aurora capability.",
     proof: "The operator's factual capability notes become the only approved source for claims.",
-    preview: "/hero/hero-2.png",
+    preview: "/__l5e/assets-v1/7af8c755-390e-4b97-a2aa-ee916ac85b53/hero-2.png",
     route: "/studio",
   },
 ] as const;

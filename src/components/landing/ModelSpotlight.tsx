@@ -27,7 +27,7 @@ export function ModelSpotlight() {
     <section className="relative z-10 px-5 py-16 border-t border-white/5 overflow-hidden">
       {/* Full-bleed cinematic stills texture behind the cards */}
       <img
-        src="/spotlight/cinematic-stills.jpeg"
+        src="/__l5e/assets-v1/f1c3487a-cfad-4aa4-b0b6-fa7ec4c86544/cinematic-stills.jpeg"
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.08] select-none"

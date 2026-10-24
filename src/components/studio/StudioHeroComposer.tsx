@@ -12,12 +12,12 @@ import { StudioToolRows } from "@/components/studio/StudioToolRows";
 
 /** Collage strips behind the composer — real Aurora renders, dimmed. */
 const COLLAGE: string[] = [
-  "/hero/hero-1.png",
-  "/hero/hero-3.png",
-  "/hero/hero-colors.png",
-  "/hero/hero-5.png",
-  "/hero/hero-perform-anywhere.png",
-  "/hero/hero-7.png",
+  "/__l5e/assets-v1/d4b8c19a-3dd4-4c2b-822d-ee13cccef5b1/hero-1.png",
+  "/__l5e/assets-v1/71063baf-a547-4fec-84b2-0650d4c3d611/hero-3.png",
+  "/__l5e/assets-v1/1402c3bc-5115-43ad-b10b-4a28f1350a37/hero-colors.png",
+  "/__l5e/assets-v1/35a6a279-3639-4b4c-b3d6-d19a2db0418f/hero-5.png",
+  "/__l5e/assets-v1/5486a6d0-288b-40a6-bbbc-5dde786b3160/hero-perform-anywhere.png",
+  "/__l5e/assets-v1/cc1e6f97-8da2-4e54-bf68-8a7b60435bf5/hero-7.png",
 ];
 
 export type ComposerMode = "image" | "video";

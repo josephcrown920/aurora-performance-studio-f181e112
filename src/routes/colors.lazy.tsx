@@ -515,7 +515,7 @@ function ColorsStudio() {
               to="/colors-show"
               className="group overflow-hidden aurora-glass rounded-2xl border border-white/10 transition-all hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             >
-              <img src="/gallery/josh-pink-mic.png" alt="Cinematic performance portrait with a pink microphone" loading="lazy" className="h-24 w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+              <img src="/__l5e/assets-v1/9a42cb3e-bbff-4acc-8f70-7d07dbfb0144/josh-pink-mic.png" alt="Cinematic performance portrait with a pink microphone" loading="lazy" className="h-24 w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
               <div className="p-4">
               <div className="flex items-start justify-between gap-3">
                 <span className="flex size-10 items-center justify-center rounded-xl bg-primary/15 text-primary">

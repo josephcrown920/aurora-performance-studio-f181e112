@@ -6,7 +6,7 @@ import audioAsset from "@/assets/the-one-hook.mp3.asset.json";
 import { transcribeAudio } from "@/lib/hf.functions";
 import { AUDIO_ACCEPT } from "@/lib/utils";
 
-const lipsyncDemoVideo = "/videos/face-sings-hero.mp4";
+const lipsyncDemoVideo = "/__l5e/assets-v1/8fbf76f7-6565-467f-b84a-3b01572f27c2/face-sings-hero.mp4";
 
 type Cue = { t: number; text: string };
 

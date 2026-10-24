@@ -140,10 +140,10 @@ const PRESET_IMAGES: Record<string, string> = {
 };
 
 const STUDIO_GALLERY_SAMPLES = [
-  { src: "/gallery/josh-pink-mic.png", label: "Performance portrait", caption: "Studio light · vocal close-up" },
-  { src: "/gallery/josh-neon-tech.png", label: "Neon campaign", caption: "Night scene · cinematic color" },
+  { src: "/__l5e/assets-v1/9a42cb3e-bbff-4acc-8f70-7d07dbfb0144/josh-pink-mic.png", label: "Performance portrait", caption: "Studio light · vocal close-up" },
+  { src: "/__l5e/assets-v1/5288e308-21ef-466a-bbd7-b0468fac0c90/josh-neon-tech.png", label: "Neon campaign", caption: "Night scene · cinematic color" },
   { src: "/gallery/violet-haze.webp", label: "Violet editorial", caption: "Fashion mood · soft haze" },
-  { src: "/gallery/josh-meme-fire.png", label: "High-energy social", caption: "Creator cut · graphic moment" },
+  { src: "/__l5e/assets-v1/8aa60e51-4798-4f76-9a16-2a92fcb7a0d6/josh-meme-fire.png", label: "High-energy social", caption: "Creator cut · graphic moment" },
   { src: "/gallery/ichroma-cover.webp", label: "Cover art", caption: "Album world · polished finish" },
 ] as const;
 

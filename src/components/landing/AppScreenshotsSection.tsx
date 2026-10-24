@@ -15,7 +15,7 @@ type Screen = {
 
 const SCREENS: Screen[] = [
   {
-    src: "/screenshots/tiktok30-templates.png",
+    src: "/__l5e/assets-v1/aa8ae159-ccca-4708-ad34-bf225832a2eb/tiktok30-templates.png",
     label: "One prompt. 30 unique posts.",
     kicker: "TikTok30",
     to: "/spin",
@@ -23,7 +23,7 @@ const SCREENS: Screen[] = [
     aspect: "portrait",
   },
   {
-    src: "/screenshots/lipsync-studio.png",
+    src: "/__l5e/assets-v1/7d15e32d-f2bf-49d9-aff4-631a7983f25e/lipsync-studio.png",
     label: "Make any face sing your hook.",
     kicker: "Lip Sync Studio",
     to: "/lipsync",
@@ -31,7 +31,7 @@ const SCREENS: Screen[] = [
     aspect: "portrait",
   },
   {
-    src: "/screenshots/autocut.png",
+    src: "/__l5e/assets-v1/27b21dea-e9be-4f31-a188-62d839b334f3/autocut.png",
     label: "AI-cut video from your raw clips.",
     kicker: "AutoCut",
     to: "/tiktok",
@@ -39,7 +39,7 @@ const SCREENS: Screen[] = [
     aspect: "portrait",
   },
   {
-    src: "/screenshots/playground-desktop.png",
+    src: "/__l5e/assets-v1/b672dec2-cbc2-4e74-987f-ca2ccc514ec6/playground-desktop.png",
     label: "Script the studio with code.",
     kicker: "Playground",
     to: "/editor",
@@ -47,7 +47,7 @@ const SCREENS: Screen[] = [
     aspect: "landscape",
   },
   {
-    src: "/screenshots/studio-screen.png",
+    src: "/__l5e/assets-v1/07420e18-5968-40a5-a944-2f39f164cd1f/studio-screen.png",
     label: "Your face. Any world.",
     kicker: "Studio",
     to: "/studio",
@@ -55,7 +55,7 @@ const SCREENS: Screen[] = [
     aspect: "portrait",
   },
   {
-    src: "/screenshots/gallery-screen.jpeg",
+    src: "/__l5e/assets-v1/8f60fae7-af22-4631-a94a-21818270f0e8/gallery-screen.jpeg",
     label: "Every render, saved and shareable.",
     kicker: "Gallery",
     to: "/gallery",

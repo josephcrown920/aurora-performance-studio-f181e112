@@ -211,7 +211,7 @@ async function main() {
       .upload(outfitPath, outfitBytes, { contentType: "image/jpeg", upsert: false });
     assert(!outfitUploadError, `outfit upload failed: ${outfitUploadError?.message}`);
 
-    const sourceBytes = await readFile("public/viral-presets/preview-2.mp4");
+    const sourceBytes = await readFile("public/__l5e/assets-v1/c328ce33-2593-4c18-b5b2-afef56622ca6/preview-2.mp4");
     const { error: sourceUploadError } = await supabaseAdmin.storage
       .from("studio")
       .upload(sourcePath, sourceBytes, {
