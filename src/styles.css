@@ -2414,11 +2414,40 @@ html[data-theme="light"] {
 .director-clean-shell .director-room-rail-item { width:auto; border-radius:6px; color:var(--muted-foreground); }
 .director-clean-shell .director-room-rail-item-active { color:var(--foreground); background:var(--secondary); border-color:var(--border); }
 .director-canvas-layout { display:grid; grid-template-columns:minmax(0,1fr); flex:1; min-height:0; position:relative; }
-.production-flow { min-height:280px; }
-.production-node { width:240px; letter-spacing:0; }
-.production-flow .react-flow__handle { width:14px; height:14px; background:var(--primary); border:3px solid var(--card); }
-.production-flow .react-flow__edge-path { stroke:var(--primary); stroke-width:2; }
-.production-flow .react-flow__controls-button { background:var(--card); border-color:var(--border); color:var(--foreground); fill:var(--foreground); }
+.production-flow {
+  min-height:280px; isolation:isolate; overflow:hidden;
+  background:
+    radial-gradient(60% 50% at 15% 10%, color-mix(in oklab, var(--primary) 32%, transparent), transparent 70%),
+    radial-gradient(50% 45% at 90% 85%, color-mix(in oklab, var(--accent) 28%, transparent), transparent 70%),
+    radial-gradient(40% 40% at 70% 20%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%),
+    var(--background);
+}
+.production-flow::before {
+  content:""; position:absolute; inset:-50%; z-index:-1; pointer-events:none;
+  background:conic-gradient(from 0deg at 50% 50%, transparent, color-mix(in oklab, var(--primary) 12%, transparent), transparent 40%);
+  animation:production-aurora 28s linear infinite;
+}
+.production-flow::after {
+  content:""; position:absolute; inset:0; z-index:4; pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 50%, transparent 55%, color-mix(in oklab, var(--background) 85%, transparent));
+}
+@keyframes production-aurora { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .production-flow::before { animation:none; } }
+.production-flow .react-flow__background { opacity:.55; }
+.production-node {
+  width:240px; letter-spacing:0; overflow:hidden; border-radius:16px;
+  background:color-mix(in oklab, var(--card) 72%, transparent) !important;
+  backdrop-filter:blur(14px) saturate(140%);
+  box-shadow:0 18px 40px -18px color-mix(in oklab, var(--primary) 55%, transparent), inset 0 1px 0 color-mix(in oklab, var(--foreground) 10%, transparent);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.production-node:hover { transform:translateY(-2px); box-shadow:0 24px 50px -16px color-mix(in oklab, var(--primary) 75%, transparent); }
+.production-node > header { background:linear-gradient(90deg, color-mix(in oklab, var(--primary) 22%, transparent), transparent); }
+.production-flow .react-flow__handle { width:14px; height:14px; background:var(--primary); border:3px solid var(--card); box-shadow:0 0 12px var(--primary); }
+.production-flow .react-flow__edge-path { stroke:var(--primary); stroke-width:2.5; stroke-dasharray:8 6; animation:production-flowline 1.2s linear infinite; filter:drop-shadow(0 0 6px var(--primary)); }
+@keyframes production-flowline { to { stroke-dashoffset:-28; } }
+.production-flow .react-flow__controls { border-radius:12px; overflow:hidden; box-shadow:0 10px 30px -12px color-mix(in oklab, var(--primary) 60%, transparent); }
+.production-flow .react-flow__controls-button { background:color-mix(in oklab, var(--card) 80%, transparent); border-color:var(--border); color:var(--foreground); fill:var(--foreground); }
 .production-flow .react-flow__controls-button svg { fill:currentColor; max-width:14px; max-height:14px; }
 .director-detail-panel { display:flex; flex-direction:column; position:absolute; right:0; top:0; bottom:0; width:min(360px,92%); z-index:30; }
 .director-scene-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
