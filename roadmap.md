@@ -1,4 +1,4 @@
-# Roadmap
+- [x] Reduce tracked repository media: ~130 MiB of duplicate or unused photos/videos removed; cloud-backed photos now load from Lovable Assets. Remaining: media in computed-path folders (nav-previews, sample-photos, colors, josh, generated clips) kept locally.
 
 - [ ] Reduce tracked repository media size using verified Lovable Assets pointers; preserve source, required Expo assets and all working media references. Awaiting confirmation of the scanned file groups before migration.
 - [x] Compact luxury-interior reference previews and Personalize the scene controls; Build a Scene reference previews and Two-angle workflow left unchanged. Public workflow/browser check passed without page errors; build OK.
