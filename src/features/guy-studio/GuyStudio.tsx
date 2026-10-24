@@ -1,3 +1,4 @@
+import "./guy-studio.css";
 import { ModelLogo } from "@/components/guy/ModelLogo";
 import { ThemePicker } from "@/components/guy/ThemePicker";
 import { generationIntent } from "@/lib/guy/chat-intent";
@@ -11,7 +12,7 @@ import { EffectPreview } from "@/components/guy/EffectPreview";
 import { supabase } from "@/integrations/supabase/client";
 import { listCloudSessions, saveToCloudGallery, syncSessionToCloud } from "@/lib/guy/cloud";
 import { displayName, greetingText } from "@/lib/guy/greeting";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Clapperboard,
@@ -97,27 +98,9 @@ import scene1 from "@/assets/guy/scene1.jpg";
 import scene2 from "@/assets/guy/scene2.jpg";
 import scene3 from "@/assets/guy/scene3.jpg";
 
-export const Route = createFileRoute("/studio")({
-  head: () => ({
-    meta: [
-      { title: "GUI Video Studio — Creative editor" },
-      {
-        name: "description",
-        content:
-          "Create images and videos, direct your edit with AI, and preview every cut on your timeline.",
-      },
-      { property: "og:title", content: "GUI Video Studio — Creative editor" },
-      {
-        property: "og:description",
-        content:
-          "Create images and videos, direct your edit with AI, and preview every cut on your timeline.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Editor,
-});
+export function GuyStudio() {
+  return <Editor />;
+}
 
 type Kind = "video" | "image" | "audio";
 type Asset = EditorAsset;
