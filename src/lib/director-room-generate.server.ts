@@ -118,7 +118,8 @@ export async function handleDirectorRoomImageRequest(
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    console.error("[director-room-image] provider failed:", message);
     const status = /rate.?limit/i.test(message) ? 429 : 502;
-    return json({ error: message }, status);
+    return json({ error: status === 429 ? message : `The image service failed: ${message}. Your credits were refunded — try again shortly.` }, status);
   }
 }

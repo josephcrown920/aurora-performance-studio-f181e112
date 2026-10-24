@@ -25,7 +25,7 @@ const CONTENT_REFERENCES = [
     label: "Start creating from an idea",
   },
   {
-    src: "/content/aurora-create.jpeg",
+    src: "/__l5e/assets-v1/0a876873-2ace-4094-8140-abfe875b382f/aurora-create.jpeg",
     alt: "Aurora AI image and video creation screen with image and video modes",
     label: "Create images and videos in seconds",
   },

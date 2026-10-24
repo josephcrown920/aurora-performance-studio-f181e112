@@ -94,7 +94,7 @@ export const Route = createFileRoute("/")({
         rel: "preload",
         as: "image",
         href: "/hero/hero-direct-identity.w928.webp",
-        imageSrcSet: LANDING_IMAGE_SRCSET["/hero/hero-direct-identity.png"],
+        imageSrcSet: LANDING_IMAGE_SRCSET["/__l5e/assets-v1/84d9d0f6-c8f4-49de-9965-8bea94d27fff/hero-direct-identity.png"],
         imageSizes: "100vw",
         fetchPriority: "high",
       },
@@ -168,7 +168,7 @@ const HERO_SLIDES: ReadonlyArray<{
   refPrompt: string;
 }> = [
   {
-    src: "/hero/hero-direct-identity.png",
+    src: "/__l5e/assets-v1/84d9d0f6-c8f4-49de-9965-8bea94d27fff/hero-direct-identity.png",
     // The subject sits flush against the photo's right edge, so a centred
     // object-cover crop on tall phone viewports slices the face in half.
     focus: "object-right",
@@ -180,7 +180,7 @@ const HERO_SLIDES: ReadonlyArray<{
     refPrompt: "Studio-grade artist portrait, dramatic red and blue stage lighting, cinematic film grain",
   },
   {
-    src: "/hero/hero-perform-anywhere.png",
+    src: "/__l5e/assets-v1/5486a6d0-288b-40a6-bbbc-5dde786b3160/hero-perform-anywhere.png",
     eyebrow: "Flagship Feature",
     badge: "★ Pro",
     headline: "Perform Anywhere.",
@@ -190,7 +190,7 @@ const HERO_SLIDES: ReadonlyArray<{
     refPrompt: "Cinematic performance scene, moody concert lighting, 35mm film still",
   },
   {
-    src: "/hero/hero-2.png",
+    src: "/__l5e/assets-v1/7af8c755-390e-4b97-a2aa-ee916ac85b53/hero-2.png",
     eyebrow: "TikTok 30",
     badge: "★ Pro",
     headline: "Go Viral On TikTok In 30 Seconds.",
@@ -200,7 +200,7 @@ const HERO_SLIDES: ReadonlyArray<{
     refPrompt: "Scroll-stopping social promo visual, bold styling, high-contrast color pop",
   },
   {
-    src: "/hero/hero-colors.png",
+    src: "/__l5e/assets-v1/1402c3bc-5115-43ad-b10b-4a28f1350a37/hero-colors.png",
     focus: "object-[70%_center]",
     eyebrow: "Colors Studio",
     badge: "★ Pro",
@@ -211,7 +211,7 @@ const HERO_SLIDES: ReadonlyArray<{
     refPrompt: "Colors show performance set, saturated monochrome backdrop, editorial styling",
   },
   {
-    src: "/hero/hero-7.png",
+    src: "/__l5e/assets-v1/cc1e6f97-8da2-4e54-bf68-8a7b60435bf5/hero-7.png",
     focus: "object-[75%_center]",
     eyebrow: "Press Ready",
     badge: "★ Pro",

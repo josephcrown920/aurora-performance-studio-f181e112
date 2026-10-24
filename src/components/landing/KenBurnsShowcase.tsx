@@ -1,14 +1,14 @@
 const PHOTOS = [
-  { src: "/landing-photo-nba-josh.png",     label: "Artist" },
-  { src: "/landing-photo-1.jpeg",           label: "Commercial" },
-  { src: "/landing-photo-2.jpeg",           label: "Editorial" },
-  { src: "/landing-photo-3.jpeg",           label: "Lifestyle" },
-  { src: "/landing-photo-4.jpeg",           label: "Fashion" },
-  { src: "/landing-photo-5.jpeg",           label: "Product" },
-  { src: "/landing-photo-6.png",            label: "Performance" },
-  { src: "/landing-photo-studios-grid.png", label: "Colors Studio" },
-  { src: "/landing-photo-7.png",            label: "Music Video" },
-  { src: "/landing-photo-8.png",            label: "Production" },
+  { src: "/__l5e/assets-v1/c54e24e2-275d-4bde-a00c-2021dd73f9be/landing-photo-nba-josh.png",     label: "Artist" },
+  { src: "/__l5e/assets-v1/20d0e306-84db-4811-b5a7-41872a66ca28/landing-photo-1.jpeg",           label: "Commercial" },
+  { src: "/__l5e/assets-v1/5946fec8-4c46-4985-a9ab-1802213cb581/landing-photo-2.jpeg",           label: "Editorial" },
+  { src: "/__l5e/assets-v1/a4224ac6-25f3-4e45-bf8a-731ba8673e52/landing-photo-3.jpeg",           label: "Lifestyle" },
+  { src: "/__l5e/assets-v1/7672263b-342f-402e-892f-41f76ffd9c4d/landing-photo-4.jpeg",           label: "Fashion" },
+  { src: "/__l5e/assets-v1/48ba0f3d-0fdf-47bc-bc18-53aec4af9e7d/landing-photo-5.jpeg",           label: "Product" },
+  { src: "/__l5e/assets-v1/efd360bb-b326-40be-90af-5407bf40bc31/landing-photo-6.png",            label: "Performance" },
+  { src: "/__l5e/assets-v1/025cfe0c-dfd2-4b41-8d0a-4a42d48dda1b/landing-photo-studios-grid.png", label: "Colors Studio" },
+  { src: "/__l5e/assets-v1/4e75af14-c5e9-4a48-bb96-acb24f7e9b5e/landing-photo-7.png",            label: "Music Video" },
+  { src: "/__l5e/assets-v1/b3715315-d042-49b5-9075-96579c59025e/landing-photo-8.png",            label: "Production" },
 ];
 
 const TEXT_SECTIONS = [

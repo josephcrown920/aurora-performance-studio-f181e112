@@ -45,37 +45,37 @@ const SCENE_PRESETS = [
     id: "stage",
     label: "Concert Stage",
     prompt: "Cinematic concert stage with dramatic neon lights, fog machine effects, crowd in background, ultra realistic, wide shot, 16:9",
-    thumb: "/hero/hero-perform-anywhere.png",
+    thumb: "/__l5e/assets-v1/5486a6d0-288b-40a6-bbbc-5dde786b3160/hero-perform-anywhere.png",
   },
   {
     id: "rooftop",
     label: "City Rooftop",
     prompt: "Luxury rooftop at golden hour, city skyline background, warm atmospheric lighting, ultra realistic, 16:9",
-    thumb: "/hero/hero-1.png",
+    thumb: "/__l5e/assets-v1/d4b8c19a-3dd4-4c2b-822d-ee13cccef5b1/hero-1.png",
   },
   {
     id: "studio",
     label: "Recording Studio",
     prompt: "Professional recording studio interior, mixing console, warm lighting, acoustic panels, dark aesthetic, ultra realistic 16:9",
-    thumb: "/hero/hero-2.png",
+    thumb: "/__l5e/assets-v1/7af8c755-390e-4b97-a2aa-ee916ac85b53/hero-2.png",
   },
   {
     id: "neon",
     label: "Neon Alley",
     prompt: "Rain-soaked neon alley at night, Tokyo street aesthetic, colorful reflections on wet pavement, cinematic 16:9",
-    thumb: "/hero/hero-3.png",
+    thumb: "/__l5e/assets-v1/71063baf-a547-4fec-84b2-0650d4c3d611/hero-3.png",
   },
   {
     id: "mansion",
     label: "Mansion Interior",
     prompt: "Luxury mansion living room, modern art on walls, floor to ceiling windows, city view at night, ultra realistic 16:9",
-    thumb: "/hero/hero-4.png",
+    thumb: "/__l5e/assets-v1/ba1c68c8-f2eb-48d3-b0dd-ee85f0585cbb/hero-4.png",
   },
   {
     id: "beach",
     label: "Sunset Beach",
     prompt: "Tropical beach at sunset, golden hour light, palm trees silhouettes, dramatic sky, cinematic 16:9",
-    thumb: "/hero/hero-5.png",
+    thumb: "/__l5e/assets-v1/35a6a279-3639-4b4c-b3d6-d19a2db0418f/hero-5.png",
   },
 ] as const;
 

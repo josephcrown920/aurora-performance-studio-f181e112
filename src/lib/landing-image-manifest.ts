@@ -2,11 +2,11 @@
 // Maps a landing image src (exactly as components reference it) to a WebP
 // srcset string. Regenerate after adding/replacing landing images.
 export const LANDING_IMAGE_SRCSET: Record<string, string> = {
-  "/hero/hero-direct-identity.png": "/hero/hero-direct-identity.w480.webp 480w, /hero/hero-direct-identity.w928.webp 928w",
-  "/hero/hero-perform-anywhere.png": "/hero/hero-perform-anywhere.w480.webp 480w, /hero/hero-perform-anywhere.w768.webp 768w",
-  "/hero/hero-2.png": "/hero/hero-2.w480.webp 480w, /hero/hero-2.w933.webp 933w",
-  "/hero/hero-colors.png": "/hero/hero-colors.w480.webp 480w, /hero/hero-colors.w960.webp 960w",
-  "/hero/hero-7.png": "/hero/hero-7.w480.webp 480w, /hero/hero-7.w960.webp 960w, /hero/hero-7.w1440.webp 1440w",
+  "/__l5e/assets-v1/84d9d0f6-c8f4-49de-9965-8bea94d27fff/hero-direct-identity.png": "/hero/hero-direct-identity.w480.webp 480w, /hero/hero-direct-identity.w928.webp 928w",
+  "/__l5e/assets-v1/5486a6d0-288b-40a6-bbbc-5dde786b3160/hero-perform-anywhere.png": "/hero/hero-perform-anywhere.w480.webp 480w, /hero/hero-perform-anywhere.w768.webp 768w",
+  "/__l5e/assets-v1/7af8c755-390e-4b97-a2aa-ee916ac85b53/hero-2.png": "/hero/hero-2.w480.webp 480w, /hero/hero-2.w933.webp 933w",
+  "/__l5e/assets-v1/1402c3bc-5115-43ad-b10b-4a28f1350a37/hero-colors.png": "/hero/hero-colors.w480.webp 480w, /hero/hero-colors.w960.webp 960w",
+  "/__l5e/assets-v1/cc1e6f97-8da2-4e54-bf68-8a7b60435bf5/hero-7.png": "/hero/hero-7.w480.webp 480w, /hero/hero-7.w960.webp 960w, /hero/hero-7.w1440.webp 1440w",
   "/landing/step-reference.jpg": "/landing/step-reference.w480.webp 480w, /landing/step-reference.w800.webp 800w",
   "/landing/step-final.jpg": "/landing/step-final.w480.webp 480w, /landing/step-final.w800.webp 800w",
   "/spin-demo.jpg": "/spin-demo.w480.webp 480w, /spin-demo.w717.webp 717w",

@@ -16,7 +16,7 @@ const TOOLS = [
     cost: "FROM 400 AURA",
     costColor: "bg-[#a3e635] text-black",
     to: "/motion",
-    img: "/hero/hero-perform-anywhere.png",
+    img: "/__l5e/assets-v1/5486a6d0-288b-40a6-bbbc-5dde786b3160/hero-perform-anywhere.png",
   },
   {
     num: "01",
@@ -27,7 +27,7 @@ const TOOLS = [
     cost: "FROM 2 AURA",
     costColor: "bg-white/10 text-white",
     to: "/colors",
-    img: "/hero/hero-colors.png",
+    img: "/__l5e/assets-v1/1402c3bc-5115-43ad-b10b-4a28f1350a37/hero-colors.png",
   },
   {
     num: "02",
@@ -38,7 +38,7 @@ const TOOLS = [
     cost: "FROM 6 AURA",
     costColor: "bg-white/10 text-white",
     to: "/spin",
-    img: "/hero/hero-tiktok30.jpg",
+    img: "/__l5e/assets-v1/c97240b8-d788-484c-8bf9-93689b22d7e9/hero-tiktok30.jpg",
   },
   {
     num: "03",
@@ -49,7 +49,7 @@ const TOOLS = [
     cost: "FROM 480 AURA",
     costColor: "bg-white/10 text-white",
     to: "/agent",
-    img: "/hero/hero-1.png",
+    img: "/__l5e/assets-v1/d4b8c19a-3dd4-4c2b-822d-ee13cccef5b1/hero-1.png",
   },
   {
     num: "03A",
@@ -71,7 +71,7 @@ const TOOLS = [
     cost: "FROM 12 AURA",
     costColor: "bg-white/10 text-white",
     to: "/music-video",
-    img: "/hero/hero-2.png",
+    img: "/__l5e/assets-v1/7af8c755-390e-4b97-a2aa-ee916ac85b53/hero-2.png",
   },
   {
     num: "05",
@@ -82,7 +82,7 @@ const TOOLS = [
     cost: "FROM 8 AURA",
     costColor: "bg-white/10 text-white",
     to: "/lipsync",
-    img: "/hero/hero-3.png",
+    img: "/__l5e/assets-v1/71063baf-a547-4fec-84b2-0650d4c3d611/hero-3.png",
   },
   {
     num: "06",
@@ -93,7 +93,7 @@ const TOOLS = [
     cost: "FROM 300 AURA",
     costColor: "bg-white/10 text-white",
     to: "/director-room",
-    img: "/hero/hero-4.png",
+    img: "/__l5e/assets-v1/ba1c68c8-f2eb-48d3-b0dd-ee85f0585cbb/hero-4.png",
   },
 ] as const;
 

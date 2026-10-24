@@ -1,6 +1,4 @@
-# Roadmap
-
-- [ ] Reduce tracked repository media size using verified Lovable Assets pointers; preserve source, required Expo assets and all working media references. Awaiting confirmation of the scanned file groups before migration.
+- [x] Reduce tracked repository media: ~130 MiB of duplicate or unused photos/videos removed; cloud-backed photos now load from Lovable Assets. Remaining: media in computed-path folders (nav-previews, sample-photos, colors, josh, generated clips) kept locally.
 - [x] Compact luxury-interior reference previews and Personalize the scene controls; Build a Scene reference previews and Two-angle workflow left unchanged. Public workflow/browser check passed without page errors; build OK.
 
 - [x] Add Get Ready With Me within Perform Anywhere using the shared private source draft and existing motion services; opening-canvas link, experience switching, signed-out entry and mobile layout verified. Current output is a 5-second preview / up to 15-second reviewed render, not a full 30-second render.

@@ -23,7 +23,7 @@ export function FeaturedArtist() {
             {QUADRANTS.map((q) => (
               <div key={q.label} className="overflow-hidden">
                 <img
-                  src="/spotlight/kling-artist.jpeg"
+                  src="/__l5e/assets-v1/108bb944-eee6-4f9d-9ec8-76aaa8dc3c07/kling-artist.jpeg"
                   alt={q.label}
                   loading="lazy"
                   className="h-full w-full object-cover"

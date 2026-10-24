@@ -290,7 +290,7 @@ export function defaultNbaJoshProduction(): NbaJoshProduction {
       "the-one-hook-20s",
       "audio",
       "The One hook · canonical 20s cut",
-      "/audio/the-one-hook2-20s.mp3",
+      "/__l5e/assets-v1/6724cd13-4524-4bc8-a1c7-6293a09e3118/the-one-hook2-20s.mp3",
       "The_one_hook2_20secs_1787628338902.mp3",
     ),
     delivery: { durationSeconds: 15, aspectRatio: "16:9", fps: 60 },
