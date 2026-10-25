@@ -876,6 +876,8 @@ const MotionParamsSchema = z
 const MotionTransferSchema = z.object({
   imageUrl: z.string().url(),
   drivingVideoUrl: z.string().url(),
+  /** Optional Depth Anything depth map (PNG) used for Genjutsu depth conditioning. */
+  depthGuideUrl: z.string().url().optional(),
   sourceGenerationId: z.string().uuid().optional(),
   workflowMode: z.enum(["colors", "anywhere"]).optional(),
   workflowAngle: z.enum(["wide", "closeup"]).optional(),
@@ -897,6 +899,8 @@ const MotionTransferSchema = z.object({
 export const PerformanceReskinSchema = z.object({
   performanceVideoUrl: z.string().url(),
   avatarImageUrl: z.string().url(),
+  /** Optional Depth Anything depth map (PNG) used for Genjutsu depth conditioning. */
+  depthGuideUrl: z.string().url().optional(),
   outfit: z.string().max(400).optional(),
   location: z.string().max(400).optional(),
   audioUrl: z.string().url().optional(),
@@ -1040,6 +1044,7 @@ export const generateMimicMotion = createServerFn({ method: "POST" })
     const { userId } = context;
     await assertOwnedReferenceImage(data.imageUrl, userId);
     assertOwnStudioUpload(data.drivingVideoUrl, userId);
+    if (data.depthGuideUrl) assertOwnStudioUpload(data.depthGuideUrl, userId);
     if (data.sourceGenerationId) {
       const { data: source } = await supabaseAdmin
         .from("generations")
@@ -1111,6 +1116,7 @@ export const generateMimicMotion = createServerFn({ method: "POST" })
     const req = buildMimicMotionRequest({
       imageUrl: data.imageUrl,
       drivingVideoUrl: data.drivingVideoUrl,
+      depthGuideUrl: data.depthGuideUrl,
       prompt: data.prompt,
       params: gated.params,
     });
@@ -1143,6 +1149,7 @@ export async function _enqueuePerformanceReskin(
   assertOwnStudioUpload(data.performanceVideoUrl, userId);
   await assertOwnedReferenceImage(data.avatarImageUrl, userId);
   if (data.audioUrl) assertOwnStudioUpload(data.audioUrl, userId);
+  if (data.depthGuideUrl) assertOwnStudioUpload(data.depthGuideUrl, userId);
 
   if (!(await hasActiveWorkerForKind("motion"))) {
     throw new Error(NO_MOTION_BACKEND_MSG);
@@ -1161,6 +1168,7 @@ export async function _enqueuePerformanceReskin(
   const payload = {
     performanceVideoUrl: data.performanceVideoUrl,
     avatarImageUrl: data.avatarImageUrl,
+    depthGuideUrl: data.depthGuideUrl,
     outfit: data.outfit,
     location: data.location,
     audioUrl: data.audioUrl,
