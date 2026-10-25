@@ -85,6 +85,8 @@ export const MIMIC_MOTION_WORKFLOW = {
 export type BuildMimicMotionOpts = {
   imageUrl: string;
   drivingVideoUrl: string;
+  /** Optional Depth Anything depth map URL — enables Genjutsu depth conditioning. */
+  depthGuideUrl?: string;
   prompt?: string;
   params?: MotionParams;
 };
