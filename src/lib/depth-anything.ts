@@ -46,7 +46,7 @@ export async function estimateDepthMap(source: string): Promise<{ blob: Blob; pr
   if (!depth) throw new Error("Depth estimation returned no depth map");
   const canvas = depth.toCanvas();
   const blob = await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode the depth map"))), "image/png");
+    canvas.toBlob((b: Blob | null) => (b ? resolve(b) : reject(new Error("Could not encode the depth map"))), "image/png");
   });
   return { blob, previewUrl: URL.createObjectURL(blob) };
 }
