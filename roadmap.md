@@ -62,3 +62,8 @@
 - [ ] Depth-map conditioning in Motion Control & Perform Anywhere (after editor)
 - [ ] Add APPETIZE_API_TOKEN + OLLAMA_API_KEY secrets (waiting on user)
 - [ ] Verify Appetize installation and add Expo Android preview/test helper scripts; actual remote-device tests require APPETIZE_API_TOKEN.
+- [x] Make the ported Remix GUI Video Studio (GuyStudio) the default /studio view; node canvas moved to /studio?mode=canvas; added 17 missing model logo tiles; verified in browser.
+- [ ] Add Perform Anywhere to the landing page (appearance untouched).
+- [ ] Redesign Get Ready With Me per README.
+- [ ] Surface the Canvas clearly in menus.
+- [ ] Depth-map conditioning for Motion Control and Perform Anywhere.
