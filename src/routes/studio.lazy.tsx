@@ -81,13 +81,13 @@ export const Route = createLazyFileRoute("/studio")({ component: StudioWorkspace
 
 function StudioWorkspace() {
   const { mode } = Route.useSearch();
-  if (mode !== "edit") return <NodeWorkspace canvasOnly />;
+  if (mode === "canvas") return <NodeWorkspace canvasOnly />;
   return <main className="min-h-screen bg-background text-foreground">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
       <Link to="/" className="text-lg font-semibold">Aurora</Link>
       <nav aria-label="Studio views" className="flex items-center gap-2">
-        <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: undefined }}>Canvas</Link></Button>
-        <Button asChild size="sm"><Link to="/studio" search={{ mode: "edit" }} aria-current="page">Video Studio</Link></Button>
+        <Button asChild size="sm"><Link to="/studio" search={{ mode: undefined }} aria-current="page">Video Studio</Link></Button>
+        <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: "canvas" }}>Canvas</Link></Button>
       </nav>
     </header>
     <div><ClientOnly fallback={<p role="status">Opening studio…</p>}><GuyStudio /></ClientOnly></div>
