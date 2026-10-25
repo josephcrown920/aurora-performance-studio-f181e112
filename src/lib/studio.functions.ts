@@ -876,6 +876,8 @@ const MotionParamsSchema = z
 const MotionTransferSchema = z.object({
   imageUrl: z.string().url(),
   drivingVideoUrl: z.string().url(),
+  /** Optional Depth Anything depth map (PNG) used for Genjutsu depth conditioning. */
+  depthGuideUrl: z.string().url().optional(),
   sourceGenerationId: z.string().uuid().optional(),
   workflowMode: z.enum(["colors", "anywhere"]).optional(),
   workflowAngle: z.enum(["wide", "closeup"]).optional(),
@@ -897,6 +899,8 @@ const MotionTransferSchema = z.object({
 export const PerformanceReskinSchema = z.object({
   performanceVideoUrl: z.string().url(),
   avatarImageUrl: z.string().url(),
+  /** Optional Depth Anything depth map (PNG) used for Genjutsu depth conditioning. */
+  depthGuideUrl: z.string().url().optional(),
   outfit: z.string().max(400).optional(),
   location: z.string().max(400).optional(),
   audioUrl: z.string().url().optional(),
