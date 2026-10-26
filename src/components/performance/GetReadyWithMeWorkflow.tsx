@@ -30,6 +30,9 @@ export function GetReadyWithMeWorkflow() {
   const [job, setJob] = useState<{ id: string; preview: boolean; previewId?: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const uploadLock = useRef(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [depth, setDepth] = useState<{ url: string; preview: string } | null>(null);
+  const [depthBusy, setDepthBusy] = useState(false);
   const history = useQuery({ queryKey: ["grwm-generations", user?.id], queryFn: () => list(), enabled: !!user, refetchInterval: job ? 4000 : false });
 
   useEffect(() => {
@@ -87,14 +90,29 @@ export function GetReadyWithMeWorkflow() {
       const prompt = "Get Ready With Me: preserve the recorded dressing gestures and timing, character identity and fixed camera. No captions or added dialogue.";
       const params = { motionType: "faithful" as const, cameraMovement: "static" as const, frames: 240, fps: 16, preserveFace: true };
       return transform === "sync"
-        ? sync({ data: { performanceVideoUrl: draft.phoneVideoUrl, avatarImageUrl: target, outfit: outfit || undefined, location: location || undefined, prompt, params, confirmPreviewId } })
-        : transfer({ data: { imageUrl: target, drivingVideoUrl: draft.phoneVideoUrl, prompt, params, confirmPreviewId } });
+        ? sync({ data: { performanceVideoUrl: draft.phoneVideoUrl, avatarImageUrl: target, outfit: outfit || undefined, location: location || undefined, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } })
+        : transfer({ data: { imageUrl: target, drivingVideoUrl: draft.phoneVideoUrl, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } });
     },
     onMutate: () => setError(null),
     onSuccess: result => { setJob({ id: result.generationId, preview: result.preview }); void history.refetch(); },
     onError: e => setError(e instanceof Error ? e.message : "Render failed"),
   });
   function changeInputs(action: () => void) { action(); setJob(null); setError(null); }
+  async function buildDepth() {
+    if (!user || !videoRef.current) return;
+    setDepthBusy(true); setError(null);
+    try {
+      const { estimateDepthMap, videoFrameDataUrl } = await import("@/lib/depth-anything");
+      const { blob, previewUrl } = await estimateDepthMap(videoFrameDataUrl(videoRef.current));
+      const path = `${user.id}/performance-variants/build_scene/grwm-depth-${crypto.randomUUID()}.png`;
+      const up = await supabase.storage.from("studio").upload(path, blob, { contentType: "image/png", upsert: false });
+      if (up.error) throw up.error;
+      const signed = await supabase.storage.from("studio").createSignedUrl(path, 86400);
+      if (signed.error || !signed.data?.signedUrl) throw signed.error ?? new Error("Could not load the depth guide");
+      setDepth({ url: signed.data.signedUrl, preview: previewUrl }); setJob(null);
+    } catch (e) { setError(e instanceof Error ? e.message : "Depth guide failed"); }
+    finally { setDepthBusy(false); }
+  }
 
   return <section aria-label="Get Ready With Me" className="space-y-5">
     <div className="flex items-center justify-between gap-3"><h2 className="flex items-center gap-2 text-2xl font-semibold"><Shirt />Get Ready With Me</h2><span className="shrink-0 text-sm text-muted-foreground">30s input</span></div>
@@ -103,7 +121,12 @@ export function GetReadyWithMeWorkflow() {
         {(["identity", "outfit"] as const).map(slot => <label key={slot} className="flex min-w-0 cursor-pointer flex-col gap-2 rounded-lg border border-border p-3"><span className="text-sm font-semibold">{slot === "identity" ? "Character Lock" : "Outfit reference"}</span>{draft.references[slot] ? <img src={draft.references[slot] ?? ""} alt={slot} className="aspect-[3/4] w-full rounded object-cover" /> : <div className="flex aspect-[3/4] items-center justify-center bg-muted"><Upload className="text-muted-foreground" /></div>}<input aria-label={`Upload ${slot} photo`} type="file" accept="image/*" disabled={uploading || running || mutation.isPending} className="sr-only" onChange={e => { const file = e.target.files?.[0]; if (file) void upload(file, slot); e.target.value = ""; }} /></label>)}
       </div>
       <label className="block cursor-pointer border-y border-border py-3"><span className="mb-2 flex items-center gap-2 text-sm font-semibold"><Upload size={16} />Dressing clip · up to 30 seconds</span><input aria-label="Upload dressing clip" type="file" accept="video/*" disabled={uploading || running || mutation.isPending} onChange={e => { const file = e.target.files?.[0]; if (file) void upload(file, "phone"); e.target.value = ""; }} /></label>
-      {draft.phoneVideoUrl && <video src={draft.phoneVideoUrl} controls playsInline preload="metadata" aria-label="Your dressing clip" className="max-h-80 w-full bg-muted" />}
+      {draft.phoneVideoUrl && <video ref={videoRef} src={draft.phoneVideoUrl} crossOrigin="anonymous" controls playsInline preload="metadata" aria-label="Your dressing clip" className="max-h-80 w-full bg-muted" />}
+      {draft.phoneVideoUrl && <div className="flex items-center gap-3 rounded-lg border border-border p-3">
+        {depth ? <img src={depth.preview} alt="Depth guide" className="h-24 w-16 rounded object-cover" /> : <div className="flex h-24 w-16 items-center justify-center rounded bg-muted text-[10px] text-muted-foreground">Depth</div>}
+        <div className="min-w-0 flex-1 space-y-1"><p className="text-sm font-semibold">Depth guide · Depth Anything → Genjutsu</p><p className="text-xs text-muted-foreground">Builds a depth map from your clip's current frame and locks the render to it.</p>
+          <Button size="sm" variant="outline" disabled={depthBusy || running || mutation.isPending} onClick={() => void buildDepth()}>{depthBusy ? <><Loader2 className="animate-spin" />Building…</> : depth ? "Rebuild depth guide" : "Build depth guide"}</Button></div>
+      </div>}
       <div role="group" aria-label="Transformation" className="grid grid-cols-2 gap-2">{(["sync", "transfer"] as const).map(value => <Button key={value} variant={transform === value ? "default" : "outline"} aria-pressed={transform === value} disabled={running || mutation.isPending} onClick={() => changeInputs(() => setTransform(value))}>{value === "sync" ? "Motion Sync" : "Motion Transfer"}</Button>)}</div>
       {transform === "sync" && <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Outfit<input aria-label="Target outfit" value={outfit} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setOutfit(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label><label className="text-sm font-medium">Location<input aria-label="Target location" value={location} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setLocation(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label></div>}
       <p className="text-xs text-muted-foreground">Preview up to 5 seconds; reviewed render up to 15 seconds.</p>
