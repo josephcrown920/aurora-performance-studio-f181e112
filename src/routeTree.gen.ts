@@ -39,6 +39,7 @@ import { Route as DeleteAccountRouteImport } from './routes/delete-account'
 import { Route as DirectorRouteImport } from './routes/director'
 import { Route as DirectorRoomRouteImport } from './routes/director-room'
 import { Route as DirectorsBoardRouteImport } from './routes/directors-board'
+import { Route as DownloadRouteImport } from './routes/download'
 import { Route as EditRouteImport } from './routes/edit'
 import { Route as EditorRouteImport } from './routes/editor'
 import { Route as EromifyRouteImport } from './routes/eromify'
@@ -386,6 +387,11 @@ const DirectorsBoardRoute = DirectorsBoardRouteImport.update({
 } as any).lazy(() =>
   import('./routes/directors-board.lazy').then((d) => d.Route),
 )
+const DownloadRoute = DownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EditRoute = EditRouteImport.update({
   id: '/edit',
   path: '/edit',
@@ -1417,6 +1423,7 @@ export interface FileRoutesByFullPath {
   '/director': typeof DirectorRoute
   '/director-room': typeof DirectorRoomRoute
   '/directors-board': typeof DirectorsBoardRoute
+  '/download': typeof DownloadRoute
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
   '/eromify': typeof EromifyRoute
@@ -1638,6 +1645,7 @@ export interface FileRoutesByTo {
   '/director': typeof DirectorRoute
   '/director-room': typeof DirectorRoomRoute
   '/directors-board': typeof DirectorsBoardRoute
+  '/download': typeof DownloadRoute
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
   '/eromify': typeof EromifyRoute
@@ -1861,6 +1869,7 @@ export interface FileRoutesById {
   '/director': typeof DirectorRoute
   '/director-room': typeof DirectorRoomRoute
   '/directors-board': typeof DirectorsBoardRoute
+  '/download': typeof DownloadRoute
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
   '/eromify': typeof EromifyRoute
@@ -2085,6 +2094,7 @@ export interface FileRouteTypes {
     | '/director'
     | '/director-room'
     | '/directors-board'
+    | '/download'
     | '/edit'
     | '/editor'
     | '/eromify'
@@ -2306,6 +2316,7 @@ export interface FileRouteTypes {
     | '/director'
     | '/director-room'
     | '/directors-board'
+    | '/download'
     | '/edit'
     | '/editor'
     | '/eromify'
@@ -2528,6 +2539,7 @@ export interface FileRouteTypes {
     | '/director'
     | '/director-room'
     | '/directors-board'
+    | '/download'
     | '/edit'
     | '/editor'
     | '/eromify'
@@ -2751,6 +2763,7 @@ export interface RootRouteChildren {
   DirectorRoute: typeof DirectorRoute
   DirectorRoomRoute: typeof DirectorRoomRoute
   DirectorsBoardRoute: typeof DirectorsBoardRoute
+  DownloadRoute: typeof DownloadRoute
   EditRoute: typeof EditRoute
   EditorRoute: typeof EditorRoute
   EromifyRoute: typeof EromifyRoute
@@ -3122,6 +3135,13 @@ declare module '@tanstack/react-router' {
       path: '/directors-board'
       fullPath: '/directors-board'
       preLoaderRoute: typeof DirectorsBoardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download': {
+      id: '/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof DownloadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/edit': {
@@ -4610,6 +4630,7 @@ const rootRouteChildren: RootRouteChildren = {
   DirectorRoute: DirectorRoute,
   DirectorRoomRoute: DirectorRoomRoute,
   DirectorsBoardRoute: DirectorsBoardRoute,
+  DownloadRoute: DownloadRoute,
   EditRoute: EditRoute,
   EditorRoute: EditorRoute,
   EromifyRoute: EromifyRoute,
