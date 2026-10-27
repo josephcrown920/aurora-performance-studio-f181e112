@@ -1,3 +1,5 @@
+- [x] Update /download to the finished October 27 EAS preview APK (abb9a293, version 1.0.0/build 4); verified Expo status FINISHED and downloadable artifact.
+- [ ] Before direct Android launch, replace the temporary EAS APK URL with durable hosting (current artifact expires November 10, 2026) and verify installation on a real Android phone.
 - [x] Reduce tracked repository media: ~130 MiB of duplicate or unused photos/videos removed; cloud-backed photos now load from Lovable Assets. Remaining: media in computed-path folders (nav-previews, sample-photos, colors, josh, generated clips) kept locally.
 - [x] Compact luxury-interior reference previews and Personalize the scene controls; Build a Scene reference previews and Two-angle workflow left unchanged. Public workflow/browser check passed without page errors; build OK.
 
