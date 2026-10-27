@@ -455,16 +455,25 @@ function LandingPage() {
             </span>
           </Link>
           <div className="flex shrink-0 items-center gap-3">
-            {canInstall && (
+            {canInstall ? (
               <button
                 type="button"
                 onClick={install}
                 aria-label="Install the Aurora app"
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 backdrop-blur-sm transition-colors hover:bg-white/10"
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-primary/50 bg-primary/20 px-3 py-1.5 text-[11px] font-semibold text-foreground backdrop-blur-sm transition-colors hover:bg-primary/30"
               >
                 <Download className="size-3 shrink-0" />
-                <span className="landing-nav-install-label">Install</span>
+                <span className="landing-nav-install-label">Install app</span>
               </button>
+            ) : (
+              <Link
+                to="/download"
+                aria-label="Get the Aurora app"
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-primary/50 bg-primary/20 px-3 py-1.5 text-[11px] font-semibold text-foreground backdrop-blur-sm transition-colors hover:bg-primary/30"
+              >
+                <Download className="size-3 shrink-0" />
+                <span className="landing-nav-install-label">Get the app</span>
+              </Link>
             )}
             <Link
               to="/partners"
