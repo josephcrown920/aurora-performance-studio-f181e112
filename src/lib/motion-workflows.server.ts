@@ -142,9 +142,16 @@ export function buildMimicMotionRequest(opts: BuildMimicMotionOpts): MotionGener
       seed: p.seed,
       frames: p.frames,
       preserve_face: p.preserveFace,
-    },
-    // ComfyUI graph + per-node patches for comfyui workers.
-    comfyWorkflow: MIMIC_MOTION_WORKFLOW,
+    ...(opts.depthGuideUrl ? { depth_guide_url: opts.depthGuideUrl, depth_strength: 0.6 } : {}),
+    } as MotionGenerateRequest["params"],
+    // ComfyUI graph: with a depth guide, node 6 loads it and feeds the sampler's depth input.
+    comfyWorkflow: opts.depthGuideUrl
+      ? {
+          ...MIMIC_MOTION_WORKFLOW,
+          "3": { ...MIMIC_MOTION_WORKFLOW["3"], inputs: { ...MIMIC_MOTION_WORKFLOW["3"].inputs, depth_map: ["6", 0], depth_strength: 0.6 } },
+          "6": { class_type: "LoadImageFromUrl", inputs: { url: "" } },
+        }
+      : MIMIC_MOTION_WORKFLOW,
     comfyInputs: {
       "1.url": opts.imageUrl,
       "2.url": opts.drivingVideoUrl,
@@ -157,6 +164,7 @@ export function buildMimicMotionRequest(opts: BuildMimicMotionOpts): MotionGener
       "3.preserve_face": p.preserveFace,
       "3.seed": p.seed,
       "4.fps": p.fps,
+      ...(opts.depthGuideUrl ? { "6.url": opts.depthGuideUrl } : {}),
     },
   };
 }

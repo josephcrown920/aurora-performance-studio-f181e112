@@ -675,6 +675,7 @@ async function runTiktokRemixChild(job: JobRow, orch: Orchestrate, workerId?: st
 async function runPerformanceReskin(job: JobRow, orch: Orchestrate, workerId?: string) {
   const p = job.payload as {
     performanceVideoUrl: string;
+    depthGuideUrl?: string;
     avatarImageUrl: string;
     outfit?: string;
     location?: string;
@@ -721,6 +722,7 @@ async function runPerformanceReskin(job: JobRow, orch: Orchestrate, workerId?: s
     ...buildMimicMotionRequest({
       imageUrl: still.url,
       drivingVideoUrl: p.performanceVideoUrl,
+      depthGuideUrl: p.depthGuideUrl,
       prompt: p.prompt,
       params: p.params,
     }),

@@ -92,3 +92,15 @@ describe("MimicMotion request contract", () => {
     expect(JSON.stringify(MIMIC_MOTION_WORKFLOW)).toBe(originalGraph);
   });
 });
+describe("depth guide conditioning", () => {
+  it("feeds the depth map into the sampler when provided", () => {
+    const r = buildMimicMotionRequest({ imageUrl: "https://x/a.png", drivingVideoUrl: "https://x/b.mp4", depthGuideUrl: "https://x/d.png" });
+    const wf = r.comfyWorkflow as Record<string, { inputs: Record<string, unknown> }>;
+    expect(wf["3"].inputs.depth_map).toEqual(["6", 0]);
+    expect((r.comfyInputs as Record<string, unknown>)["6.url"]).toBe("https://x/d.png");
+  });
+  it("leaves the graph unchanged without a depth map", () => {
+    const r = buildMimicMotionRequest({ imageUrl: "https://x/a.png", drivingVideoUrl: "https://x/b.mp4" });
+    expect((r.comfyWorkflow as Record<string, unknown>)["6"]).toBeUndefined();
+  });
+});
