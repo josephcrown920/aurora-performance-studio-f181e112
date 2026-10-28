@@ -83,8 +83,8 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           </>}
         </section>
       </div>
-      </div>
       {!grwm && <PerformWorlds />}
+      </div>
 
   </main>;
 }

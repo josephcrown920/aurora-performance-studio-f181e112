@@ -7,7 +7,7 @@ import worlds from "@/assets/me/colors-worlds.jpg.asset.json";
 import identity from "@/assets/me/identity.jpg.asset.json";
 
 // Order of the 12 sets in the 3x4 reference sheet, mapped to Colors preset ids.
-const SHEET = ["hot-pink", "royal-blue", "neon-green", "sunset-orange", "electric-purple", "cyber-yellow", "crimson-red", "ice-white", "obsidian-black", "aqua-teal", "rose-gold", "lime-pop"];
+const SHEET = ["hot-pink", "royal-blue", "neon-green", "sunset-orange", "electric-purple", "cyber-yellow", "crimson-red", "ice-white", "obsidian", "aqua", "rose-gold", "lime-pop"];
 
 function tileStyle(i: number) {
   const col = i % 3;
