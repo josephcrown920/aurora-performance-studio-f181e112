@@ -1,5 +1,5 @@
-import "@lovable.dev/cloud-auth-js/styles.css";
 // @ts-nocheck
+import "@lovable.dev/cloud-auth-js/styles.css";
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { parseAuthReturnPath } from "@/lib/auth-return-path";
 import { classifyAuthError, describeAuthError, type ClassifiedAuthError } from "@/lib/auth-error-message";
