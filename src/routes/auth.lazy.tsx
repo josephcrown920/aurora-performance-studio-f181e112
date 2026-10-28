@@ -132,9 +132,12 @@ function AuthPage() {
       });
     return () => controller.abort();
   }, []);
-  const providerEnabled = (name: "google" | "apple") =>
-    enabledProviders === null || enabledProviders[name] === true;
-  const anyOAuthEnabled = providerEnabled("google") || providerEnabled("apple");
+  // Sign in with Lovable is brokered by Lovable and not listed in the
+  // backend's provider settings, so it is always shown.
+  const providerEnabled = (name: "google" | "apple" | "lovable") =>
+    name === "lovable" || enabledProviders === null || enabledProviders[name] === true;
+  const anyOAuthEnabled = true;
+  const [lovableBusy, setLovableBusy] = useState(false);
 
   useEffect(() => {
     setHydrated(true);
@@ -332,7 +335,7 @@ function AuthPage() {
 
   // Shared OAuth helper — handles frame detection, intent tracking, redirect.
   const handleOAuth = async (
-    provider: "google" | "apple",
+    provider: "google" | "apple" | "lovable",
     setBusy: (v: boolean) => void,
   ) => {
     if (!authAvailable) {
@@ -340,7 +343,7 @@ function AuthPage() {
       return;
     }
     setBusy(true);
-    const label = provider === "google" ? "Google" : "Apple";
+    const label = provider === "google" ? "Google" : provider === "apple" ? "Apple" : "Lovable";
     try {
       if (mode === "signup" && typeof window !== "undefined") {
         sessionStorage.setItem(OAUTH_SIGNUP_INTENT_KEY, provider);
@@ -364,6 +367,7 @@ function AuthPage() {
 
   const handleGoogleSignIn  = () => handleOAuth("google", setGoogleBusy);
   const handleAppleSignIn  = () => handleOAuth("apple",  setAppleBusy);
+  const handleLovableSignIn = () => handleOAuth("lovable", setLovableBusy);
 
   // Register a passkey for the currently signed-in user
   async function offerPasskeyRegistration() {
@@ -814,6 +818,16 @@ function AuthPage() {
           >
             {googleBusy ? "Signing in..." : <><GoogleIcon className="mr-2 size-4" /> Continue with Google</>}
           </Button>
+        )}
+        {providerEnabled("lovable") && (
+          <button
+            type="button"
+            disabled={lovableBusy}
+            onClick={handleLovableSignIn}
+            className="lovable-auth-button mt-2 w-full"
+          >
+            {lovableBusy ? "Signing in..." : "Continue with Lovable"}
+          </button>
         )}
         {providerEnabled("apple") && (
           <Button
