@@ -32,16 +32,17 @@ function PhoneRecordingSlot({ active, onActivate }: { active: boolean; onActivat
         }}
       />
       {url ? (
-        <video src={url} controls playsInline preload="metadata" aria-label="FG3 phone recording" onPlay={onActivate} />
+        <video src={url} controls playsInline preload="metadata" aria-label="Performance recording" onPlay={onActivate} />
       ) : (
-        <button
+        <Button
+          variant="outline"
           type="button"
           onClick={() => inputRef.current?.click()}
           className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border bg-muted/40 text-muted-foreground transition hover:text-foreground"
         >
           <Smartphone size={22} />
           <span className="px-3 text-center text-xs">Record or pick a phone clip</span>
-        </button>
+        </Button>
       )}
       <Button
         variant="ghost"
@@ -49,7 +50,7 @@ function PhoneRecordingSlot({ active, onActivate }: { active: boolean; onActivat
         aria-pressed={active}
         className="h-11 w-full justify-start whitespace-normal text-left text-xs"
       >
-        {name ? `FG3 phone recording — ${name}` : "FG3 phone recording"}
+        {name ? `Performance — ${name}` : "Performance"}
       </Button>
     </article>
   );

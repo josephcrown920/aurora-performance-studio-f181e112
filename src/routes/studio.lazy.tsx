@@ -2,6 +2,7 @@
 import { authNextSearch } from "@/lib/auth-return-path";
 import { StudioPage as NodeWorkspace } from "@/features/storyboard/studio/StudioPage";
 import { GuyStudio } from "@/features/guy-studio/GuyStudio";
+import { PerformAnywhereWorkspace } from "@/components/performance/PerformAnywhereWorkspace";
 import { ClientOnly, createLazyFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -81,6 +82,7 @@ export const Route = createLazyFileRoute("/studio")({ component: StudioWorkspace
 
 function StudioWorkspace() {
   const { mode } = Route.useSearch();
+  const [grwm, setGrwm] = useState(false);
   if (mode === "canvas") return <NodeWorkspace canvasOnly />;
   return <main className="min-h-screen bg-background text-foreground">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
@@ -88,9 +90,10 @@ function StudioWorkspace() {
       <nav aria-label="Studio views" className="flex items-center gap-2">
         <Button asChild size="sm"><Link to="/studio" search={{ mode: undefined }} aria-current="page">Video Studio</Link></Button>
         <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: "canvas" }}>Canvas</Link></Button>
+        <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: "perform" }}>Perform</Link></Button>
       </nav>
     </header>
-    <div><ClientOnly fallback={<p role="status">Opening studio…</p>}><GuyStudio /></ClientOnly></div>
+    <div><ClientOnly fallback={<p role="status">Opening studio…</p>}>{mode === "perform" ? <PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} /> : <GuyStudio />}</ClientOnly></div>
   </main>;
 }
 

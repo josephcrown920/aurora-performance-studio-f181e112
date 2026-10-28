@@ -185,6 +185,7 @@ function MiniUpload({
 }
 
 function ColorsStudio() {
+  const search = Route.useSearch();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -198,7 +199,8 @@ function ColorsStudio() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [cameraMovement, setCameraMovement] = useState("push_in");
   const [lipSyncResults, setLipSyncResults] = useState<Record<string, string>>({});
-  const [color, setColor] = useState(COLOR_PRESETS[1].id); // royal blue — matches tried & tested
+  const [color, setColor] = useState(search.color ?? "royal-blue");
+  useEffect(() => { setColor(search.color ?? "royal-blue"); }, [search.color]);
   const [kind, setKind] = useState<SetupKind>("performance");
   const [setup, setSetup] = useState("performance");
   const [workflow, setWorkflow] = useState(WORKFLOWS[0].id);

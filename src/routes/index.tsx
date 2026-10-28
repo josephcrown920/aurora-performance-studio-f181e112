@@ -40,9 +40,6 @@ const PRICE_AVATAR = lipsyncEngineCost("heygen-photo");
 const BalloonLipsync = lazy(() =>
   import("@/components/landing/BalloonLipsync").then((m) => ({ default: m.BalloonLipsync })),
 );
-const AppScreenshotsSection = lazy(() =>
-  import("@/components/landing/AppScreenshotsSection").then((m) => ({ default: m.AppScreenshotsSection })),
-);
 const CliSection = lazy(() =>
   import("@/components/landing/CliSection").then((m) => ({ default: m.CliSection })),
 );
@@ -83,10 +80,10 @@ const CollaboratorsStrip = lazy(() =>
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aurora — Production Canvas" },
-      { name: "description", content: "Connect character references, scenes and motion on Aurora’s editable production canvas." },
-      { property: "og:title", content: "Aurora — Production Canvas" },
-      { property: "og:description", content: "An editable node workspace for scene planning, previews and video production." },
+      { title: "Aurora — Perform Anywhere & Video Studio" },
+      { name: "description", content: "Create performance worlds, direct scenes and edit videos with Aurora." },
+      { property: "og:title", content: "Aurora — Perform Anywhere & Video Studio" },
+      { property: "og:description", content: "Performance worlds, character references and a complete video studio." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: CANONICAL_ORIGIN },
@@ -777,8 +774,6 @@ function LandingPage() {
 
 
 
-      {/* ── App Screenshots — "Inside Aurora" ────────────────────────── */}
-      <ScrollReveal><Suspense fallback={null}><AppScreenshotsSection /></Suspense></ScrollReveal>
       <OutputGallery
         items={DEMO_ASSETS.landing.colors}
         kicker="Colors Studio"
@@ -893,48 +888,6 @@ function LandingPage() {
         </div>
       </section>
 
-
-      {/* ── Tool Directory ───────────────────────────────────────────────── */}
-      <section className="border-b border-white/8 bg-[#0a0910] px-5 py-16 sm:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.34em] text-violet-300">Every Aurora tool</span>
-              <h2 className="mt-4 max-w-3xl text-[clamp(2.75rem,8vw,6.5rem)] font-black uppercase leading-[0.83] tracking-[-0.055em] text-zinc-100">
-                Create<br />
-                <span className="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.56)]">something</span><br />
-                new.
-              </h2>
-            </div>
-            <p className="max-w-[30ch] text-sm leading-relaxed text-zinc-500 sm:text-right">
-              One balance across every tool. Prices below use Aurora&apos;s live Aura economy.
-            </p>
-          </div>
-
-          <div className="border-t border-white/10">
-            {toolDirectory.map((tool) => (
-              <Link
-                key={tool.name}
-                to={tool.to}
-                className="group grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-3 border-b border-white/10 py-4 no-underline transition-colors hover:bg-white/[0.035] sm:grid-cols-[3.5rem_minmax(10rem,1fr)_minmax(10rem,0.8fr)_auto_auto] sm:gap-5 sm:px-4"
-              >
-                <span className="text-xs font-semibold tabular-nums text-zinc-600">{tool.number}</span>
-                <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="text-lg font-black uppercase tracking-tight text-zinc-100 transition-colors group-hover:text-violet-300 sm:text-2xl">{tool.name}</span>
-                  {tool.label && <span className="hidden rounded-sm bg-violet-400/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.13em] text-violet-200 ring-1 ring-violet-300/25 sm:inline">{tool.label}</span>}
-                </div>
-                <span className="hidden text-right text-xs text-zinc-500 sm:block">{tool.description}</span>
-                <span className="rounded-full bg-white/[0.07] px-2.5 py-1 text-[10px] font-bold tabular-nums text-zinc-300 ring-1 ring-white/10">{tool.price}</span>
-                <ArrowUpRight className="size-4 text-zinc-600 transition-colors group-hover:text-violet-300" />
-              </Link>
-            ))}
-          </div>
-          <div className="mt-6 flex items-center justify-between gap-4 text-xs text-zinc-500">
-            <span>Plans and Aura top-ups available anytime</span>
-            <Link to="/tools" className="font-semibold text-violet-300 hover:text-white">Explore all tools →</Link>
-          </div>
-        </div>
-      </section>
 
       {/* ── Featured Artist ─────────────────────────────────────────────── */}
       <Suspense fallback={null}><FeaturedArtist /></Suspense>

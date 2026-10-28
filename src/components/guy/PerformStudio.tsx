@@ -6,6 +6,7 @@ import { DEPTH_GUIDE, depthMap, generateImage, generateVideo, urlToBlob } from "
 import { removeImageBackground } from "@/lib/guy/remove-background";
 import { readSite } from "@/lib/guy/site-settings";
 import { FaceSwap } from "@/components/guy/FaceSwap";
+import { PerformAnywhereWorkspace } from "@/components/performance/PerformAnywhereWorkspace";
 import burningHouse from "@/assets/guy/burning-house-background.jpg";
 import { DEFAULT_VIDEO_ENGINE, VIDEO_ENGINES } from "@/lib/guy/engines";
 
@@ -48,6 +49,7 @@ function useFileUrl(file: File | null) {
 
 export function PerformStudio({ onAsset }: { onAsset: AddAsset }) {
   const [tab, setTab] = useState<Tab>("perform");
+  const [grwm, setGrwm] = useState(false);
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6">
       <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">Perform anywhere</p>
@@ -58,7 +60,7 @@ export function PerformStudio({ onAsset }: { onAsset: AddAsset }) {
           <Button key={id} size="sm" variant={tab === id ? "secondary" : "ghost"} aria-pressed={tab === id} onClick={() => setTab(id)}><Icon />{name}</Button>
         ))}
       </nav>
-      {tab === "perform" && <Perform onAsset={onAsset} />}
+      {tab === "perform" && <PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} />}
       {tab === "motion" && <MotionStyle onAsset={onAsset} />}
       {tab === "background" && <BackgroundSwap onAsset={onAsset} />}
       {tab === "blender" && <BlenderBridge onAsset={onAsset} />}
