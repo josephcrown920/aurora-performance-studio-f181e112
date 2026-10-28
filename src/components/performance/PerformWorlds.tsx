@@ -34,7 +34,7 @@ export function PerformWorlds() {
     finally { setBusy(false); }
   };
 
-  return <section aria-label="Choose your world" className="mt-6 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+  return <section aria-label="Choose your world" className="mt-6 grid gap-4 md:grid-cols-[3fr_2fr]">
     <div className="min-w-0">
       <div className="mb-2 flex items-center justify-between"><h2 className="font-display text-2xl">PICK YOUR WORLD</h2><span className="text-xs text-muted-foreground">12 color sets</span></div>
       <div className="workspace-active relative aspect-video overflow-hidden rounded-lg border border-border" style={tileStyle(pick)}>
@@ -50,8 +50,8 @@ export function PerformWorlds() {
       <div className="flex items-center gap-2"><Layers3 size={16} className="text-primary" /><h3 className="text-sm font-bold">Depth guide · Depth Anything → Genjutsu</h3></div>
       <p className="mt-1 text-xs text-muted-foreground">The depth map locks your body and space so the new world wraps around you. Runs free in your browser.</p>
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <figure><img src={identity.url} alt="Source photo" className="aspect-[3/4] w-full rounded object-cover" /><figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Your photo</figcaption></figure>
-        <figure>{depth ? <img src={depth} alt="Depth map of your photo" className="aspect-[3/4] w-full rounded object-cover" /> : <div className="flex aspect-[3/4] w-full items-center justify-center rounded bg-muted text-xs text-muted-foreground">{busy ? <Loader2 className="animate-spin" /> : "Depth map"}</div>}<figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Depth guide</figcaption></figure>
+        <figure><img src={identity.url} alt="Source photo" className="h-44 w-full rounded object-cover" /><figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Your photo</figcaption></figure>
+        <figure>{depth ? <img src={depth} alt="Depth map of your photo" className="h-44 w-full rounded object-cover" /> : <div className="flex h-44 w-full items-center justify-center rounded bg-muted text-xs text-muted-foreground">{busy ? <Loader2 className="animate-spin" /> : "Depth map"}</div>}<figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Depth guide</figcaption></figure>
       </div>
       <Button size="sm" variant="outline" className="mt-3 w-full" disabled={busy} onClick={() => void buildDepth()}>{busy ? "Building depth…" : depth ? "Rebuild depth guide" : "See the depth guide"}</Button>
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
