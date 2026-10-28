@@ -52,7 +52,7 @@ const WORKFLOW_GUIDES: Record<PerformanceVariantKind, WorkflowGuideConfig> = {
     eyebrow: "Reference example",
     headline: "Your couch becomes a luxury interior",
     summary:
-      "Three references — composition, luxury interior and your identity — place a faithful seated performance inside the vehicle while preserving your face and outfit.",
+      "Film yourself seated anywhere. Aurora keeps your face, outfit and every move, and rebuilds the world around you as a Maybach, Rolls-Royce or private jet.",
     before: {
       src: "/workflow-guides/anywhere-phone.webp",
       alt: "Workflow reference example: the real seated phone recording used as the performance source.",
@@ -63,8 +63,8 @@ const WORKFLOW_GUIDES: Record<PerformanceVariantKind, WorkflowGuideConfig> = {
       alt: "Workflow reference example: a rendered luxury vehicle interior scene matching the seated performance.",
       ratio: "aspect-[16/9]",
     },
-    beforeLabel: "Your seated recording",
-    afterLabel: "Rendered luxury interior",
+    beforeLabel: "Your phone · couch",
+    afterLabel: "Aurora · Maybach interior",
   },
 };
 
@@ -82,7 +82,7 @@ function GuideFigure({ image, label, highlighted, compact = false }: { image: Gu
           alt={image.alt}
           loading="lazy"
           decoding="async"
-          className={cn("w-full", compact ? "h-36 object-contain sm:h-44" : `object-cover ${image.ratio}`)}
+          className={cn("w-full", compact ? "aspect-[4/3] object-cover" : `object-cover ${image.ratio}`)}
         />
       </div>
       <figcaption className="mt-2 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
