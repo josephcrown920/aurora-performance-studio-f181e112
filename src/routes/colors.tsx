@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { resolvePerformanceColor } from "@/lib/performance-world-selection";
 
 export const Route = createFileRoute("/colors")({
-  validateSearch: (search: Record<string, unknown>) => ({ color: resolvePerformanceColor(search.color) }),
+  validateSearch: (search: Record<string, unknown>): { color?: string } => ({ color: search.color === undefined ? undefined : resolvePerformanceColor(search.color) }),
   head: () => ({
     meta: [
       { title: "Colors Studio — Aurora" },
