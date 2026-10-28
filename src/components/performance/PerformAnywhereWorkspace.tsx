@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { PerformanceVariantWorkflow } from "@/components/performance/PerformanceVariantWorkflow";
 import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 import { GetReadyWithMeWorkflow } from "@/components/performance/GetReadyWithMeWorkflow";
+import { PerformWorlds } from "@/components/performance/PerformWorlds";
 import studioClip from "@/assets/josh/generated/clip-05-studio-gel.webm";
 import studioPoster from "@/assets/josh/generated/still-05-studio-gel.jpg";
 
@@ -82,6 +83,8 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           </>}
         </section>
       </div>
-    </div>
+      </div>
+      {!grwm && <PerformWorlds />}
+
   </main>;
 }
