@@ -8,7 +8,7 @@ import { OutputGallery } from "@/components/visual/OutputGallery";
 import { DEMO_ASSETS } from "@/lib/demo-assets";
 import { useServerFn } from "@tanstack/react-start";
 import { LipSyncDemo } from "@/components/landing/LipSyncDemo";
-import { Mic2, ArrowRight, Upload, Music2, Wand2, Download, Loader2, Play, Pause, CheckCircle2, X, Zap, Sparkles, Server, ImageIcon, Info } from "lucide-react";
+import { Mic2, ArrowRight, Upload, Music2, Wand2, Download, Loader2, Play, Pause, CheckCircle2, X, Zap, Sparkles, Server, ImageIcon, Info, Video } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
