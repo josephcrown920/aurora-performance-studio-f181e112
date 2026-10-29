@@ -632,13 +632,6 @@ function SpinPage() {
         </div>
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-3 md:flex-row">
-          <input
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="e.g. day in my life as a Miami fitness creator"
-            className="flex-1 rounded-xl aurora-glass px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-            disabled={active}
-          />
           <button
             type="submit"
             disabled={active || !prompt.trim() || (mode === "video" && (!productUrl || !script.trim()))}
