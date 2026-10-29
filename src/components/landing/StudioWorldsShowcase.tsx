@@ -11,13 +11,13 @@ import redRoom from "@/assets/studio-worlds/red-room.jpg.asset.json";
 
 const WORLDS = [
   { name: "Electric Purple", img: purple.url, color: "electric-purple" },
-  { name: "Spotlight", img: spotlight.url, color: "midnight" },
-  { name: "Clean White", img: white.url, color: "white" },
-  { name: "Crimson", img: crimson.url, color: "crimson" },
+  { name: "Spotlight", img: spotlight.url, color: "obsidian" },
+  { name: "Clean White", img: white.url, color: "ice-white" },
+  { name: "Crimson", img: crimson.url, color: "crimson-red" },
   { name: "Hot Pink", img: pink.url, color: "hot-pink" },
-  { name: "Teal", img: teal.url, color: "teal" },
+  { name: "Teal", img: teal.url, color: "aqua" },
   { name: "Golden Street", img: street.url, color: undefined },
-  { name: "Red Room", img: redRoom.url, color: "crimson" },
+  { name: "Red Room", img: redRoom.url, color: "crimson-red" },
 ];
 
 const FEATURES = [

@@ -71,4 +71,4 @@
 - [ ] Surface the Canvas clearly in menus.
 - [ ] Depth-map conditioning for Motion Control and Perform Anywhere.
 
-- [ ] Landing: remove color picker/depth block, add full studio shots, Scene Builder, Multi-angle, TikTok 30
+- [x] Landing: remove color picker/depth block, add full studio shots, Scene Builder, Multi-angle, TikTok 30
