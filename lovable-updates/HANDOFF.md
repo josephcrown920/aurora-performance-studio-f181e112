@@ -86,3 +86,11 @@ Screenshots of the current approved look: `screenshots/latest-2026-10-29/`. See 
 - Car scene: Character Lock / Identity starts with NBA Josh's face for signed-in users; Interior and Window slots still empty.
 - Colors studio accepts `?color=` so a chosen world opens pre-selected.
 Open: Maybach photos in Interior/Window slots; real signed-in generation tests; licensed Canela/Neue Montreal fonts.
+
+## Update 2026-10-29 — locked appearance
+Current approved look and do-not-touch rules: `UI-UX.md`. Screenshots: `screenshots/latest-2026-10-29/` (see `SNAPSHOT.md`).
+- FG3 renamed to "Performance"; Featured Artist kept as-is with name NBA Josh.
+- Landing: shared Perform Anywhere block, 8 full studio photos, Scene Builder / Multi-angle / TikTok 30 cards; tool grid and tool directory removed.
+- Studio Perform view (`/studio?mode=perform`) reuses Perform Anywhere.
+- Get Ready With Me redesigned (You → Outfit → Dressed); car scene Identity starts with NBA Josh.
+Open: Maybach photos in Interior/Window slots; signed-in generation tests; licensed fonts.
