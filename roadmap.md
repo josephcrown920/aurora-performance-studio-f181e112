@@ -70,3 +70,5 @@
 - [ ] Redesign Get Ready With Me per README.
 - [ ] Surface the Canvas clearly in menus.
 - [ ] Depth-map conditioning for Motion Control and Perform Anywhere.
+
+- [x] Landing: remove color picker/depth block, add full studio shots, Scene Builder, Multi-angle, TikTok 30
