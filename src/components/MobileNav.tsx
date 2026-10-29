@@ -144,6 +144,9 @@ export const ARCHIVED_FEATURES: Feature[] = [
 
 // Bottom tab — flagship trio with premium badge treatment.
 const TAB_ITEMS: (Feature & { premium?: boolean })[] = [
+  { to: "/studio",       label: "Video Agent",     icon: Film },
+  { to: "/canvas",       label: "Canvas",          icon: Workflow },
+  { to: "/reshoot",      label: "Multi-Angle",     icon: Camera },
   { to: "/spin",         label: "TikTok30",        icon: Flame,    premium: true },
 ];
 
@@ -387,7 +390,7 @@ export function MobileNav() {
               style={{ background: "linear-gradient(90deg, transparent 0%, oklch(0.60 0.27 295 / 0.5) 50%, transparent 100%)" }}
             />
 
-            <ul className={visibleTabs.length === 2 ? "grid grid-cols-2" : "grid grid-cols-3"}>
+            <ul className="grid" style={{ gridTemplateColumns: `repeat(${Math.max(visibleTabs.length, 1)}, minmax(0, 1fr))` }}>
               {visibleTabs.map((t) => {
                 const active = isActive(pathname, t.to);
                 return (
