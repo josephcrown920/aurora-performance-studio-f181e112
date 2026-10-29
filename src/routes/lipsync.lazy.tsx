@@ -443,7 +443,8 @@ function LipSyncForm() {
         )}
 
         <WelcomeTour show={showTour} onDismiss={() => setShowTour(false)} />
-        {!isPhotoEngine && (
+        {/* Engine-named demo chips hidden: routing is automatic. */}
+        {false && !isPhotoEngine && (
           <ExampleChips
             presets={LIPSYNC_EXAMPLE_PRESETS}
             activeId={activeExampleId}
