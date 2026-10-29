@@ -84,16 +84,19 @@ function StudioWorkspace() {
   const { mode } = Route.useSearch();
   const [grwm, setGrwm] = useState(false);
   if (mode === "canvas") return <NodeWorkspace canvasOnly />;
+  // Default view is the ported Video Agent studio as-is (its own mode bar),
+  // so it looks exactly like the original Remix project.
+  if (mode !== "perform") return <ClientOnly fallback={<p role="status">Opening studio…</p>}><GuyStudio /></ClientOnly>;
   return <main className="min-h-screen bg-background text-foreground">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
       <Link to="/" className="text-lg font-semibold">Aurora</Link>
       <nav aria-label="Studio views" className="flex items-center gap-2">
-        <Button asChild size="sm"><Link to="/studio" search={{ mode: undefined }} aria-current="page">Video Studio</Link></Button>
+        <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: undefined }}>Video Studio</Link></Button>
         <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: "canvas" }}>Canvas</Link></Button>
-        <Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: "perform" }}>Perform</Link></Button>
+        <Button asChild size="sm"><Link to="/studio" search={{ mode: "perform" }} aria-current="page">Perform</Link></Button>
       </nav>
     </header>
-    <div><ClientOnly fallback={<p role="status">Opening studio…</p>}>{mode === "perform" ? <PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} /> : <GuyStudio />}</ClientOnly></div>
+    <div><ClientOnly fallback={<p role="status">Opening studio…</p>}><PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} /></ClientOnly></div>
   </main>;
 }
 

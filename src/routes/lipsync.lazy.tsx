@@ -8,7 +8,7 @@ import { OutputGallery } from "@/components/visual/OutputGallery";
 import { DEMO_ASSETS } from "@/lib/demo-assets";
 import { useServerFn } from "@tanstack/react-start";
 import { LipSyncDemo } from "@/components/landing/LipSyncDemo";
-import { Mic2, ArrowRight, Upload, Music2, Wand2, Download, Loader2, Play, Pause, CheckCircle2, X, Zap, Sparkles, Server, ImageIcon, Info } from "lucide-react";
+import { Mic2, ArrowRight, Upload, Music2, Wand2, Download, Loader2, Play, Pause, CheckCircle2, X, Zap, Sparkles, Server, ImageIcon, Info, Video } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -443,7 +443,8 @@ function LipSyncForm() {
         )}
 
         <WelcomeTour show={showTour} onDismiss={() => setShowTour(false)} />
-        {!isPhotoEngine && (
+        {/* Engine-named demo chips hidden: routing is automatic. */}
+        {false && !isPhotoEngine && (
           <ExampleChips
             presets={LIPSYNC_EXAMPLE_PRESETS}
             activeId={activeExampleId}
@@ -483,36 +484,34 @@ function LipSyncForm() {
           />
         )}
 
-        {/* Engine toggle */}
+        {/* Source type — the engine itself is routed automatically */}
         <div className="mt-4">
-          <p className="aurora-kicker mb-2">Engine</p>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 rounded-2xl aurora-glass p-1">
+          <p className="aurora-kicker mb-2">Start from</p>
+          <div className="grid grid-cols-2 gap-2 rounded-2xl aurora-glass p-1">
             {([
-              { id: "sync-v2", label: "Studio", sub: "Sync 1.9 · film-grade", icon: Sparkles },
-              { id: "wav2lip", label: "Fast", sub: "Wav2Lip · cheaper", icon: Zap },
-              { id: "latentsync", label: "Self-hosted", sub: "LatentSync · your GPU", icon: Server },
-              { id: "xai-ugc", label: "xAI UGC", sub: "Still photo → talking head", icon: ImageIcon },
-              { id: "heygen-photo", label: "HeyGen Photo", sub: "Still photo → your audio", icon: ImageIcon },
-            ] as const).map(o => (
-              <button
-                key={o.id}
-                onClick={() => setEngine(o.id)}
-                disabled={busy}
-                className={`flex items-center gap-2 justify-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
-                  engine === o.id ? "bg-[image:var(--gradient-hero)] text-white shadow-[var(--shadow-glow-soft)]" : "text-white/70 hover:text-white"
-                }`}
-              >
-                <o.icon className="size-3.5 shrink-0" />
-                <span className="truncate">{o.label}</span>
-              </button>
-            ))}
+              { id: "sync-v2", label: "Video clip", icon: Video },
+              { id: "heygen-photo", label: "Photo", icon: ImageIcon },
+            ] as const).map(o => {
+              const on = o.id === "sync-v2" ? !isPhotoEngine : isPhotoEngine;
+              return (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setEngine(o.id)}
+                  disabled={busy}
+                  aria-pressed={on}
+                  className={`flex items-center gap-2 justify-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+                    on ? "bg-[image:var(--gradient-hero)] text-white shadow-[var(--shadow-glow-soft)]" : "text-white/70 hover:text-white"
+                  }`}
+                >
+                  <o.icon className="size-3.5 shrink-0" />
+                  <span className="truncate">{o.label}</span>
+                </button>
+              );
+            })}
           </div>
-          <p className="mt-1.5 text-[11px] text-white/40">
-            {engine === "sync-v2" && "Sync 1.9 — film-grade phoneme alignment on a video clip"}
-            {engine === "wav2lip" && "Wav2Lip — fast & cheap, slightly lower quality"}
-            {engine === "latentsync" && "LatentSync — runs on your registered GPU worker"}
-            {engine === "xai-ugc" && "grok-imagine-video-1.5 — animates a still photo into a 9:16 UGC talking-head video"}
-            {engine === "heygen-photo" && "HeyGen — animates a still photo directly to your uploaded audio, no fixed script"}
+          <p className="mt-1.5 text-[11px] text-white/50">
+            Model: Auto — Aurora picks the best available lip-sync model for you.
           </p>
         </div>
 

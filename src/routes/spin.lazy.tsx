@@ -403,22 +403,22 @@ function SpinPage() {
           <ArrowLeft className="size-4" /> Back
         </Link>
 
-        <header className="workspace-heading"><h1>TIKTOK30</h1><span>30 shots · one person</span></header>
-        <PageHeroBanner
-          compact
-          kicker="Campaign proof"
-          headline="One concept, 30 scroll-stopping posts."
-          sub=""
-          media={DEMO_ASSETS.spin.hero}
-          className="campaign-proof mt-5"
-        />
+        <header className="workspace-heading"><h1>TIKTOK30</h1><span>1–2 photos in · 30 shots out</span></header>
+        <p className="mt-3 text-sm text-muted-foreground">Upload one or two photos of the same person, describe the vibe, and get 30 different shots with the same face in every one.</p>
 
         <div className="workspace-controls">
         <section className="mt-5">
-          <h2 className="mb-3 text-sm font-semibold">Campaign style</h2>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {templates.map((t) => <Button key={t.id} type="button" variant="outline" disabled={active} aria-pressed={templateId === t.id} onClick={() => pickTemplate(t.id)} className={`h-12 justify-start whitespace-normal text-left text-xs ${templateId === t.id ? "workspace-active" : ""}`}><span aria-hidden>{t.emoji}</span>{t.label}</Button>)}
-          </div>
+          <label htmlFor="spin-prompt" className="mb-2 block text-sm font-semibold">Prompt</label>
+          <textarea
+            id="spin-prompt"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="e.g. Night city streets, neon reflections, streetwear, confident poses"
+            maxLength={2000}
+            rows={3}
+            disabled={active}
+            className="w-full resize-none rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+          />
         </section>
         {/* Video ratio slider — 0 to 30 clips (budget i2v, 5 Aura each) */}
         {mode !== "video" && (
@@ -632,13 +632,6 @@ function SpinPage() {
         </div>
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-3 md:flex-row">
-          <input
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="e.g. day in my life as a Miami fitness creator"
-            className="flex-1 rounded-xl aurora-glass px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-            disabled={active}
-          />
           <button
             type="submit"
             disabled={active || !prompt.trim() || (mode === "video" && (!productUrl || !script.trim()))}
