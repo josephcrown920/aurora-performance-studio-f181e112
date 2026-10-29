@@ -43,7 +43,7 @@ export function FeaturedArtist() {
               Featured Artist
             </span>
             <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-white mb-2">
-              Kling
+              NBA Josh
             </h2>
             <p className="text-sm font-medium text-zinc-400 mb-1">
               Powered by Aurora
