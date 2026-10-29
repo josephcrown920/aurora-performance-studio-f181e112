@@ -59,8 +59,11 @@ const PerformAnywhereWorkspace = lazy(() =>
 );
 function LandingPerformAnywhere() {
   const [grwm, setGrwm] = useState(false);
-  return <section aria-label="Perform Anywhere" className="relative z-10"><Suspense fallback={null}><PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} /></Suspense></section>;
+  return <section aria-label="Perform Anywhere" className="relative z-10"><Suspense fallback={null}><PerformAnywhereWorkspace embedded hideWorlds grwm={grwm} onExperienceChange={setGrwm} /></Suspense></section>;
 }
+const StudioWorldsShowcase = lazy(() =>
+  import("@/components/landing/StudioWorldsShowcase").then((m) => ({ default: m.StudioWorldsShowcase })),
+);
 const IntroAnimation = lazy(() =>
   import("@/components/landing/IntroAnimation").then((m) => ({ default: m.IntroAnimation })),
 );
@@ -716,6 +719,7 @@ function LandingPage() {
       </div>
 
       <LandingPerformAnywhere />
+      <Suspense fallback={null}><StudioWorldsShowcase /></Suspense>
 
       {/* ── Process ─────────────────────────────────────────────────────── */}
       {/* Never give a landing element the id `process`: browsers expose

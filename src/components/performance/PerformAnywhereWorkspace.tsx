@@ -56,7 +56,7 @@ function PhoneRecordingSlot({ active, onActivate }: { active: boolean; onActivat
   );
 }
 
-export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = false }: { grwm: boolean; onExperienceChange: (grwm: boolean) => void; embedded?: boolean }) {
+export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = false, hideWorlds = false }: { grwm: boolean; onExperienceChange: (grwm: boolean) => void; embedded?: boolean; hideWorlds?: boolean }) {
   const { user } = useAuth();
   const [active, setActive] = useState(0);
   return <main className={`workspace-duo text-foreground ${embedded ? "" : "min-h-screen pb-24"}`}>
@@ -84,7 +84,7 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           </>}
         </section>
       </div>
-      {!grwm && <PerformWorlds />}
+      {!grwm && !hideWorlds && <PerformWorlds />}
       </div>
 
   </main>;
