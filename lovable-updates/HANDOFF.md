@@ -75,3 +75,22 @@ Snapshot date: 2026-10-05; latest work update: 2026-10-22. Read this first. It c
 - One shared timeline and Layers editor. Do not build competing editors.
 - Creator media stays in owner-scoped private storage. Credits are reserved on the server.
 - Never run paid generations without explicit permission.
+
+## Update 2026-10-29 — locked appearance (do not overwrite)
+Screenshots of the current approved look: `screenshots/latest-2026-10-29/`. See `UI-UX.md` for the rules that protect them.
+- FG3 label renamed to "Performance" everywhere.
+- Featured Artist section kept in its original layout; only the name changed from Kling to NBA Josh.
+- Landing page: Perform Anywhere embedded (shared component), "Pick your studio" row of 8 full studio photos, then Scene Builder / Multi-angle / TikTok 30 cards. Tool directory and "Every tool you need" card grid removed.
+- Studio has a Perform view (`/studio?mode=perform`) using the same Perform Anywhere component.
+- Get Ready With Me redesigned: You → Outfit → Dressed strip with NBA Josh photos.
+- Car scene: Character Lock / Identity starts with NBA Josh's face for signed-in users; Interior and Window slots still empty.
+- Colors studio accepts `?color=` so a chosen world opens pre-selected.
+Open: Maybach photos in Interior/Window slots; real signed-in generation tests; licensed Canela/Neue Montreal fonts.
+
+## Update 2026-10-29 — locked appearance
+Current approved look and do-not-touch rules: `UI-UX.md`. Screenshots: `screenshots/latest-2026-10-29/` (see `SNAPSHOT.md`).
+- FG3 renamed to "Performance"; Featured Artist kept as-is with name NBA Josh.
+- Landing: shared Perform Anywhere block, 8 full studio photos, Scene Builder / Multi-angle / TikTok 30 cards; tool grid and tool directory removed.
+- Studio Perform view (`/studio?mode=perform`) reuses Perform Anywhere.
+- Get Ready With Me redesigned (You → Outfit → Dressed); car scene Identity starts with NBA Josh.
+Open: Maybach photos in Interior/Window slots; signed-in generation tests; licensed fonts.

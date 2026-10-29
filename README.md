@@ -6,6 +6,8 @@ https://github.com/josephcrown920/Auroraglobal.git SET UP THIS PROJECT
 
 See [`lovable-updates/HANDOFF.md`](lovable-updates/HANDOFF.md) for the full work log, where development stopped, open blockers, and page screenshots in `lovable-updates/screenshots/`.
 
+Locked appearance rules: [`lovable-updates/UI-UX.md`](lovable-updates/UI-UX.md). Snapshot history: [`lovable-updates/SNAPSHOT.md`](lovable-updates/SNAPSHOT.md).
+
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable

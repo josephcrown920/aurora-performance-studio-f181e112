@@ -1,4 +1,4 @@
-- [ ] Apply requested performance cleanup: rename FG3, feature NBA Josh with supplied likeness, remove pictured home tool sections, and reuse Perform grids inside Studio; verify color selection and depth preview.
+- [x] Apply requested performance cleanup: rename FG3, feature NBA Josh with supplied likeness, remove pictured home tool sections, and reuse Perform grids inside Studio; verify color selection and depth preview.
 - [x] Update /download to the finished October 27 EAS preview APK (abb9a293, version 1.0.0/build 4); verified Expo status FINISHED and downloadable artifact.
 - [ ] Before direct Android launch, replace the temporary EAS APK URL with durable hosting (current artifact expires November 10, 2026) and verify installation on a real Android phone.
 - [x] Reduce tracked repository media: ~130 MiB of duplicate or unused photos/videos removed; cloud-backed photos now load from Lovable Assets. Remaining: media in computed-path folders (nav-previews, sample-photos, colors, josh, generated clips) kept locally.
