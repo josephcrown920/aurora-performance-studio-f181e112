@@ -23,6 +23,7 @@ import {
 } from "@/lib/performance-variant-workflows";
 import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 import { RecordingReferenceGuide, WorkflowVisualGuide } from "@/components/performance/WorkflowVisualGuide";
+import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
 
 function initial(kind: PerformanceVariantKind, mode: "colors" | "anywhere"): PerformanceVariantPayload {
   const references = Object.fromEntries(PERFORMANCE_VARIANT_CATALOG[kind].references.map((item) => [item.id, null]));
@@ -58,7 +59,11 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   useEffect(() => {
     if (!user) return;
     loadFn({ data: { kind, mode } }).then((result) => {
-      if (result.payload) setDraft(result.payload);
+      const base = result.payload ?? initial(kind, mode);
+      const withJosh = kind === "luxury_interior" && !base.references.identity
+        ? { ...base, references: { ...base.references, identity: `${window.location.origin}${joshPortrait.url}` } }
+        : base;
+      setDraft(withJosh);
       setRevision(result.revision);
       setReady(true);
     }).catch((error) => toast.error(error instanceof Error ? error.message : "Could not load workflow"));
