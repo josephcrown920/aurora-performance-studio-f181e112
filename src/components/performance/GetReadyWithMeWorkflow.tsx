@@ -2,7 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { Download, Loader2, Shirt, Upload } from "lucide-react";
+import { Check, Download, Loader2, Shirt, Upload } from "lucide-react";
+import grwmFace from "@/assets/nba-josh/portrait.jpg.asset.json";
+import grwmFit from "@/assets/nba-josh/black-outfit.png.asset.json";
+import grwmFull from "@/assets/nba-josh/full-body.jpg.asset.json";
+
+function GrwmFrame({ src, label, highlight }: { src: string; label: string; highlight?: boolean }) {
+  return <figure className={`relative overflow-hidden rounded-lg border ${highlight ? "border-primary" : "border-border"}`}>
+    <img src={src} alt={`NBA Josh example: ${label}`} loading="lazy" className="aspect-[3/4] w-full object-cover" />
+    <figcaption className="absolute inset-x-0 bottom-0 bg-background/80 py-1 text-center text-[10px] font-bold uppercase tracking-widest text-foreground">{label}</figcaption>
+  </figure>;
+}
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -114,13 +124,36 @@ export function GetReadyWithMeWorkflow() {
     finally { setDepthBusy(false); }
   }
 
+  const busy = uploading || running || mutation.isPending;
   return <section aria-label="Get Ready With Me" className="space-y-5">
-    <div className="flex items-center justify-between gap-3"><h2 className="flex items-center gap-2 text-2xl font-semibold"><Shirt />Get Ready With Me</h2><span className="shrink-0 text-sm text-muted-foreground">30s input</span></div>
-    {loading ? <Loader2 className="animate-spin" /> : !user ? <Button asChild><Link to="/auth" search={{ next: "/perform-anywhere?experience=grwm" }}>Sign in to create</Link></Button> : !draft ? <p role="status">{error ?? "Loading your scene…"}</p> : <>
-      <div className="grid grid-cols-2 gap-3">
-        {(["identity", "outfit"] as const).map(slot => <label key={slot} className="flex min-w-0 cursor-pointer flex-col gap-2 rounded-lg border border-border p-3"><span className="text-sm font-semibold">{slot === "identity" ? "Character Lock" : "Outfit reference"}</span>{draft.references[slot] ? <img src={draft.references[slot] ?? ""} alt={slot} className="aspect-[3/4] w-full rounded object-cover" /> : <div className="flex aspect-[3/4] items-center justify-center bg-muted"><Upload className="text-muted-foreground" /></div>}<input aria-label={`Upload ${slot} photo`} type="file" accept="image/*" disabled={uploading || running || mutation.isPending} className="sr-only" onChange={e => { const file = e.target.files?.[0]; if (file) void upload(file, slot); e.target.value = ""; }} /></label>)}
+    <div className="overflow-hidden rounded-2xl border border-primary/40 bg-card">
+      <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 p-3">
+        <GrwmFrame src={grwmFace.url} label="You" />
+        <span className="text-primary">→</span>
+        <GrwmFrame src={grwmFit.url} label="Outfit" />
+        <span className="text-primary">→</span>
+        <GrwmFrame src={grwmFull.url} label="Dressed" highlight />
       </div>
-      <label className="block cursor-pointer border-y border-border py-3"><span className="mb-2 flex items-center gap-2 text-sm font-semibold"><Upload size={16} />Dressing clip · up to 30 seconds</span><input aria-label="Upload dressing clip" type="file" accept="video/*" disabled={uploading || running || mutation.isPending} onChange={e => { const file = e.target.files?.[0]; if (file) void upload(file, "phone"); e.target.value = ""; }} /></label>
+      <div className="flex items-end justify-between gap-3 border-t border-border px-4 py-3">
+        <div><p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">Perform Anywhere</p><h2 className="flex items-center gap-2 font-display text-3xl text-foreground"><Shirt className="size-6" />Get Ready With Me</h2></div>
+        <span className="shrink-0 rounded-full border border-border px-2 py-1 text-[11px] text-muted-foreground">Clip ≤ 30s</span>
+      </div>
+    </div>
+    {loading ? <Loader2 className="animate-spin" /> : !user ? <Button asChild className="w-full"><Link to="/auth" search={{ next: "/perform-anywhere?experience=grwm" }}>Sign in to create</Link></Button> : !draft ? <p role="status">{error ?? "Loading your scene…"}</p> : <>
+      <div className="grid grid-cols-3 gap-2">
+        {(["identity", "outfit"] as const).map((slot, i) => <label key={slot} className="group flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-xl border border-border bg-card p-2 transition hover:border-primary">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-primary">0{i + 1}</span>
+          <span className="truncate text-xs font-semibold">{slot === "identity" ? "Character Lock" : "Outfit"}</span>
+          {draft.references[slot] ? <img src={draft.references[slot] ?? ""} alt={slot} className="aspect-[3/4] w-full rounded-lg object-cover" /> : <div className="flex aspect-[3/4] items-center justify-center rounded-lg bg-muted"><Upload className="size-4 text-muted-foreground" /></div>}
+          <input aria-label={`Upload ${slot} photo`} type="file" accept="image/*" disabled={busy} className="sr-only" onChange={e => { const file = e.target.files?.[0]; if (file) void upload(file, slot); e.target.value = ""; }} />
+        </label>)}
+        <label className="flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-xl border border-border bg-card p-2 transition hover:border-primary">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-primary">03</span>
+          <span className="truncate text-xs font-semibold">Dressing clip</span>
+          <div className="flex aspect-[3/4] flex-col items-center justify-center gap-1 rounded-lg bg-muted text-center text-[10px] text-muted-foreground">{draft.phoneVideoUrl ? <><Check className="size-4 text-primary" />Clip added</> : <><Upload className="size-4" />Phone video</>}</div>
+          <input aria-label="Upload dressing clip" type="file" accept="video/*" disabled={busy} className="sr-only" onChange={e => { const file = e.target.files?.[0]; if (file) void upload(file, "phone"); e.target.value = ""; }} />
+        </label>
+      </div>
       {draft.phoneVideoUrl && <video ref={videoRef} src={draft.phoneVideoUrl} crossOrigin="anonymous" controls playsInline preload="metadata" aria-label="Your dressing clip" className="max-h-80 w-full bg-muted" />}
       {draft.phoneVideoUrl && <div className="flex items-center gap-3 rounded-lg border border-border p-3">
         {depth ? <img src={depth.preview} alt="Depth guide" className="h-24 w-16 rounded object-cover" /> : <div className="flex h-24 w-16 items-center justify-center rounded bg-muted text-[10px] text-muted-foreground">Depth</div>}
