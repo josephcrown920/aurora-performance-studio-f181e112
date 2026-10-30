@@ -50,6 +50,7 @@ import {
   ImageIcon,
   Camera,
   Flame,
+  ScanFace,
 } from "lucide-react";
 import {
   AGENTS,
