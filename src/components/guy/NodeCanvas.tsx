@@ -154,7 +154,7 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
     if (!task) { patch(n.id, { error: "Write a task or connect a Prompt node first." }); return; }
     patch(n.id, { busy: true, error: undefined, reply: "", status: "Thinking…" });
     try {
-      const r = await fetch("/api/crew-agent", {
+      const r = await fetch("/api/guy/crew-agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ agent: n.agentId ?? "orchestrator", brief: task, history: [], images: [], assets: [], clips: [] }),

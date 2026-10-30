@@ -758,7 +758,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
     }
     try {
       const images = await framesForBrain();
-      const r = await fetch("/api/crew-agent", {
+      const r = await fetch("/api/guy/crew-agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
