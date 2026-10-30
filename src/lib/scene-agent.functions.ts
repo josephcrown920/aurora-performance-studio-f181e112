@@ -32,7 +32,7 @@ export const planSceneWithAgent = createServerFn({ method: "POST" })
       const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "google/gemini-3-flash-preview", messages: [{ role: "user", content: text }] }),
+        body: JSON.stringify({ model: "openai/gpt-6-astra", reasoning_effort: "low", messages: [{ role: "user", content: text }] }),
       });
       if (!r.ok) throw new Error(r.status === 429 ? "Scene agent is busy, try again shortly." : "The scene agent is unavailable right now.");
       const j = (await r.json()) as { choices?: { message?: { content?: string } }[] };
