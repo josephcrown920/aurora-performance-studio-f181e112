@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { Type, ImageUp, ImageIcon, Film, Plus, Minus, Maximize, Play, Loader2, Trash2, FolderInput, Hand, MousePointer2 } from "lucide-react";
+import { Type, ImageUp, ImageIcon, Film, Plus, Minus, Maximize, Play, Loader2, Trash2, FolderInput, Hand, MousePointer2, Bot } from "lucide-react";
 import { IMAGE_ENGINES, VIDEO_ENGINES, DEFAULT_IMAGE_ENGINE, DEFAULT_VIDEO_ENGINE, motionPhrase, type Motion } from "@/lib/guy/engines";
+import { AGENTS } from "@/lib/guy/agents";
+import { readSse } from "@/lib/guy/agent-stream";
 import { generateImage, generateVideo, urlToBlob } from "@/lib/guy/generate";
 import { cn } from "@/lib/utils";
 
-type NodeType = "prompt" | "upload" | "image" | "video";
+type NodeType = "prompt" | "upload" | "image" | "video" | "agent";
 type Node = {
   id: string; type: NodeType; x: number; y: number;
   text?: string | undefined; url?: string | undefined; engine?: string | undefined;
+  agentId?: string | undefined; log?: string[] | undefined; reply?: string | undefined;
   busy?: boolean; status?: string | undefined; error?: string | undefined;
 };
 type Edge = { from: string; to: string };
@@ -16,6 +19,7 @@ const W = 240;
 const META: Record<NodeType, { label: string; icon: typeof Type; out: "text" | "image" | "video" }> = {
   prompt: { label: "Prompt", icon: Type, out: "text" },
   upload: { label: "Image upload", icon: ImageUp, out: "image" },
+  agent: { label: "Agent · Run a task", icon: Bot, out: "text" },
   image: { label: "Image · Generate / Edit", icon: ImageIcon, out: "image" },
   video: { label: "Video · Animate", icon: Film, out: "video" },
 };
@@ -29,6 +33,7 @@ const START: { nodes: Node[]; edges: Edge[] } = {
     { id: "i1", type: "image", x: 360, y: 60, engine: DEFAULT_IMAGE_ENGINE },
     { id: "p2", type: "prompt", x: 360, y: 360, text: "She turns to camera and smiles, petals drift" },
     { id: "v1", type: "video", x: 680, y: 160, engine: DEFAULT_VIDEO_ENGINE },
+    { id: "ag1", type: "agent", x: 40, y: 540, agentId: "orchestrator", text: "" },
   ],
   edges: [{ from: "p1", to: "i1" }, { from: "u1", to: "i1" }, { from: "i1", to: "v1" }, { from: "p2", to: "v1" }],
 };
@@ -42,6 +47,10 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
   const wrap = useRef<HTMLDivElement>(null);
   const viewRef = useRef(view);
   viewRef.current = view;
+  const nodesRef = useRef(nodes);
+  nodesRef.current = nodes;
+  const edgesRef = useRef(edges);
+  edgesRef.current = edges;
   const heights = useRef<Record<string, number>>({});
   const [, force] = useState(0);
 
@@ -134,12 +143,43 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
   function inputs(id: string) {
     const ins = edges.filter((e) => e.to === id).map((e) => nodes.find((n) => n.id === e.from)).filter(Boolean) as Node[];
     return {
-      text: ins.filter((n) => n.type === "prompt").map((n) => n.text?.trim()).filter(Boolean).join(". "),
+      text: ins.map((n) => (n.type === "prompt" ? n.text?.trim() : n.type === "agent" ? n.reply?.trim() : "")).filter(Boolean).join(". "),
       image: ins.find((n) => (n.type === "upload" || n.type === "image") && n.url)?.url,
     };
   }
 
+  async function runAgent(n: Node) {
+    const upstream = inputs(n.id).text;
+    const task = [n.text?.trim(), upstream].filter(Boolean).join("\n\nContext: ");
+    if (!task) { patch(n.id, { error: "Write a task or connect a Prompt node first." }); return; }
+    patch(n.id, { busy: true, error: undefined, reply: "", status: "Thinking…" });
+    try {
+      const r = await fetch("/api/guy/crew-agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ agent: n.agentId ?? "orchestrator", brief: task, history: [], images: [], assets: [], clips: [] }),
+      });
+      if (!r.ok || !r.body) {
+        const e = (await r.json().catch(() => null)) as { reply?: string } | null;
+        throw new Error(e?.reply || "The agent could not respond.");
+      }
+      let reply = ""; let failed = "";
+      await readSse(r.body, (event, data) => {
+        if (event === "ping") return;
+        const d = JSON.parse(data) as { text?: string; reply?: string };
+        if (event === "reply" && d.text) { reply = d.text; patch(n.id, { reply }); }
+        else if (event === "done") reply = d.reply || reply;
+        else if (event === "error") failed = d.reply || "The agent failed.";
+      });
+      if (failed) throw new Error(failed);
+      patch(n.id, { busy: false, status: undefined, reply });
+    } catch (e) {
+      patch(n.id, { busy: false, status: undefined, error: e instanceof Error ? e.message : "Agent failed" });
+    }
+  }
+
   async function run(n: Node) {
+    if (n.type === "agent") return runAgent(n);
     const { text, image } = inputs(n.id);
     if (!text) { patch(n.id, { error: "Connect a Prompt node with some text first." }); return; }
     patch(n.id, { busy: true, error: undefined, status: "Starting…" });
@@ -211,6 +251,19 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
                       <span className="mt-1.5 block text-[11px] text-primary">{n.url ? "Replace" : "Choose image"}</span>
                       <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) patch(n.id, { url: URL.createObjectURL(f) }); }} />
                     </label>
+                  )}
+                  {n.type === "agent" && (
+                    <>
+                      <select value={n.agentId ?? "orchestrator"} onChange={(e) => patch(n.id, { agentId: e.target.value })} aria-label="Agent" className="w-full rounded-md border border-border bg-background px-2 py-1 text-[11px]">
+                        {AGENTS.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+                      </select>
+                      <textarea value={n.text ?? ""} onChange={(e) => patch(n.id, { text: e.target.value })} rows={3} placeholder="Give the agent a task, e.g. write 4 shot prompts…" className="w-full resize-none rounded-md border border-border bg-background p-2 text-xs outline-none focus:border-primary" />
+                      {(n.busy || n.reply) && <div className="max-h-32 overflow-y-auto whitespace-pre-wrap rounded-md bg-muted p-2 text-[11px]">{n.reply || <span className="flex items-center gap-1.5 text-muted-foreground"><Loader2 className="size-3 animate-spin" />{n.status}</span>}</div>}
+                      {n.error && <p className="text-[10px] text-destructive">{n.error}</p>}
+                      <button onClick={() => void run(n)} disabled={n.busy} className="flex w-full items-center justify-center gap-1 rounded-md bg-primary py-1.5 text-[11px] font-semibold text-primary-foreground disabled:opacity-50">
+                        {n.busy ? <Loader2 className="size-3 animate-spin" /> : <Play className="size-3" />} Run agent
+                      </button>
+                    </>
                   )}
                   {(n.type === "image" || n.type === "video") && (
                     <>

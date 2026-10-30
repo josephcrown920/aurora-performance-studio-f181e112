@@ -45,7 +45,7 @@ export function LipSync({ onDone }: { onDone: (url: string) => void }) {
     if (!face) return "";
     setStatus("Lip sync agent is studying your references…");
     const data = await toJpeg(face);
-    const r = await fetch("/api/crew-agent", {
+    const r = await fetch("/api/guy/crew-agent", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         agent: "gemini", assets: [], clips: [],
