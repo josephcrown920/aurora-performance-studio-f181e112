@@ -1,4 +1,3 @@
-import { createPortal } from "react-dom";
 import "./guy-studio.css";
 import { ModelLogo } from "@/components/guy/ModelLogo";
 import { ThemePicker } from "@/components/guy/ThemePicker";
@@ -101,7 +100,9 @@ import scene1 from "@/assets/guy/scene1.jpg";
 import scene2 from "@/assets/guy/scene2.jpg";
 import scene3 from "@/assets/guy/scene3.jpg";
 
-export function GuyStudio({ initialMode = "start" }: { initialMode?: "start" | "edit" }) {
+type StudioMode = "start" | "edit" | "canvas" | "layers" | "workflows" | "creative" | "perform";
+
+export function GuyStudio({ initialMode = "start" }: { initialMode?: StudioMode }) {
   return <Editor initialMode={initialMode} />;
 }
 
@@ -122,7 +123,7 @@ const GREETING: Msg = {
   text: greetingText(""),
 };
 
-function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
+function Editor({ initialMode }: { initialMode: StudioMode }) {
   const [userName, setUserName] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const accountName = useRef("");
@@ -827,10 +828,10 @@ function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
   const audioAsset = audioClip ? assetOf(audioClip.assetId) : null;
 
   return (
-    <div className="guy-studio mx-auto flex min-h-screen w-full max-w-[1800px] flex-col overflow-hidden border-border bg-background/65 font-sans text-foreground sm:min-h-[calc(100vh-32px)] sm:rounded-xl sm:border sm:studio-frame lg:my-4">
-      {/* Compact controls from Studio Video Guide. */}
-      <header aria-label="Studio controls" className="studio-header sticky top-0 z-50 flex h-11 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-card/75 px-2 py-1 backdrop-blur-2xl sm:h-12 sm:px-3">
-        <div className="flex min-w-0 shrink-0 items-center gap-2">
+    <div className="guy-studio mx-auto flex min-h-screen w-full max-w-[1800px] flex-row overflow-hidden border-border bg-background/65 font-sans text-foreground sm:min-h-[calc(100vh-32px)] sm:rounded-xl sm:border sm:studio-frame lg:my-4">
+      {/* Original Remix of Aurora Video Agent side rail. */}
+      <header aria-label="Studio controls" className="studio-header studio-side sticky top-0 z-50 flex h-screen w-14 shrink-0 flex-col items-stretch justify-start gap-3 overflow-y-auto border-r border-border bg-card/75 px-1.5 py-3 backdrop-blur-2xl sm:w-56 sm:px-3 sm:py-4">
+        <div className="flex min-w-0 flex-col items-stretch gap-2">
           <input
             aria-label="Session name"
             value={sessionName}
@@ -880,7 +881,7 @@ function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
           <img src={logoIcon} width={32} height={32} alt="" className="size-8 shrink-0 object-contain" />
           <span className="hidden font-display text-xs font-bold sm:inline">GUI Video Studio</span>
         </div>
-        <div className="studio-header-tools ml-auto flex min-w-0 shrink-0 items-center gap-2">
+        <div className="studio-header-tools flex min-w-0 flex-col items-stretch gap-2">
           <Button
             size="sm"
             variant="ghost"
@@ -895,7 +896,72 @@ function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
             <Volume2 className="size-3.5 sm:hidden" />
             <span className="hidden sm:inline">{voiceOn ? "Voice on" : "Voice off"}</span>
           </Button>
-
+          <nav aria-label="Studio workspace" className="studio-mode-nav flex shrink-0 flex-col rounded-lg border border-border glass-control p-0.5 text-[11px]">
+            <Button
+              size="sm"
+              variant="ghost"
+              aria-label="Chat" title="Chat"
+              onClick={() => setMode("start")}
+              aria-pressed={mode === "start"}
+              className={cn("h-6 px-2", mode === "start" && "bg-primary/20 text-primary")}
+            >
+              <MessageSquare className="size-3" />
+              <span className="hidden sm:inline">Chat</span>
+            </Button>
+            <Button
+              variant="ghost"
+              aria-label="Video Agent" title="Video Agent"
+              onClick={() => setMode("edit")}
+              aria-pressed={mode === "edit"}
+              className={cn(
+                "h-6 rounded-md px-2.5 py-1 transition",
+                mode === "edit"
+                  ? "bg-primary/20 text-primary shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Clapperboard className="size-3 sm:hidden" />
+              <span className="hidden sm:inline">Editor</span>
+            </Button>
+            <Button
+              variant="ghost"
+              aria-label="Canvas" title="Canvas"
+              onClick={() => setMode("canvas")}
+              aria-pressed={mode === "canvas"}
+              className={cn(
+                "h-6 rounded-md px-2.5 py-1 transition",
+                mode === "canvas"
+                  ? "bg-primary/20 text-primary shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Film className="size-3 sm:hidden" />
+              <span className="hidden sm:inline">Canvas</span>
+            </Button>
+            <Button
+              variant="ghost"
+              aria-label="Layers" title="Layers"
+              onClick={() => setMode("layers")}
+              aria-pressed={mode === "layers"}
+              className={cn(
+                "h-6 rounded-md px-2.5 py-1 transition",
+                mode === "layers"
+                  ? "bg-primary/20 text-primary shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Layers3 className="size-3 sm:hidden" />
+              <span className="hidden sm:inline">Layers</span>
+            </Button>
+            <Button variant="ghost" aria-label="Workflows" onClick={() => setMode("workflows")}
+              className={cn("rounded-md px-2.5 py-1 transition", mode === "workflows" ? "bg-primary/20 text-primary shadow-sm" : "text-muted-foreground hover:text-foreground")}>
+              <Workflow className="size-3 sm:hidden" /><span className="hidden sm:inline">Workflows</span>
+            </Button>
+            <Button size="sm" variant="ghost" aria-label="Perform Anywhere" aria-pressed={mode === "perform"} onClick={() => setMode("perform")}><Film className="size-3" /><span className="hidden sm:inline">Perform</span></Button>
+            <Button size="sm" variant="ghost" aria-label="Creative tools" aria-pressed={mode === "creative"} onClick={() => setMode("creative")}><Wand2 className="size-3" /><span className="hidden sm:inline">Tools</span></Button>
+            <Button asChild size="sm" variant="ghost"><Link to="/reshoot" aria-label="Multi-Angle" title="Multi-Angle"><Camera className="size-3" /><span className="hidden sm:inline">Multi-Angle</span></Link></Button>
+            <Button asChild size="sm" variant="ghost"><Link to="/spin" aria-label="TikTok30" title="TikTok30"><Flame className="size-3" /><span className="hidden sm:inline">TikTok30</span></Link></Button>
+          </nav>
           <Button asChild size="sm" variant="ghost"><Link to="/admin" aria-label="Visual settings"><Gauge className="size-3.5" /><span className="hidden sm:inline">Visual settings</span></Link></Button>
           {signedIn ? (
             <Button size="sm" variant="ghost" aria-label="Sign out" onClick={() => void supabase.auth.signOut()}>
@@ -941,22 +1007,7 @@ function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
           </Button>
         </div>
       </header>
-      {createPortal(<nav aria-label="Studio modes" className="studio-dock fixed bottom-3 left-1/2 z-50 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-0.5 overflow-x-auto rounded-full border border-border glass-panel p-1.5 backdrop-blur-2xl">
-        {([
-          ["start", "Chat", MessageSquare],
-          ["edit", "Video Agent", Clapperboard],
-          ["canvas", "Canvas", Film],
-          ["layers", "Layers", Layers3],
-          ["workflows", "Workflows", Workflow],
-          ["perform", "Perform", Film],
-          ["creative", "Creative tools", Wand2],
-        ] as const).map(([value, label, Icon]) => (
-          <Button key={value} size="icon" variant="ghost" onClick={() => setMode(value)} aria-pressed={mode === value} aria-label={label} title={label} className={cn("size-8 shrink-0 rounded-full p-0", mode === value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")}><Icon className="size-4" /></Button>
-        ))}
-        <Button asChild size="icon" variant="ghost" className="size-8 shrink-0 rounded-full"><Link to="/reshoot" aria-label="Multi-Angle" title="Multi-Angle"><Camera className="size-4" /></Link></Button>
-        <Button asChild size="icon" variant="ghost" className="size-8 shrink-0 rounded-full"><Link to="/spin" aria-label="TikTok30" title="TikTok30"><Flame className="size-4" /></Link></Button>
-      </nav>, document.body)}
-      <div className="flex min-w-0 flex-1 flex-col pb-20">
+      <div className="flex min-w-0 flex-1 flex-col">
       <div className="hidden h-10 items-center gap-2 border-b border-border px-4 text-xs lg:flex">
         <span className="font-semibold">{sessionName}</span>
         <span className="text-muted-foreground">· {busy ? "Brain working…" : genBusy ? "Generating…" : "Ready"}</span>
