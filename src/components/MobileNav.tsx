@@ -145,7 +145,6 @@ export const ARCHIVED_FEATURES: Feature[] = [
 // Bottom tab — flagship trio with premium badge treatment.
 const TAB_ITEMS: (Feature & { premium?: boolean })[] = [
   { to: "/studio",       label: "Video Agent",     icon: Film },
-  { to: "/canvas",       label: "Canvas",          icon: Workflow },
   { to: "/reshoot",      label: "Multi-Angle",     icon: Camera },
   { to: "/spin",         label: "TikTok30",        icon: Flame,    premium: true },
 ];
