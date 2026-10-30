@@ -25,7 +25,7 @@ import { PerformanceSourceStrip } from "@/components/performance/PerformanceSour
 import { RecordingReferenceGuide, WorkflowVisualGuide } from "@/components/performance/WorkflowVisualGuide";
 import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
 import { EnvironmentPickerDialog } from "@/components/performance/EnvironmentPicker";
-import { PERFORM_ENVIRONMENTS, absoluteUrl } from "@/lib/environment-presets";
+import { PERFORM_ENVIRONMENTS, LUXURY_INTERIORS, absoluteUrl } from "@/lib/environment-presets";
 
 function initial(kind: PerformanceVariantKind, mode: "colors" | "anywhere"): PerformanceVariantPayload {
   const references = Object.fromEntries(PERFORMANCE_VARIANT_CATALOG[kind].references.map((item) => [item.id, null]));
@@ -46,7 +46,8 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   const [revision, setRevision] = useState(0);
   const [ready, setReady] = useState(false);
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerSlot, setPickerSlot] = useState<"location" | "interior" | null>(null);
+  const [pickedIds, setPickedIds] = useState<Record<string, string | null>>({});
   const [envId, setEnvId] = useState<string | null>(null);
   // Default Perform Anywhere scene: the graffiti wall, until the creator picks or uploads another.
   useEffect(() => {
@@ -182,16 +183,18 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
           {catalog.references.map((reference) => (
             <div key={reference.id} className={`reference-tile ${draft.references[reference.id] ? "workspace-active" : ""}`}>
               <input ref={(node) => { fileRefs.current[reference.id] = node; }} hidden type="file" accept="image/*" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, reference.id, "image").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); event.target.value = ""; }} />
-              <Button variant="ghost" onClick={() => reference.id === "location" ? setPickerOpen(true) : fileRefs.current[reference.id]?.click()} className="h-16 w-full justify-start overflow-hidden text-left">
+              <Button variant="ghost" onClick={() => reference.id === "location" || reference.id === "interior" ? setPickerSlot(reference.id) : fileRefs.current[reference.id]?.click()} className="h-16 w-full justify-start overflow-hidden text-left">
                 {draft.references[reference.id] ? <img src={draft.references[reference.id] ?? ""} alt={reference.label} className="size-10 shrink-0 rounded object-cover" /> : <Upload className="size-4 shrink-0 text-primary" />}
                 <span className="whitespace-normal text-xs">{reference.label}</span>
               </Button>
             </div>
           ))}
         </section>
-        <EnvironmentPickerDialog open={pickerOpen} onOpenChange={setPickerOpen} presets={PERFORM_ENVIRONMENTS} selectedId={envId}
-          onUpload={() => { setPickerOpen(false); fileRefs.current.location?.click(); setEnvId(null); }}
-          onPick={(preset) => { setEnvId(preset.id); setPickerOpen(false); setDraft((d) => ({ ...d, references: { ...d.references, location: absoluteUrl(preset.image) }, settings: "location" in d.settings ? { ...d.settings, location: preset.prompt } : d.settings })); }} />
+        <EnvironmentPickerDialog open={pickerSlot !== null} onOpenChange={(v) => { if (!v) setPickerSlot(null); }}
+          presets={pickerSlot === "interior" ? LUXURY_INTERIORS : PERFORM_ENVIRONMENTS}
+          selectedId={pickerSlot === "interior" ? pickedIds.interior ?? null : envId}
+          onUpload={() => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; fileRefs.current[slot]?.click(); if (slot === "location") setEnvId(null); else setPickedIds((m) => ({ ...m, [slot]: null })); }}
+          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, references: { ...d.references, [slot]: absoluteUrl(preset.image) }, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); }} />
 
         <section className="border-t border-border pt-4">
           <h2 className="mb-2 text-sm font-bold">Personalize the scene</h2>
