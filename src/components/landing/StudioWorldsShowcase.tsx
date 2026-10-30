@@ -1,5 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Layers, Camera, Flame } from "lucide-react";
+import { ArrowUpRight, Layers, Camera, Flame, ScanFace, Film, Mic } from "lucide-react";
+import sceneFinal from "@/assets/tutorial-studio-final.jpg.asset.json";
+import sceneRefs from "@/assets/tutorial-studio-refs.jpg.asset.json";
+import lowAngle from "@/assets/video-josh-lowangle.mp4.asset.json";
+import closeup from "@/assets/video-josh-closeup.mp4.asset.json";
+import balloon from "@/assets/balloon-talking-v2.mp4.asset.json";
+import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
+import joshRed from "@/assets/josh-red-portrait.png.asset.json";
+import spin1 from "@/assets/spin-demo-1.jpg";
+import spin2 from "@/assets/spin-demo-2.jpg";
+import spin3 from "@/assets/spin-demo-3.jpg";
+import spin4 from "@/assets/spin-demo-4.jpg";
 import purple from "@/assets/studio-worlds/purple.jpg.asset.json";
 import spotlight from "@/assets/studio-worlds/spotlight.jpg.asset.json";
 import white from "@/assets/studio-worlds/white.jpg.asset.json";
@@ -20,11 +31,23 @@ const WORLDS = [
   { name: "Red Room", img: redRoom.url, color: "crimson-red" },
 ];
 
-const FEATURES = [
-  { icon: Layers, kicker: "Scene Builder", title: "Build any scene from your own references.", to: "/scene-builder" as const, search: undefined },
-  { icon: Camera, kicker: "Multi-angle", title: "One performance. Wide, close-up and every angle between.", to: "/colors-show" as const, search: { mode: "anywhere", flow: "build_scene" } },
-  { icon: Flame, kicker: "TikTok 30", title: "One idea. 30 unique posts ready to publish.", to: "/spin" as const, search: undefined },
+type Demo = { kind: "video"; src: string } | { kind: "pair"; before: string; after: string; labels: [string, string] } | { kind: "grid"; srcs: string[] };
+const FEATURES: { icon: typeof Layers; kicker: string; title: string; demo: string; to: "/scene-builder" | "/reshoot" | "/spin" | "/studio" | "/perform-anywhere" | "/lipsync"; search?: Record<string, string>; media: Demo }[] = [
+  { icon: Layers, kicker: "Scene Builder", title: "Build any scene from your own references.", demo: "Drop in a face, outfit and location. Aurora puts them together into one finished shot.", to: "/scene-builder", media: { kind: "pair", before: sceneRefs.url, after: sceneFinal.url, labels: ["Your refs", "Scene"] } },
+  { icon: Camera, kicker: "Multi-angle", title: "One performance. Wide, close-up and every angle between.", demo: "Upload one photo and get six camera angles of the same person in the same look.", to: "/reshoot", media: { kind: "video", src: lowAngle.url } },
+  { icon: Flame, kicker: "TikTok 30", title: "1–2 photos in. 30 shots out.", demo: "Same character in every frame, new outfits, places and poses, ready to post.", to: "/spin", media: { kind: "grid", srcs: [spin1, spin2, spin3, spin4] } },
+  { icon: ScanFace, kicker: "Face swap", title: "Swap a face in any photo or video.", demo: "Add the clip and a face photo. Motion, lighting and sound stay the same.", to: "/studio", media: { kind: "pair", before: joshPortrait.url, after: joshRed.url, labels: ["Face", "Result"] } },
+  { icon: Film, kicker: "Perform Anywhere", title: "Film on your phone. Perform in any world.", demo: "Your phone take drives the motion while the scene, outfit and face stay locked.", to: "/perform-anywhere", media: { kind: "video", src: closeup.url } },
+  { icon: Mic, kicker: "Lip sync", title: "Any face. Any track. In sync.", demo: "Upload a vocal and a clip or photo. Aurora picks the best model for you.", to: "/lipsync", media: { kind: "video", src: balloon.url } },
 ];
+
+function DemoMedia({ media, label }: { media: Demo; label: string }) {
+  const box = "relative aspect-video w-full overflow-hidden rounded-xl bg-muted";
+  if (media.kind === "video") return <div className={box}><video src={media.src} muted loop autoPlay playsInline preload="metadata" aria-label={`${label} demo`} className="size-full object-cover" /></div>;
+  if (media.kind === "grid") return <div className={`${box} grid grid-cols-4 gap-0.5`}>{media.srcs.map((src, i) => <img key={src} src={src} alt={`${label} shot ${i + 1}`} loading="lazy" className="size-full object-cover" />)}</div>;
+  return <div className={`${box} grid grid-cols-2 gap-0.5`}>{[media.before, media.after].map((src, i) => <div key={src} className="relative"><img src={src} alt={`${label} ${media.labels[i]}`} loading="lazy" className="size-full object-cover" /><span className="absolute left-2 top-2 rounded-full bg-background/80 px-2 py-0.5 text-[10px] font-semibold uppercase text-foreground">{media.labels[i]}</span></div>)}</div>;
+}
+
 
 export function StudioWorldsShowcase() {
   return (
@@ -52,11 +75,15 @@ export function StudioWorldsShowcase() {
 
       <div className="mt-10 grid gap-3 px-5 md:grid-cols-3">
         {FEATURES.map((f) => (
-          <Link key={f.kicker} to={f.to} search={f.search as never} className="group rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary">
-            <f.icon className="size-5 text-primary" />
-            <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{f.kicker}</p>
+          <Link key={f.kicker} to={f.to} search={f.search as never} className="group rounded-2xl border border-border bg-card p-3 transition-colors hover:border-primary">
+            <DemoMedia media={f.media} label={f.kicker} />
+            <div className="px-2 pb-2">
+            <f.icon className="mt-4 size-5 text-primary" />
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{f.kicker}</p>
             <p className="mt-1 text-lg font-semibold text-foreground">{f.title}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{f.demo}</p>
             <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">Open <ArrowUpRight className="size-4" /></span>
+            </div>
           </Link>
         ))}
       </div>
