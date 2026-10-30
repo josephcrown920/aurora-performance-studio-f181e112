@@ -368,7 +368,7 @@ export function MobileNav() {
         Menu
       </button>
 
-      {!isCanvas && (
+      {(
         <>
           <div aria-hidden className="aurora-mobile-chrome" style={{ height: "calc(4rem + env(safe-area-inset-bottom))" }} />
             <nav

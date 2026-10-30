@@ -314,7 +314,7 @@ function RootComponent() {
   // see the app shell pop in after a network round-trip; once loading settles,
   // the verified user is authoritative (an invalid stored token drops it).
   const hasPersistentNavigation =
-    !isVideoAgent && !isFullScreenEditor && !isNodeWorkspace && (!!user || (authLoading && hasStoredAuth));
+    !isVideoAgent && !isFullScreenEditor && (pathname === "/canvas" || (!isNodeWorkspace && (!!user || (authLoading && hasStoredAuth))));
 
   if (isIsolated) {
     // NexusARB stays a self-contained, full-bleed page: no phone frame, no

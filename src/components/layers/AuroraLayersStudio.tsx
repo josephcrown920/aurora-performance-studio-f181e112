@@ -170,7 +170,7 @@ function Studio() {
     <div className="mx-auto w-full max-w-[1680px] px-4 py-6 sm:px-6 lg:pl-32 lg:pr-8">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
         <div className="flex items-center gap-3"><Layers3 className="size-8 text-primary" /><h1 className="text-2xl font-bold sm:text-3xl">Aurora Layers</h1></div>
-        <div className="flex items-center gap-2"><span className="text-xs text-muted-foreground">Image studio</span><Button asChild variant="outline" size="sm"><Link to="/video-agent/timeline">Video editor</Link></Button></div>
+        <div className="flex items-center gap-2"><span className="text-xs text-muted-foreground">Image studio</span><Button asChild variant="outline" size="sm"><Link to="/studio" search={{ mode: "edit" }}>Video editor</Link></Button></div>
       </header>
       <div className="layers-workspace grid items-start gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <section className="min-w-0">
