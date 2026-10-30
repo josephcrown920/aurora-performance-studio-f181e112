@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Film, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -60,11 +60,15 @@ function PhoneRecordingSlot({ active, onActivate }: { active: boolean; onActivat
 export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = false, hideWorlds = false }: { grwm: boolean; onExperienceChange: (grwm: boolean) => void; embedded?: boolean; hideWorlds?: boolean }) {
   const { user } = useAuth();
   const [active, setActive] = useState(0);
+  useEffect(() => { if (grwm) document.getElementById("pa-grwm")?.scrollIntoView({ block: "start" }); }, [grwm]);
+  void onExperienceChange;
   return <main className={`workspace-duo text-foreground ${embedded ? "" : "min-h-screen pb-24"}`}>
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-8">
       {!embedded && <Link to="/studio" className="inline-flex items-center gap-2 text-sm text-muted-foreground"><ArrowLeft size={15} />Studio</Link>}
       <header className="workspace-heading"><h1>PERFORM ANYWHERE</h1><span>Environment swap</span></header>
-      <div role="group" aria-label="Performance experience" className="mt-4 flex flex-wrap gap-2"><Button variant={!grwm ? "default" : "outline"} aria-pressed={!grwm} onClick={() => onExperienceChange(false)}>Performance</Button><Button variant={grwm ? "default" : "outline"} aria-pressed={grwm} onClick={() => onExperienceChange(true)}>Get Ready With Me</Button></div>
+      <nav aria-label="Perform Anywhere features" className="mt-4 flex flex-wrap gap-2">
+        {[["pa-scene","Build a scene"],["pa-luxury","Luxury interior"],["pa-twoangle","Two-angle"],["pa-grwm","Get Ready With Me"]].map(([id,label]) => <Button key={id} variant="outline" size="sm" onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}>{label}</Button>)}
+      </nav>
       <div className="perform-workspace-grid mt-5">
         <section aria-label="Performance examples" className="min-w-0">
           <div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-semibold">Performance examples</h2><span className="text-xs text-muted-foreground">Scene → phone → final</span></div>
@@ -81,15 +85,31 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           </div>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-y border-border py-3"><span className="flex items-center gap-2 text-xs text-muted-foreground"><Film size={14} />Your scene. Your performance.</span><Button asChild size="sm" variant="outline"><Link to="/motion">Motion controls<ArrowUpRight size={13} /></Link></Button></div>
         </section>
-        <section aria-label="Build your performance" className="min-w-0">
-          {grwm ? <GetReadyWithMeWorkflow /> : user ? <PerformanceVariantWorkflow kind="build_scene" mode="anywhere" compact /> : <>
+        <section id="pa-scene" aria-label="Build your performance" className="min-w-0 scroll-mt-20">
+          {user ? <PerformanceVariantWorkflow kind="build_scene" mode="anywhere" compact /> : <>
             <PerformanceSourceStrip references={{}} phoneVideoUrl={null} />
             <h2 className="mt-5 font-display text-3xl">BUILD YOUR SCENE</h2>
             <div className="mt-4 grid grid-cols-2 gap-2"><Button asChild><Link to="/colors-show" search={{ mode: "anywhere", flow: "build_scene" }}>Start performance<ArrowUpRight size={14} /></Link></Button><Button asChild variant="outline"><Link to="/scene-builder">Scene Builder</Link></Button></div>
           </>}
         </section>
       </div>
-      {!grwm && !hideWorlds && <PerformWorlds />}
+      <section id="pa-luxury" aria-label="Luxury interior" className="mt-10 scroll-mt-20 border-t border-border pt-6">
+        {user ? <PerformanceVariantWorkflow kind="luxury_interior" mode="anywhere" compact /> : <>
+          <h2 className="font-display text-3xl">LUXURY INTERIOR</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Film yourself seated anywhere — Aurora rebuilds the world as a Maybach, Rolls-Royce or private jet.</p>
+          <Button asChild className="mt-3"><Link to="/colors-show" search={{ mode: "anywhere", flow: "luxury_interior" }}>Start luxury interior<ArrowUpRight size={14} /></Link></Button>
+        </>}
+      </section>
+      <section id="pa-twoangle" aria-label="Two-angle workflow" className="mt-10 scroll-mt-20 border-t border-border pt-6">
+        <h2 className="font-display text-3xl">TWO-ANGLE WORKFLOW</h2>
+        <p className="mt-1 text-sm text-muted-foreground">One wide and one close-up shot of you at the mic, then animate both with your phone performance.</p>
+        <Button asChild className="mt-3"><Link to="/colors-show" search={{ mode: "anywhere" }}>Open two-angle workflow<ArrowUpRight size={14} /></Link></Button>
+      </section>
+      <section id="pa-grwm" aria-label="Get Ready With Me" className="mt-10 scroll-mt-20 border-t border-border pt-6">
+        <h2 className="mb-4 font-display text-3xl">GET READY WITH ME</h2>
+        <GetReadyWithMeWorkflow />
+      </section>
+      {!hideWorlds && <PerformWorlds />}
       </div>
 
   </main>;
