@@ -112,6 +112,13 @@ export function GetReadyWithMeWorkflow() {
     onSuccess: result => { setJob({ id: result.generationId, preview: result.preview }); void history.refetch(); },
     onError: e => setError(e instanceof Error ? e.message : "Render failed"),
   });
+  const [autoRender, setAutoRender] = useState(false);
+  useEffect(() => {
+    if (!autoRender) return;
+    setAutoRender(false);
+    if (!draft?.phoneVideoUrl || !target) { toast.message("Scene set. Add your photo and dressing clip to render it."); return; }
+    if (!mutation.isPending) mutation.mutate(false);
+  }, [autoRender, draft?.phoneVideoUrl, target, mutation]);
   function changeInputs(action: () => void) { action(); setJob(null); setError(null); }
   async function buildDepth() {
     if (!user || !videoRef.current) return;
@@ -166,7 +173,7 @@ export function GetReadyWithMeWorkflow() {
           <Button size="sm" variant="outline" disabled={depthBusy || running || mutation.isPending} onClick={() => void buildDepth()}>{depthBusy ? <><Loader2 className="animate-spin" />Building…</> : depth ? "Rebuild depth guide" : "Build depth guide"}</Button></div>
       </div>}
       <div className="space-y-2"><p className="text-xs font-bold uppercase tracking-widest text-primary">Scene · final environment</p>
-        <div role="group" aria-label="Scene"><EnvironmentGrid presets={GRWM_ENVIRONMENTS} selectedId={sceneId} disabled={running || mutation.isPending} onPick={(scene) => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); })} /></div></div>
+        <div role="group" aria-label="Scene"><EnvironmentGrid presets={GRWM_ENVIRONMENTS} selectedId={sceneId} disabled={running || mutation.isPending} onPick={(scene) => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); setAutoRender(true); })} /></div></div>
       <div role="group" aria-label="Transformation" className="grid grid-cols-2 gap-2">{(["sync", "transfer"] as const).map(value => <Button key={value} variant={transform === value ? "default" : "outline"} aria-pressed={transform === value} disabled={running || mutation.isPending} onClick={() => changeInputs(() => setTransform(value))}>{value === "sync" ? "Motion Sync" : "Motion Transfer"}</Button>)}</div>
       {transform === "sync" && <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Outfit<input aria-label="Target outfit" value={outfit} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setOutfit(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label><label className="text-sm font-medium">Scene details<input aria-label="Target location" value={location} disabled={running || mutation.isPending} onChange={e => changeInputs(() => { setSceneId("custom"); setLocation(e.target.value); })} className="mt-1 w-full rounded border border-border bg-background p-2" /></label></div>}
       <p className="text-xs text-muted-foreground">Preview up to 5 seconds; reviewed render up to 15 seconds.</p>
