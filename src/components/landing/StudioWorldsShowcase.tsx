@@ -6,6 +6,9 @@ import lowAngle from "@/assets/video-josh-lowangle.mp4.asset.json";
 import closeup from "@/assets/video-josh-closeup.mp4.asset.json";
 import balloon from "@/assets/balloon-talking-v2.mp4.asset.json";
 import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
+import stillPerf from "@/assets/josh-performance-still-v1.jpg.asset.json";
+import balloonStill from "@/assets/balloon-head.png.asset.json";
+import joshSide from "@/assets/josh-blue-side.jpg.asset.json";
 import joshRed from "@/assets/josh-red-portrait.png.asset.json";
 import spin1 from "@/assets/spin-demo-1.jpg";
 import spin2 from "@/assets/spin-demo-2.jpg";
@@ -31,19 +34,19 @@ const WORLDS = [
   { name: "Red Room", img: redRoom.url, color: "crimson-red" },
 ];
 
-type Demo = { kind: "video"; src: string } | { kind: "pair"; before: string; after: string; labels: [string, string] } | { kind: "grid"; srcs: string[] };
+type Demo = { kind: "video"; src: string; poster: string } | { kind: "pair"; before: string; after: string; labels: [string, string] } | { kind: "grid"; srcs: string[] };
 const FEATURES: { icon: typeof Layers; kicker: string; title: string; demo: string; to: "/scene-builder" | "/reshoot" | "/spin" | "/studio" | "/perform-anywhere" | "/lipsync"; search?: Record<string, string>; media: Demo }[] = [
   { icon: Layers, kicker: "Scene Builder", title: "Build any scene from your own references.", demo: "Drop in a face, outfit and location. Aurora puts them together into one finished shot.", to: "/scene-builder", media: { kind: "pair", before: sceneRefs.url, after: sceneFinal.url, labels: ["Your refs", "Scene"] } },
-  { icon: Camera, kicker: "Multi-angle", title: "One performance. Wide, close-up and every angle between.", demo: "Upload one photo and get six camera angles of the same person in the same look.", to: "/reshoot", media: { kind: "video", src: lowAngle.url } },
+  { icon: Camera, kicker: "Multi-angle", title: "One performance. Wide, close-up and every angle between.", demo: "Upload one photo and get six camera angles of the same person in the same look.", to: "/reshoot", media: { kind: "video", src: lowAngle.url, poster: joshSide.url } },
   { icon: Flame, kicker: "TikTok 30", title: "1–2 photos in. 30 shots out.", demo: "Same character in every frame, new outfits, places and poses, ready to post.", to: "/spin", media: { kind: "grid", srcs: [spin1, spin2, spin3, spin4] } },
   { icon: ScanFace, kicker: "Face swap", title: "Swap a face in any photo or video.", demo: "Add the clip and a face photo. Motion, lighting and sound stay the same.", to: "/studio", media: { kind: "pair", before: joshPortrait.url, after: joshRed.url, labels: ["Face", "Result"] } },
-  { icon: Film, kicker: "Perform Anywhere", title: "Film on your phone. Perform in any world.", demo: "Your phone take drives the motion while the scene, outfit and face stay locked.", to: "/perform-anywhere", media: { kind: "video", src: closeup.url } },
-  { icon: Mic, kicker: "Lip sync", title: "Any face. Any track. In sync.", demo: "Upload a vocal and a clip or photo. Aurora picks the best model for you.", to: "/lipsync", media: { kind: "video", src: balloon.url } },
+  { icon: Film, kicker: "Perform Anywhere", title: "Film on your phone. Perform in any world.", demo: "Your phone take drives the motion while the scene, outfit and face stay locked.", to: "/perform-anywhere", media: { kind: "video", src: closeup.url, poster: stillPerf.url } },
+  { icon: Mic, kicker: "Lip sync", title: "Any face. Any track. In sync.", demo: "Upload a vocal and a clip or photo. Aurora picks the best model for you.", to: "/lipsync", media: { kind: "video", src: balloon.url, poster: balloonStill.url } },
 ];
 
 function DemoMedia({ media, label }: { media: Demo; label: string }) {
   const box = "relative aspect-video w-full overflow-hidden rounded-xl bg-muted";
-  if (media.kind === "video") return <div className={box}><video src={media.src} muted loop autoPlay playsInline preload="metadata" aria-label={`${label} demo`} className="size-full object-cover" /></div>;
+  if (media.kind === "video") return <div className={box}><video src={media.src} poster={media.poster} muted loop autoPlay playsInline preload="metadata" aria-label={`${label} demo`} className="size-full object-cover" /></div>;
   if (media.kind === "grid") return <div className={`${box} grid grid-cols-4 gap-0.5`}>{media.srcs.map((src, i) => <img key={src} src={src} alt={`${label} shot ${i + 1}`} loading="lazy" className="size-full object-cover" />)}</div>;
   return <div className={`${box} grid grid-cols-2 gap-0.5`}>{[media.before, media.after].map((src, i) => <div key={src} className="relative"><img src={src} alt={`${label} ${media.labels[i]}`} loading="lazy" className="size-full object-cover" /><span className="absolute left-2 top-2 rounded-full bg-background/80 px-2 py-0.5 text-[10px] font-semibold uppercase text-foreground">{media.labels[i]}</span></div>)}</div>;
 }
