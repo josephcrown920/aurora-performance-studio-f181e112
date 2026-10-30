@@ -109,8 +109,8 @@ function BillingPage() {
   });
   // Keep the owner preview, but real visitors always see their server-detected
   // country and checkout-safe currency.
-  const [previewRegion, setPreviewRegion] = useState<PaystackCurrency>("NGN");
-  const previewing = isAdmin && previewRegion !== geo?.currency;
+  const [previewRegion, setPreviewRegion] = useState<PaystackCurrency>("USD");
+  const previewing = false && previewRegion !== geo?.currency;
   const region: PaystackCurrency = previewing ? previewRegion : ((geo?.currency ?? "USD") as PaystackCurrency);
   const pricingCountry = previewing ? PREVIEW_COUNTRY_BY_CURRENCY[previewRegion] : geo?.country ?? null;
   const localPrice = (amountUsdMinor: number) => usdDisplayPrice(amountUsdMinor);
