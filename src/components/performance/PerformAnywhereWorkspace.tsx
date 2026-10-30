@@ -9,6 +9,7 @@ import { GetReadyWithMeWorkflow } from "@/components/performance/GetReadyWithMeW
 import { PerformWorlds } from "@/components/performance/PerformWorlds";
 import studioClip from "@/assets/josh/generated/clip-05-studio-gel.webm";
 import studioPoster from "@/assets/josh/generated/still-05-studio-gel.jpg";
+import micScene from "@/assets/environments/mic/mic-street.jpg.asset.json";
 
 function PhoneRecordingSlot({ active, onActivate }: { active: boolean; onActivate: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -66,13 +67,17 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
       <div role="group" aria-label="Performance experience" className="mt-4 flex flex-wrap gap-2"><Button variant={!grwm ? "default" : "outline"} aria-pressed={!grwm} onClick={() => onExperienceChange(false)}>Performance</Button><Button variant={grwm ? "default" : "outline"} aria-pressed={grwm} onClick={() => onExperienceChange(true)}>Get Ready With Me</Button></div>
       <div className="perform-workspace-grid mt-5">
         <section aria-label="Performance examples" className="min-w-0">
-          <div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-semibold">Performance examples</h2><span className="text-xs text-muted-foreground">Existing Aurora clips</span></div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-semibold">Performance examples</h2><span className="text-xs text-muted-foreground">Scene → phone → final</span></div>
+          <div className="grid grid-cols-3 gap-2">
             <article className={`performance-example ${active === 0 ? "workspace-active" : ""}`}>
-              <video src={studioClip} poster={studioPoster} controls playsInline preload="metadata" aria-label="Studio performance" onPlay={() => setActive(0)} />
-              <Button variant="ghost" onClick={() => setActive(0)} aria-pressed={active === 0} className="h-11 w-full justify-start whitespace-normal text-left text-xs">Studio performance</Button>
+              <img src={micScene.url} alt="Scene with a hanging mic to perform at" className="aspect-video w-full rounded-md object-cover" onClick={() => setActive(0)} />
+              <Button variant="ghost" onClick={() => setActive(0)} aria-pressed={active === 0} className="h-11 w-full justify-start whitespace-normal text-left text-xs">Scene at the mic</Button>
             </article>
             <PhoneRecordingSlot active={active === 1} onActivate={() => setActive(1)} />
+            <article className={`performance-example ${active === 2 ? "workspace-active" : ""}`}>
+              <video src={studioClip} poster={studioPoster} controls playsInline preload="metadata" aria-label="Final render" onPlay={() => setActive(2)} />
+              <Button variant="ghost" onClick={() => setActive(2)} aria-pressed={active === 2} className="h-11 w-full justify-start whitespace-normal text-left text-xs">Final render</Button>
+            </article>
           </div>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-y border-border py-3"><span className="flex items-center gap-2 text-xs text-muted-foreground"><Film size={14} />Your scene. Your performance.</span><Button asChild size="sm" variant="outline"><Link to="/motion">Motion controls<ArrowUpRight size={13} /></Link></Button></div>
         </section>
