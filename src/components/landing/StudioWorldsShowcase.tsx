@@ -5,7 +5,7 @@ import sceneRefs from "@/assets/tutorial-studio-refs.jpg.asset.json";
 import lowAngle from "@/assets/video-josh-lowangle.mp4.asset.json";
 import closeup from "@/assets/video-josh-closeup.mp4.asset.json";
 import balloon from "@/assets/balloon-talking-v2.mp4.asset.json";
-import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
+import joshPortrait from "@/assets/josh-blue-portrait.png.asset.json";
 import stillPerf from "@/assets/josh-performance-still-v1.jpg.asset.json";
 import balloonStill from "@/assets/balloon-head.png.asset.json";
 import joshSide from "@/assets/josh-blue-side.jpg.asset.json";
