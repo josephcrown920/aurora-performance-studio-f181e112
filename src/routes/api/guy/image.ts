@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { GATEWAY, IMAGE_MODEL, apiKey, passthrough, shouldFallback, openRouterImage } from "@/lib/guy/gateway.server";
 import { IMAGE_ENGINES } from "@/lib/guy/engines";
 import { arkFetch, arkError } from "@/lib/guy/ark.server";
+import { IDENTITY_HEADER, assertIdentityRequest, decodeIdentity, identityPrompt } from "@/lib/identity/contract";
 
 async function arkImage(model: string, prompt: string, image?: string | string[]) {
   const r = await arkFetch("/images/generations", { method: "POST", body: JSON.stringify({ model, prompt, size: "2K", response_format: "b64_json", watermark: false, ...(image ? { image } : {}) }) });
@@ -25,8 +26,17 @@ export const Route = createFileRoute("/api/guy/image")({
         if (type.includes("multipart")) {
           const form = await request.formData();
           if (!String(form.get("prompt") ?? "").trim()) return Response.json({ error: { message: "Prompt required" } }, { status: 400 });
-          const r = resolve(String(form.get("engine") ?? ""));
+          const engineId = String(form.get("engine") ?? "");
+          const r = resolve(engineId);
           if (r.error || !r.model) return Response.json({ error: { message: r.error ?? "Image model unavailable" } }, { status: 400 });
+          const identity = decodeIdentity(String(form.get("identity") ?? "")) ?? decodeIdentity(request.headers.get(IDENTITY_HEADER));
+          form.delete("identity");
+          if (identity) {
+            const refCount = [...form.getAll("image"), ...form.getAll("image[]")].filter((f) => f instanceof File && f.size > 0).length;
+            try { assertIdentityRequest(identity, "image", engineId, refCount); }
+            catch (e) { return Response.json({ error: { message: (e as Error).message } }, { status: 400 }); }
+            form.set("prompt", `${String(form.get("prompt"))}\n\n${identityPrompt(identity)}`);
+          }
           if (r.ark) {
             const files = [...form.getAll("image"), ...form.getAll("image[]")].filter((file): file is File => file instanceof File);
             const urls = await Promise.all(files.map(async (file) => {
