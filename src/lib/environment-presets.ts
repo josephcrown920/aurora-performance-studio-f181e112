@@ -13,6 +13,10 @@ import court from "@/assets/environments/basketball-court.jpg";
 import nightclub from "@/assets/environments/nightclub.jpg";
 import graffitiColor from "@/assets/environments/graffiti-color.jpg";
 import graffitiNight from "@/assets/environments/graffiti-night.jpg";
+import graffitiGolden from "@/assets/environments/graffiti-golden.jpg";
+import graffitiRooftop from "@/assets/environments/graffiti-rooftop.jpg";
+import graffitiTunnel from "@/assets/environments/graffiti-tunnel.jpg";
+import graffitiCourt from "@/assets/environments/graffiti-court.jpg";
 import playground from "@/assets/environments/playground.jpg";
 import surrealIslands from "@/assets/environments/surreal-islands.jpg";
 import surrealMirror from "@/assets/environments/surreal-mirror.jpg";
@@ -64,6 +68,10 @@ export const PERFORM_ENVIRONMENTS: EnvironmentPreset[] = [
   e("cinema", "Deluxe cinema", "Urban & Street", cinema, "outside a deluxe cinema at night, glowing marquee and red carpet"),
   e("graffiti-color", "Graffiti wall", "Urban & Street", graffitiColor, "vibrant colorful graffiti wall alley in daylight"),
   e("graffiti-night", "Neon graffiti", "Urban & Street", graffitiNight, "dark graffiti wall lit by purple neon tube"),
+  e("graffiti-golden", "Graffiti sunset", "Urban & Street", graffitiGolden, "Lagos backstreet with a huge purple, yellow and red graffiti mural, wet asphalt at golden hour"),
+  e("graffiti-rooftop", "Graffiti rooftop", "Urban & Street", graffitiRooftop, "Lagos rooftop at night with a chrome and magenta graffiti wall and city skyline"),
+  e("graffiti-tunnel", "Graffiti tunnel", "Urban & Street", graffitiTunnel, "underpass tunnel covered in colorful graffiti, fluorescent light, reflective puddles"),
+  e("graffiti-court", "Graffiti court", "Urban & Street", graffitiCourt, "basketball half court beside a giant teal, orange and pink graffiti mural"),
   e("street", "Night street", "Urban & Street", street.url, "city street at night with practical lights"),
   e("playground", "Playground", "Urban & Street", playground, "colorful playground with swings and slide at golden hour"),
   e("surreal-islands", "Floating islands", "Surreal", surrealIslands, "surreal floating islands in a pastel purple sky with a giant moon"),

@@ -167,6 +167,16 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
     onError: (error) => toast.error(error instanceof Error ? error.message : "Motion enqueue failed"),
   });
   const requiredReady = catalog.references.every((item) => draft.references[item.id]);
+  const [autoBuild, setAutoBuild] = useState(false);
+  useEffect(() => {
+    if (!autoBuild) return;
+    setAutoBuild(false);
+    if (plateMutation.isPending) return;
+    const missing = catalog.references.filter((item) => !draft.references[item.id]).map((item) => item.label);
+    if (missing.length) { toast.message(`Scene saved. Add ${missing.join(", ")} to build it.`); return; }
+    toast.message("Building your scene…");
+    plateMutation.mutate(undefined);
+  }, [autoBuild, draft.references, catalog.references, plateMutation]);
   const finishedMotion = draft.motions.find((item) => item.generationId !== item.previewId && generations.data?.items.some((g) => g.id === item.generationId && !!g.result_video_url && ["succeeded", "complete"].includes(g.status ?? "")));
   const finalUrl = finishedMotion ? generations.data?.items.find((g) => g.id === finishedMotion.generationId)?.result_video_url : null;
   return (
@@ -194,7 +204,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
           presets={pickerSlot === "interior" ? LUXURY_INTERIORS : PERFORM_ENVIRONMENTS}
           selectedId={pickerSlot === "interior" ? pickedIds.interior ?? null : envId}
           onUpload={() => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; fileRefs.current[slot]?.click(); if (slot === "location") setEnvId(null); else setPickedIds((m) => ({ ...m, [slot]: null })); }}
-          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, references: { ...d.references, [slot]: absoluteUrl(preset.image) }, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); }} />
+          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, references: { ...d.references, [slot]: absoluteUrl(preset.image) }, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); setAutoBuild(true); }} />
 
         <section className="border-t border-border pt-4">
           <h2 className="mb-2 text-sm font-bold">Personalize the scene</h2>
