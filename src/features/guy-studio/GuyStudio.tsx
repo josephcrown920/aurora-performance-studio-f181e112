@@ -50,6 +50,7 @@ import {
   ImageIcon,
   Camera,
   Flame,
+  ScanFace,
 } from "lucide-react";
 import {
   AGENTS,
@@ -163,6 +164,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   const [busy, setBusy] = useState(false);
   const [voiceOn, setVoiceOn] = useState(false);
   const [genBusy, setGenBusy] = useState(false);
+  const [performTab, setPerformTab] = useState<"perform" | "face">("perform");
   const [mode, setMode] = useState<"start" | "edit" | "canvas" | "layers" | "workflows" | "creative" | "perform">(initialMode);
   const [comfyFirst, setComfyFirst] = useState(false);
   const [imgEngine, setImgEngine] = useState(DEFAULT_IMAGE_ENGINE);
@@ -957,7 +959,8 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
               className={cn("rounded-md px-2.5 py-1 transition", mode === "workflows" ? "bg-primary/20 text-primary shadow-sm" : "text-muted-foreground hover:text-foreground")}>
               <Workflow className="size-3 sm:hidden" /><span className="hidden sm:inline">Workflows</span>
             </Button>
-            <Button size="sm" variant="ghost" aria-label="Perform Anywhere" aria-pressed={mode === "perform"} onClick={() => setMode("perform")}><Film className="size-3" /><span className="hidden sm:inline">Perform</span></Button>
+            <Button size="sm" variant="ghost" aria-label="Perform Anywhere" aria-pressed={mode === "perform" && performTab !== "face"} onClick={() => { setPerformTab("perform"); setMode("perform"); }}><Film className="size-3" /><span className="hidden sm:inline">Perform</span></Button>
+            <Button size="sm" variant="ghost" aria-label="Face swap" aria-pressed={mode === "perform" && performTab === "face"} onClick={() => { setPerformTab("face"); setMode("perform"); }}><ScanFace className="size-3" /><span className="hidden sm:inline">Face swap</span></Button>
             <Button size="sm" variant="ghost" aria-label="Creative tools" aria-pressed={mode === "creative"} onClick={() => setMode("creative")}><Wand2 className="size-3" /><span className="hidden sm:inline">Tools</span></Button>
             <Button asChild size="sm" variant="ghost"><Link to="/reshoot" aria-label="Multi-Angle" title="Multi-Angle"><Camera className="size-3" /><span className="hidden sm:inline">Multi-Angle</span></Link></Button>
             <Button asChild size="sm" variant="ghost"><Link to="/spin" aria-label="TikTok30" title="TikTok30"><Flame className="size-3" /><span className="hidden sm:inline">TikTok30</span></Link></Button>
@@ -1117,7 +1120,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           </div>
         </StudioCover>
       ) : mode === "perform" ? (
-        <PerformStudio onAsset={addAsset} />
+        <PerformStudio key={performTab} initialTab={performTab} onAsset={addAsset} />
       ) : mode === "creative" ? (
         <CreativeTools initialTab={comfyFirst ? "comfy" : "moodboards"} onAsset={addAsset} onPerform={() => setMode("perform")} onCanvas={() => setMode("canvas")} onLayers={() => setMode("layers")} onWorkflows={() => setMode("workflows")} onAsk={(task) => { setMode("start"); setAgent("orchestrator"); setBrief(task); }} />
       ) : mode === "canvas" ? (
