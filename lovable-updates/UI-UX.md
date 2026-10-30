@@ -25,3 +25,9 @@ Approved look as of 2026-10-29. Reference captures: `screenshots/latest-2026-10-
 - Landing "Create something new" tool directory.
 - Landing color picker + depth box (they stay on `/perform-anywhere` only).
 - Holographic Slider Studio banner (creator declined).
+
+## Studio Video Guide restoration — 2026-10-30
+- Preserve the public Studio Video Guide compact horizontal control header and floating bottom mode dock, not the replaced left sidebar.
+- Dock includes Chat, Video Agent, Canvas, Layers, Workflows, Perform, Tools plus Multi-Angle and TikTok30 shortcuts.
+- `/layers` opens the native image studio directly. Its Video editor link returns to `/studio?mode=edit`.
+- Reference screenshots: `screenshots/studio-guide-2026-10-30/`. These are signed-out local UI checks, not proof of generation or private saves.

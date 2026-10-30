@@ -100,8 +100,8 @@ import scene1 from "@/assets/guy/scene1.jpg";
 import scene2 from "@/assets/guy/scene2.jpg";
 import scene3 from "@/assets/guy/scene3.jpg";
 
-export function GuyStudio() {
-  return <Editor />;
+export function GuyStudio({ initialMode = "start" }: { initialMode?: "start" | "edit" }) {
+  return <Editor initialMode={initialMode} />;
 }
 
 type Kind = "video" | "image" | "audio";
@@ -121,7 +121,7 @@ const GREETING: Msg = {
   text: greetingText(""),
 };
 
-function Editor() {
+function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
   const [userName, setUserName] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const accountName = useRef("");
@@ -161,7 +161,7 @@ function Editor() {
   const [busy, setBusy] = useState(false);
   const [voiceOn, setVoiceOn] = useState(false);
   const [genBusy, setGenBusy] = useState(false);
-  const [mode, setMode] = useState<"start" | "edit" | "canvas" | "layers" | "workflows" | "creative" | "perform">("start");
+  const [mode, setMode] = useState<"start" | "edit" | "canvas" | "layers" | "workflows" | "creative" | "perform">(initialMode);
   const [comfyFirst, setComfyFirst] = useState(false);
   const [imgEngine, setImgEngine] = useState(DEFAULT_IMAGE_ENGINE);
   const [vidEngine, setVidEngine] = useState(DEFAULT_VIDEO_ENGINE);
@@ -826,7 +826,7 @@ function Editor() {
   const audioAsset = audioClip ? assetOf(audioClip.assetId) : null;
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[1800px] flex-col overflow-hidden border-border bg-background/65 font-sans text-foreground backdrop-blur-2xl sm:min-h-[calc(100vh-32px)] sm:rounded-xl sm:border sm:studio-frame lg:my-4">
+    <div className="guy-studio mx-auto flex min-h-screen w-full max-w-[1800px] flex-col overflow-hidden border-border bg-background/65 font-sans text-foreground sm:min-h-[calc(100vh-32px)] sm:rounded-xl sm:border sm:studio-frame lg:my-4">
       {/* Compact controls from Studio Video Guide. */}
       <header aria-label="Studio controls" className="studio-header sticky top-0 z-50 flex h-11 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-card/75 px-2 py-1 backdrop-blur-2xl sm:h-12 sm:px-3">
         <div className="flex min-w-0 shrink-0 items-center gap-2">
