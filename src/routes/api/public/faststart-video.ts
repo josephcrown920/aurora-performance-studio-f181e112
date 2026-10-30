@@ -24,7 +24,7 @@ import { promisify } from "util";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { isTrustedUrl } from "@/lib/url-guard";
 
-const execFileAsync = (...args: Parameters<typeof execFile>) => (promisify(execFile) as (...a: unknown[]) => Promise<{ stdout: string; stderr: string }>)(...args);
+const execFileAsync = (file: string, args: string[], opts: { timeout?: number; maxBuffer?: number }) => (promisify(execFile) as (f: string, a: string[], o: object) => Promise<{ stdout: string; stderr: string }>)(file, args, opts);
 
 const cacheDir = () => join(tmpdir(), "faststart-cache");
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6h — matches signed-URL lifetimes
