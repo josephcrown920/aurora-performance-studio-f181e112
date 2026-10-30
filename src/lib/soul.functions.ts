@@ -214,3 +214,25 @@ export const vibeMatch = createServerFn({ method: "POST" })
     await assertFeatureAccess(context.userId, "soul");
     return vibeMatchCore(data.imageUrl, context.userId);
   });
+
+// ─── Use a trained Soul as an identity reference elsewhere ──────────────────
+// Copies the soul's first reference (or training) photo into the caller's own
+// studio uploads so Scene Builder / Layers / Perform Anywhere ownership guards
+// accept it exactly like a photo the creator uploaded themselves.
+export const getSoulIdentityReference = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ soulId: z.string().uuid() }).parse(d))
+  .handler(async ({ context, data }): Promise<{ url: string; name: string }> => {
+    const soul = await getOwnedSoul(data.soulId, context.userId);
+    const src = soul.reference_image_paths[0] ?? soul.training_image_paths[0];
+    if (!src) throw new Error("This character has no photos yet.");
+    const { data: blob, error } = await supabaseAdmin.storage.from("soul-training").download(src);
+    if (error || !blob) throw new Error("Could not read the character photo.");
+    const ext = src.split(".").pop() || "jpg";
+    const path = `${context.userId}/uploads/soul-${soul.id}-${crypto.randomUUID()}.${ext}`;
+    const up = await supabaseAdmin.storage.from("studio").upload(path, blob, { contentType: blob.type || "image/jpeg", upsert: false });
+    if (up.error) throw new Error(up.error.message);
+    const { data: signed, error: signErr } = await supabaseAdmin.storage.from("studio").createSignedUrl(path, 60 * 60 * 24);
+    if (signErr || !signed?.signedUrl) throw new Error("Could not prepare the character photo.");
+    return { url: signed.signedUrl, name: soul.name };
+  });

@@ -1,5 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import micStreet from "@/assets/environments/mic/mic-street.jpg.asset.json";
+import joshSide from "@/assets/josh-blue-side.jpg.asset.json";
 import type { PerformanceVariantKind } from "@/lib/performance-variant-workflows";
 
 /**
@@ -36,12 +38,12 @@ const WORKFLOW_GUIDES: Record<PerformanceVariantKind, WorkflowGuideConfig> = {
     summary:
       "Five role references lock identity, outfit, location and prop into a single directed frame. Approve it, then spin off tighter re-angles that keep the same world.",
     before: {
-      src: "/workflow-guides/reangle-input.webp",
+      src: micStreet.url,
       alt: "Workflow reference example: an approved base scene of a performer at a mic in front of a car.",
       ratio: "aspect-[16/9]",
     },
     after: {
-      src: "/workflow-guides/reangle-output.webp",
+      src: joshSide.url,
       alt: "Workflow reference example: a tighter side-profile re-angle rendered from the same base scene.",
       ratio: "aspect-[16/9]",
     },

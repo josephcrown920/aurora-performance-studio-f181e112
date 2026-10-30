@@ -1,4 +1,4 @@
-import burningHouse from "@/assets/guy/burning-house-background.jpg";
+import burningHouse from "@/assets/environments/basketball-court.jpg";
 /** Admin-editable site settings, saved in this browser. */
 export type SiteSettings = {
   brand: string;

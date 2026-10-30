@@ -24,7 +24,7 @@
 - Keep the Expo Android app and side apps under `artifacts/`, outside the web app's source; the root .easignore uploads only `artifacts/aurora-mobile` to EAS so the web bun.lock never reaches the mobile builder.
 
 - Keep the native Layers image studio scoped to its feature and reuse authenticated credit-reserved generation, owner-scoped private Layers storage, and the existing TimelineDoc events; this avoids external session forwarding and competing video editors.
-- /studio?mode=edit renders the ported Remix GUI Video Studio (src/features/guy-studio/GuyStudio.tsx, a plain component, not a route); Perform Anywhere lives in one shared PerformAnywhereWorkspace component reused by the landing page, /perform-anywhere, and the Video Studio's Perform view so its look can't drift.
+- /studio defaults to the original Aurora StudioPage (all features); /studio?mode=edit renders the ported Remix GUI Video Studio (src/features/guy-studio/GuyStudio.tsx, a plain component, not a route); Perform Anywhere lives in one shared PerformAnywhereWorkspace component reused by the landing page, /perform-anywhere, and the Video Studio's Perform view so its look can't drift.
 
 - /layers opens GuyStudio in Layers mode with the same LayerStudio and asset callback as Studio; this preserves the original Remix appearance and one editor session rather than embedding or substituting another app.
 
