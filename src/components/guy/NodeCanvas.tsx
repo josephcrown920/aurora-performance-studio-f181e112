@@ -145,6 +145,7 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
     return {
       text: ins.map((n) => (n.type === "prompt" ? n.text?.trim() : n.type === "agent" ? n.reply?.trim() : "")).filter(Boolean).join(". "),
       image: ins.find((n) => (n.type === "upload" || n.type === "image") && n.url)?.url,
+      images: ins.filter((n) => (n.type === "upload" || n.type === "image") && n.url).map((n) => n.url!),
     };
   }
 

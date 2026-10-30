@@ -37,6 +37,7 @@ function errMsg(d: unknown, fallback: string) {
 export async function generateImage(prompt: string, engine: string, source?: Blob, raw = false, refs: Blob[] = []): Promise<string> {
   if (!raw) prompt = withCreativeContext(prompt);
   let r: Response;
+  if (!source && refs.length) { source = refs[0]; refs = refs.slice(1); }
   if (source) {
     const form = new FormData();
     form.set("prompt", prompt);

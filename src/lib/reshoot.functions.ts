@@ -78,6 +78,7 @@ export const reshootMultiAngle = createServerFn({ method: "POST" })
           prompt: `[Reshoot / ${angle.label}] ${buildAnglePrompt(angle, description)}`,
           model: RESHOOT_MODEL,
           imageUrls: [data.imageUrl],
+          editStrict: true,
           cost: RESHOOT_COST_PER_IMAGE,
           reason: "reshoot_angle",
         }),
