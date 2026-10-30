@@ -1,5 +1,9 @@
 // @ts-nocheck
 import { authNextSearch } from "@/lib/auth-return-path";
+import demoTwoAngleAsset from "@/assets/josh-blue-side.jpg.asset.json";
+import demoBuild from "@/assets/tutorial-studio-final.jpg.asset.json";
+import demoInterior from "@/assets/environments/interior-maybach.jpg";
+import demoSceneBuilder from "@/assets/tutorial-studio-refs.jpg.asset.json";
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AutoplayVideo } from "@/components/ui/AutoplayVideo";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -1704,25 +1708,25 @@ function MotionStudio() {
             <div className="grid gap-3 sm:grid-cols-2">
               {[
                 {
-                  title: "Two-angle performance",
+                  title: "Two-angle performance", image: demoTwoAngleAsset.url,
                   body: "Wide plate plus close-up, each matched to its own phone recording.",
                   search: { mode: "anywhere" as const },
                   cta: "Start guided build",
                 },
                 {
-                  title: "Build a Scene",
+                  title: "Build a Scene", image: demoBuild.url,
                   body: "Five role references lock identity, then generate 3–5 fresh camera angles from one approved base scene.",
                   search: { mode: "anywhere" as const, flow: "build_scene" as const },
                   cta: "Open workflow",
                 },
                 {
-                  title: "Luxury Interior",
+                  title: "Luxury Interior", image: demoInterior,
                   body: "Three references place a faithful seated performance inside the vehicle, face and outfit preserved.",
                   search: { mode: "anywhere" as const, flow: "luxury_interior" as const },
                   cta: "Open workflow",
                 },
                 {
-                  title: "Scene Builder",
+                  title: "Scene Builder", image: demoSceneBuilder.url,
                   body: "Design the world first — stage, rooftop, studio — then bring it back here to animate.",
                   to: "/scene-builder" as const,
                   cta: "Open Scene Builder",
@@ -1734,6 +1738,7 @@ function MotionStudio() {
                     to={card.to}
                     className="group rounded-2xl border border-white/10 bg-white/[0.02] p-4 no-underline transition-colors hover:border-primary/40"
                   >
+                    <img src={card.image} alt={`${card.title} demo`} loading="lazy" className="-mx-1 -mt-1 mb-3 aspect-[16/9] w-[calc(100%+0.5rem)] rounded-xl object-cover" />
                     <h3 className="text-sm font-bold text-foreground">{card.title}</h3>
                     <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{card.body}</p>
                     <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary">
@@ -1747,6 +1752,7 @@ function MotionStudio() {
                     search={card.search}
                     className="group rounded-2xl border border-white/10 bg-white/[0.02] p-4 no-underline transition-colors hover:border-primary/40"
                   >
+                    <img src={card.image} alt={`${card.title} demo`} loading="lazy" className="-mx-1 -mt-1 mb-3 aspect-[16/9] w-[calc(100%+0.5rem)] rounded-xl object-cover" />
                     <h3 className="text-sm font-bold text-foreground">{card.title}</h3>
                     <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{card.body}</p>
                     <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary">
