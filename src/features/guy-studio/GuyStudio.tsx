@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import "./guy-studio.css";
 import { ModelLogo } from "@/components/guy/ModelLogo";
 import { ThemePicker } from "@/components/guy/ThemePicker";
@@ -940,7 +941,7 @@ function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
           </Button>
         </div>
       </header>
-      <nav aria-label="Studio modes" className="studio-dock fixed bottom-3 left-1/2 z-50 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-0.5 overflow-x-auto rounded-full border border-border glass-panel p-1.5 backdrop-blur-2xl">
+      {createPortal(<nav aria-label="Studio modes" className="studio-dock fixed bottom-3 left-1/2 z-50 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-0.5 overflow-x-auto rounded-full border border-border glass-panel p-1.5 backdrop-blur-2xl">
         {([
           ["start", "Chat", MessageSquare],
           ["edit", "Video Agent", Clapperboard],
@@ -954,7 +955,7 @@ function Editor({ initialMode }: { initialMode: "start" | "edit" }) {
         ))}
         <Button asChild size="icon" variant="ghost" className="size-8 shrink-0 rounded-full"><Link to="/reshoot" aria-label="Multi-Angle" title="Multi-Angle"><Camera className="size-4" /></Link></Button>
         <Button asChild size="icon" variant="ghost" className="size-8 shrink-0 rounded-full"><Link to="/spin" aria-label="TikTok30" title="TikTok30"><Flame className="size-4" /></Link></Button>
-      </nav>
+      </nav>, document.body)}
       <div className="flex min-w-0 flex-1 flex-col pb-20">
       <div className="hidden h-10 items-center gap-2 border-b border-border px-4 text-xs lg:flex">
         <span className="font-semibold">{sessionName}</span>
