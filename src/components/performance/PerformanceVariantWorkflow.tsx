@@ -24,6 +24,7 @@ import {
 import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 import { RecordingReferenceGuide, WorkflowVisualGuide } from "@/components/performance/WorkflowVisualGuide";
 import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
+import { SoulPicker } from "@/components/soul/SoulPicker";
 import { EnvironmentPickerDialog } from "@/components/performance/EnvironmentPicker";
 import { PERFORM_ENVIRONMENTS, LUXURY_INTERIORS, absoluteUrl } from "@/lib/environment-presets";
 
@@ -200,6 +201,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
             </div>
           ))}
         </section>
+        <SoulPicker label="Use a Soul character as identity" onPick={(url) => setDraft((d) => ({ ...d, references: { ...d.references, identity: url } }))} />
         <EnvironmentPickerDialog open={pickerSlot !== null} onOpenChange={(v) => { if (!v) setPickerSlot(null); }}
           presets={pickerSlot === "interior" ? LUXURY_INTERIORS : PERFORM_ENVIRONMENTS}
           selectedId={pickerSlot === "interior" ? pickedIds.interior ?? null : envId}

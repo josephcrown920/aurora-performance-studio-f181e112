@@ -20,6 +20,7 @@ import { generateBaseScene } from "@/lib/scene-builder.functions";
 import { generatePerformanceShot, listGenerations } from "@/lib/studio.functions";
 import { Button } from "@/components/ui/button";
 import { HiggsHero, StepGuide, type GuideStep } from "@/components/studio/HiggsLayout";
+import { SoulPicker } from "@/components/soul/SoulPicker";
 import { planSceneWithAgent } from "@/lib/scene-agent.functions";
 import weaverThumb from "@/assets/environments/graffiti-color.jpg";
 import storyboardThumb from "@/assets/environments/deluxe-cinema.jpg";
@@ -433,6 +434,7 @@ function SceneBuilderPage() {
               <span className="text-xs text-white/30">{filledSlots} / {SLOT_COUNT} uploaded</span>
             </div>
 
+            <SoulPicker className="mb-2" label="Use a Soul character as Selfie" onPick={(url) => setSlots((prev) => { const next = [...prev]; next[0] = url; return next; })} />
             <div className="grid grid-cols-5 gap-2">
               {SLOT_LABELS.map((label, idx) => (
                 <div key={label} className="flex flex-col gap-1">
