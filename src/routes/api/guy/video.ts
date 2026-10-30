@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { identityPrompt } from "@/lib/identity/contract";
 import { GATEWAY, VIDEO_MODEL, apiKey, passthrough } from "@/lib/guy/gateway.server";
 import { VIDEO_ENGINES } from "@/lib/guy/engines";
 import { arkFetch, arkError } from "@/lib/guy/ark.server";
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/api/guy/video")({
         if (b.faceSwap) {
           if (!b.video || !b.refs?.length) return Response.json({ error: { message: "Add the video and a face photo first." } }, { status: 400 });
           const content: unknown[] = [
-            { type: "text", text: `Edit video 1: replace only the main person's face with the face of the person in image 1. Keep identity exact. Preserve every motion, expression timing, head angle, lighting, hair, clothing, body, background, camera move and audio from video 1. ${b.prompt}` },
+            { type: "text", text: `Edit video 1: replace only the main person's face with the SOURCE IDENTITY in image 1. ${identityPrompt({ identityRequired: true, expressionMode: "preserve" })} Preserve every motion, expression timing, head angle, lighting, hair, clothing, body, background, camera move and audio from video 1. ${b.prompt}` },
             { type: "video_url", video_url: { url: `data:${b.video.mime};base64,${b.video.data}` }, role: "reference_video" },
             ...b.refs.slice(0, 3).map((r) => ({ type: "image_url", image_url: { url: `data:${r.mime};base64,${r.data}` }, role: "reference_image" })),
           ];

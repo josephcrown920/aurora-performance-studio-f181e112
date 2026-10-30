@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { generateImage, faceSwapVideo } from "@/lib/guy/generate";
-import { IMAGE_ENGINES, DEFAULT_IMAGE_ENGINE } from "@/lib/guy/engines";
+import { IMAGE_ENGINES } from "@/lib/guy/engines";
 import { Loader2, ScanFace } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EXPRESSION_MODES, IDENTITY_IMAGE_ENGINES, assertIdentityRequest, type ExpressionMode, type IdentitySettings } from "@/lib/identity/contract";
