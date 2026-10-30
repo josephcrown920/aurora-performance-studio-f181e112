@@ -47,8 +47,8 @@ function useFileUrl(file: File | null) {
   return url;
 }
 
-export function PerformStudio({ onAsset }: { onAsset: AddAsset }) {
-  const [tab, setTab] = useState<Tab>("perform");
+export function PerformStudio({ onAsset, initialTab = "perform" }: { onAsset: AddAsset; initialTab?: Tab }) {
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [grwm, setGrwm] = useState(false);
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6">
