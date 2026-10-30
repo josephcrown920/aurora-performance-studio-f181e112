@@ -3,6 +3,7 @@ import { authNextSearch } from "@/lib/auth-return-path";
 import demoTwoAngleAsset from "@/assets/josh-blue-side.jpg.asset.json";
 import demoBuild from "@/assets/tutorial-studio-final.jpg.asset.json";
 import demoInterior from "@/assets/environments/interior-maybach.jpg";
+import demoRollsVideo from "@/assets/demos/nba-josh-rolls-demo.mp4.asset.json";
 import demoSceneBuilder from "@/assets/tutorial-studio-refs.jpg.asset.json";
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AutoplayVideo } from "@/components/ui/AutoplayVideo";
@@ -1720,7 +1721,7 @@ function MotionStudio() {
                   cta: "Open workflow",
                 },
                 {
-                  title: "Luxury Interior", image: demoInterior,
+                  title: "Luxury Interior", image: demoInterior, video: demoRollsVideo.url,
                   body: "Three references place a faithful seated performance inside the vehicle, face and outfit preserved.",
                   search: { mode: "anywhere" as const, flow: "luxury_interior" as const },
                   cta: "Open workflow",
@@ -1752,7 +1753,11 @@ function MotionStudio() {
                     search={card.search}
                     className="group rounded-2xl border border-white/10 bg-white/[0.02] p-4 no-underline transition-colors hover:border-primary/40"
                   >
-                    <img src={card.image} alt={`${card.title} demo`} loading="lazy" className="-mx-1 -mt-1 mb-3 aspect-[16/9] w-[calc(100%+0.5rem)] rounded-xl object-cover" />
+                    {"video" in card && card.video ? (
+                      <video src={card.video} poster={card.image} autoPlay muted loop playsInline preload="metadata" className="-mx-1 -mt-1 mb-3 aspect-[16/9] w-[calc(100%+0.5rem)] rounded-xl object-cover" />
+                    ) : (
+                      <img src={card.image} alt={`${card.title} demo`} loading="lazy" className="-mx-1 -mt-1 mb-3 aspect-[16/9] w-[calc(100%+0.5rem)] rounded-xl object-cover" />
+                    )}
                     <h3 className="text-sm font-bold text-foreground">{card.title}</h3>
                     <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{card.body}</p>
                     <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary">
