@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { authNextSearch } from "@/lib/auth-return-path";
-import demoTwoAngle from "@/assets/environments/graffiti-color.jpg";
+import demoTwoAngleAsset from "@/assets/josh-blue-side.jpg.asset.json";
 import demoBuild from "@/assets/tutorial-studio-final.jpg.asset.json";
 import demoInterior from "@/assets/environments/interior-maybach.jpg";
 import demoSceneBuilder from "@/assets/tutorial-studio-refs.jpg.asset.json";
@@ -1708,7 +1708,7 @@ function MotionStudio() {
             <div className="grid gap-3 sm:grid-cols-2">
               {[
                 {
-                  title: "Two-angle performance", image: demoTwoAngle,
+                  title: "Two-angle performance", image: demoTwoAngleAsset.url,
                   body: "Wide plate plus close-up, each matched to its own phone recording.",
                   search: { mode: "anywhere" as const },
                   cta: "Start guided build",
