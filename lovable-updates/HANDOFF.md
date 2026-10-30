@@ -94,3 +94,10 @@ Current approved look and do-not-touch rules: `UI-UX.md`. Screenshots: `screensh
 - Studio Perform view (`/studio?mode=perform`) reuses Perform Anywhere.
 - Get Ready With Me redesigned (You → Outfit → Dressed); car scene Identity starts with NBA Josh.
 Open: Maybach photos in Interior/Window slots; signed-in generation tests; licensed fonts.
+
+## Studio Video Guide continuation — 2026-10-30
+- Successfully checked out the now-public Studio Video Guide reference. Restored its compact header and floating bottom mode dock instead of the incorrect side rail. Kept the existing editor and generation services.
+- Added Multi-Angle and TikTok30 shortcuts to the Studio dock. Direct edit URLs open the editor.
+- Removed the broken external Layers iframe as the default; `/layers` opens native Aurora Layers with existing private storage and shared timeline. Its editor return points to Studio.
+- Verified local Layers photo upload and Wardrobe selection; no paid generation or private save attempted. Screenshots are in `screenshots/studio-guide-2026-10-30/`.
+- Navigation regression tests: 5 passed. Canvas requires its signed-in workflow; signed-out Canvas-tab verification remains unconfirmed.
