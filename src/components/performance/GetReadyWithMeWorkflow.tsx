@@ -109,7 +109,7 @@ export function GetReadyWithMeWorkflow() {
       const params = { motionType: "faithful" as const, cameraMovement: "static" as const, frames: 240, fps: 16, preserveFace: true };
       return transform === "sync"
         ? sync({ data: { performanceVideoUrl: draft.phoneVideoUrl, avatarImageUrl: target, outfit: outfit || undefined, location: location || undefined, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } })
-        : transfer({ data: { imageUrl: target, location: undefined as never, drivingVideoUrl: draft.phoneVideoUrl, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } });
+        : transfer({ data: { imageUrl: target, drivingVideoUrl: draft.phoneVideoUrl, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } });
     },
     onMutate: () => setError(null),
     onSuccess: result => { setJob({ id: result.generationId, preview: result.preview }); void history.refetch(); },
