@@ -5,7 +5,7 @@ import redRoom from "@/assets/studio-worlds/red-room.jpg.asset.json";
 import spotlight from "@/assets/studio-worlds/spotlight.jpg.asset.json";
 import teal from "@/assets/studio-worlds/teal.jpg.asset.json";
 import white from "@/assets/studio-worlds/white.jpg.asset.json";
-import street from "@/assets/studio-worlds/street.jpg.asset.json";
+import nightStreetMic from "@/assets/environments/night-street-mic.jpg";
 import villa from "@/assets/environments/lagos-villa.jpg";
 import carPark from "@/assets/environments/car-park.jpg";
 import parkingLot from "@/assets/environments/parking-lot.jpg";
@@ -81,12 +81,22 @@ export const PERFORM_ENVIRONMENTS: EnvironmentPreset[] = [
   e("graffiti-rooftop", "Graffiti rooftop", "Urban & Street", graffitiRooftop, "Lagos rooftop at night with a chrome and magenta graffiti wall and city skyline"),
   e("graffiti-tunnel", "Graffiti tunnel", "Urban & Street", graffitiTunnel, "underpass tunnel covered in colorful graffiti, fluorescent light, reflective puddles"),
   e("graffiti-court", "Graffiti court", "Urban & Street", graffitiCourt, "basketball half court beside a giant teal, orange and pink graffiti mural"),
-  e("street", "Night street", "Urban & Street", street.url, "city street at night with practical lights"),
+  e("street", "Golden street", "Urban & Street", nightStreetMic, "quiet city street at golden hour with a classic car parked"),
   e("playground", "Playground", "Urban & Street", playground, "colorful playground with swings and slide at golden hour"),
   e("surreal-islands", "Floating islands", "Surreal", surrealIslands, "surreal floating islands in a pastel purple sky with a giant moon"),
   e("surreal-mirror", "Mirror desert", "Surreal", surrealMirror, "surreal mirror desert with floating doorways"),
   e("museum", "Art museum", "Museum & Art", museum, "modern art museum gallery with white walls and abstract paintings"),
 ];
+
+const OUTDOOR_MIC_IDS = new Set([
+  "lagos-villa", "danfo-street", "marina", "lekki-bridge", "beach-club", "beach-sunset",
+  "parking-lot", "court", "nightclub", "cinema", "graffiti-color", "graffiti-night", "graffiti-golden",
+  "graffiti-rooftop", "graffiti-court", "street", "playground", "surreal-islands", "surreal-mirror",
+]);
+const MIC_CUE = "; a vintage microphone hangs on a thin cable from above at mouth height, performer stands under it and sings into it";
+for (const env of PERFORM_ENVIRONMENTS) {
+  if (OUTDOOR_MIC_IDS.has(env.id) && !env.prompt.includes("microphone")) env.prompt += MIC_CUE;
+}
 
 export const GRWM_ENVIRONMENTS: EnvironmentPreset[] = [
   e("wardrobe", "Walk-in wardrobe", "Walk-in Wardrobes", wardrobeWarm, "luxury walk-in wardrobe with warm lit wooden shelves, hanging clothes, sneaker wall and full-length mirror"),

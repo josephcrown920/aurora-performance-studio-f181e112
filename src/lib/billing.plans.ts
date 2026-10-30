@@ -470,3 +470,13 @@ export function classifyJobQueue(
   if (kind === "reshoot" || kind === "multi_angle") return "heavy";
   return "standard";
 }
+
+/** Display-only USD list price. All customer-facing price labels use USD. */
+export function usdDisplayPrice(amountUsdMinor: number): LocalPrice {
+  return {
+    amountMinor: Math.max(0, Math.round(Number(amountUsdMinor) || 0)),
+    currency: "USD",
+    pppMultiplier: 1,
+    displayLocale: "en-US",
+  } as LocalPrice;
+}

@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Check, Loader2, Sparkles, Zap, Crown } from "lucide-react";
 import { toast } from "sonner";
 import { createPaystackCheckout } from "@/lib/billing.functions";
-import { PLANS, computePaystackPrice, formatLocalPrice, type PlanKey } from "@/lib/billing.plans";
+import { PLANS, type PlanKey } from "@/lib/billing.plans";
 import { detectCurrency } from "@/lib/geo.functions";
 import { useAuth } from "@/hooks/use-auth";
 import { track } from "@/lib/tracking";
@@ -74,7 +74,6 @@ export function PricingSection() {
     staleTime: 60 * 60 * 1000,
   });
   const currency = geo?.currency ?? "USD";
-  const hasLocalPricing = (geo?.pppMultiplier ?? 1) < 1;
 
   const onChoose = async (plan: PlanKey) => {
 
@@ -96,94 +95,95 @@ export function PricingSection() {
   };
 
   return (
-    <section id="pricing" className="relative z-10 px-6 md:px-12 pb-24">
-      <div className="text-center max-w-2xl mx-auto mb-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-violet-300/80 mb-2">Pricing</p>
-        <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
-          Simple Aura. <span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-pink-200 bg-clip-text text-transparent">No subscriptions.</span>
+    <section id="pricing" className="relative z-10 px-5 md:px-12 pb-28">
+      <div className="pointer-events-none absolute inset-x-0 top-10 mx-auto h-72 max-w-4xl rounded-full bg-violet-600/20 blur-[120px]" />
+      <div className="relative text-center max-w-2xl mx-auto mb-12">
+        <p className="text-[11px] uppercase tracking-[0.35em] text-violet-300/80 mb-3">Pricing · USD</p>
+        <h2 className="text-4xl md:text-6xl font-semibold tracking-tight leading-[0.95]">
+          Pay once.<br />
+          <span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">Create forever.</span>
         </h2>
-        <p className="text-white/65 mt-3 text-sm md:text-base">
-          Images from {imageCost} Aura. Budget video from {budgetVideoCost} Aura and lip-sync from{" "}
-          {budgetLipSyncCost} Aura; premium models cost more. Aura never expires.
+        <p className="text-white/60 mt-4 text-sm md:text-base">
+          No subscription. Aura never expires. Images from {imageCost} Aura, video from {budgetVideoCost}, lip-sync from {budgetLipSyncCost}.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
+      <div className="relative grid md:grid-cols-3 gap-4 md:gap-5 max-w-6xl mx-auto items-stretch">
         {ORDER.map((key) => {
           const p = PLANS[key];
           const meta = META[key];
           const Icon = meta.icon;
-          const price = computePaystackPrice(Math.round(p.usd * 100), geo?.country ?? null);
+          const perAura = (p.usd / p.credits) * 100;
           return (
             <div
               key={key}
-              className={`relative rounded-3xl border p-6 md:p-8 flex flex-col gap-5 transition-all duration-300 hover:-translate-y-1 ${
+              className={`group relative rounded-[28px] p-px transition-all duration-500 hover:-translate-y-1 ${
                 meta.highlight
-                  ? "border-violet-400/50 bg-gradient-to-b from-violet-500/15 to-fuchsia-500/5 shadow-2xl shadow-violet-500/20"
-                  : "border-white/10 bg-white/[0.03] hover:border-white/25"
+                  ? "bg-gradient-to-b from-violet-400 via-fuchsia-500/60 to-amber-300/40 md:scale-[1.04] shadow-[0_30px_80px_-30px_rgba(167,139,250,0.7)]"
+                  : "bg-gradient-to-b from-white/20 to-white/[0.03]"
               }`}
             >
-              {meta.highlight && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.18em] px-3 py-1 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold shadow-lg shadow-violet-500/40">
-                  Most popular
-                </span>
-              )}
-              <div className="flex items-center gap-2">
-                <span className={`size-9 rounded-xl flex items-center justify-center ${meta.highlight ? "bg-gradient-to-br from-violet-500 to-fuchsia-500" : "bg-white/10"}`}>
-                  <Icon className="size-4 text-white" />
-                </span>
-                <div>
-                  <p className="font-semibold text-lg leading-none">{meta.name}</p>
-                  <p className="text-[11px] text-white/50 mt-1">{meta.tagline}</p>
+              <div className="relative h-full rounded-[27px] bg-zinc-950/95 backdrop-blur-xl p-7 md:p-8 flex flex-col gap-6 overflow-hidden">
+                {meta.highlight && <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-72 rounded-full bg-fuchsia-500/25 blur-3xl" />}
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className={`size-10 rounded-2xl flex items-center justify-center ${meta.highlight ? "bg-gradient-to-br from-violet-500 to-fuchsia-500" : "bg-white/[0.06] ring-1 ring-white/10"}`}>
+                      <Icon className="size-4 text-white" />
+                    </span>
+                    <div>
+                      <p className="font-semibold text-lg leading-none tracking-tight">{meta.name}</p>
+                      <p className="text-[11px] text-white/45 mt-1">{meta.tagline}</p>
+                    </div>
+                  </div>
+                  {meta.highlight && (
+                    <span className="text-[9px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full bg-white text-zinc-950 font-bold">Most popular</span>
+                  )}
                 </div>
-              </div>
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl md:text-5xl font-semibold tracking-tight">{formatLocalPrice(price)}</span>
-                  <span className="text-xs text-white/50">one-time</span>
+                <div className="relative">
+                  <div className="flex items-start gap-1">
+                    <span className="text-xl text-white/50 mt-2">$</span>
+                    <span className="text-6xl font-semibold tracking-tighter leading-none">{p.usd}</span>
+                    <span className="self-end mb-1 ml-1 text-xs text-white/40">USD · one-time</span>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between rounded-2xl bg-white/[0.04] ring-1 ring-white/10 px-4 py-3">
+                    <span className="text-sm font-semibold text-violet-200">{p.credits.toLocaleString()} Aura</span>
+                    <span className="text-[11px] text-white/45">{perAura.toFixed(2)}¢ / Aura</span>
+                  </div>
                 </div>
-                <p className="text-sm text-violet-200 mt-1">{p.credits} Aura</p>
-                <p className="text-[11px] text-white/40">
-                  {formatLocalPrice({ ...price, amountMinor: Math.round(price.amountMinor / p.credits) })} / Aura
-                </p>
-                {hasLocalPricing && (
-                  <span className="mt-2 inline-flex rounded-full bg-emerald-400/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-200">
-                    Local pricing applied
-                  </span>
-                )}
+                <div className="relative h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                <ul className="relative space-y-3 text-sm text-white/80">
+                  {meta.features(p.credits).map((f) => (
+                    <li key={f} className="flex items-start gap-3">
+                      <span className="mt-0.5 size-4 rounded-full bg-violet-500/20 ring-1 ring-violet-400/40 flex items-center justify-center shrink-0">
+                        <Check className="size-2.5 text-violet-200" />
+                      </span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => onChoose(key)}
+                  disabled={loadingPlan !== null}
+                  className={`relative mt-auto w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full font-semibold transition disabled:opacity-60 ${
+                    meta.highlight
+                      ? "bg-white text-zinc-950 hover:bg-white/90"
+                      : "bg-white/[0.06] ring-1 ring-white/15 text-white hover:bg-white/10"
+                  }`}
+                >
+                  {loadingPlan === key ? (<><Loader2 className="size-4 animate-spin" /> Redirecting…</>) : (<>Get {meta.name}</>)}
+                </button>
               </div>
-              <ul className="space-y-2 text-sm text-white/80">
-                {meta.features(p.credits).map((f) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <Check className="size-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => onChoose(key)}
-                disabled={loadingPlan !== null}
-                className={`mt-auto w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full font-medium transition disabled:opacity-60 ${
-                  meta.highlight
-                    ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-xl shadow-violet-500/30 hover:opacity-95"
-                    : "border border-white/15 text-white hover:bg-white/5"
-                }`}
-              >
-                {loadingPlan === key ? (
-                  <><Loader2 className="size-4 animate-spin" /> Redirecting…</>
-                ) : (
-                  <>Get {meta.name}</>
-                )}
-              </button>
             </div>
           );
         })}
       </div>
 
-      <p className="text-center text-xs text-white/40 mt-8">
-        Secure payments by Paystack · 7-day refund on unused Aura ·{" "}
-        <Link to="/gifts" className="underline hover:text-white/70">Gift cards available</Link>
-      </p>
+      <div className="relative mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/45">
+        <span>Prices in USD</span><span>·</span>
+        <span>Secure checkout</span><span>·</span>
+        <span>7-day refund on unused Aura</span><span>·</span>
+        <Link to="/gifts" className="underline hover:text-white/70">Gift cards</Link>
+      </div>
     </section>
   );
 }
