@@ -29,7 +29,16 @@ import bedroom from "@/assets/environments/bedroom.jpg";
 import vanity from "@/assets/environments/vanity.jpg";
 import hotelSuite from "@/assets/environments/hotel-suite.jpg";
 
-export type EnvironmentCategory = "Color Studios" | "Lagos" | "Urban & Street" | "Surreal" | "Museum & Art" | "Indoor Rooms" | "Walk-in Wardrobes";
+import int_rolls from "@/assets/environments/interior-rolls.jpg";
+import int_jet from "@/assets/environments/interior-jet.jpg";
+import int_maybach from "@/assets/environments/interior-maybach.jpg";
+import int_gwagon from "@/assets/environments/interior-gwagon.jpg";
+import int_limo from "@/assets/environments/interior-limo.jpg";
+import int_yacht from "@/assets/environments/interior-yacht.jpg";
+import int_lambo from "@/assets/environments/interior-lambo.jpg";
+import int_bentley from "@/assets/environments/interior-bentley.jpg";
+
+export type EnvironmentCategory = "Luxury Interiors" | "Color Studios" | "Lagos" | "Urban & Street" | "Surreal" | "Museum & Art" | "Indoor Rooms" | "Walk-in Wardrobes";
 export interface EnvironmentPreset { id: string; label: string; category: EnvironmentCategory; image: string; prompt: string }
 
 const e = (id: string, label: string, category: EnvironmentCategory, image: string, prompt: string): EnvironmentPreset => ({ id, label, category, image, prompt });
@@ -75,3 +84,14 @@ export function absoluteUrl(src: string) {
   if (/^https?:|^data:|^blob:/.test(src) || typeof window === "undefined") return src;
   return new URL(src, window.location.origin).toString();
 }
+
+export const LUXURY_INTERIORS: EnvironmentPreset[] = [
+  e("int-maybach", "Maybach rear seat", "Luxury Interiors", int_maybach, "Mercedes-Maybach rear cabin, white quilted leather, purple ambient light, night city through window"),
+  e("int-rolls", "Rolls-Royce starlight", "Luxury Interiors", int_rolls, "Rolls-Royce Phantom rear cabin, starlight headliner, cream quilted leather, wood veneer"),
+  e("int-bentley", "Bentley tan leather", "Luxury Interiors", int_bentley, "Bentley Bentayga rear cabin, tan diamond-quilted leather, rose gold accents, daylight"),
+  e("int-gwagon", "G-Wagon red night", "Luxury Interiors", int_gwagon, "G-Wagon interior, black and red diamond-stitched leather, red ambient light, night"),
+  e("int-lambo", "Lamborghini Urus", "Luxury Interiors", int_lambo, "Lamborghini Urus interior, orange and black leather, glowing dashboard, night city"),
+  e("int-limo", "Neon limousine", "Luxury Interiors", int_limo, "stretch limousine interior, black leather, purple LED ceiling, bar"),
+  e("int-jet", "Private jet", "Luxury Interiors", int_jet, "private jet cabin, beige leather club seats, sunset through oval windows"),
+  e("int-yacht", "Yacht salon", "Luxury Interiors", int_yacht, "luxury yacht salon, white sofas, teak floor, ocean at golden hour"),
+];
