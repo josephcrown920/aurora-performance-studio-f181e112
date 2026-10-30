@@ -981,6 +981,7 @@ const geminiDirect: ProviderAdapter = {
         /* skip bad ref */
       }
     }
+    if ((r.imageUrls?.length ?? 0) > 0 && parts.length === 1) throw new Error("Couldn't load your reference photo, so we stopped instead of generating a different person. Please re-upload it.");
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
       withTimeout({
@@ -2053,6 +2054,7 @@ const replitGeminiImage: ProviderAdapter = {
         /* skip bad ref */
       }
     }
+    if ((r.imageUrls?.length ?? 0) > 0 && parts.length === 1) throw new Error("Couldn't load your reference photo, so we stopped instead of generating a different person. Please re-upload it.");
     const response = await ai.models.generateContent({
       model,
       contents: [{ role: "user", parts }],

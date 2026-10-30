@@ -241,7 +241,7 @@ export const generatePerformanceVariantPlate = createServerFn({ method: "POST" }
     const { reserveOrchestrateRecord } = await import("@/lib/generate-core.server");
     const result = await reserveOrchestrateRecord({
       userId: context.userId, kind: "image", prompt, model: "google/gemini-3.1-flash-image-preview",
-      imageUrls: refs, cost: computeCost({ features: ["image"] }).total, reason: "performance_variant",
+      imageUrls: refs, editStrict: refs.length > 0, cost: computeCost({ features: ["image"] }).total, reason: "performance_variant",
     });
     if (!result.ok) throw new Error(result.error);
     const { data: generation } = await supabaseAdmin.from("generations").select("result_image_url").eq("id", result.generationId).eq("user_id", context.userId).single();

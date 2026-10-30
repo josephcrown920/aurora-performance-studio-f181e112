@@ -37,6 +37,7 @@ function errMsg(d: unknown, fallback: string) {
 export async function generateImage(prompt: string, engine: string, source?: Blob, raw = false, refs: Blob[] = []): Promise<string> {
   if (!raw) prompt = withCreativeContext(prompt);
   let r: Response;
+  if (!source && refs.length) { source = refs[0]; refs = refs.slice(1); }
   if (source) {
     const form = new FormData();
     form.set("prompt", prompt);
@@ -45,9 +46,9 @@ export async function generateImage(prompt: string, engine: string, source?: Blo
       form.append("image[]", source, "source.png");
       refs.forEach((ref, i) => form.append("image[]", ref, `reference_${i}.png`));
     } else form.set("image", source, "source.png");
-    r = await fetch("/api/image", { method: "POST", body: form });
+    r = await fetch("/api/guy/image", { method: "POST", body: form });
   } else {
-    r = await fetch("/api/image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt, engine }) });
+    r = await fetch("/api/guy/image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt, engine }) });
   }
   const text = await r.text();
   let d: ImgResp = {};
@@ -59,6 +60,28 @@ export async function generateImage(prompt: string, engine: string, source?: Blo
 }
 
 /** Create a video job, poll until finished, return an object URL for the clip. */
+/** Swap the face in an uploaded video with a face photo (ModelArk Seedance 2.5 video edit). */
+export async function faceSwapVideo(video: Blob, faces: Blob[], note: string, onStatus?: (s: string) => void): Promise<string> {
+  onStatus?.("Uploading…");
+  const body = { prompt: note || "Natural, photoreal result.", faceSwap: true, video: await fileToMedia(video), refs: await Promise.all(faces.map(fileToMedia)) };
+  const r = await fetch("/api/guy/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const job = (await r.json().catch(() => ({}))) as { id?: string };
+  if (!r.ok || !job.id) throw new Error(errMsg(job, "The video service rejected the face swap."));
+  const started = Date.now();
+  for (;;) {
+    await new Promise((res) => setTimeout(res, 5000));
+    const p = (await (await fetch(`/api/guy/video/${job.id}`)).json().catch(() => ({}))) as { status?: string; error?: unknown };
+    const s = (p.status ?? "").toLowerCase();
+    onStatus?.(s ? `Swapping face · ${s}` : "Swapping face…");
+    if (["completed", "succeeded", "done"].includes(s)) break;
+    if (["failed", "error", "cancelled", "canceled"].includes(s)) throw new Error(errMsg(p, "Face swap failed."));
+    if (Date.now() - started > 10 * 60 * 1000) throw new Error("Face swap took too long — try a shorter clip.");
+  }
+  const content = await fetch(`/api/guy/video/${job.id}/content`);
+  if (!content.ok) throw new Error("Couldn't download the finished video.");
+  return URL.createObjectURL(await content.blob());
+}
+
 export async function generateVideo(
   prompt: string,
   engine: string,
@@ -87,20 +110,20 @@ export async function generateVideo(
   if (opts.audio) body["audio"] = await fileToMedia(opts.audio);
   if (depth) body["depth"] = await fileToMedia(depth);
   if (opts.refs?.length) body["refs"] = await Promise.all(opts.refs.map(fileToMedia));
-  const r = await fetch("/api/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const r = await fetch("/api/guy/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const job = (await r.json().catch(() => ({}))) as { id?: string; status?: string };
   if (!r.ok || !job.id) throw new Error(errMsg(job, "The video service rejected the request."));
   const started = Date.now();
   for (;;) {
     await new Promise((res) => setTimeout(res, 5000));
-    const p = (await (await fetch(`/api/video/${job.id}`)).json().catch(() => ({}))) as { status?: string; error?: unknown };
+    const p = (await (await fetch(`/api/guy/video/${job.id}`)).json().catch(() => ({}))) as { status?: string; error?: unknown };
     const s = (p.status ?? "").toLowerCase();
     opts.onStatus?.(s || "working");
     if (["completed", "succeeded", "done"].includes(s)) break;
     if (["failed", "error", "cancelled", "canceled"].includes(s)) throw new Error(errMsg(p, "Video generation failed."));
     if (Date.now() - started > 8 * 60 * 1000) throw new Error("Video took too long — try a shorter or simpler prompt.");
   }
-  const content = await fetch(`/api/video/${job.id}/content`);
+  const content = await fetch(`/api/guy/video/${job.id}/content`);
   if (!content.ok) throw new Error("The finished video could not be downloaded.");
   const blob = await content.blob();
   return URL.createObjectURL(blob);

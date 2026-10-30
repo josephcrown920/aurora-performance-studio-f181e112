@@ -145,6 +145,7 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
     return {
       text: ins.map((n) => (n.type === "prompt" ? n.text?.trim() : n.type === "agent" ? n.reply?.trim() : "")).filter(Boolean).join(". "),
       image: ins.find((n) => (n.type === "upload" || n.type === "image") && n.url)?.url,
+      images: ins.filter((n) => (n.type === "upload" || n.type === "image") && n.url).map((n) => n.url!),
     };
   }
 
@@ -180,13 +181,15 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
 
   async function run(n: Node) {
     if (n.type === "agent") return runAgent(n);
-    const { text, image } = inputs(n.id);
+    const { text, image, images } = inputs(n.id);
     if (!text) { patch(n.id, { error: "Connect a Prompt node with some text first." }); return; }
     patch(n.id, { busy: true, error: undefined, status: "Starting…" });
     try {
       if (n.type === "image") {
         const src = image ? await urlToBlob(image) : undefined;
-        const url = await generateImage(text, n.engine ?? DEFAULT_IMAGE_ENGINE, src);
+        const extra = await Promise.all(images.slice(1).map((u) => urlToBlob(u)));
+        const lock = images.length ? " Keep the exact same person from the reference photo(s): identical face, skin tone, hair and features. Do not change identity." : "";
+        const url = await generateImage(text + lock, n.engine ?? DEFAULT_IMAGE_ENGINE, src, false, extra);
         patch(n.id, { url, busy: false, status: undefined });
         onAsset(url, "image", `image_${n.id}.png`, true);
       } else {
