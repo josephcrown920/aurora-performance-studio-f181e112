@@ -5,7 +5,7 @@ import { arkFetch, arkError } from "@/lib/guy/ark.server";
 import { requireDepth, videoSettings } from "@/lib/guy/generation-policy";
 
 type Media = { data: string; mime: string };
-type Body = { prompt: string; engine?: string; motion?: string; duration?: string; resolution?: string; draft?: boolean; image?: Media; lastFrame?: Media; video?: Media; audio?: Media; depth?: Media; refs?: Media[] };
+type Body = { prompt: string; engine?: string; motion?: string; duration?: string; resolution?: string; draft?: boolean; image?: Media; lastFrame?: Media; video?: Media; audio?: Media; depth?: Media; refs?: Media[]; faceSwap?: boolean };
 
 // Creates a video job. Client polls /api/video/$id.
 export const Route = createFileRoute("/api/guy/video")({
@@ -14,6 +14,19 @@ export const Route = createFileRoute("/api/guy/video")({
       POST: async ({ request }) => {
         const b = (await request.json()) as Body;
         if (!b.prompt?.trim()) return new Response("Prompt required", { status: 400 });
+
+        if (b.faceSwap) {
+          if (!b.video || !b.refs?.length) return Response.json({ error: { message: "Add the video and a face photo first." } }, { status: 400 });
+          const content: unknown[] = [
+            { type: "text", text: `Edit video 1: replace only the main person's face with the face of the person in image 1. Keep identity exact. Preserve every motion, expression timing, head angle, lighting, hair, clothing, body, background, camera move and audio from video 1. ${b.prompt}` },
+            { type: "video_url", video_url: { url: `data:${b.video.mime};base64,${b.video.data}` }, role: "reference_video" },
+            ...b.refs.slice(0, 3).map((r) => ({ type: "image_url", image_url: { url: `data:${r.mime};base64,${r.data}` }, role: "reference_image" })),
+          ];
+          const r = await arkFetch("/contents/generations/tasks", { method: "POST", body: JSON.stringify({ model: "dreamina-seedance-2-5-260628", content, omni_reference_task_type: "edit", ratio: "adaptive", duration: -1, watermark: false }) });
+          if (!r.ok) return arkError(r);
+          const job = (await r.json()) as { id?: string };
+          return Response.json({ id: `ark_${job.id}`, status: "queued" });
+        }
 
         const e = VIDEO_ENGINES.find((x) => x.id === b.engine);
         if (e && (!e.available || !e.model)) {

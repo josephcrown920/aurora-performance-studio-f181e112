@@ -59,6 +59,28 @@ export async function generateImage(prompt: string, engine: string, source?: Blo
 }
 
 /** Create a video job, poll until finished, return an object URL for the clip. */
+/** Swap the face in an uploaded video with a face photo (ModelArk Seedance 2.5 video edit). */
+export async function faceSwapVideo(video: Blob, faces: Blob[], note: string, onStatus?: (s: string) => void): Promise<string> {
+  onStatus?.("Uploading…");
+  const body = { prompt: note || "Natural, photoreal result.", faceSwap: true, video: await fileToMedia(video), refs: await Promise.all(faces.map(fileToMedia)) };
+  const r = await fetch("/api/guy/video", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const job = (await r.json().catch(() => ({}))) as { id?: string };
+  if (!r.ok || !job.id) throw new Error(errMsg(job, "The video service rejected the face swap."));
+  const started = Date.now();
+  for (;;) {
+    await new Promise((res) => setTimeout(res, 5000));
+    const p = (await (await fetch(`/api/guy/video/${job.id}`)).json().catch(() => ({}))) as { status?: string; error?: unknown };
+    const s = (p.status ?? "").toLowerCase();
+    onStatus?.(s ? `Swapping face · ${s}` : "Swapping face…");
+    if (["completed", "succeeded", "done"].includes(s)) break;
+    if (["failed", "error", "cancelled", "canceled"].includes(s)) throw new Error(errMsg(p, "Face swap failed."));
+    if (Date.now() - started > 10 * 60 * 1000) throw new Error("Face swap took too long — try a shorter clip.");
+  }
+  const content = await fetch(`/api/guy/video/${job.id}/content`);
+  if (!content.ok) throw new Error("Couldn't download the finished video.");
+  return URL.createObjectURL(await content.blob());
+}
+
 export async function generateVideo(
   prompt: string,
   engine: string,
