@@ -15,6 +15,7 @@ import {
   PLANS,
   SUBSCRIPTION_TIERS,
   computePaystackPrice,
+  usdDisplayPrice,
   formatLocalPrice,
   type PaystackCurrency,
 } from "@/lib/billing.plans";
@@ -112,9 +113,9 @@ function BillingPage() {
   const previewing = isAdmin && previewRegion !== geo?.currency;
   const region: PaystackCurrency = previewing ? previewRegion : ((geo?.currency ?? "USD") as PaystackCurrency);
   const pricingCountry = previewing ? PREVIEW_COUNTRY_BY_CURRENCY[previewRegion] : geo?.country ?? null;
-  const localPrice = (amountUsdMinor: number) => computePaystackPrice(amountUsdMinor, pricingCountry);
+  const localPrice = (amountUsdMinor: number) => usdDisplayPrice(amountUsdMinor);
   const proPriceLabel = `${formatLocalPrice(localPrice(SUBSCRIPTION_TIERS.pro.price_amount_minor))} / month`;
-  const hasLocalPricing = !previewing && (geo?.pppMultiplier ?? 1) < 1;
+  const hasLocalPricing = false;
 
   const search = Route.useSearch() as Record<string, string>;
 
@@ -334,8 +335,8 @@ function BillingPage() {
           </div>
         </section>
 
-        {/* ── Owner-only: preview pricing as another region ── */}
-        {isAdmin && (
+        {/* Region preview hidden: all prices display in USD */}
+        {false && isAdmin && (
           <section>
             <div className="rounded-2xl border border-dashed border-primary/30 bg-primary/5 p-4">
               <div className="flex items-center gap-2 mb-2.5">

@@ -39,7 +39,7 @@ import { GenerationProgress } from "@/components/ui/GenerationProgress";
 import { BlurredPreview } from "@/components/ui/BlurredPreview";
 import { getMyProfile, createPaystackCheckout, getPaymentByReference, getPaymentStatusByReference } from "@/lib/billing.functions";
 import { trackPurchase, trackGenerationCompleted } from "@/lib/gtm";
-import { PLANS, computePaystackPrice, evaluatePlanLimits, formatLocalPrice } from "@/lib/billing.plans";
+import { PLANS, computePaystackPrice, evaluatePlanLimits, formatLocalPrice, usdDisplayPrice } from "@/lib/billing.plans";
 import { computeCost, type Resolution } from "@/lib/pricing";
 import { ResolutionPicker } from "@/components/ResolutionPicker";
 import { PlanLimitNotice } from "@/components/PlanLimitNotice";
@@ -386,7 +386,7 @@ function StudioPage() {
   const publishFn = useServerFn(publishGeneration);
   const detectCurrencyFn = useServerFn(detectCurrency);
   const { data: geo } = useQuery({ queryKey: ["geo-currency"], queryFn: () => detectCurrencyFn(), staleTime: 60 * 60 * 1000 });
-  const localPrice = (amountUsdMinor: number) => computePaystackPrice(amountUsdMinor, geo?.country ?? null);
+  const localPrice = (amountUsdMinor: number) => usdDisplayPrice(amountUsdMinor);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
