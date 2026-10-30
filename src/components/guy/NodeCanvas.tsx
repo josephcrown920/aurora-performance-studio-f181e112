@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { Type, ImageUp, ImageIcon, Film, Plus, Minus, Maximize, Play, Loader2, Trash2, FolderInput, Hand, MousePointer2 } from "lucide-react";
+import { Type, ImageUp, ImageIcon, Film, Plus, Minus, Maximize, Play, Loader2, Trash2, FolderInput, Hand, MousePointer2, Bot } from "lucide-react";
 import { IMAGE_ENGINES, VIDEO_ENGINES, DEFAULT_IMAGE_ENGINE, DEFAULT_VIDEO_ENGINE, motionPhrase, type Motion } from "@/lib/guy/engines";
+import { AGENTS } from "@/lib/guy/agents";
+import { readSse } from "@/lib/guy/agent-stream";
 import { generateImage, generateVideo, urlToBlob } from "@/lib/guy/generate";
 import { cn } from "@/lib/utils";
 
-type NodeType = "prompt" | "upload" | "image" | "video";
+type NodeType = "prompt" | "upload" | "image" | "video" | "agent";
 type Node = {
   id: string; type: NodeType; x: number; y: number;
   text?: string | undefined; url?: string | undefined; engine?: string | undefined;
+  agentId?: string | undefined; log?: string[] | undefined; reply?: string | undefined;
   busy?: boolean; status?: string | undefined; error?: string | undefined;
 };
 type Edge = { from: string; to: string };
@@ -16,6 +19,7 @@ const W = 240;
 const META: Record<NodeType, { label: string; icon: typeof Type; out: "text" | "image" | "video" }> = {
   prompt: { label: "Prompt", icon: Type, out: "text" },
   upload: { label: "Image upload", icon: ImageUp, out: "image" },
+  agent: { label: "Agent · Run a task", icon: Bot, out: "text" },
   image: { label: "Image · Generate / Edit", icon: ImageIcon, out: "image" },
   video: { label: "Video · Animate", icon: Film, out: "video" },
 };
@@ -29,6 +33,7 @@ const START: { nodes: Node[]; edges: Edge[] } = {
     { id: "i1", type: "image", x: 360, y: 60, engine: DEFAULT_IMAGE_ENGINE },
     { id: "p2", type: "prompt", x: 360, y: 360, text: "She turns to camera and smiles, petals drift" },
     { id: "v1", type: "video", x: 680, y: 160, engine: DEFAULT_VIDEO_ENGINE },
+    { id: "ag1", type: "agent", x: 40, y: 540, agentId: "orchestrator", text: "" },
   ],
   edges: [{ from: "p1", to: "i1" }, { from: "u1", to: "i1" }, { from: "i1", to: "v1" }, { from: "p2", to: "v1" }],
 };
@@ -42,6 +47,10 @@ export function NodeCanvas({ motion, onAsset }: { motion: Motion; onAsset: (url:
   const wrap = useRef<HTMLDivElement>(null);
   const viewRef = useRef(view);
   viewRef.current = view;
+  const nodesRef = useRef(nodes);
+  nodesRef.current = nodes;
+  const edgesRef = useRef(edges);
+  edgesRef.current = edges;
   const heights = useRef<Record<string, number>>({});
   const [, force] = useState(0);
 
