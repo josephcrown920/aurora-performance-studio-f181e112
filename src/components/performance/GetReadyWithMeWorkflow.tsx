@@ -7,12 +7,9 @@ import grwmFace from "@/assets/nba-josh/portrait.jpg.asset.json";
 import grwmFit from "@/assets/nba-josh/black-outfit.png.asset.json";
 import grwmFull from "@/assets/nba-josh/grwm-dressed-wardrobe.jpg";
 
-const GRWM_SCENES = [
-  { id: "wardrobe", label: "Walk-in wardrobe", prompt: "luxury walk-in wardrobe with warm lit wooden shelves, hanging clothes, sneaker wall and full-length mirror" },
-  { id: "mirror", label: "Vanity mirror", prompt: "bedroom vanity mirror with bulb lights, natural window light" },
-  { id: "bedroom", label: "Bedroom", prompt: "stylish bedroom with clothes laid out on the bed" },
-  { id: "studio", label: "Purple studio", prompt: "seamless purple studio cyclorama, soft key light" },
-] as const;
+import { EnvironmentGrid } from "@/components/performance/EnvironmentPicker";
+import { GRWM_ENVIRONMENTS } from "@/lib/environment-presets";
+const GRWM_SCENES = GRWM_ENVIRONMENTS;
 
 function GrwmFrame({ src, label, highlight }: { src: string; label: string; highlight?: boolean }) {
   return <figure className={`relative overflow-hidden rounded-lg border ${highlight ? "border-primary" : "border-border"}`}>
@@ -169,7 +166,7 @@ export function GetReadyWithMeWorkflow() {
           <Button size="sm" variant="outline" disabled={depthBusy || running || mutation.isPending} onClick={() => void buildDepth()}>{depthBusy ? <><Loader2 className="animate-spin" />Building…</> : depth ? "Rebuild depth guide" : "Build depth guide"}</Button></div>
       </div>}
       <div className="space-y-2"><p className="text-xs font-bold uppercase tracking-widest text-primary">Scene · final environment</p>
-        <div role="group" aria-label="Scene" className="grid grid-cols-2 gap-2 sm:grid-cols-4">{GRWM_SCENES.map(scene => <Button key={scene.id} size="sm" variant={sceneId === scene.id ? "default" : "outline"} aria-pressed={sceneId === scene.id} disabled={running || mutation.isPending} onClick={() => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); })}>{scene.label}</Button>)}</div></div>
+        <div role="group" aria-label="Scene"><EnvironmentGrid presets={GRWM_ENVIRONMENTS} selectedId={sceneId} disabled={running || mutation.isPending} onPick={(scene) => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); })} /></div></div>
       <div role="group" aria-label="Transformation" className="grid grid-cols-2 gap-2">{(["sync", "transfer"] as const).map(value => <Button key={value} variant={transform === value ? "default" : "outline"} aria-pressed={transform === value} disabled={running || mutation.isPending} onClick={() => changeInputs(() => setTransform(value))}>{value === "sync" ? "Motion Sync" : "Motion Transfer"}</Button>)}</div>
       {transform === "sync" && <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Outfit<input aria-label="Target outfit" value={outfit} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setOutfit(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label><label className="text-sm font-medium">Scene details<input aria-label="Target location" value={location} disabled={running || mutation.isPending} onChange={e => changeInputs(() => { setSceneId("custom"); setLocation(e.target.value); })} className="mt-1 w-full rounded border border-border bg-background p-2" /></label></div>}
       <p className="text-xs text-muted-foreground">Preview up to 5 seconds; reviewed render up to 15 seconds.</p>
