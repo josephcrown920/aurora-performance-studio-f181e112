@@ -5,7 +5,14 @@ import { Link } from "@tanstack/react-router";
 import { Check, Download, Loader2, Shirt, Upload } from "lucide-react";
 import grwmFace from "@/assets/nba-josh/portrait.jpg.asset.json";
 import grwmFit from "@/assets/nba-josh/black-outfit.png.asset.json";
-import grwmFull from "@/assets/nba-josh/full-body.jpg.asset.json";
+import grwmFull from "@/assets/nba-josh/grwm-dressed-wardrobe.jpg";
+
+const GRWM_SCENES = [
+  { id: "wardrobe", label: "Walk-in wardrobe", prompt: "luxury walk-in wardrobe with warm lit wooden shelves, hanging clothes, sneaker wall and full-length mirror" },
+  { id: "mirror", label: "Vanity mirror", prompt: "bedroom vanity mirror with bulb lights, natural window light" },
+  { id: "bedroom", label: "Bedroom", prompt: "stylish bedroom with clothes laid out on the bed" },
+  { id: "studio", label: "Purple studio", prompt: "seamless purple studio cyclorama, soft key light" },
+] as const;
 
 function GrwmFrame({ src, label, highlight }: { src: string; label: string; highlight?: boolean }) {
   return <figure className={`relative overflow-hidden rounded-lg border ${highlight ? "border-primary" : "border-border"}`}>
@@ -35,7 +42,8 @@ export function GetReadyWithMeWorkflow() {
   const [revision, setRevision] = useState(0);
   const [transform, setTransform] = useState<Transform>("sync");
   const [outfit, setOutfit] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState<string>(GRWM_SCENES[0].prompt);
+  const [sceneId, setSceneId] = useState<string>("wardrobe");
   const [uploading, setUploading] = useState(false);
   const [job, setJob] = useState<{ id: string; preview: boolean; previewId?: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -97,7 +105,7 @@ export function GetReadyWithMeWorkflow() {
       if (!draft?.phoneVideoUrl || !target) throw new Error("Add your character photo and dressing clip first.");
       const confirmPreviewId = full && job?.preview && completed ? job.id : undefined;
       if (full && !confirmPreviewId) throw new Error("Review a completed preview first.");
-      const prompt = "Get Ready With Me: preserve the recorded dressing gestures and timing, character identity and fixed camera. No captions or added dialogue.";
+      const prompt = `Get Ready With Me in a ${location}. The final shot ends fully dressed in this scene. Preserve the recorded dressing gestures and timing, character identity and fixed camera. No captions or added dialogue.`;
       const params = { motionType: "faithful" as const, cameraMovement: "static" as const, frames: 240, fps: 16, preserveFace: true };
       return transform === "sync"
         ? sync({ data: { performanceVideoUrl: draft.phoneVideoUrl, avatarImageUrl: target, outfit: outfit || undefined, location: location || undefined, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } })
@@ -132,7 +140,7 @@ export function GetReadyWithMeWorkflow() {
         <span className="text-primary">→</span>
         <GrwmFrame src={grwmFit.url} label="Outfit" />
         <span className="text-primary">→</span>
-        <GrwmFrame src={grwmFull.url} label="Dressed" highlight />
+        <GrwmFrame src={grwmFull} label="Dressed" highlight />
       </div>
       <div className="flex items-end justify-between gap-3 border-t border-border px-4 py-3">
         <div><p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">Perform Anywhere</p><h2 className="flex items-center gap-2 font-display text-3xl text-foreground"><Shirt className="size-6" />Get Ready With Me</h2></div>
@@ -160,8 +168,10 @@ export function GetReadyWithMeWorkflow() {
         <div className="min-w-0 flex-1 space-y-1"><p className="text-sm font-semibold">Depth guide · Depth Anything → Genjutsu</p><p className="text-xs text-muted-foreground">Builds a depth map from your clip's current frame and locks the render to it.</p>
           <Button size="sm" variant="outline" disabled={depthBusy || running || mutation.isPending} onClick={() => void buildDepth()}>{depthBusy ? <><Loader2 className="animate-spin" />Building…</> : depth ? "Rebuild depth guide" : "Build depth guide"}</Button></div>
       </div>}
+      <div className="space-y-2"><p className="text-xs font-bold uppercase tracking-widest text-primary">Scene · final environment</p>
+        <div role="group" aria-label="Scene" className="grid grid-cols-2 gap-2 sm:grid-cols-4">{GRWM_SCENES.map(scene => <Button key={scene.id} size="sm" variant={sceneId === scene.id ? "default" : "outline"} aria-pressed={sceneId === scene.id} disabled={running || mutation.isPending} onClick={() => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); })}>{scene.label}</Button>)}</div></div>
       <div role="group" aria-label="Transformation" className="grid grid-cols-2 gap-2">{(["sync", "transfer"] as const).map(value => <Button key={value} variant={transform === value ? "default" : "outline"} aria-pressed={transform === value} disabled={running || mutation.isPending} onClick={() => changeInputs(() => setTransform(value))}>{value === "sync" ? "Motion Sync" : "Motion Transfer"}</Button>)}</div>
-      {transform === "sync" && <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Outfit<input aria-label="Target outfit" value={outfit} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setOutfit(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label><label className="text-sm font-medium">Location<input aria-label="Target location" value={location} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setLocation(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label></div>}
+      {transform === "sync" && <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Outfit<input aria-label="Target outfit" value={outfit} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setOutfit(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label><label className="text-sm font-medium">Scene details<input aria-label="Target location" value={location} disabled={running || mutation.isPending} onChange={e => changeInputs(() => { setSceneId("custom"); setLocation(e.target.value); })} className="mt-1 w-full rounded border border-border bg-background p-2" /></label></div>}
       <p className="text-xs text-muted-foreground">Preview up to 5 seconds; reviewed render up to 15 seconds.</p>
       {(error || failed) && <p role="alert" className="text-sm text-destructive">{error ?? current?.error ?? "Render did not complete."}</p>}
       {uploading && <p role="status" className="text-sm">Saving upload…</p>}
