@@ -33,11 +33,11 @@ export const PERFORMANCE_VARIANT_CATALOG = {
     label: "Build a Scene",
     description: "Five-role reference composition, one approved base, then continuity-locked re-angles.",
     references: [
-      { id: "identity", label: "Identity selfie", guidance: "Clear face and identity source." },
+      { id: "identity", label: "Selfie", guidance: "Clear face and identity source." },
       { id: "outfit", label: "Outfit", guidance: "Full look, fabric and accessories." },
       { id: "location", label: "Location", guidance: "The environment and practical lighting." },
-      { id: "composition", label: "Pose / composition", guidance: "Body pose and camera framing." },
-      { id: "prop", label: "Car / prop", guidance: "The exact hero prop to preserve." },
+      { id: "composition", label: "Pose", guidance: "Body pose and camera framing." },
+      { id: "prop", label: "Car", guidance: "The exact hero car or prop to preserve." },
     ] satisfies ReferenceSlot[],
   },
   luxury_interior: {

@@ -8,7 +8,7 @@ export const SLOT_LABELS = [
   "Outfit",
   "Location",
   "Pose",
-  "Prop / Car",
+  "Car",
 ] as const;
 
 export const SLOT_HINTS = [
