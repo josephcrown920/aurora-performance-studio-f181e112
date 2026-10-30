@@ -20,6 +20,9 @@ import { generateBaseScene } from "@/lib/scene-builder.functions";
 import { generatePerformanceShot, listGenerations } from "@/lib/studio.functions";
 import { Button } from "@/components/ui/button";
 import { HiggsHero, StepGuide, type GuideStep } from "@/components/studio/HiggsLayout";
+import { planSceneWithAgent } from "@/lib/scene-agent.functions";
+import weaverThumb from "@/assets/environments/graffiti-color.jpg";
+import storyboardThumb from "@/assets/environments/deluxe-cinema.jpg";
 
 export const Route = createLazyFileRoute("/scene-builder")({
   component: SceneBuilderPage,
@@ -103,6 +106,21 @@ function SceneBuilderPage() {
   // Each enqueued angle is tracked by its generation ID so we can poll for results.
   const [angleJobs, setAngleJobs] = useState<AngleJob[]>([]);
 
+  const [agentBrief, setAgentBrief] = useState("");
+  const [agentTips, setAgentTips] = useState<string[]>([]);
+  const agentFn = useServerFn(planSceneWithAgent);
+  const agentMut = useMutation({
+    mutationFn: () => agentFn({ data: { brief: agentBrief, filled: SLOT_LABELS.filter((_, i) => slots[i]) as string[] } }),
+    onSuccess: (plan) => {
+      if (plan.outfit) setOutfit(plan.outfit);
+      if (plan.location) setLocation(plan.location);
+      if (plan.prop) setProp(plan.prop);
+      if (plan.prompt) setPromptOverride(plan.prompt);
+      setAgentTips(plan.tips);
+      toast.success("Scene agent set up your scene — review and generate");
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Scene agent failed"),
+  });
   const baseFn = useServerFn(generateBaseScene);
   const enqueueFn = useServerFn(generatePerformanceShot);
   const listFn = useServerFn(listGenerations);
@@ -321,14 +339,14 @@ function SceneBuilderPage() {
         {/* Header */}
         <div className="px-4 pt-4 pb-4 flex items-center gap-2">
           <Clapperboard className="w-4 h-4 text-primary shrink-0" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-primary">
+          <span className="font-display text-2xl tracking-wide text-primary">
             Directors ROOM
           </span>
         </div>
 
         {/* ── Sub-tools: Scene Weaver + Storyboard ────────────────────── */}
         <div className="px-4 pb-2">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-2">Also in Directors ROOM</p>
+          <p className="font-display text-lg tracking-wide text-muted-foreground mb-2">Also in Directors ROOM</p>
           <div className="grid grid-cols-2 gap-2">
             <Link
               to="/scene-weaver"
@@ -337,12 +355,10 @@ function SceneBuilderPage() {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative p-3.5 flex flex-col gap-2">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
-                  <Camera className="size-4 text-primary" />
-                </span>
+                <img src={weaverThumb} alt="Scene Weaver" loading="lazy" className="aspect-video w-full rounded-lg object-cover" />
                 <div>
-                  <p className="text-sm font-semibold text-foreground leading-tight">Scene Weaver</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">Weave cinematic shots from your references</p>
+                  <p className="font-display text-xl tracking-wide text-foreground leading-tight">Scene Weaver</p>
+                  <p className="text-sm font-semibold text-muted-foreground mt-0.5 leading-snug">Weave cinematic shots from your references</p>
                 </div>
               </div>
             </Link>
@@ -353,12 +369,10 @@ function SceneBuilderPage() {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative p-3.5 flex flex-col gap-2">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
-                  <Clapperboard className="size-4 text-primary" />
-                </span>
+                <img src={storyboardThumb} alt="Storyboard" loading="lazy" className="aspect-video w-full rounded-lg object-cover" />
                 <div>
-                  <p className="text-sm font-semibold text-foreground leading-tight">Storyboard</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">Plan and visualise your shot sequence</p>
+                  <p className="font-display text-xl tracking-wide text-foreground leading-tight">Storyboard</p>
+                  <p className="text-sm font-semibold text-muted-foreground mt-0.5 leading-snug">Plan and visualise your shot sequence</p>
                 </div>
               </div>
             </Link>
@@ -384,7 +398,7 @@ function SceneBuilderPage() {
                       </div>
                     )}
                   </div>
-                  <span className="text-[8px] font-semibold uppercase tracking-wider text-violet-200/60">{label}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-violet-200/80">{label}</span>
                 </div>
               ))}
             </div>
@@ -398,6 +412,17 @@ function SceneBuilderPage() {
               ))}
             </div>
           </div>
+
+          {/* ── Dola Seed scene agent ── */}
+          <section aria-label="Scene agent" className="rounded-xl border border-primary/30 bg-primary/5 p-3">
+            <div className="flex items-center gap-2"><Sparkles className="size-4 text-primary" /><h2 className="font-display text-xl tracking-wide">Scene Agent</h2><span className="ml-auto text-xs font-semibold text-muted-foreground">Dola Seed</span></div>
+            <p className="mt-1 text-sm font-medium text-muted-foreground">Add your references below, tell the agent the vibe, and it fills in the outfit, location, car and prompt for you.</p>
+            <textarea value={agentBrief} onChange={(e) => setAgentBrief(e.target.value)} rows={3} maxLength={1500} placeholder="e.g. Me in my black Venus flytrap tee rapping at a hanging mic outside a Lagos nightclub, Maybach parked behind" className="mt-2 w-full rounded-lg border border-border bg-background/60 p-2 text-sm font-medium" />
+            <Button className="mt-2 w-full" disabled={!user || agentBrief.trim().length < 3 || agentMut.isPending} onClick={() => agentMut.mutate()}>
+              {agentMut.isPending ? <RefreshCw className="size-4 animate-spin" /> : <Sparkles className="size-4" />}{user ? "Set up my scene" : "Sign in to use the agent"}
+            </Button>
+            {agentTips.length > 0 && <ul className="mt-2 list-disc pl-5 text-sm font-medium text-muted-foreground">{agentTips.map((t) => <li key={t}>{t}</li>)}</ul>}
+          </section>
 
           {/* ── 5 Labeled upload slots ── */}
           <section>
@@ -446,11 +471,11 @@ function SceneBuilderPage() {
                       <Upload className="w-4 h-4 text-white/30" />
                     )}
                   </button>
-                  <span className="text-[10px] font-semibold text-center text-white/50 truncate leading-tight">
+                  <span className="text-xs font-bold text-center text-white/80 truncate leading-tight">
                     {label}
                   </span>
                   {!slots[idx] && (
-                    <span className="text-[9px] text-center text-white/25 leading-tight line-clamp-2">
+                    <span className="text-[11px] font-medium text-center text-white/50 leading-tight line-clamp-2">
                       {SLOT_HINTS[idx]}
                     </span>
                   )}
@@ -588,7 +613,7 @@ function SceneBuilderPage() {
               [
                 { label: "Outfit", placeholder: "e.g. oversized denim jacket, white crop top, black cargo pants", value: outfit, set: setOutfit },
                 { label: "Location", placeholder: "e.g. rooftop at golden hour, downtown street with neon signs", value: location, set: setLocation },
-                { label: "Prop / Car", placeholder: "e.g. matte black sports car, vintage cassette player", value: prop, set: setProp },
+                { label: "Car", placeholder: "e.g. matte black sports car, vintage cassette player", value: prop, set: setProp },
               ] as const
             ).map(({ label, placeholder, value, set }) => (
               <div key={label}>
