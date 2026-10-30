@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { generateImage, faceSwapVideo } from "@/lib/guy/generate";
-import { IMAGE_ENGINES, DEFAULT_IMAGE_ENGINE } from "@/lib/guy/engines";
+import { IMAGE_ENGINES } from "@/lib/guy/engines";
 import { Loader2, ScanFace } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { EXPRESSION_MODES, IDENTITY_IMAGE_ENGINES, assertIdentityRequest, type ExpressionMode, type IdentitySettings } from "@/lib/identity/contract";
 
 const IDENTITY_LOCK = "Keep the exact same person from the face reference: identical face shape, eyes, nose, lips, jawline, skin tone, freckles, marks and age. Do not beautify, stylize or blend identities.";
 
@@ -12,7 +13,9 @@ export function FaceSwap({ onAsset }: { onAsset: (url: string, kind: "image" | "
   const [target, setTarget] = useState<File>();
   const [face, setFace] = useState<File>();
   const [preview, setPreview] = useState<string[]>([]);
-  const [engine, setEngine] = useState(DEFAULT_IMAGE_ENGINE);
+  const [engine, setEngine] = useState("seedream5pro");
+  const [expression, setExpression] = useState<ExpressionMode>("preserve");
+  const [customExpr, setCustomExpr] = useState("");
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
@@ -30,7 +33,9 @@ export function FaceSwap({ onAsset }: { onAsset: (url: string, kind: "image" | "
         setResult(url); onAsset(url, "video", "face-swap.mp4"); setStatus("Face-swapped video added to Generations.");
       } else {
         setStatus("Editing the face…");
-        const url = await generateImage(`Edit the first image: replace only the main person's face with the consenting adult identity in the second image. ${IDENTITY_LOCK} Match original lighting, skin shading, head angle and expression. Keep hair, clothing, body, background and composition unchanged. Natural photographic result, no text.`, engine, target, false, [face]);
+        const identity: IdentitySettings = { identityRequired: true, faceSwapMode: true, expressionMode: expression, customExpression: customExpr, preserveFacialStructure: true, preserveSkinTone: true, preserveDistinctiveFeatures: true, referencePriority: "identity-first" };
+        assertIdentityRequest(identity, "image", engine, 2);
+        const url = await generateImage("Natural photographic face swap, no text.", engine, target, true, [face], identity);
         setResult(url); onAsset(url, "image", "face-swap.png"); setStatus("Face edit added to Generations.");
       }
     } catch (e) { setStatus(e instanceof Error ? e.message : "Face swap failed."); }
@@ -52,8 +57,12 @@ export function FaceSwap({ onAsset }: { onAsset: (url: string, kind: "image" | "
       <input key={`${kind}-${i}`} aria-label={label} type="file" accept={i === 0 && kind === "video" ? "video/*" : "image/*"} className="w-full min-w-0" onChange={(e) => { if (i === 0) setTarget(e.target.files?.[0]); else setFace(e.target.files?.[0]); }} />
     </label>)}</div>
     {kind === "image"
-      ? <select aria-label="Face swap image engine" value={engine} onChange={(e) => setEngine(e.target.value)} className="w-full rounded-md border border-border bg-background p-2 text-xs">{IMAGE_ENGINES.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}</select>
+      ? <select aria-label="Face swap image engine" value={engine} onChange={(e) => setEngine(e.target.value)} className="w-full rounded-md border border-border bg-background p-2 text-xs">{IMAGE_ENGINES.filter((e) => IDENTITY_IMAGE_ENGINES.has(e.id)).map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}</select>
       : <p className="text-xs text-muted-foreground">Model: Seedance 2.5 (ModelArk). Keeps the clip's motion, timing and sound; best with clips up to 15 seconds.</p>}
+    <div className="flex gap-2">
+      <select aria-label="Expression" value={expression} onChange={(e) => setExpression(e.target.value as ExpressionMode)} className="flex-1 rounded-md border border-border bg-background p-2 text-xs">{EXPRESSION_MODES.filter((m) => kind === "image" || m === "preserve").map((m) => <option key={m} value={m}>{m === "preserve" ? "Keep original expression" : m === "follow-prompt" ? "Follow note" : m[0].toUpperCase() + m.slice(1)}</option>)}</select>
+      {expression === "custom" && <input aria-label="Custom expression" value={customExpr} onChange={(e) => setCustomExpr(e.target.value)} placeholder="e.g. smirk, one brow raised" className="flex-1 rounded-md border border-border bg-background p-2 text-xs" />}
+    </div>
     <label className="flex items-start gap-2 text-xs"><input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />I have permission from the adults pictured to edit their likeness.</label>
     <Button disabled={!target || !face || !consent || busy} onClick={() => void run()}>{busy ? <Loader2 className="animate-spin" /> : <ScanFace />}{kind === "video" ? "Swap face in video" : "Swap face"}</Button>
     {status && <p role="status" className="text-xs text-muted-foreground">{status}</p>}

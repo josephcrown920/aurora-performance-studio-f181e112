@@ -27,3 +27,5 @@
 - /studio?mode=edit renders the ported Remix GUI Video Studio (src/features/guy-studio/GuyStudio.tsx, a plain component, not a route); Perform Anywhere lives in one shared PerformAnywhereWorkspace component reused by the landing page, /perform-anywhere, and the Video Studio's Perform view so its look can't drift.
 
 - /layers opens GuyStudio in Layers mode with the same LayerStudio and asset callback as Studio; this preserves the original Remix appearance and one editor session rather than embedding or substituting another app.
+
+- Identity contract: src/lib/identity/contract.ts is the single identity rule set; /api/guy/image and video face swap enforce it server-side so UI cannot bypass it.
