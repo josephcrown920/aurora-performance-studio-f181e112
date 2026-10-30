@@ -59,6 +59,14 @@ Snapshot date: 2026-10-05; latest work update: 2026-10-22. Read this first. It c
 - No paid generations were attempted; this local-media check does not verify authenticated generation, private-library persistence or provider availability. Local file URLs need reimport after refresh.
 - Next priority remains real depth conditioning in Motion Control / Perform Anywhere. Appetize helper scripts were not found during this continuation; previous installation claims are not evidence of a working device-test setup. APPETIZE_API_TOKEN and OLLAMA_API_KEY remain pending from the creator.
 
+## Exact Remix correction — 2026-10-30
+- Source confirmed by creator: Remix of Aurora Video Agent `bb1a20ff-d34f-40ff-a266-9e8377053b7e`, snapshot `e5daa5e7`.
+- Restored its original left control rail instead of Studio Video Guide’s header and floating dock. Explicit scoped desktop rules compensate for Aurora’s globally disabled Tailwind breakpoints without changing other pages.
+- `/layers` now opens the same GuyStudio in Layers mode, rendering the original copied LayerStudio (decomposition, source, identity, output, storyboard and motion controls), not an external iframe or alternative AuroraLayersStudio.
+- Preserved generation handlers and asset callback; tested a local photo upload, Wardrobe target selection/locking, Send to timeline, and switching to the editor with the image visible. Desktop 1280px and phone 430px checks had no page errors or horizontal overflow. Seven existing navigation/timeline tests passed; automatic build OK.
+- Captures: `screenshots/remix-original-2026-10-30/`. These public/local checks do not verify paid generation, account quota or private-cloud persistence. This original Layers implementation saves shoots locally on the device; the previous private native implementation remains in the code but is not the displayed screen.
+- Landing, Perform Anywhere, Build a Scene and Two-angle layouts were not changed.
+
 ## Where it stopped (open items)
 - **Security:** the Canvas ARK and ComfyUI submit endpoints need in-handler auth, spending limits and safe error messages. After that, run a fresh security scan.
 - **Export:** there is no single finished MP4 with the song. The export ZIP only contains frames and clips.
