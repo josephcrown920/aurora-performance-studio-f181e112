@@ -33,6 +33,11 @@ import bedroom from "@/assets/environments/bedroom.jpg";
 import vanity from "@/assets/environments/vanity.jpg";
 import hotelSuite from "@/assets/environments/hotel-suite.jpg";
 
+import micRed from "@/assets/environments/mic/mic-red.jpg.asset.json";
+import micWhite from "@/assets/environments/mic/mic-white.jpg.asset.json";
+import micTeal from "@/assets/environments/mic/mic-teal.jpg.asset.json";
+import micStreet from "@/assets/environments/mic/mic-street.jpg.asset.json";
+
 import int_rolls from "@/assets/environments/interior-rolls.jpg";
 import int_jet from "@/assets/environments/interior-jet.jpg";
 import int_maybach from "@/assets/environments/interior-maybach.jpg";
@@ -42,12 +47,16 @@ import int_yacht from "@/assets/environments/interior-yacht.jpg";
 import int_lambo from "@/assets/environments/interior-lambo.jpg";
 import int_bentley from "@/assets/environments/interior-bentley.jpg";
 
-export type EnvironmentCategory = "Luxury Interiors" | "Color Studios" | "Lagos" | "Urban & Street" | "Surreal" | "Museum & Art" | "Indoor Rooms" | "Walk-in Wardrobes";
+export type EnvironmentCategory = "Mic Stages" | "Luxury Interiors" | "Color Studios" | "Lagos" | "Urban & Street" | "Surreal" | "Museum & Art" | "Indoor Rooms" | "Walk-in Wardrobes";
 export interface EnvironmentPreset { id: string; label: string; category: EnvironmentCategory; image: string; prompt: string }
 
 const e = (id: string, label: string, category: EnvironmentCategory, image: string, prompt: string): EnvironmentPreset => ({ id, label, category, image, prompt });
 
 export const PERFORM_ENVIRONMENTS: EnvironmentPreset[] = [
+  e("mic-red", "Red mic stage", "Mic Stages", micRed.url, "seamless red studio with a hanging vintage microphone suspended from above at mouth height; performer stands under it and sings into it, black stool"),
+  e("mic-white", "White mic stage", "Mic Stages", micWhite.url, "seamless white studio with a black condenser mic on a boom arm overhead; performer stands under it and sings into it"),
+  e("mic-teal", "Teal mic stage", "Mic Stages", micTeal.url, "seamless teal studio with haze and a hanging vintage microphone suspended from above at mouth height; performer stands under it and sings into it, teal stool"),
+  e("mic-street", "Sunset street mic", "Mic Stages", micStreet.url, "golden-hour street with a classic Mercedes parked and a hanging vintage microphone suspended from above at mouth height; performer stands under it and sings into it"),
   e("crimson", "Crimson studio", "Color Studios", crimson.url, "seamless crimson red cyclorama studio with soft key light"),
   e("purple", "Royal purple", "Color Studios", purple.url, "seamless royal purple cyclorama studio with glow lighting"),
   e("teal", "Teal studio", "Color Studios", teal.url, "seamless teal cyclorama studio, clean even light"),
