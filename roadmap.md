@@ -1,3 +1,4 @@
+- [ ] Restore Studio and Layers appearance from the exact Remix of Aurora Video Agent project (bb1a20ff), preserving Aurora’s generation services and approved Perform Anywhere layout; verify both screens.
 - [x] Match the now-public Studio Video Guide header and dock; open native Layers directly; add Multi-Angle/TikTok30 shortcuts and capture desktop/mobile editor and Layers.
 - [ ] Verify Canvas bottom tabs in a signed-in session (signed-out Canvas did not reach the workspace).
 - [x] Apply requested performance cleanup: rename FG3, feature NBA Josh with supplied likeness, remove pictured home tool sections, and reuse Perform grids inside Studio; verify color selection and depth preview.
