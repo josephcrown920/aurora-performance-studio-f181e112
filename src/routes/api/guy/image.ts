@@ -68,6 +68,8 @@ export const Route = createFileRoute("/api/guy/image")({
         }
         const { prompt, engine } = (await request.json()) as { prompt?: string; engine?: string };
         if (!prompt?.trim()) return new Response("Prompt required", { status: 400 });
+        const jsonIdentity = decodeIdentity(request.headers.get(IDENTITY_HEADER));
+        if (jsonIdentity?.identityRequired || jsonIdentity?.faceSwapMode) return Response.json({ error: { message: "Add a reference photo of the person first — we won't generate a different person." } }, { status: 400 });
         const r = resolve(engine);
         if (r.error || !r.model) return Response.json({ error: { message: r.error ?? "Image model unavailable" } }, { status: 400 });
         if (r.ark) return arkImage(r.model, prompt);

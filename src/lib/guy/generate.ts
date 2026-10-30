@@ -1,5 +1,6 @@
 /** Browser helpers that call the app's own generation endpoints. */
 import { withCreativeContext } from "@/lib/guy/creative-context";
+import { IDENTITY_HEADER, encodeIdentity, type IdentitySettings } from "@/lib/identity/contract";
 
 const DRAFT_KEY = "reel-draft-mode";
 /** Draft mode: quick low-res, short preview renders. */
@@ -34,7 +35,7 @@ function errMsg(d: unknown, fallback: string) {
 }
 
 /** Generate an image, or edit `source` by prompt when given. Returns a displayable URL. */
-export async function generateImage(prompt: string, engine: string, source?: Blob, raw = false, refs: Blob[] = []): Promise<string> {
+export async function generateImage(prompt: string, engine: string, source?: Blob, raw = false, refs: Blob[] = [], identity?: IdentitySettings): Promise<string> {
   if (!raw) prompt = withCreativeContext(prompt);
   let r: Response;
   if (!source && refs.length) { source = refs[0]; refs = refs.slice(1); }
@@ -42,13 +43,14 @@ export async function generateImage(prompt: string, engine: string, source?: Blo
     const form = new FormData();
     form.set("prompt", prompt);
     form.set("engine", engine);
+    if (identity) form.set("identity", encodeIdentity(identity));
     if (refs.length) {
       form.append("image[]", source, "source.png");
       refs.forEach((ref, i) => form.append("image[]", ref, `reference_${i}.png`));
     } else form.set("image", source, "source.png");
     r = await fetch("/api/guy/image", { method: "POST", body: form });
   } else {
-    r = await fetch("/api/guy/image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt, engine }) });
+    r = await fetch("/api/guy/image", { method: "POST", headers: { "Content-Type": "application/json" }, ...(identity ? { headers: { "Content-Type": "application/json", [IDENTITY_HEADER]: encodeIdentity(identity) } } : {}), body: JSON.stringify({ prompt, engine }) });
   }
   const text = await r.text();
   let d: ImgResp = {};
