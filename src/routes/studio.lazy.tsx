@@ -86,7 +86,7 @@ function StudioWorkspace() {
   if (mode === "canvas") return <NodeWorkspace canvasOnly />;
   // Default view is the ported Video Agent studio as-is (its own mode bar),
   // so it looks exactly like the original Remix project.
-  if (mode !== "perform") return <ClientOnly fallback={<p role="status">Opening studio…</p>}><GuyStudio initialMode={mode === "edit" ? "edit" : "start"} /></ClientOnly>;
+  if (mode !== "perform") return <ClientOnly fallback={<p role="status">Opening studio…</p>}><GuyStudio initialMode={mode === "edit" ? "edit" : mode === "canvas" ? "canvas" : "start"} /></ClientOnly>;
   return <main className="min-h-screen bg-background text-foreground">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
       <Link to="/" className="text-lg font-semibold">Aurora</Link>

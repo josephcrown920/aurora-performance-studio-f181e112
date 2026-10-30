@@ -37,7 +37,7 @@ export function SiteFooter({ tone = "dark" }: { tone?: "dark" | "light" }) {
         </div>
         <nav className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-sm">
           <Link to="/studio" className={`no-underline ${muted}`}>Image &amp; Video</Link>
-          <Link to="/canvas" className={`no-underline ${muted}`}>Canvas</Link>
+          
           {showFeature("ugc") && <Link to="/ugc" className={`no-underline ${muted}`}>UGC Ads Factory</Link>}
           <Link to="/motion" className={`no-underline ${muted}`}>Perform Anywhere</Link>
           <Link to="/lipsync" className={`no-underline ${muted}`}>Lip Sync</Link>
