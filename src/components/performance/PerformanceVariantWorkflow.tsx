@@ -48,6 +48,15 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const [pickerOpen, setPickerOpen] = useState(false);
   const [envId, setEnvId] = useState<string | null>(null);
+  // Default Perform Anywhere scene: the graffiti wall, until the creator picks or uploads another.
+  useEffect(() => {
+    if (mode !== "anywhere" || draft.references.location || envId !== null) return;
+    if (!catalog.references.some((r) => r.id === "location")) return;
+    const graffiti = PERFORM_ENVIRONMENTS.find((p) => p.id === "graffiti-color");
+    if (!graffiti) return;
+    setEnvId(graffiti.id);
+    setDraft((d) => d.references.location ? d : ({ ...d, references: { ...d.references, location: absoluteUrl(graffiti.image) }, settings: "location" in d.settings ? { ...d.settings, location: graffiti.prompt } : d.settings }));
+  }, [mode, draft.references.location, envId, catalog.references]);
   const loadFn = useServerFn(loadPerformanceVariant);
   const saveFn = useServerFn(savePerformanceVariant);
   const generateFn = useServerFn(generatePerformanceVariantPlate);
