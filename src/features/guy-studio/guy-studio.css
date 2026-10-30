@@ -1,4 +1,4 @@
-/* Merged "Studio Video Guide" editor styles — scoped to .guy-studio so Aurora pages keep their look. */
+/* Original Remix editor styles — scoped to .guy-studio so Aurora pages keep their look. */
 @theme inline {
   --font-display: "Syne", ui-sans-serif, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -984,4 +984,27 @@
   background: oklch(0.97 0.003 280);
   color: oklch(0.2 0 0);
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent);
+}
+
+/* Aurora disables Tailwind breakpoints globally. Restore only the original
+   Remix workspace tracks; never change the shared Perform Anywhere surface. */
+.guy-studio > .studio-side { align-self: start; height: 100dvh; padding-inline: 6px; }
+.guy-studio .studio-side .studio-mode-nav button { min-width: 0; }
+@media (min-width: 640px) {
+  .guy-studio > .studio-side { width: 224px; padding: 16px 12px; }
+  .guy-studio .studio-side .hidden.sm\:inline { display: inline; }
+  .guy-studio .studio-side .hidden.sm\:block { display: block; }
+  .guy-studio .studio-side .sm\:hidden { display: none; }
+  .guy-studio .studio-side .studio-mode-nav button { justify-content: flex-start; }
+  .guy-studio .studio-side .studio-header-tools > button { width: 100%; }
+  .guy-studio .layers-app select { min-width: 0; }
+}
+@media (min-width: 768px) {
+  .guy-studio .studio-side .hidden.md\:block { display: block; }
+  .guy-studio .studio-side .hidden.md\:flex { display: flex; }
+}
+@media (min-width: 1024px) {
+  .guy-studio .editor-workspace { grid-template-columns: minmax(0, 1fr) 280px; }
+  .guy-studio .layers-app > .grid { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); }
+  .guy-studio .layers-app .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
