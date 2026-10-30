@@ -26,7 +26,7 @@ import { isTrustedUrl } from "@/lib/url-guard";
 
 const execFileAsync = (...args: Parameters<typeof execFile>) => (promisify(execFile) as (...a: unknown[]) => Promise<{ stdout: string; stderr: string }>)(...args);
 
-const CACHE_DIR = join(tmpdir(), "faststart-cache");
+const cacheDir = () => join(tmpdir(), "faststart-cache");
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6h — matches signed-URL lifetimes
 const MAX_VIDEO_BYTES = 200 * 1024 * 1024; // 200MB safety cap
 
@@ -151,7 +151,7 @@ export const Route = createFileRoute("/api/public/faststart-video")({
 
         // Serve from the /tmp cache when fresh.
         const cacheKey = createHash("sha256").update(`${gen.id}:${videoUrl}`).digest("hex").slice(0, 24);
-        const cachePath = join(CACHE_DIR, `${cacheKey}.mp4`);
+        const cachePath = join(cacheDir(), `${cacheKey}.mp4`);
         try {
           const st = await stat(cachePath);
           if (Date.now() - st.mtimeMs < CACHE_TTL_MS) {
@@ -191,7 +191,7 @@ export const Route = createFileRoute("/api/public/faststart-video")({
         }
 
         // Best-effort cache write; playback must not depend on it.
-        mkdir(CACHE_DIR, { recursive: true })
+        mkdir(cacheDir(), { recursive: true })
           .then(() => writeFile(cachePath, body))
           .catch(() => {});
 
