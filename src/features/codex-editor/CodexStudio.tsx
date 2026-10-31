@@ -28,9 +28,9 @@ export function CodexStudio() {
         ))}
       </nav>
     </header>
-    <div className="grid min-w-0 gap-4 p-3 sm:p-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div className="grid min-w-0 gap-4 p-3 sm:p-5 min-[1100px]:grid-cols-[minmax(0,1fr)_340px]">
       <div className="codex-glass min-w-0 rounded-2xl p-3 sm:p-4"><VideoStudio /></div>
-      <aside className="codex-glass h-fit rounded-2xl px-4 lg:sticky lg:top-5"><CodexCommands /></aside>
+      <aside className="codex-glass h-fit rounded-2xl px-4 min-[1100px]:sticky min-[1100px]:top-5"><CodexCommands /></aside>
     </div>
   </main>;
 }
