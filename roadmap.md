@@ -82,3 +82,7 @@
 - [ ] Depth-map conditioning for Motion Control and Perform Anywhere.
 
 - [x] Landing: remove color picker/depth block, add full studio shots, Scene Builder, Multi-angle, TikTok 30
+
+- [x] Motion control defaults to Seedance 2.5 (/motion and /seedance-motion)
+- [x] Studio editor uses the light-blue Codex glass theme with side assistant panel
+- [ ] Restyle timeline track area to Codex blue; full Codex panels (node canvas, agent inbox) not ported
