@@ -2461,3 +2461,24 @@ html[data-theme="light"] {
  .director-clean-header nav { width:100%; }
  .director-clean-title input { max-width:none; }
 }
+
+/* Codex Plus Editor palette, copied from the uploaded Codex theme */
+.codex-theme {
+  --background: #091326; --foreground: #eef5ff;
+  --card: #16243ccc; --card-foreground: #eef5ff;
+  --popover: #14213bef; --popover-foreground: #eef5ff;
+  --primary: #8de4ee; --primary-foreground: #092233;
+  --secondary: #233852; --secondary-foreground: #dbeafa;
+  --muted: #1d2c48; --muted-foreground: #a1b5cd;
+  --accent: #304766; --accent-foreground: #eef5ff;
+  --border: #a4d4ff24; --input: #a4d4ff38; --ring: #8de4ee;
+  --codex-glass: #a5d7ff0d; --codex-glow: #8de4ee33;
+  background: radial-gradient(1200px 600px at 15% -10%, #1f3d63 0%, transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, #2a2350 0%, transparent 55%), var(--background);
+  color: var(--foreground);
+}
+.codex-theme .codex-glass {
+  background: var(--codex-glass); border: 1px solid var(--border);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: inset 0 1px 0 #ffffff0a, 0 20px 60px #0005;
+}

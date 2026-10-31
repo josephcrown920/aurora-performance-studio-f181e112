@@ -30,8 +30,8 @@ export function CodexCommands() {
     window.dispatchEvent(new CustomEvent('aurora:apply-doc', { detail: pending.doc }));
     setNote(pending.summary); setPending(undefined); setCommand('');
   }
-  return <section aria-label="Codex editing commands" className="min-w-0 space-y-4 border-t border-border py-4">
-    <h2 className="text-lg font-semibold">Codex · Local edits</h2>
+  return <section aria-label="Codex editing commands" className="min-w-0 space-y-4 py-4">
+    <h2 className="text-lg font-semibold">Codex assistant</h2><p className="text-xs text-muted-foreground">Pick a clip, describe the cut (for example “split at 3”), review it, then apply.</p>
     <Select value={selected ?? ''} onValueChange={setSelected}><SelectTrigger aria-label="Codex selected clip"><SelectValue placeholder="Select clip" /></SelectTrigger><SelectContent>{doc.clips.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent></Select>
     <Textarea aria-label="Codex editing command" value={command} onChange={e => setCommand(e.target.value)} placeholder="Describe your edit…" maxLength={1000} />
     <Button onClick={preview} disabled={!command.trim()}><Send className="size-4" /> Review edit</Button>
