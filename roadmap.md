@@ -1,3 +1,4 @@
+- [ ] Run requested inference.sh feature generation tests strictly below USD 1.00; record samples separately from in-app verification and block unpriced/Seedream/Seedance paths.
 - [x] Preserve original PureMix v4 engine and source screens from GitHub commit 791acde; master December locally with the unchanged engine. Stereo 24-bit WAV measured -14 LUFS; no inference spending.
 - [ ] Integrate original PureMix upload/job screens and hosted arbitrary-track mastering; requires a separately deployed Python-capable worker, which Aurora web hosting cannot supply.
 - [x] Inspect supplied phone recordings: portrait upper-body performance with audio, 10.15 seconds; useful face/head motion reference, not full-body coverage. No paid motion tests.
