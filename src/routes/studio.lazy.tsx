@@ -2,6 +2,7 @@
 import { authNextSearch } from "@/lib/auth-return-path";
 import { StudioPage as NodeWorkspace } from "@/features/storyboard/studio/StudioPage";
 import { GuyStudio } from "@/features/guy-studio/GuyStudio";
+import { CodexStudio } from "@/features/codex-editor/CodexStudio";
 import { PerformAnywhereWorkspace } from "@/components/performance/PerformAnywhereWorkspace";
 import { ClientOnly, createLazyFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
@@ -88,7 +89,7 @@ function StudioWorkspace() {
   // so it looks exactly like the original Remix project.
   // Default /studio is the original Aurora studio with every feature; the
   // ported video editor stays one tap away at ?mode=edit.
-  if (mode === "edit") return <ClientOnly fallback={<p role="status">Opening studio…</p>}><GuyStudio initialMode="edit" /></ClientOnly>;
+  if (!mode || mode === "edit") return <ClientOnly fallback={<p role="status">Opening studio…</p>}><CodexStudio /></ClientOnly>;
   if (mode !== "perform") return <StudioPage />;
   return <main className="min-h-screen bg-background text-foreground">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">

@@ -1,0 +1,5 @@
+# Native Codex integration
+
+The actual uploaded `lib/editor/model.ts`, `nle.ts`, `effects.ts` and `interchange.ts` are preserved in `core/`. The model's asset URL validator is adapted for Aurora media. `timeline-adapter.ts` projects the canonical TimelineDoc into Codex's model, executes its original parser/edit validation, then preserves Aurora metadata while mapping back.
+
+Studio now exposes imports, shared program monitor, native timeline/layers, WebM export and approval-gated deterministic Codex commands. Home, Perform and native Layers are unchanged. This is the first usable integration, not the full standalone Codex suite: provider orchestration, producer panels, complete effects, cloud project sessions and all export formats are still pending. No competing project store or paid calls were introduced.

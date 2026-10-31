@@ -1,4 +1,8 @@
-- [ ] Port the actual uploaded Codex editing core into primary Studio, simplify navigation, preserve the shared timeline and approved Home/Perform/Layers; verify imports, command approval, playback and export.
+- [x] Preserve original PureMix v4 engine and source screens from GitHub commit 791acde; master December locally with the unchanged engine. Stereo 24-bit WAV measured -14 LUFS; no inference spending.
+- [ ] Integrate original PureMix upload/job screens and hosted arbitrary-track mastering; requires a separately deployed Python-capable worker, which Aurora web hosting cannot supply.
+- [x] Inspect supplied phone recordings: portrait upper-body performance with audio, 10.15 seconds; useful face/head motion reference, not full-body coverage. No paid motion tests.
+- [x] Mount actual Codex local editing core in primary Studio with simplified navigation and shared TimelineDoc; reviewed split/source offsets and seven focused tests passed.
+- [ ] Complete full Codex provider/producer/session/effects panels; standalone API contracts need ownership-safe Aurora adapters. Current surface is local commands/shared timeline, not the full standalone suite.
 - [x] Restore Studio and Layers appearance from the exact Remix of Aurora Video Agent project (bb1a20ff), preserving existing generation handlers and approved Perform Anywhere layout; desktop/mobile upload, target lock and Layers-to-editor handoff verified. Paid generation/private cloud saves not verified.
 - [x] Match the now-public Studio Video Guide header and dock; open native Layers directly; add Multi-Angle/TikTok30 shortcuts and capture desktop/mobile editor and Layers.
 - [ ] Verify Canvas bottom tabs in a signed-in session (signed-out Canvas did not reach the workspace).

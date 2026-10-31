@@ -35,18 +35,19 @@ export function VideoStudio() {
       if (kind !== "image") {
         const media = kind === "audio" ? new Audio() : document.createElement("video");
         media.preload = "metadata";
-        duration = await new Promise<number>(resolve => {
+        try { duration = await new Promise<number>((resolve, reject) => {
           const finish = () => {
             clearTimeout(timeout);
-            resolve(Number.isFinite(media.duration) && media.duration > 0 ? media.duration : 5);
+            if (Number.isFinite(media.duration) && media.duration > 0) resolve(media.duration);
+            else reject(new Error(`This browser cannot read ${file.name}. Try a compatible MP4 or WebM file.`));
             media.removeAttribute("src");
             media.load();
           };
-          const timeout = setTimeout(finish, 5000);
+          const timeout = setTimeout(finish, 15000);
           media.onloadedmetadata = finish;
           media.onerror = finish;
           media.src = src;
-        });
+        }); } catch (error) { URL.revokeObjectURL(src); toast.error(error instanceof Error ? error.message : 'Unsupported media'); continue; }
       }
       window.dispatchEvent(
         new CustomEvent("aurora:import-media", {
