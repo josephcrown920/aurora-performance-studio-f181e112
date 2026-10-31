@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/josephcrown920/PureMix-AI",
+  "commit": "791acde1cec4d19e1ad72495bab94986b190912e",
+  "engine": "artifacts/api-server/src/lib/audioMastering.py",
+  "status": "Original engine unchanged; worker deployment and native frontend integration pending"
+}
