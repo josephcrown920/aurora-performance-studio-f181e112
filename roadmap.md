@@ -1,3 +1,4 @@
+- [ ] Port the actual uploaded Codex editing core into primary Studio, simplify navigation, preserve the shared timeline and approved Home/Perform/Layers; verify imports, command approval, playback and export.
 - [x] Restore Studio and Layers appearance from the exact Remix of Aurora Video Agent project (bb1a20ff), preserving existing generation handlers and approved Perform Anywhere layout; desktop/mobile upload, target lock and Layers-to-editor handoff verified. Paid generation/private cloud saves not verified.
 - [x] Match the now-public Studio Video Guide header and dock; open native Layers directly; add Multi-Angle/TikTok30 shortcuts and capture desktop/mobile editor and Layers.
 - [ ] Verify Canvas bottom tabs in a signed-in session (signed-out Canvas did not reach the workspace).
