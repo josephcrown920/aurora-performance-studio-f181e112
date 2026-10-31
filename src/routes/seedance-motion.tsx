@@ -57,7 +57,7 @@ function SeedanceMotionPage() {
   const [subjectImageUrl, setSubjectImageUrl] = useState<string | null>(null);
   const [motionVideoUrl, setMotionVideoUrl] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("Transfer the motion and timing from the reference video to the subject. Preserve the subject's identity and clothing.");
-  const [modelKey, setModelKey] = useState<(typeof MODELS)[number][0]>("seedance-2.0-fast");
+  const [modelKey, setModelKey] = useState<(typeof MODELS)[number][0]>("seedance-2.5");
   const [cameraMovement, setCameraMovement] = useState<(typeof CAMERAS)[number][0]>("static");
   const [motionType, setMotionType] = useState<(typeof MOTIONS)[number][0]>("faithful");
   const [resolution, setResolution] = useState<"480p" | "720p">("720p");

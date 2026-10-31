@@ -99,14 +99,14 @@ export function VideoStudio() {
           type="button"
           data-testid="video-studio-import"
           onClick={() => fileRef.current?.click()}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:border-primary/50"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 text-foreground py-1.5 text-xs font-semibold hover:border-primary/50"
         >
           <HardDriveUpload className="size-3.5" /> Import media
         </Button>
         <Button
           type="button"
           onClick={() => setShowLayers((v) => !v)}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:border-primary/50"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 text-foreground py-1.5 text-xs font-semibold hover:border-primary/50"
         >
           <Layers className="size-3.5" /> {showLayers ? "Hide layers" : "Layers"}
         </Button>

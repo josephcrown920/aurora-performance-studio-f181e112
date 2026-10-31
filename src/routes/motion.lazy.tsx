@@ -157,7 +157,7 @@ function MotionStudio() {
   const [endFrame, setEndFrame] = useState<string | null>(null);
   const [pose, setPose] = useState(POSE_PRESETS[0]);
   const [cameraMovement, setCameraMovement] = useState("push_in");
-  const [videoModel, setVideoModel] = useState(VIDEO_MODEL_LIST[0].value);
+  const [videoModel, setVideoModel] = useState("seedance-2.5");
   const [videoPrompt, setVideoPrompt] = useState("natural body movement, expressive performance, cinematic");
   const [stagedImage, setStagedImage] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
