@@ -86,3 +86,11 @@
 - [x] Motion control defaults to Seedance 2.5 (/motion and /seedance-motion)
 - [x] Studio editor uses the light-blue Codex glass theme with side assistant panel
 - [ ] Restyle timeline track area to Codex blue; full Codex panels (node canvas, agent inbox) not ported
+
+## Aurora v1 Final Sprint (frozen scope) — status 2026-11-01
+- [x] TikTok30 only: no TikTok50 labels/constants remain (searched app + mobile)
+- [ ] P0 central human-reference routing guard (Seedance/ModelArk + Motion Control) — blocked: ModelArk key rejected / account overdue
+- [ ] P0 Perform Anywhere v2: 14 environments end-to-end — blocked: needs paid renders beyond $1 test cap
+- [ ] P0 proof gates (Motion, Style Transfer, GRWM, Colors, Music Video agent, Production, Canvas, ComfyUI, mastering, Layers, TikTok30) — blocked on provider budget/access
+- [ ] P1 pricing redesign, Canvas redesign, full Layers, PDFs/tutorials
+- [ ] P1 rollback / database restore / storage restore proofs — need creator to act in History and Backups screens
