@@ -164,6 +164,23 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
     })),
     onError: (error) => toast.error(error instanceof Error ? error.message : "Motion enqueue failed"),
   });
+  // Long image renders can outlive the request connection, leaving the button
+  // spinning even though the plate was saved. Recover it from the generation list.
+  const plateStartRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (plateMutation.isPending && plateStartRef.current == null) plateStartRef.current = Date.now() - 5_000;
+    const started = plateStartRef.current;
+    if (started == null) return;
+    const needle = kind === "build_scene" ? "canonical performance scene" : "canonical luxury seated interior";
+    const found = generations.data?.items.find((g) => g.kind === "image" && !!g.result_image_url
+      && ["succeeded", "complete"].includes(g.status ?? "") && (g.prompt ?? "").includes(needle)
+      && g.id !== draft.base?.generationId && new Date(g.created_at).getTime() >= started);
+    if (found?.result_image_url) {
+      plateStartRef.current = null;
+      setDraft((value) => ({ ...value, base: { url: found.result_image_url!, generationId: found.id, approved: false }, angles: [], motions: [] }));
+      plateMutation.reset();
+    } else if (!plateMutation.isPending && Date.now() - started > 600_000) plateStartRef.current = null;
+  }, [plateMutation, generations.data, draft.base, kind]);
   const requiredReady = catalog.references.every((item) => draft.references[item.id]);
   const [autoBuild, setAutoBuild] = useState(false);
   useEffect(() => {
