@@ -318,6 +318,9 @@ function MotionStudio() {
             {stepBadge("1. Stage pose (image)", imgState as "idle" | "running" | "ok" | "error", imageError)}
             {stepBadge("2. Animate (video)", vidState as "idle" | "running" | "ok" | "error", videoError)}
           </div>
+          <p className="text-xs text-muted-foreground">
+            Heads up: this animates your staged photo. It does not copy moves from a phone recording yet — the pose photo only guides the stance.
+          </p>
 
           <div className="flex gap-2">
             <Button
