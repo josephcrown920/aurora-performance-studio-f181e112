@@ -74,11 +74,8 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   useEffect(() => {
     if (!user) return;
     loadFn({ data: { kind, mode } }).then((result) => {
-      const base = result.payload ?? initial(kind, mode);
-      const withJosh = kind === "luxury_interior" && !base.references.identity
-        ? { ...base, references: { ...base.references, identity: `${window.location.origin}${joshPortrait.url}` } }
-        : base;
-      setDraft(withJosh);
+      // Never pre-fill a demo portrait: the server only accepts the creator's own uploads.
+      setDraft(result.payload ?? initial(kind, mode));
       setRevision(result.revision);
       setReady(true);
     }).catch((error) => toast.error(error instanceof Error ? error.message : "Could not load workflow"));
