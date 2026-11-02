@@ -97,3 +97,5 @@
 
 - [ ] Motion Control and video features fail: no working video provider (ModelArk key rejected/overdue, inference.sh ~$0.34, no other video keys). Fix: route through Comfy Cloud. Blocked on COMFY_CLOUD_API_KEY.
 - [ ] Push to GitHub: user must connect via Project settings > Git (agent cannot).
+
+- [ ] Comfy Cloud motion test blocked: account returns FREE_TIER_EXHAUSTED (needs paid Comfy Cloud plan for API runs). Motion graph (Wan2.2 Fun Control 5B + DWPose) ready in /tmp test; port to app after plan active.
