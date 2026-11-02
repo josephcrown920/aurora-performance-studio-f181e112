@@ -23,6 +23,7 @@ import { SiteImagesProvider } from "@/components/landing/SiteImagesProvider";
 import { SiteCopyProvider } from "@/components/landing/SiteCopyProvider";
 import { FeatureVisibilityProvider } from "@/components/FeatureVisibilityProvider";
 import { MobileNav } from "@/components/MobileNav";
+import { BackButton } from "@/components/BackButton";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { useEffect, useState } from "react";
 import { captureRefFromUrl } from "@/lib/referral";
@@ -361,6 +362,7 @@ function RootComponent() {
             <DesignSkinApplier />
             {!isVideoAgent && !isPrimeAgent && !isFullScreenEditor && !isNodeWorkspace && <AuroraChatbot />}
             <AdminHotkey />
+            {!isFullScreenEditor && <BackButton />}
             <ReferralAttacher />
             {hasPersistentNavigation && <MobileNav />}
             <CookieConsentBanner />
