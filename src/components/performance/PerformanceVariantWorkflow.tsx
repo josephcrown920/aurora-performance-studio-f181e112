@@ -52,13 +52,15 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   const [envId, setEnvId] = useState<string | null>(null);
   // Default Perform Anywhere scene: the graffiti wall, until the creator picks or uploads another.
   useEffect(() => {
-    if (mode !== "anywhere" || draft.references.location || envId !== null) return;
+    if (mode !== "anywhere" || !user || draft.references.location || envId !== null) return;
     if (!catalog.references.some((r) => r.id === "location")) return;
     const graffiti = PERFORM_ENVIRONMENTS.find((p) => p.id === "graffiti-color");
     if (!graffiti) return;
     setEnvId(graffiti.id);
-    setDraft((d) => d.references.location ? d : ({ ...d, references: { ...d.references, location: absoluteUrl(graffiti.image) }, settings: "location" in d.settings ? { ...d.settings, location: graffiti.prompt } : d.settings }));
-  }, [mode, draft.references.location, envId, catalog.references]);
+    setDraft((d) => "location" in d.settings ? { ...d, settings: { ...d.settings, location: graffiti.prompt } } : d);
+    void usePresetImage("location", graffiti.image).catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, user, draft.references.location, envId, catalog.references]);
   const loadFn = useServerFn(loadPerformanceVariant);
   const saveFn = useServerFn(savePerformanceVariant);
   const generateFn = useServerFn(generatePerformanceVariantPlate);
@@ -117,6 +119,16 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
       ? { ...value, phoneVideoUrl: data.signedUrl }
       : { ...value, angleVideoOverrides: { ...value.angleVideoOverrides, [slot]: data.signedUrl } });
     else setDraft((value) => ({ ...value, audioUrl: data.signedUrl }));
+  }
+
+  // Preset scenes are app images; the server only accepts the creator's own storage,
+  // so copy the preset into their studio folder before using it.
+  async function usePresetImage(slot: string, image: string) {
+    const response = await fetch(absoluteUrl(image));
+    if (!response.ok) throw new Error("Could not load that scene");
+    const blob = await response.blob();
+    const type = blob.type || "image/jpeg";
+    await upload(new File([blob], `${slot}.${type.split("/")[1] || "jpg"}`, { type }), slot, "image");
   }
 
   const plateMutation = useMutation({
@@ -220,7 +232,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
           presets={pickerSlot === "interior" ? LUXURY_INTERIORS : PERFORM_ENVIRONMENTS}
           selectedId={pickerSlot === "interior" ? pickedIds.interior ?? null : envId}
           onUpload={() => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; fileRefs.current[slot]?.click(); if (slot === "location") setEnvId(null); else setPickedIds((m) => ({ ...m, [slot]: null })); }}
-          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, references: { ...d.references, [slot]: absoluteUrl(preset.image) }, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); setAutoBuild(true); }} />
+          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); void usePresetImage(slot, preset.image).then(() => setAutoBuild(true)).catch((error) => toast.error(error instanceof Error ? error.message : "Could not use that scene")); }} />
 
         <section className="border-t border-border pt-4">
           <h2 className="mb-2 text-sm font-bold">Personalize the scene</h2>
