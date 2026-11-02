@@ -232,7 +232,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
           presets={pickerSlot === "interior" ? LUXURY_INTERIORS : PERFORM_ENVIRONMENTS}
           selectedId={pickerSlot === "interior" ? pickedIds.interior ?? null : envId}
           onUpload={() => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; fileRefs.current[slot]?.click(); if (slot === "location") setEnvId(null); else setPickedIds((m) => ({ ...m, [slot]: null })); }}
-          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, references: { ...d.references, [slot]: absoluteUrl(preset.image) }, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); setAutoBuild(true); }} />
+          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); void usePresetImage(slot, preset.image).then(() => setAutoBuild(true)).catch((error) => toast.error(error instanceof Error ? error.message : "Could not use that scene")); }} />
 
         <section className="border-t border-border pt-4">
           <h2 className="mb-2 text-sm font-bold">Personalize the scene</h2>
