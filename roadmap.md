@@ -94,3 +94,6 @@
 - [ ] P0 proof gates (Motion, Style Transfer, GRWM, Colors, Music Video agent, Production, Canvas, ComfyUI, mastering, Layers, TikTok30) — blocked on provider budget/access
 - [ ] P1 pricing redesign, Canvas redesign, full Layers, PDFs/tutorials
 - [ ] P1 rollback / database restore / storage restore proofs — need creator to act in History and Backups screens
+
+- [ ] Motion Control and video features fail: no working video provider (ModelArk key rejected/overdue, inference.sh ~$0.34, no other video keys). Fix: route through Comfy Cloud. Blocked on COMFY_CLOUD_API_KEY.
+- [ ] Push to GitHub: user must connect via Project settings > Git (agent cannot).
