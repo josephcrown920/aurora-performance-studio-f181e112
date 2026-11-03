@@ -8,6 +8,7 @@ import "@fontsource/bricolage-grotesque/700.css";
 import "@fontsource/bricolage-grotesque/800.css";
 import "@fontsource/jetbrains-mono/400.css";
 import { ComfyAgentPanel } from "@/components/comfy/ComfyAgentPanel";
+import { StudioModeDock } from "@/components/guy/StudioModeDock";
 import { ModelLogo } from "@/components/guy/ModelLogo";
 import { ThemePicker } from "@/components/guy/ThemePicker";
 import { generationIntent } from "@/lib/guy/chat-intent";
@@ -985,15 +986,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
         </div>
       </header>
       {saveNotice && <div role="status" className="shrink-0 border-b border-border bg-card px-3 py-2 text-xs text-foreground">{saveNotice}</div>}
-      {/* floating mode dock */}
-      <nav aria-label="Studio modes" className="studio-dock flex shrink-0 items-center justify-center gap-0.5 overflow-x-auto border-b border-border glass-panel px-2 py-1">
-        <Button size="sm" variant="ghost" onClick={() => setMode("edit")} aria-pressed={mode === "edit"} title="Editor" className={cn("size-8 shrink-0 rounded-full p-0", mode === "edit" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Clapperboard className="size-4" /></Button>
-        <Button size="sm" variant="ghost" onClick={() => setMode("canvas")} aria-pressed={mode === "canvas"} title="Canvas" className={cn("size-8 shrink-0 rounded-full p-0", mode === "canvas" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Film className="size-4" /></Button>
-        <Button size="sm" variant="ghost" onClick={() => setMode("layers")} aria-pressed={mode === "layers"} title="Layers" className={cn("size-8 shrink-0 rounded-full p-0", mode === "layers" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Layers3 className="size-4" /></Button>
-        <Button size="sm" variant="ghost" onClick={() => setMode("workflows")} aria-pressed={mode === "workflows"} title="Workflows" className={cn("size-8 shrink-0 rounded-full p-0", mode === "workflows" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Workflow className="size-4" /></Button>
-        <Button size="sm" variant="ghost" onClick={() => setMode("perform")} aria-pressed={mode === "perform"} title="Perform" className={cn("size-8 shrink-0 rounded-full p-0", mode === "perform" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Film className="size-4" /></Button>
-        <Button size="sm" variant="ghost" onClick={() => setMode("creative")} aria-pressed={mode === "creative"} title="Creative tools" className={cn("size-8 shrink-0 rounded-full p-0", mode === "creative" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Wand2 className="size-4" /></Button>
-      </nav>
+      <StudioModeDock mode={mode} onMode={setMode} />
       <div id="main" className="flex min-w-0 flex-1 flex-col">
       <div className="hidden h-10 items-center gap-2 border-b border-border px-4 text-xs lg:flex">
         <span className="font-semibold">{sessionName}</span>
