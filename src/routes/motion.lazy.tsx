@@ -420,7 +420,9 @@ function MotionStudio() {
     staleTime: 0,
     refetchInterval: 60_000,
   });
-  const motionOnline = motionWorker?.available ?? false;
+  // Cloud motion providers handle jobs when no self-hosted worker is online.
+  const motionOnline = true;
+  void motionWorker;
 
   const { data: history } = useQuery({
     queryKey: ["motion-gens", user?.id],
@@ -1691,7 +1693,7 @@ function MotionStudio() {
               </Link>
             )}
 
-            <p className="text-[11px] text-zinc-600 pb-1">First render is a short discounted preview — review in Gallery, then render the full clip. Runs on a self-hosted GPU backend.</p>
+            <p className="text-[11px] text-zinc-600 pb-1">First render is a short discounted preview — review in Gallery, then render the full clip. Runs on your GPU worker when online, otherwise on cloud motion models.</p>
           </div>
         )}
 

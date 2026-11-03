@@ -1099,8 +1099,10 @@ export const generateMimicMotion = createServerFn({ method: "POST" })
       }
     }
 
-    if (!(await hasActiveWorkerForKind("motion"))) {
-      throw new Error(NO_MOTION_BACKEND_MSG);
+    const useCloud = !(await hasActiveWorkerForKind("motion"));
+    if (useCloud) {
+      const { cloudMotionAvailable } = await import("./cloud-motion.server");
+      if (!cloudMotionAvailable()) throw new Error(NO_MOTION_BACKEND_MSG);
     }
 
     // Preview-confirm gate: unconfirmed runs get a capped frame budget and
@@ -1132,7 +1134,22 @@ export const generateMimicMotion = createServerFn({ method: "POST" })
       },
     );
     if (gated.previewPass) await markGenerationPreview(out.generationId, fingerprint, effectiveParams.seed);
-    await trackServer("motion_transfer_enqueued", userId, { jobId: out.jobId });
+    await trackServer("motion_transfer_enqueued", userId, { jobId: out.jobId, cloud: useCloud });
+    if (useCloud) {
+      const { renderMotionOnCloud } = await import("./cloud-motion.server");
+      const r = await renderMotionOnCloud(userId, out.generationId, out.jobId, {
+        imageUrl: data.imageUrl,
+        drivingVideoUrl: data.drivingVideoUrl,
+        prompt: data.prompt,
+        cameraMovement: data.params?.cameraMovement,
+        motionType: data.params?.motionType,
+        duration: gated.previewPass ? 4 : 5,
+      });
+      if (!r.ok) {
+        await refundCredits(userId, gated.previewPass ? Math.max(1, Math.ceil(fullCost * 0.5)) : fullCost, out.generationId);
+        throw new Error(`Cloud motion failed: ${r.error}`);
+      }
+    }
     return { ...out, preview: gated.previewPass };
   });
 
@@ -1151,8 +1168,10 @@ export async function _enqueuePerformanceReskin(
   if (data.audioUrl) assertOwnStudioUpload(data.audioUrl, userId);
   if (data.depthGuideUrl) assertOwnStudioUpload(data.depthGuideUrl, userId);
 
-  if (!(await hasActiveWorkerForKind("motion"))) {
-    throw new Error(NO_MOTION_BACKEND_MSG);
+  const useCloud = !(await hasActiveWorkerForKind("motion"));
+  if (useCloud) {
+    const { cloudMotionAvailable } = await import("./cloud-motion.server");
+    if (!cloudMotionAvailable()) throw new Error(NO_MOTION_BACKEND_MSG);
   }
 
   // Preview-confirm gate: unconfirmed runs get a capped frame budget and
@@ -1185,7 +1204,20 @@ export async function _enqueuePerformanceReskin(
     payload as Record<string, unknown>,
   );
   if (gated.previewPass) await markGenerationPreview(out.generationId, fingerprint, effectiveParams.seed);
-  await trackServer("performance_reskin_enqueued", userId, { jobId: out.jobId });
+  await trackServer("performance_reskin_enqueued", userId, { jobId: out.jobId, cloud: useCloud });
+  if (useCloud) {
+    const { renderMotionOnCloud } = await import("./cloud-motion.server");
+    const r = await renderMotionOnCloud(userId, out.generationId, out.jobId, {
+      imageUrl: data.avatarImageUrl,
+      drivingVideoUrl: data.performanceVideoUrl,
+      prompt: [data.prompt, data.outfit && `Outfit: ${data.outfit}`, data.location && `Location: ${data.location}`].filter(Boolean).join(". ") || undefined,
+      duration: gated.previewPass ? 4 : 5,
+    });
+    if (!r.ok) {
+      await refundCredits(userId, gated.previewPass ? Math.max(1, Math.ceil(fullCost * 0.5)) : fullCost, out.generationId);
+      throw new Error(`Cloud motion failed: ${r.error}`);
+    }
+  }
   return { ...out, preview: gated.previewPass };
 }
 
