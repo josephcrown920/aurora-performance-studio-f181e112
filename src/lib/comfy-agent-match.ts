@@ -29,3 +29,26 @@ export function unfinishedRuns<T extends ComfyRunLite>(runs: T[]): T[] {
 export function finishedOutputs<T extends ComfyRunLite>(runs: T[]): T[] {
   return runs.filter((r) => r.status === "succeeded" && !!r.output_url);
 }
+
+export type DetectedInput = { key: string; label: string; type: "text" | "image" | "seed" | "number"; required?: boolean; default?: unknown };
+
+/** Turn a raw ComfyUI API-format graph into app inputs: prompts, image loads and seeds become fields. */
+export function detectComfyInputs(graph: Record<string, { class_type?: string; inputs?: Record<string, unknown>; _meta?: { title?: string } }>): { inputs: DetectedInput[]; kind: "image" | "video" } {
+  const inputs: DetectedInput[] = [];
+  let video = false;
+  for (const [id, node] of Object.entries(graph ?? {})) {
+    const c = node?.class_type ?? "";
+    const i = node?.inputs ?? {};
+    const title = node?._meta?.title;
+    if (/video|vhs|wan|animatediff/i.test(c)) video = true;
+    if (/CLIPTextEncode/i.test(c) && typeof i.text === "string") {
+      const neg = /neg/i.test(title ?? "");
+      inputs.push({ key: `${id}.text`, label: title ?? (neg ? "Negative prompt" : "Prompt"), type: "text", required: !neg, default: i.text });
+    } else if (/^LoadImage$/i.test(c) && typeof i.image === "string") {
+      inputs.push({ key: `${id}.image`, label: title ?? "Image", type: "image", required: true });
+    } else if (/KSampler/i.test(c) && typeof i.seed === "number") {
+      inputs.push({ key: `${id}.seed`, label: "Seed", type: "seed", default: i.seed });
+    }
+  }
+  return { inputs, kind: video ? "video" : "image" };
+}

@@ -19,3 +19,19 @@ describe("comfy agent matching", () => {
     expect(finishedOutputs(r).map((x) => x.id)).toEqual(["b"]);
   });
 });
+
+import { detectComfyInputs } from "./comfy-agent-match";
+describe("make app from ComfyUI workflow", () => {
+  it("turns prompt, image and seed nodes into fields", () => {
+    const r = detectComfyInputs({
+      "6": { class_type: "CLIPTextEncode", inputs: { text: "a dancer" } },
+      "10": { class_type: "LoadImage", inputs: { image: "x.png" } },
+      "3": { class_type: "KSampler", inputs: { seed: 42 } },
+    });
+    expect(r.inputs.map((i) => i.key)).toEqual(["3.seed", "6.text", "10.image"]);
+    expect(r.kind).toBe("image");
+  });
+  it("marks Wan graphs as video apps", () => {
+    expect(detectComfyInputs({ "1": { class_type: "WanFunControlToVideo", inputs: {} } }).kind).toBe("video");
+  });
+});
