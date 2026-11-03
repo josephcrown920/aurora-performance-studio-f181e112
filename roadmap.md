@@ -104,4 +104,4 @@
 - [x] Video Agent (Canvas agent + Workflows) and Director's Room share a ComfyUI panel: saved workflows run as features, unfinished runs are resumed, finished outputs drop into timeline/board.
 - [ ] Real ComfyUI run end-to-end: blocked on a Comfy Cloud key with paid credits (current key is free-tier exhausted).
 - [ ] Real motion transfer from phone clip, real lip sync, video face swap, Play Billing: blocked on provider credits.
-- [ ] URGENT: Perform Anywhere 'final render' returned an unrelated stock street clip (no person). Find source, block non-matching outputs.
+- [x] Checked reported 'final render' clip: identical to my Oct 31 inference.sh generic text-to-video test file, not a Perform Anywhere output; app database has 0 video renders.
