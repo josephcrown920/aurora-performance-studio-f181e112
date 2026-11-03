@@ -99,3 +99,8 @@
 - [ ] Push to GitHub: user must connect via Project settings > Git (agent cannot).
 
 - [ ] Comfy Cloud motion test blocked: account returns FREE_TIER_EXHAUSTED (needs paid Comfy Cloud plan for API runs). Motion graph (Wan2.2 Fun Control 5B + DWPose) ready in /tmp test; port to app after plan active.
+
+- [x] /studio opens the Video Agent first; corner bar links Director, Storyboard, Canvas, Codex, ComfyUI, Perform.
+- [x] Video Agent (Canvas agent + Workflows) and Director's Room share a ComfyUI panel: saved workflows run as features, unfinished runs are resumed, finished outputs drop into timeline/board.
+- [ ] Real ComfyUI run end-to-end: blocked on a Comfy Cloud key with paid credits (current key is free-tier exhausted).
+- [ ] Real motion transfer from phone clip, real lip sync, video face swap, Play Billing: blocked on provider credits.

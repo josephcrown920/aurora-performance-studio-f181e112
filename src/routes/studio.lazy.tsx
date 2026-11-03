@@ -93,6 +93,9 @@ function StudioWorkspace() {
     <nav aria-label="Director tools" className="fixed bottom-4 right-4 z-[9998] flex gap-2 rounded-full border border-border bg-background/85 p-1.5 shadow-lg backdrop-blur">
       <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/director">Director</Link></Button>
       <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/previs">Storyboard</Link></Button>
+      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/studio" search={{ mode: "canvas" }}>Canvas</Link></Button>
+      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/studio" search={{ mode: "codex" }}>Codex</Link></Button>
+      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/comfy">ComfyUI</Link></Button>
       <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/studio" search={{ mode: "perform" }}>Perform</Link></Button>
     </nav>
   </ClientOnly>;

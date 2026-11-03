@@ -4,6 +4,7 @@ import { ThemePicker } from "@/components/guy/ThemePicker";
 import { generationIntent } from "@/lib/guy/chat-intent";
 import { CreativeTools } from "@/components/guy/CreativeTools";
 import { WorkflowStudio } from "@/components/guy/WorkflowStudio";
+import { ComfyAgentPanel } from "@/components/comfy/ComfyAgentPanel";
 import { PerformStudio } from "@/components/guy/PerformStudio";
 import logoIcon from "@/assets/guy/gui-video-studio-logo.png";
 import { TimelineHoverPreview } from "@/components/guy/TimelineHoverPreview";
@@ -1130,11 +1131,13 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
             <p className="flex items-center gap-1.5 text-xs font-semibold"><Bot className="size-3.5 text-accent" /> Canvas agent</p>
             <p className="text-[11px] text-muted-foreground">Ask for shots, looks or a full sequence. It sees your images and sends results to Generations and the timeline.</p>
             <CreativeChat messages={msgs} brief={brief} setBrief={setBrief} busy={busy} send={(t) => send(t, "orchestrator")} onAttach={(f) => void ingest(f)} references={assets.map((a) => a.name)} />
+            <ComfyAgentPanel brief={brief} onOutput={(o) => addAsset(o.url, o.kind === "video" ? "video" : "image", o.name, true)} />
           </aside>
         </main>
       ) : mode === "workflows" ? (
         <main className="flex-1 p-2 sm:p-3">
           <WorkflowStudio assets={assets} clips={clips} onAsset={addAsset} onComfy={() => { setComfyFirst(true); setMode("creative"); }} />
+          <div className="mt-3"><ComfyAgentPanel brief={brief} onOutput={(o) => addAsset(o.url, o.kind === "video" ? "video" : "image", o.name, true)} /></div>
         </main>
       ) : mode === "layers" ? (
         <main className="flex-1 p-2 sm:p-3">
