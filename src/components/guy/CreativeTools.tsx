@@ -35,9 +35,17 @@ export function CreativeTools(props: Props) {
           ["Image relighting", "Relight my attached image with soft studio key light and a subtle rim light. Keep identity, outfit and composition unchanged."],
           ["Object removal", "Remove the unwanted object from my image. Ask which object and keep everything else unchanged."],
           ["Video continuation", "Continue my attached video as one seamless shot, maintaining subject identity, lighting and direction."],
+          ["Music video director", "Read my song idea and plan a beat-synced music video: shot list, prompts per shot and cut points, then generate and place each shot."],
+          ["Beat-synced edit", "Cut my timeline clips on the beat of my audio track and suggest a transition for every cut."],
+          ["Storyboard from script", "Turn my script or brief into a numbered storyboard with one image prompt per panel, then generate the panels."],
+          ["Character consistency", "Lock my character's look from the attached references and keep identity, outfit and hair consistent across every new shot."],
+          ["Product ad (15s)", "Write and produce a 15-second product ad: hook, three feature shots and an end card, using my product image."],
+          ["Thumbnail designer", "Design three bold, high-contrast thumbnail options for my video with large readable title text."],
+          ["Subtitles & captions", "Write punchy on-screen captions for my timeline, timed to each clip."],
+          ["Colour grade match", "Match the colour grade of all timeline clips to the first clip and suggest one effect preset."],
           ["Campaign shot list", "Plan and create a consistent campaign shot list from my references, then sequence each finished shot on the timeline."],
         ].map(([name, brief]) => ({ name: name ?? "", image: pop, tag: "CREATIVE ACTION", action: () => props.onAsk(brief ?? ""), label: "Prepare brief" })),
-      ].map((t) => <article key={t.name} className="overflow-hidden rounded-lg border border-border bg-card"><img src={t.image} alt={t.name} className="aspect-video w-full object-cover" /><div className="p-4"><p className="font-mono text-[9px] text-accent">{t.tag}</p><h2 className="my-2 text-sm font-bold">{t.name}</h2><Button size="sm" variant="secondary" onClick={t.action}>{t.label}</Button></div></article>)}
+      ].map((t) => <article key={t.name} title={t.label} className="group overflow-hidden rounded-lg border border-border bg-card transition hover:border-primary"><div className="overflow-hidden"><img src={t.image} alt={t.name} className="aspect-video w-full object-cover transition duration-500 group-hover:scale-110 group-hover:saturate-150" /></div><div className="p-4"><p className="font-mono text-[9px] text-accent">{t.tag}</p><h2 className="my-2 text-sm font-bold">{t.name}</h2><Button size="sm" variant="secondary" onClick={t.action}>{t.label}</Button></div></article>)}
       <article className="rounded-lg border border-border bg-card p-4"><p className="font-mono text-[9px] text-muted-foreground">KREA CONNECTION REQUIRED</p><h2 className="my-2 text-sm font-bold">Krea 2 / Turbo · LoRA · Realtime</h2><p className="mb-4 text-xs leading-relaxed text-muted-foreground">These services are not connected. The uploaded Krea 2 style workflow runs through your ComfyUI partner nodes; LoRA training and Realtime require a separate Krea setup.</p><Button size="sm" variant="outline" onClick={() => setTab("comfy")}><Plug />Connect workflow</Button></article>
     </div>}
   </main>;
