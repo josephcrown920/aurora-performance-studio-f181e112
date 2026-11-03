@@ -30,3 +30,4 @@
 
 - Identity contract: src/lib/identity/contract.ts is the single identity rule set; /api/guy/image and video face swap enforce it server-side so UI cannot bypass it.
 - Preserve PureMix's upstream Python engine under artifacts/puremix-original; it requires a separate Python-capable worker for hosted mastering, never a subprocess inside a web server function.
+- GUI editor sessions use owner-protected video_studio_projects with a GUI-tagged context entry; this preserves source session behavior without a competing session table.

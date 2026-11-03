@@ -100,9 +100,11 @@
 
 - [ ] Comfy Cloud motion test blocked: account returns FREE_TIER_EXHAUSTED (needs paid Comfy Cloud plan for API runs). Motion graph (Wan2.2 Fun Control 5B + DWPose) ready in /tmp test; port to app after plan active.
 
-- [x] /studio opens the Video Agent first; corner bar links Director, Storyboard, Canvas, Codex, ComfyUI, Perform.
+- [x] /studio opens the source GUI Video Editor directly with its own original mode dock; Codex and Director URLs remain available separately.
 - [x] Video Agent (Canvas agent + Workflows) and Director's Room share a ComfyUI panel: saved workflows run as features, unfinished runs are resumed, finished outputs drop into timeline/board.
 - [ ] Real ComfyUI run end-to-end: blocked on a Comfy Cloud key with paid credits (current key is free-tier exhausted).
 - [ ] Real motion transfer from phone clip, real lip sync, video face swap, Play Billing: blocked on provider credits.
 - [x] Checked reported 'final render' clip: identical to my Oct 31 inference.sh generic text-to-video test file, not a Perform Anywhere output; app database has 0 video renders.
 - [ ] Restore the complete GUI Video Editor from project 152f871a as Aurora's editor, preserving source panels, tools and assets; verify local editing without paid generations.
+- [x] Restore source editor screen, library (all seven original props), character lock, notebook, complete effect catalogue and source session controls; ten focused tests passed. Signed-in browser verified playback, library-to-timeline, character selection, native Canvas/Layers, photo import, local export and private session save/reopen; build OK. No paid generation calls.
+- [ ] Complete exact-editor fidelity: source Genjutsu package and VFX demo media download failed; original Canvas build-and-run behavior still differs from Aurora's safe agent adapter; generated-media gallery persistence remains unverified. Do not describe the entire port as complete.
