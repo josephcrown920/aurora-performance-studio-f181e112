@@ -20,7 +20,7 @@ const MODES = [
 ] as const;
 
 /** Visual mode navigation leaves the parent editor session mounted. */
-export function StudioModeDock({ mode, onMode }: { mode: StudioMode; onMode: (mode: StudioMode) => void }) {
+export function StudioModeDock({ mode, onMode }: { mode: StudioMode | "start"; onMode: (mode: StudioMode) => void }) {
   return (
     <nav aria-label="Studio modes" className="studio-dock shrink-0 overflow-x-auto border-b border-border glass-panel px-3 py-2">
       <div className="mx-auto flex w-max gap-2">
