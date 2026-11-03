@@ -1204,7 +1204,20 @@ export async function _enqueuePerformanceReskin(
     payload as Record<string, unknown>,
   );
   if (gated.previewPass) await markGenerationPreview(out.generationId, fingerprint, effectiveParams.seed);
-  await trackServer("performance_reskin_enqueued", userId, { jobId: out.jobId });
+  await trackServer("performance_reskin_enqueued", userId, { jobId: out.jobId, cloud: useCloud });
+  if (useCloud) {
+    const { renderMotionOnCloud } = await import("./cloud-motion.server");
+    const r = await renderMotionOnCloud(userId, out.generationId, out.jobId, {
+      imageUrl: data.avatarImageUrl,
+      drivingVideoUrl: data.performanceVideoUrl,
+      prompt: [data.prompt, data.outfit && `Outfit: ${data.outfit}`, data.location && `Location: ${data.location}`].filter(Boolean).join(". ") || undefined,
+      duration: gated.previewPass ? 4 : 5,
+    });
+    if (!r.ok) {
+      await refundCredits(userId, gated.previewPass ? Math.max(1, Math.ceil(fullCost * 0.5)) : fullCost, out.generationId);
+      throw new Error(`Cloud motion failed: ${r.error}`);
+    }
+  }
   return { ...out, preview: gated.previewPass };
 }
 
