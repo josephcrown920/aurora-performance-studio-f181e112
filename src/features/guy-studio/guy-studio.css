@@ -4032,6 +4032,47 @@
   min-width: 2rem;
   justify-content: center;
 }
+:where(.guy-studio) .studio-preview-dock {
+  padding: 8px 12px;
+}
+:where(.guy-studio) .studio-preview-row {
+  display: flex;
+  width: max-content;
+  margin-inline: auto;
+  gap: 8px;
+}
+:where(.guy-studio) .studio-mode-preview {
+  width: 108px;
+  height: 76px;
+  padding: 0;
+  gap: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+:where(.guy-studio) .studio-mode-preview[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+:where(.guy-studio) .studio-mode-preview img {
+  width: 100%;
+  height: 48px;
+  flex: 0 0 48px;
+  object-fit: cover;
+}
+:where(.guy-studio) .studio-mode-preview span {
+  width: 100%;
+  height: 26px;
+  flex: 0 0 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0;
+}
 :where(.guy-studio) .cover-scene {
   min-height: 600px;
   height: min(760px, 76svh);

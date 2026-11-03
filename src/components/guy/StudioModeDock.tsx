@@ -22,8 +22,8 @@ const MODES = [
 /** Visual mode navigation leaves the parent editor session mounted. */
 export function StudioModeDock({ mode, onMode }: { mode: StudioMode | "start"; onMode: (mode: StudioMode) => void }) {
   return (
-    <nav aria-label="Studio modes" className="studio-dock shrink-0 overflow-x-auto border-b border-border glass-panel px-3 py-2">
-      <div className="mx-auto flex w-max gap-2">
+    <nav aria-label="Studio modes" className="studio-dock studio-preview-dock shrink-0 overflow-x-auto border-b border-border glass-panel px-3 py-2">
+      <div className="studio-preview-row mx-auto flex w-max gap-2">
         {MODES.map(({ mode: value, label, image, icon: Icon }) => (
           <Button
             key={value}
@@ -32,7 +32,7 @@ export function StudioModeDock({ mode, onMode }: { mode: StudioMode | "start"; o
             aria-label={label}
             aria-pressed={mode === value}
             className={cn(
-              "group relative flex h-[76px] w-[108px] shrink-0 flex-col gap-0 overflow-hidden rounded-md border p-0 transition-colors motion-reduce:transition-none",
+              "studio-mode-preview group relative flex h-[76px] w-[108px] shrink-0 flex-col gap-0 overflow-hidden rounded-md border p-0 transition-colors motion-reduce:transition-none",
               mode === value ? "border-primary bg-primary text-primary-foreground ring-1 ring-primary" : "border-border bg-card text-foreground hover:border-primary",
             )}
           >
