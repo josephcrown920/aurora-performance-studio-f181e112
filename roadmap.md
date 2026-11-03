@@ -109,3 +109,5 @@
 - [x] Restore source editor screen, library (all seven original props), character lock, notebook, complete effect catalogue and source session controls; ten focused tests passed. Signed-in browser verified playback, library-to-timeline, character selection, native Canvas/Layers, photo import, local export and private session save/reopen; build OK. No paid generation calls.
 - [ ] Complete exact-editor fidelity: source Genjutsu package and VFX demo media download failed; original Canvas build-and-run behavior still differs from Aurora's safe agent adapter; generated-media gallery persistence remains unverified. Do not describe the entire port as complete.
 - [x] Add FlowAurora-inspired visual mode previews in Studio, preserving all six modes and editor state; desktop/mobile thumbnails and Layers → Editor switching verified, seven editor-state tests passed, build OK. No generation calls.
+- [ ] Audit GitHub #125 using fresh tests; update only proven checks and explicitly record failed motion control/transfer.
+- [ ] Confirm code reaches GitHub after audit; Git sync status is not available to the agent.
