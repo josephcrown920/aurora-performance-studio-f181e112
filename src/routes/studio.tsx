@@ -49,10 +49,10 @@ export const Route = createFileRoute("/studio")({
   component: StudioPage,
   head: () => ({
     meta: [
-      { title: "Studio — Aurora" },
-      { name: "description", content: "The full Aurora studio: upload references, pick a model, run generations and iterate on cinematic shots." },
-      { property: "og:title", content: "Aurora Studio" },
-      { property: "og:description", content: "Run image and video generations across every top model from one canvas." },
+      { title: "GUI Video Studio — Aurora" },
+      { name: "description", content: "Aurora’s complete GUI Video Editor: timeline editing, reference library, character controls, Layers, Canvas and creative workflows." },
+      { property: "og:title", content: "GUI Video Studio — Aurora" },
+      { property: "og:description", content: "Timeline editing, reference library, character controls, Layers, Canvas and creative workflows in Aurora’s full Video Agent studio." },
       { property: "og:url", content: "https://aurorastudiostar.lovable.app/studio" },
       { name: "robots", content: "noindex" },
       { property: "og:type", content: "website" },

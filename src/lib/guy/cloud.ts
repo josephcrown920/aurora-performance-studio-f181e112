@@ -41,7 +41,7 @@ export async function syncSessionToCloud(session: SavedSession) {
   const userId = await currentUserId();
   if (!userId) return false;
   const state = { assets: session.assets, clips: session.clips, messages: session.messages, agent: session.agent, imageEngine: session.imageEngine, videoEngine: session.videoEngine };
-  const { error } = await (supabase as any).from("studio_sessions").upsert({ id: session.id, user_id: userId, name: session.name, state, updated_at: new Date().toISOString() });
+  const { error } = await supabase.from("video_studio_projects").insert({ id: crypto.randomUUID(), user_id: userId, title: session.name, context_notes: { guiSessionId: session.id, guiEditor: state }, updated_at: new Date().toISOString() });
   if (error) throw error;
   return true;
 }
@@ -50,13 +50,14 @@ export async function syncSessionToCloud(session: SavedSession) {
 export async function listCloudSessions(): Promise<SavedSession[]> {
   const userId = await currentUserId();
   if (!userId) return [];
-  const { data } = await (supabase as any).from("studio_sessions").select("id, name, state, updated_at").order("updated_at", { ascending: false }).limit(30);
+  const { data } = await supabase.from("video_studio_projects").select("id, title, context_notes, updated_at").order("updated_at", { ascending: false }).limit(30);
   if (!data) return [];
-  return data.map((row: any) => {
-    const s = (row.state ?? {}) as Record<string, unknown>;
+  return data.filter((row) => Boolean((row.context_notes as Record<string, unknown> | null)?.guiEditor)).map((row) => {
+    const context = row.context_notes as Record<string, unknown>;
+    const s = (context.guiEditor ?? {}) as Record<string, unknown>;
     return {
-      id: row.id,
-      name: row.name,
+      id: typeof context.guiSessionId === "string" ? context.guiSessionId : row.id,
+      name: row.title,
       updatedAt: row.updated_at,
       assets: (s["assets"] as SavedSession["assets"]) ?? [],
       clips: (s["clips"] as SavedSession["clips"]) ?? [],

@@ -95,7 +95,7 @@ export function Terminal(props: {
   if (!open)
     return (
       <Button variant="ghost" onClick={() => setOpen(true)} aria-label="Open terminal"
-        className="fixed bottom-20 right-3 z-40 gap-1.5 rounded-full border border-border glass-panel px-3 font-mono text-[11px] md:bottom-4">
+        className="studio-terminal-toggle fixed bottom-4 right-3 z-40 gap-1.5 rounded-full border border-border glass-panel px-3 font-mono text-[11px]">
         <SquareTerminal className="size-3.5" /> Terminal
       </Button>
     );
