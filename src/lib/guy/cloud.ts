@@ -39,22 +39,25 @@ export async function listCloudGallery() {
 /** Upsert a saved session to the cloud so it syncs across devices. */
 export async function syncSessionToCloud(session: SavedSession) {
   const userId = await currentUserId();
-  if (!userId) return;
+  if (!userId) return false;
   const state = { assets: session.assets, clips: session.clips, messages: session.messages, agent: session.agent, imageEngine: session.imageEngine, videoEngine: session.videoEngine };
-  await (supabase as any).from("studio_sessions").upsert({ id: session.id, user_id: userId, name: session.name, state, updated_at: new Date().toISOString() });
+  const { error } = await supabase.from("video_studio_projects").insert({ id: crypto.randomUUID(), user_id: userId, title: session.name, context_notes: [{ guiSessionId: session.id, guiEditor: state }], updated_at: new Date().toISOString() });
+  if (error) throw error;
+  return true;
 }
 
 /** Pull the signed-in user's cloud sessions. */
 export async function listCloudSessions(): Promise<SavedSession[]> {
   const userId = await currentUserId();
   if (!userId) return [];
-  const { data } = await (supabase as any).from("studio_sessions").select("id, name, state, updated_at").order("updated_at", { ascending: false }).limit(30);
+  const { data } = await supabase.from("video_studio_projects").select("id, title, context_notes, updated_at").order("updated_at", { ascending: false }).limit(30);
   if (!data) return [];
-  return data.map((row: any) => {
-    const s = (row.state ?? {}) as Record<string, unknown>;
+  return data.filter((row) => Array.isArray(row.context_notes) && Boolean((row.context_notes[0] as Record<string, unknown> | null)?.guiEditor)).map((row) => {
+    const context = (row.context_notes as Record<string, unknown>[])[0] ?? {};
+    const s = (context.guiEditor ?? {}) as Record<string, unknown>;
     return {
-      id: row.id,
-      name: row.name,
+      id: typeof context.guiSessionId === "string" ? context.guiSessionId : row.id,
+      name: row.title,
       updatedAt: row.updated_at,
       assets: (s["assets"] as SavedSession["assets"]) ?? [],
       clips: (s["clips"] as SavedSession["clips"]) ?? [],

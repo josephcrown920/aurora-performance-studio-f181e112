@@ -11,7 +11,7 @@
 
 - Reuse the Creative Studio `MultiTrackTimeline` and `LayersEditor` for music-video editing so manual and Codex-directed cuts share one editor system.
 - Canvas now shares the Director’s Room board and React Flow graph editor by explicit creator request; Music Video Studio and standalone editor URLs remain retired. Preserve shared Layers/Lagos40 timelines.
-- Studio uses a minimal native Codex workstation with the uploaded Codex editing core projected onto TimelineDoc; Home stays the approved landing page and Canvas remains its shared Director board to avoid competing editing documents.
+- Studio mounts the complete GUI Video Editor in the existing GuyStudio feature boundary; preserve its original editor state and scoped styling while retaining Aurora service adapters, because the creator requires source fidelity rather than a simplified recreation.
 - Director’s Room opens on the graph with optional inspector and Director panels; its Layers link opens the native /layers studio rather than the decorative shot-stack panel.
 - Perform Anywhere uses the existing owner-scoped Build Your Scene draft for scene references, phone recording, and final-render previews so the compact strip reflects the actual workflow.
 - Get Ready With Me is a Perform Anywhere experience using the same owner-scoped source draft and authenticated motion/reskin services; source clip length must not imply unsupported output duration.
@@ -24,9 +24,10 @@
 - Keep the Expo Android app and side apps under `artifacts/`, outside the web app's source; the root .easignore uploads only `artifacts/aurora-mobile` to EAS so the web bun.lock never reaches the mobile builder.
 
 - Keep the native Layers image studio scoped to its feature and reuse authenticated credit-reserved generation, owner-scoped private Layers storage, and the existing TimelineDoc events; this avoids external session forwarding and competing video editors.
-- /studio and /studio?mode=edit open CodexStudio; other Studio modes retain their existing features and PerformAnywhereWorkspace remains shared so approved workflows cannot drift.
+- /studio and /studio?mode=edit open the complete GUI Video Editor in editing mode; Codex remains at ?mode=codex, and Home, Canvas Director and PerformAnywhereWorkspace retain their existing paths so approved workflows cannot drift.
 
 - /layers opens GuyStudio in Layers mode with the same LayerStudio and asset callback as Studio; this preserves the original Remix appearance and one editor session rather than embedding or substituting another app.
 
 - Identity contract: src/lib/identity/contract.ts is the single identity rule set; /api/guy/image and video face swap enforce it server-side so UI cannot bypass it.
 - Preserve PureMix's upstream Python engine under artifacts/puremix-original; it requires a separate Python-capable worker for hosted mastering, never a subprocess inside a web server function.
+- GUI editor sessions use owner-protected video_studio_projects with a GUI-tagged context entry; this preserves source session behavior without a competing session table.

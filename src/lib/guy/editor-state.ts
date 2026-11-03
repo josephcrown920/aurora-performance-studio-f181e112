@@ -45,3 +45,49 @@ export function clipForAsset(asset: EditorAsset, clips: EditorClip[], id: string
 export function serializableAssets(assets: EditorAsset[]) {
   return assets.filter((asset) => !asset.url.startsWith("blob:"));
 }
+
+/** Preserve generated object URLs as durable media, but never persist temporary uploads. */
+export async function serializableTimeline(
+  assets: EditorAsset[],
+  clips: EditorClip[],
+  encodeMedia: (url: string) => Promise<string>,
+) {
+  const durableAssets = await Promise.all(assets
+    .filter((asset) => !asset.url.startsWith("blob:") || asset.generated)
+    .map(async (asset) => asset.url.startsWith("blob:")
+      ? { ...asset, url: await encodeMedia(asset.url) }
+      : asset));
+  const ids = new Set(durableAssets.map((asset) => asset.id));
+  return { assets: durableAssets, clips: clips.filter((clip) => ids.has(clip.assetId)) };
+}
+
+/** A failed browser write must not prevent cloud saving or imply durable success. */
+export async function persistSession(
+  session: SavedSession,
+  sessions: SavedSession[],
+  storage: Pick<Storage, "setItem">,
+  sync: (session: SavedSession) => Promise<boolean>,
+) {
+  const next = [session, ...sessions].slice(0, 12);
+  let localSaved = false;
+  let cloudSaved = false;
+  try {
+    storage.setItem("reel-editor-sessions", JSON.stringify(next));
+    localSaved = true;
+  } catch {
+    // Storage can be full or blocked; still attempt the independent cloud copy.
+  }
+  try {
+    cloudSaved = await sync(session);
+  } catch {
+    // Surface the combined persistence result to the editor.
+  }
+  return { localSaved, cloudSaved, sessions: localSaved || cloudSaved ? next : sessions };
+}
+/** Starter cut shown on a fresh session: the fire house photo, then the fire performance clip. */
+export function starterTimeline(urls: string[], names: string[] = ["fire-house.jpg"]): { assets: EditorAsset[]; clips: EditorClip[] } {
+  const assets: EditorAsset[] = urls.map((url, i) => ({ id: `starter-${i}`, name: names[i] ?? `starter-${i}.jpg`, kind: /\.(mp4|webm|mov)(\?|$)/i.test(url) ? "video" : "image", url, dur: /\.(mp4|webm|mov)(\?|$)/i.test(url) ? 10 : 4 }));
+  const clips: EditorClip[] = [];
+  for (const a of assets) clips.push(clipForAsset(a, clips, `starter-clip-${a.id}`));
+  return { assets, clips };
+}

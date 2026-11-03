@@ -85,20 +85,9 @@ function StudioWorkspace() {
   const { mode } = Route.useSearch();
   const [grwm, setGrwm] = useState(false);
   if (mode === "canvas") return <NodeWorkspace canvasOnly />;
-  // Default /studio is the Remix Video Agent (GuyStudio); FlowAurora's Director
-  // and storyboard open from its floating dock. Codex stays at ?mode=codex.
+  // The complete GUI Video Editor is the primary Video Agent workspace.
   if (mode === "codex") return <ClientOnly fallback={<p role="status">Opening studio…</p>}><CodexStudio /></ClientOnly>;
-  if (!mode || mode === "edit") return <ClientOnly fallback={<p role="status">Opening Video Agent…</p>}>
-    <GuyStudio initialMode={mode === "edit" ? "edit" : "start"} />
-    <nav aria-label="Director tools" className="fixed bottom-4 right-4 z-[9998] flex gap-2 rounded-full border border-border bg-background/85 p-1.5 shadow-lg backdrop-blur">
-      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/director">Director</Link></Button>
-      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/previs">Storyboard</Link></Button>
-      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/studio" search={{ mode: "canvas" }}>Canvas</Link></Button>
-      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/studio" search={{ mode: "codex" }}>Codex</Link></Button>
-      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/comfy">ComfyUI</Link></Button>
-      <Button asChild size="sm" variant="ghost" className="rounded-full"><Link to="/studio" search={{ mode: "perform" }}>Perform</Link></Button>
-    </nav>
-  </ClientOnly>;
+  if (!mode || mode === "edit") return <ClientOnly fallback={<p role="status">Opening Video Agent…</p>}><GuyStudio initialMode="edit" /></ClientOnly>;
   if (mode !== "perform") return <StudioPage />;
   return <main className="min-h-screen bg-background text-foreground">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">

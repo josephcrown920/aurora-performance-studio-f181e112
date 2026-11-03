@@ -1,10 +1,18 @@
 import "./guy-studio.css";
+import "@fontsource/manrope/400.css";
+import "@fontsource/manrope/500.css";
+import "@fontsource/manrope/600.css";
+import "@fontsource/manrope/700.css";
+import "@fontsource/bricolage-grotesque/600.css";
+import "@fontsource/bricolage-grotesque/700.css";
+import "@fontsource/bricolage-grotesque/800.css";
+import "@fontsource/jetbrains-mono/400.css";
+import { ComfyAgentPanel } from "@/components/comfy/ComfyAgentPanel";
 import { ModelLogo } from "@/components/guy/ModelLogo";
 import { ThemePicker } from "@/components/guy/ThemePicker";
 import { generationIntent } from "@/lib/guy/chat-intent";
 import { CreativeTools } from "@/components/guy/CreativeTools";
 import { WorkflowStudio } from "@/components/guy/WorkflowStudio";
-import { ComfyAgentPanel } from "@/components/comfy/ComfyAgentPanel";
 import { PerformStudio } from "@/components/guy/PerformStudio";
 import logoIcon from "@/assets/guy/gui-video-studio-logo.png";
 import { TimelineHoverPreview } from "@/components/guy/TimelineHoverPreview";
@@ -13,6 +21,12 @@ import { EffectPreview } from "@/components/guy/EffectPreview";
 import { supabase } from "@/integrations/supabase/client";
 import { listCloudSessions, saveToCloudGallery, syncSessionToCloud } from "@/lib/guy/cloud";
 import { displayName, greetingText } from "@/lib/guy/greeting";
+import fireHouse from "@/assets/guy/burning-house-background.jpg";
+import { LIBRARY } from "@/lib/guy/library";
+import { CharacterLockPanel, useCharacterLock } from "@/components/guy/CharacterLockPanel";
+import { toggleCharacterRef } from "@/lib/guy/character-lock";
+import { ProjectNotebook } from "@/components/guy/ProjectNotebook";
+import { appendNotebook } from "@/lib/guy/creative-context";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -49,9 +63,7 @@ import {
   ArrowRight,
   LogIn,
   ImageIcon,
-  Camera,
-  Flame,
-  ScanFace,
+  UserRoundCheck,
 } from "lucide-react";
 import {
   AGENTS,
@@ -93,18 +105,16 @@ import { removeImageBackground } from "@/lib/guy/remove-background";
 import { readSse } from "@/lib/guy/agent-stream";
 import {
   clipForAsset,
-  serializableAssets,
+  serializableTimeline,
+  persistSession,
+  starterTimeline,
   type EditorAsset,
   type EditorClip,
   type SavedSession,
 } from "@/lib/guy/editor-state";
-import scene1 from "@/assets/guy/scene1.jpg";
-import scene2 from "@/assets/guy/scene2.jpg";
-import scene3 from "@/assets/guy/scene3.jpg";
 
 type StudioMode = "start" | "edit" | "canvas" | "layers" | "workflows" | "creative" | "perform";
-
-export function GuyStudio({ initialMode = "start" }: { initialMode?: StudioMode }) {
+export function GuyStudio({ initialMode = "edit" }: { initialMode?: StudioMode }) {
   return <Editor initialMode={initialMode} />;
 }
 
@@ -149,8 +159,8 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
     const { data } = supabase.auth.onAuthStateChange((_event, session) => { setSignedIn(!!session?.user); apply(session?.user.user_metadata); });
     return () => { active = false; data.subscription.unsubscribe(); };
   }, []);
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const [clips, setClips] = useState<Clip[]>([]);
+  const [assets, setAssets] = useState<Asset[]>(() => starterTimeline([fireHouse, LIBRARY[0]?.url ?? fireHouse, LIBRARY[5]?.url ?? fireHouse], ["fire-house.jpg", "josh.jpg", "officers.jpg"]).assets);
+  const [clips, setClips] = useState<Clip[]>(() => starterTimeline([fireHouse, LIBRARY[0]?.url ?? fireHouse, LIBRARY[5]?.url ?? fireHouse], ["fire-house.jpg", "josh.jpg", "officers.jpg"]).clips);
   const [sel, setSel] = useState<string | null>(null);
   const [playhead, setPlayhead] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -165,7 +175,6 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   const [busy, setBusy] = useState(false);
   const [voiceOn, setVoiceOn] = useState(false);
   const [genBusy, setGenBusy] = useState(false);
-  const [performTab, setPerformTab] = useState<"perform" | "face">("perform");
   const [mode, setMode] = useState<"start" | "edit" | "canvas" | "layers" | "workflows" | "creative" | "perform">(initialMode);
   const [comfyFirst, setComfyFirst] = useState(false);
   const [imgEngine, setImgEngine] = useState(DEFAULT_IMAGE_ENGINE);
@@ -181,9 +190,12 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   useEffect(() => { setDraft(isDraftMode()); }, []);
   const [exportPct, setExportPct] = useState(0);
   const [mediaView, setMediaView] = useState<"media" | "generations">("media");
-  const [panelTab, setPanelTab] = useState<"create" | "effects" | "media">("create");
+  const [charLock, setCharLock] = useCharacterLock();
+  const [panelTab, setPanelTab] = useState<"create" | "effects" | "media" | "library">("create");
   const [fxNote, setFxNote] = useState("");
   const [sessions, setSessions] = useState<SavedSession[]>([]);
+  const [savingSession, setSavingSession] = useState(false);
+  const [saveNotice, setSaveNotice] = useState("");
   const [sessionName, setSessionName] = useState("Untitled cut");
   const [crew, setCrew] = useState<CrewRun[]>([]);
   const [cutoutBusy, setCutoutBusy] = useState<string | null>(null);
@@ -281,8 +293,9 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
 
   function newSession() {
     if (busy || genBusy || exporting) return;
-    setAssets([]);
-    setClips([]);
+    const starter = starterTimeline([fireHouse, LIBRARY[0]?.url ?? fireHouse, LIBRARY[5]?.url ?? fireHouse], ["fire-house.jpg", "josh.jpg", "officers.jpg"]);
+    setAssets(starter.assets);
+    setClips(starter.clips);
     setSel(null);
     setPlayhead(0);
     setPlaying(false);
@@ -292,25 +305,49 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
     setSessionName("Untitled cut");
     setAgent("orchestrator");
     setDirectingStyle("original");
-    setMode("start");
+    setMode("edit");
   }
 
-  function saveSession() {
+  async function saveSession() {
+    if (savingSession) return;
+    setSavingSession(true);
+    setSaveNotice("");
+    try {
+    const timeline = await serializableTimeline(assets, clips, async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Could not read generated media");
+      const blob = await response.blob();
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => typeof reader.result === "string" ? resolve(reader.result) : reject(new Error("Could not save generated media"));
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+      });
+    });
     const session: SavedSession = {
       id: uid(),
       name: sessionName.trim() || "Untitled cut",
       updatedAt: new Date().toISOString(),
-      assets: serializableAssets(assets),
-      clips,
+      ...timeline,
       messages: msgs,
       agent,
       imageEngine: imgEngine,
       videoEngine: vidEngine,
     };
-    const next = [session, ...sessions].slice(0, 12);
-    setSessions(next);
-    window.localStorage.setItem("reel-editor-sessions", JSON.stringify(next));
-    void syncSessionToCloud(session);
+    const result = await persistSession(session, sessions, window.localStorage, syncSessionToCloud);
+    setSessions(result.sessions);
+    const notice = result.localSaved
+      ? result.cloudSaved ? "Session saved on this device and to your account." : "Session saved on this device only."
+      : result.cloudSaved ? "Saved to your account. Browser storage is full or unavailable."
+      : "Session not saved. Browser storage is full or unavailable, and cloud saving is unavailable. Keep this page open and free storage or sign in, then retry.";
+    setSaveNotice(notice + (result.localSaved || result.cloudSaved
+      ? timeline.assets.length < assets.length ? " Temporary uploads and their clips were excluded; re-import them when reopening." : ""
+      : ""));
+    } catch {
+      setSaveNotice("Session not saved: generated media could not be read. Keep this page open and retry.");
+    } finally {
+      setSavingSession(false);
+    }
   }
 
   function openSession(id: string) {
@@ -321,7 +358,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
     setCrew([]);
     setSessionName(session.name);
     setAssets(session.assets);
-    setClips(session.clips);
+    setClips(session.clips.filter((clip) => session.assets.some((asset) => asset.id === clip.assetId)));
     setMsgs(session.messages);
     setAgent(session.agent);
     setImgEngine(session.imageEngine);
@@ -743,6 +780,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   async function send(text: string, agentOverride?: string) {
     const t = text.trim();
     if (!t || busy) return;
+    appendNotebook(`Asked: ${t}`);
     const intent = generationIntent(t);
     if (intent && !genBusy) {
       setBrief("");
@@ -831,10 +869,10 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   const audioAsset = audioClip ? assetOf(audioClip.assetId) : null;
 
   return (
-    <div className="guy-studio mx-auto flex min-h-screen w-full max-w-[1800px] flex-row overflow-hidden border-border bg-background/65 font-sans text-foreground sm:min-h-[calc(100vh-32px)] sm:rounded-xl sm:border sm:studio-frame lg:my-4">
-      {/* Original Remix of Aurora Video Agent side rail. */}
-      <header aria-label="Studio controls" className="studio-header studio-side sticky top-0 z-50 flex h-screen w-14 shrink-0 flex-col items-stretch justify-start gap-3 overflow-y-auto border-r border-border bg-card/75 px-1.5 py-3 backdrop-blur-2xl sm:w-56 sm:px-3 sm:py-4">
-        <div className="flex min-w-0 flex-col items-stretch gap-2">
+    <div className="guy-studio mx-auto flex min-h-screen w-full max-w-[1800px] flex-col overflow-hidden border-border bg-background/65 font-sans text-foreground sm:min-h-[calc(100vh-32px)] sm:rounded-xl sm:border sm:studio-frame lg:my-4">
+      {/* compact control bar, pinned to the bottom */}
+      <header aria-label="Studio controls" className="studio-header sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-card/85 px-2 py-1 backdrop-blur-2xl sm:px-3">
+        <div className="flex min-w-0 items-center gap-2">
           <input
             aria-label="Session name"
             value={sessionName}
@@ -870,11 +908,12 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           <Button
             variant="ghost"
             onClick={saveSession}
+            disabled={savingSession}
             title="Save session"
             aria-label="Save session"
             className="grid size-8 place-items-center rounded-md border border-border glass-control text-muted-foreground transition hover:text-foreground"
           >
-            <Save className="size-3.5" />
+            {savingSession ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
           </Button>
           <span className="hidden items-center gap-1.5 md:flex" aria-hidden="true">
             <i className="size-2.5 rounded-full bg-destructive" />
@@ -884,7 +923,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           <img src={logoIcon} width={32} height={32} alt="" className="size-8 shrink-0 object-contain" />
           <span className="hidden font-display text-xs font-bold sm:inline">GUI Video Studio</span>
         </div>
-        <div className="studio-header-tools flex min-w-0 flex-col items-stretch gap-2">
+        <div className="studio-header-tools ml-auto flex min-w-0 items-center gap-1.5">
           <Button
             size="sm"
             variant="ghost"
@@ -899,73 +938,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
             <Volume2 className="size-3.5 sm:hidden" />
             <span className="hidden sm:inline">{voiceOn ? "Voice on" : "Voice off"}</span>
           </Button>
-          <nav aria-label="Studio workspace" className="studio-mode-nav flex shrink-0 flex-col rounded-lg border border-border glass-control p-0.5 text-[11px]">
-            <Button
-              size="sm"
-              variant="ghost"
-              aria-label="Chat" title="Chat"
-              onClick={() => setMode("start")}
-              aria-pressed={mode === "start"}
-              className={cn("h-6 px-2", mode === "start" && "bg-primary/20 text-primary")}
-            >
-              <MessageSquare className="size-3" />
-              <span className="hidden sm:inline">Chat</span>
-            </Button>
-            <Button
-              variant="ghost"
-              aria-label="Video Agent" title="Video Agent"
-              onClick={() => setMode("edit")}
-              aria-pressed={mode === "edit"}
-              className={cn(
-                "h-6 rounded-md px-2.5 py-1 transition",
-                mode === "edit"
-                  ? "bg-primary/20 text-primary shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <Clapperboard className="size-3 sm:hidden" />
-              <span className="hidden sm:inline">Editor</span>
-            </Button>
-            <Button
-              variant="ghost"
-              aria-label="Canvas" title="Canvas"
-              onClick={() => setMode("canvas")}
-              aria-pressed={mode === "canvas"}
-              className={cn(
-                "h-6 rounded-md px-2.5 py-1 transition",
-                mode === "canvas"
-                  ? "bg-primary/20 text-primary shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <Film className="size-3 sm:hidden" />
-              <span className="hidden sm:inline">Canvas</span>
-            </Button>
-            <Button
-              variant="ghost"
-              aria-label="Layers" title="Layers"
-              onClick={() => setMode("layers")}
-              aria-pressed={mode === "layers"}
-              className={cn(
-                "h-6 rounded-md px-2.5 py-1 transition",
-                mode === "layers"
-                  ? "bg-primary/20 text-primary shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <Layers3 className="size-3 sm:hidden" />
-              <span className="hidden sm:inline">Layers</span>
-            </Button>
-            <Button variant="ghost" aria-label="Workflows" onClick={() => setMode("workflows")}
-              className={cn("rounded-md px-2.5 py-1 transition", mode === "workflows" ? "bg-primary/20 text-primary shadow-sm" : "text-muted-foreground hover:text-foreground")}>
-              <Workflow className="size-3 sm:hidden" /><span className="hidden sm:inline">Workflows</span>
-            </Button>
-            <Button size="sm" variant="ghost" aria-label="Perform Anywhere" aria-pressed={mode === "perform" && performTab !== "face"} onClick={() => { setPerformTab("perform"); setMode("perform"); }}><Film className="size-3" /><span className="hidden sm:inline">Perform</span></Button>
-            <Button size="sm" variant="ghost" aria-label="Face swap" aria-pressed={mode === "perform" && performTab === "face"} onClick={() => { setPerformTab("face"); setMode("perform"); }}><ScanFace className="size-3" /><span className="hidden sm:inline">Face swap</span></Button>
-            <Button size="sm" variant="ghost" aria-label="Creative tools" aria-pressed={mode === "creative"} onClick={() => setMode("creative")}><Wand2 className="size-3" /><span className="hidden sm:inline">Tools</span></Button>
-            <Button asChild size="sm" variant="ghost"><Link to="/reshoot" aria-label="Multi-Angle" title="Multi-Angle"><Camera className="size-3" /><span className="hidden sm:inline">Multi-Angle</span></Link></Button>
-            <Button asChild size="sm" variant="ghost"><Link to="/spin" aria-label="TikTok30" title="TikTok30"><Flame className="size-3" /><span className="hidden sm:inline">TikTok30</span></Link></Button>
-          </nav>
+          <nav aria-label="Skip" className="sr-only"><a href="#main">Skip to workspace</a></nav>
           <Button asChild size="sm" variant="ghost"><Link to="/admin" aria-label="Visual settings"><Gauge className="size-3.5" /><span className="hidden sm:inline">Visual settings</span></Link></Button>
           {signedIn ? (
             <Button size="sm" variant="ghost" aria-label="Sign out" onClick={() => void supabase.auth.signOut()}>
@@ -1011,7 +984,17 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           </Button>
         </div>
       </header>
-      <div className="flex min-w-0 flex-1 flex-col">
+      {saveNotice && <div role="status" className="shrink-0 border-b border-border bg-card px-3 py-2 text-xs text-foreground">{saveNotice}</div>}
+      {/* floating mode dock */}
+      <nav aria-label="Studio modes" className="studio-dock flex shrink-0 items-center justify-center gap-0.5 overflow-x-auto border-b border-border glass-panel px-2 py-1">
+        <Button size="sm" variant="ghost" onClick={() => setMode("edit")} aria-pressed={mode === "edit"} title="Editor" className={cn("size-8 shrink-0 rounded-full p-0", mode === "edit" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Clapperboard className="size-4" /></Button>
+        <Button size="sm" variant="ghost" onClick={() => setMode("canvas")} aria-pressed={mode === "canvas"} title="Canvas" className={cn("size-8 shrink-0 rounded-full p-0", mode === "canvas" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Film className="size-4" /></Button>
+        <Button size="sm" variant="ghost" onClick={() => setMode("layers")} aria-pressed={mode === "layers"} title="Layers" className={cn("size-8 shrink-0 rounded-full p-0", mode === "layers" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Layers3 className="size-4" /></Button>
+        <Button size="sm" variant="ghost" onClick={() => setMode("workflows")} aria-pressed={mode === "workflows"} title="Workflows" className={cn("size-8 shrink-0 rounded-full p-0", mode === "workflows" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Workflow className="size-4" /></Button>
+        <Button size="sm" variant="ghost" onClick={() => setMode("perform")} aria-pressed={mode === "perform"} title="Perform" className={cn("size-8 shrink-0 rounded-full p-0", mode === "perform" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Film className="size-4" /></Button>
+        <Button size="sm" variant="ghost" onClick={() => setMode("creative")} aria-pressed={mode === "creative"} title="Creative tools" className={cn("size-8 shrink-0 rounded-full p-0", mode === "creative" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><Wand2 className="size-4" /></Button>
+      </nav>
+      <div id="main" className="flex min-w-0 flex-1 flex-col">
       <div className="hidden h-10 items-center gap-2 border-b border-border px-4 text-xs lg:flex">
         <span className="font-semibold">{sessionName}</span>
         <span className="text-muted-foreground">· {busy ? "Brain working…" : genBusy ? "Generating…" : "Ready"}</span>
@@ -1121,23 +1104,21 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           </div>
         </StudioCover>
       ) : mode === "perform" ? (
-        <PerformStudio key={performTab} initialTab={performTab} onAsset={addAsset} />
+        <PerformStudio onAsset={addAsset} />
       ) : mode === "creative" ? (
-        <CreativeTools initialTab={comfyFirst ? "comfy" : "moodboards"} onAsset={addAsset} onPerform={() => setMode("perform")} onCanvas={() => setMode("canvas")} onLayers={() => setMode("layers")} onWorkflows={() => setMode("workflows")} onAsk={(task) => { setMode("start"); setAgent("orchestrator"); setBrief(task); }} />
+        <CreativeTools initialTab={comfyFirst ? "comfy" : "moodboards"} onAsset={addAsset} onPerform={() => setMode("perform")} onCanvas={() => setMode("canvas")} onLayers={() => setMode("layers")} onWorkflows={() => setMode("workflows")} onAsk={(task) => { setMode("edit"); setAgent("orchestrator"); setBrief(task); }} />
       ) : mode === "canvas" ? (
         <main className="grid flex-1 gap-2 p-2 sm:p-3 lg:grid-cols-[minmax(0,1fr)_340px]">
           <NodeCanvas motion={motion} onAsset={addAsset} />
           <aside aria-label="Canvas agent" className="flex flex-col gap-3 rounded-lg border border-border glass-panel p-3">
             <p className="flex items-center gap-1.5 text-xs font-semibold"><Bot className="size-3.5 text-accent" /> Canvas agent</p>
             <p className="text-[11px] text-muted-foreground">Ask for shots, looks or a full sequence. It sees your images and sends results to Generations and the timeline.</p>
-            <CreativeChat messages={msgs} brief={brief} setBrief={setBrief} busy={busy} send={(t) => send(t, "orchestrator")} onAttach={(f) => void ingest(f)} references={assets.map((a) => a.name)} />
-            <ComfyAgentPanel brief={brief} onOutput={(o) => addAsset(o.url, o.kind === "video" ? "video" : "image", o.name, true)} />
+            <CreativeChat messages={msgs} brief={brief} setBrief={setBrief} busy={busy} send={(t) => send(t, "orchestrator")} onAttach={(f) => void ingest(f)} references={assets.map((a) => a.name)} /><ComfyAgentPanel brief={brief} onOutput={({ url, kind, name }) => { if (kind === "image" || kind === "video") addAsset(url, kind, name, true); }} />
           </aside>
         </main>
       ) : mode === "workflows" ? (
         <main className="flex-1 p-2 sm:p-3">
-          <WorkflowStudio assets={assets} clips={clips} onAsset={addAsset} onComfy={() => { setComfyFirst(true); setMode("creative"); }} />
-          <div className="mt-3"><ComfyAgentPanel brief={brief} onOutput={(o) => addAsset(o.url, o.kind === "video" ? "video" : "image", o.name, true)} /></div>
+          <ComfyAgentPanel brief={brief} onOutput={({ url, kind, name }) => { if (kind === "image" || kind === "video") addAsset(url, kind, name, true); }} /><WorkflowStudio assets={assets} clips={clips} onAsset={addAsset} onComfy={() => { setComfyFirst(true); setMode("creative"); }} />
         </main>
       ) : mode === "layers" ? (
         <main className="flex-1 p-2 sm:p-3">
@@ -1252,6 +1233,10 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
               </div>
             </div>
 
+            <div aria-label="Editing chat" className="rounded-lg border border-border glass-panel p-2">
+              <CreativeChat compact messages={msgs} brief={brief} setBrief={setBrief} busy={busy} send={send} onAttach={(f) => void ingest(f)} references={assets.map((a) => a.name)} />
+            </div>
+
             <div className="editor-cockpit">
             {/* timeline */}
             <div aria-label="Timeline" className="flex min-h-[248px] min-w-0 overflow-hidden rounded-lg border border-border glass-panel">
@@ -1359,16 +1344,38 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
             </div>
             <aside aria-label="Editing chat" className="flex min-w-0 flex-col gap-3 border-t border-border pt-3 xl:border-t-0 xl:border-l xl:pl-3 xl:pt-0">
               <EditPilot busy={busy} onAsk={(task) => void send(task, "orchestrator")} brief={brief} onOptimize={setBrief} />
-              <CreativeChat messages={msgs} brief={brief} setBrief={setBrief} busy={busy} send={send} onAttach={(f) => void ingest(f)} references={assets.map((a) => a.name)} />
-              <details><summary className="cursor-pointer text-xs text-muted-foreground">Creative context</summary><div className="pt-3"><CreativeContext /></div></details>
+              <CreativeContext />
+              <ProjectNotebook />
             </aside>
             </div>
           </section>
 
           <aside aria-label="Create Effects Media" className="flex min-w-0 flex-col gap-3 border-t border-border pt-3 lg:border-t-0 lg:border-l lg:pl-4 lg:pt-0">
-            <div role="tablist" aria-label="Editor tools" className="grid grid-cols-3 gap-1 border-b border-border pb-3">
-              {(["create", "effects", "media"] as const).map((tab) => <Button key={tab} variant="ghost" role="tab" aria-selected={panelTab === tab} onClick={() => setPanelTab(tab)} className={cn("h-8 px-1 text-xs capitalize", panelTab === tab ? "bg-secondary text-foreground" : "text-muted-foreground")}>{tab}</Button>)}
+            <div role="tablist" aria-label="Editor tools" className="grid grid-cols-4 gap-1 border-b border-border pb-3">
+              {(["create", "effects", "media", "library"] as const).map((tab) => <Button key={tab} variant="ghost" role="tab" aria-selected={panelTab === tab} onClick={() => setPanelTab(tab)} className={cn("h-8 px-1 text-xs capitalize", panelTab === tab ? "bg-secondary text-foreground" : "text-muted-foreground")}>{tab}</Button>)}
             </div>
+            {panelTab === "library" && <div className="space-y-2">
+              <CharacterLockPanel />
+              <p className="text-[10px] text-muted-foreground">Your props for this video. Tap + to drop on the timeline, scissors to cut out the background, person to lock the character.</p>
+              <div className="grid grid-cols-2 gap-2">
+                {LIBRARY.map((item) => {
+                  const asLib = (): Asset => assets.find((a) => a.id === item.id) ?? { id: item.id, name: `${item.name}.jpg`, kind: "image", url: item.url, dur: 4 };
+                  const ensure = () => { const a = asLib(); setAssets((x) => x.some((y) => y.id === a.id) ? x : [...x, a]); return a; };
+                  return (
+                    <div key={item.id} className="overflow-hidden rounded-md border border-border glass-control">
+                      <img src={item.url} alt={item.name} className="aspect-square w-full object-cover" loading="lazy" />
+                      <div className="flex items-center gap-1 p-1.5">
+                        <p className="min-w-0 flex-1 truncate text-[11px]">{item.name}</p>
+                        <Button variant="ghost" size="icon" className="size-6" aria-label={`Add ${item.name} to timeline`} onClick={() => { addToTimeline(ensure()); appendNotebook(`Placed prop ${item.name} on the timeline`); }}><Plus className="size-3.5" /></Button>
+                        <Button variant="ghost" size="icon" className={cn("size-6", charLock.refs.some((r) => r.id === item.id) && "text-primary")} aria-pressed={charLock.refs.some((r) => r.id === item.id)} aria-label={`Use ${item.name} as character reference`} onClick={() => setCharLock(toggleCharacterRef(charLock, { id: item.id, url: item.url }))}><UserRoundCheck className="size-3" /></Button>
+                        <Button variant="ghost" size="icon" className="size-6" aria-label={`Remove background from ${item.name}`} disabled={!!cutoutBusy} onClick={() => void makeCutout(ensure())}>{cutoutBusy === item.id ? <Loader2 className="size-3 animate-spin" /> : <Scissors className="size-3" />}</Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {cutoutError && <p role="alert" className="text-[11px] text-destructive">{cutoutError}</p>}
+            </div>}
             {panelTab === "create" && <div className="space-y-3">            <div role="tablist" aria-label="Create" className="grid grid-cols-2 gap-1 rounded-md glass-control p-1">
               {(["image", "video"] as const).map((t) => (
                 <Button variant="ghost" key={t} role="tab" aria-selected={createTab === t} type="button" onClick={() => setCreateTab(t)}
@@ -1731,6 +1738,18 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
             ) : (
               <div className="space-y-2 text-xs">
                 <p className="text-[10px] text-muted-foreground">VFX & presets — applies to the clip under the playhead, or your first clip.</p>
+                <Button variant="outline" size="sm" className="w-full gap-1 text-[11px]" disabled={!!cutoutBusy} onClick={() => {
+                  const target = videoClip ?? clips.find((c) => c.track.startsWith("V"));
+                  const a = target && assets.find((x) => x.id === target.assetId);
+                  if (!target || !a || a.kind !== "image") { setFxNote("Background removal works on photo clips — put the playhead over one."); return; }
+                  setFxNote(`Removing background from ${target.name}…`);
+                  void removeImageBackground(a.url).then((url) => {
+                    const cut: Asset = { id: uid(), name: `${a.name.replace(/\.[^.]+$/, "")}_cutout.png`, kind: "image", url, dur: a.dur, generated: true };
+                    setAssets((x) => [...x, cut]);
+                    setClips((cs) => cs.map((c) => c.id === target.id ? { ...c, assetId: cut.id } : c));
+                    setFxNote(`Background removed from ${target.name}.`);
+                  }).catch((e) => setFxNote(e instanceof Error ? e.message : "Background removal failed."));
+                }}><Scissors className="size-3" /> Remove background from clip</Button>
                 <div className="grid grid-cols-2 gap-2">
                   {PRESETS.map((p) => (
                     <Button variant="ghost" key={p.id} title={p.hint} onClick={() => {

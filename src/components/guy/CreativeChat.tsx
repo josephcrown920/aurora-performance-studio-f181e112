@@ -108,6 +108,7 @@ export function CreativeChat({
   spacious = false,
   onAttach,
   references = [],
+  compact = false,
 }: {
   messages: CreativeMessage[];
   brief: string;
@@ -117,6 +118,7 @@ export function CreativeChat({
   spacious?: boolean;
   onAttach?: (files: FileList | null) => void;
   references?: string[];
+  compact?: boolean;
 }) {
   const fileInput = useRef<HTMLInputElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
@@ -142,8 +144,8 @@ export function CreativeChat({
     if (!busy) textarea.current?.focus();
   }, [busy]);
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
-      <Conversation className={cn("min-h-[120px]", spacious ? "max-h-[340px]" : "max-h-[300px]")}>
+    <div className={cn("flex min-h-0 flex-1 flex-col", compact ? "gap-2" : "gap-4")}>
+      <Conversation className={cn(compact ? "min-h-[56px] max-h-[130px]" : "min-h-[120px]", !compact && (spacious ? "max-h-[340px]" : "max-h-[300px]"))}>
         <ConversationContent className="gap-5 p-0 pb-3">
           {messages.map((m, i) => (
             <Message key={i} from={m.role} className="max-w-full">
@@ -176,12 +178,12 @@ export function CreativeChat({
         </ConversationContent>
         <ConversationScrollButton />
       </Conversation>
-      <div className="flex flex-wrap gap-1.5" aria-label="Quick starts">
+      {!compact && <div className="flex flex-wrap gap-1.5" aria-label="Quick starts">
         {[["Image", "Generate a photoreal image of "], ["Video", "Generate a 6-second video of "]].map(([label, text]) => (
-          <Button key={label} type="button" variant="outline" size="sm" className="h-7 rounded-full border-border bg-card/40 px-3 text-[11px]" onClick={() => { setBrief(text!); textarea.current?.focus(); }}>{label}</Button>
+          <Button key={label} type="button" variant="outline" size="sm" className="h-7 rounded-full border-border bg-card/40 px-3 text-[11px]" onClick={() => { setBrief(text ?? ""); textarea.current?.focus(); }}>{label}</Button>
         ))}
-      </div>
-      <VoiceControls />
+      </div>}
+      {!compact && <VoiceControls />}
       <PromptInput onSubmit={() => send(brief)} className="creative-composer rounded-3xl border border-border bg-card/70 shadow-lg backdrop-blur-xl focus-within:border-primary/60">
         <PromptInputTextarea
           ref={textarea}
@@ -189,7 +191,7 @@ export function CreativeChat({
           value={brief}
           onChange={(e) => setBrief(e.target.value)}
           placeholder="Describe your edits, a shot or a whole video… (Enter to send)"
-          className="min-h-20 max-h-48 resize-none border-0 bg-transparent px-4 pt-3 text-sm leading-relaxed"
+          className={cn(compact ? "min-h-12 max-h-32" : "min-h-20 max-h-48", "resize-none border-0 bg-transparent px-4 pt-3 text-sm leading-relaxed")}
         />
         <PromptInputFooter>
           <span className="flex min-w-0 items-center gap-1.5 text-[10px] text-muted-foreground">
