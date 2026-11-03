@@ -39,9 +39,11 @@ export async function listCloudGallery() {
 /** Upsert a saved session to the cloud so it syncs across devices. */
 export async function syncSessionToCloud(session: SavedSession) {
   const userId = await currentUserId();
-  if (!userId) return;
+  if (!userId) return false;
   const state = { assets: session.assets, clips: session.clips, messages: session.messages, agent: session.agent, imageEngine: session.imageEngine, videoEngine: session.videoEngine };
-  await (supabase as any).from("studio_sessions").upsert({ id: session.id, user_id: userId, name: session.name, state, updated_at: new Date().toISOString() });
+  const { error } = await (supabase as any).from("studio_sessions").upsert({ id: session.id, user_id: userId, name: session.name, state, updated_at: new Date().toISOString() });
+  if (error) throw error;
+  return true;
 }
 
 /** Pull the signed-in user's cloud sessions. */
