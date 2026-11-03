@@ -52,15 +52,17 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   const [envId, setEnvId] = useState<string | null>(null);
   // Default Perform Anywhere scene: the graffiti wall, until the creator picks or uploads another.
   useEffect(() => {
-    if (mode !== "anywhere" || !user || draft.references.location || envId !== null) return;
+    // Wait for the saved workflow to load (ready) before applying the default,
+    // otherwise the async preset copy overwrites the creator's saved scene.
+    if (mode !== "anywhere" || !user || !ready || draft.references.location || envId !== null) return;
     if (!catalog.references.some((r) => r.id === "location")) return;
     const graffiti = PERFORM_ENVIRONMENTS.find((p) => p.id === "graffiti-color");
     if (!graffiti) return;
     setEnvId(graffiti.id);
-    setDraft((d) => "location" in d.settings ? { ...d, settings: { ...d.settings, location: graffiti.prompt } } : d);
-    void usePresetImage("location", graffiti.image).catch(() => undefined);
+    setDraft((d) => "location" in d.settings && !d.references.location ? { ...d, settings: { ...d.settings, location: graffiti.prompt } } : d);
+    void usePresetImage("location", graffiti.image, true).catch(() => undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, user, draft.references.location, envId, catalog.references]);
+  }, [mode, user, ready, draft.references.location, envId, catalog.references]);
   const loadFn = useServerFn(loadPerformanceVariant);
   const saveFn = useServerFn(savePerformanceVariant);
   const generateFn = useServerFn(generatePerformanceVariantPlate);
@@ -106,7 +108,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
     return () => clearTimeout(timer);
   }, [draft, ready, user]);
 
-  async function upload(file: File, slot: string, media: "image" | "video" | "audio") {
+  async function upload(file: File, slot: string, media: "image" | "video" | "audio", skipIfSet = false) {
     if (!user) return;
     const extension = file.name.split(".").pop() || (media === "image" ? "jpg" : media === "audio" ? "mp3" : "mp4");
     const path = `${user.id}/performance-variants/${kind}/${slot}-${crypto.randomUUID()}.${extension}`;
@@ -114,7 +116,11 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
     if (error) throw error;
     const { data, error: signError } = await supabase.storage.from("studio").createSignedUrl(path, 60 * 60 * 24);
     if (signError) throw signError;
-    if (media === "image") setDraft((value) => ({ ...value, references: { ...value.references, [slot]: data.signedUrl } }));
+    // skipIfSet: a default-scene copy must never overwrite a reference the
+    // creator saved or picked while the copy was still uploading.
+    if (media === "image") setDraft((value) => (skipIfSet && value.references[slot])
+      ? value
+      : { ...value, references: { ...value.references, [slot]: data.signedUrl } });
     else if (media === "video") setDraft((value) => slot === "original-performance"
       ? { ...value, phoneVideoUrl: data.signedUrl }
       : { ...value, angleVideoOverrides: { ...value.angleVideoOverrides, [slot]: data.signedUrl } });
@@ -123,12 +129,12 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
 
   // Preset scenes are app images; the server only accepts the creator's own storage,
   // so copy the preset into their studio folder before using it.
-  async function usePresetImage(slot: string, image: string) {
+  async function usePresetImage(slot: string, image: string, skipIfSet = false) {
     const response = await fetch(absoluteUrl(image));
     if (!response.ok) throw new Error("Could not load that scene");
     const blob = await response.blob();
     const type = blob.type || "image/jpeg";
-    await upload(new File([blob], `${slot}.${type.split("/")[1] || "jpg"}`, { type }), slot, "image");
+    await upload(new File([blob], `${slot}.${type.split("/")[1] || "jpg"}`, { type }), slot, "image", skipIfSet);
   }
 
   const plateMutation = useMutation({
