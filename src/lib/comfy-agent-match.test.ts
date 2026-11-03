@@ -28,7 +28,7 @@ describe("make app from ComfyUI workflow", () => {
       "10": { class_type: "LoadImage", inputs: { image: "x.png" } },
       "3": { class_type: "KSampler", inputs: { seed: 42 } },
     });
-    expect(r.inputs.map((i) => i.key)).toEqual(["6.text", "10.image", "3.seed"]);
+    expect(r.inputs.map((i) => i.key)).toEqual(["3.seed", "6.text", "10.image"]);
     expect(r.kind).toBe("image");
   });
   it("marks Wan graphs as video apps", () => {
