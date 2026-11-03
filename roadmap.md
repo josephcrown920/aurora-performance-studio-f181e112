@@ -105,3 +105,4 @@
 - [ ] Real ComfyUI run end-to-end: blocked on a Comfy Cloud key with paid credits (current key is free-tier exhausted).
 - [ ] Real motion transfer from phone clip, real lip sync, video face swap, Play Billing: blocked on provider credits.
 - [x] Checked reported 'final render' clip: identical to my Oct 31 inference.sh generic text-to-video test file, not a Perform Anywhere output; app database has 0 video renders.
+- [ ] Restore the complete GUI Video Editor from project 152f871a as Aurora's editor, preserving source panels, tools and assets; verify local editing without paid generations.
