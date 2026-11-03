@@ -52,15 +52,17 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   const [envId, setEnvId] = useState<string | null>(null);
   // Default Perform Anywhere scene: the graffiti wall, until the creator picks or uploads another.
   useEffect(() => {
-    if (mode !== "anywhere" || !user || draft.references.location || envId !== null) return;
+    // Wait for the saved workflow to load (ready) before applying the default,
+    // otherwise the async preset copy overwrites the creator's saved scene.
+    if (mode !== "anywhere" || !user || !ready || draft.references.location || envId !== null) return;
     if (!catalog.references.some((r) => r.id === "location")) return;
     const graffiti = PERFORM_ENVIRONMENTS.find((p) => p.id === "graffiti-color");
     if (!graffiti) return;
     setEnvId(graffiti.id);
-    setDraft((d) => "location" in d.settings ? { ...d, settings: { ...d.settings, location: graffiti.prompt } } : d);
-    void usePresetImage("location", graffiti.image).catch(() => undefined);
+    setDraft((d) => "location" in d.settings && !d.references.location ? { ...d, settings: { ...d.settings, location: graffiti.prompt } } : d);
+    void usePresetImage("location", graffiti.image, true).catch(() => undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, user, draft.references.location, envId, catalog.references]);
+  }, [mode, user, ready, draft.references.location, envId, catalog.references]);
   const loadFn = useServerFn(loadPerformanceVariant);
   const saveFn = useServerFn(savePerformanceVariant);
   const generateFn = useServerFn(generatePerformanceVariantPlate);
