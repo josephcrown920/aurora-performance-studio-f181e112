@@ -1,6 +1,15 @@
 /** Browser helpers that call the app's own generation endpoints. */
 import { withCreativeContext } from "@/lib/guy/creative-context";
-import { IDENTITY_HEADER, encodeIdentity, type IdentitySettings } from "@/lib/identity/contract";
+import { IDENTITY_HEADER, encodeIdentity, assertIdentityRequest, type IdentitySettings } from "@/lib/identity/contract";
+import { readCharacterLock, characterGuide, isCharacterLocked } from "@/lib/guy/character-lock";
+
+async function lockedCharacter() {
+  const lock = readCharacterLock();
+  if (!isCharacterLocked(lock)) return { guide: "", refs: [] as Blob[] };
+  // Never silently drop an unreadable identity reference.
+  const refs = await Promise.all(lock.refs.map((ref) => urlToBlob(ref.url)));
+  return { guide: characterGuide(lock), refs };
+}
 
 const DRAFT_KEY = "reel-draft-mode";
 /** Draft mode: quick low-res, short preview renders. */
@@ -36,7 +45,16 @@ function errMsg(d: unknown, fallback: string) {
 
 /** Generate an image, or edit `source` by prompt when given. Returns a displayable URL. */
 export async function generateImage(prompt: string, engine: string, source?: Blob, raw = false, refs: Blob[] = [], identity?: IdentitySettings): Promise<string> {
-  if (!raw) prompt = withCreativeContext(prompt);
+  if (!raw) {
+    prompt = withCreativeContext(prompt);
+    const lock = await lockedCharacter();
+    if (lock.refs.length) {
+      prompt += `\n\n${lock.guide}`;
+      refs = [...refs, ...lock.refs];
+      identity = { ...identity, identityRequired: true };
+      assertIdentityRequest(identity, "image", engine, refs.length + (source ? 1 : 0));
+    }
+  }
   let r: Response;
   if (!source && refs.length) { source = refs[0]; refs = refs.slice(1); }
   if (source) {
@@ -91,6 +109,12 @@ export async function generateVideo(
   opts: { image?: Blob | undefined; lastFrame?: Blob | undefined; video?: Blob | undefined; audio?: Blob | undefined; depth?: Blob | undefined; refs?: Blob[]; duration?: string; resolution?: string; onStatus?: (s: string) => void } = {},
 ): Promise<string> {
   const draft = isDraftMode();
+  const lock = await lockedCharacter();
+  if (lock.refs.length) {
+    assertIdentityRequest({ identityRequired: true }, "video", engine, lock.refs.length);
+    prompt += `\n\n${lock.guide}`;
+    opts = { ...opts, refs: [...(opts.refs ?? []), ...lock.refs] };
+  }
   const body: Record<string, unknown> = { prompt: withCreativeContext(prompt), engine, motion, duration: draft ? "4s" : opts.duration ?? "6s", resolution: opts.resolution, draft };
   let image = opts.image;
   let depth = opts.depth;

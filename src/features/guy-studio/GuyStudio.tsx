@@ -1113,12 +1113,12 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           <aside aria-label="Canvas agent" className="flex flex-col gap-3 rounded-lg border border-border glass-panel p-3">
             <p className="flex items-center gap-1.5 text-xs font-semibold"><Bot className="size-3.5 text-accent" /> Canvas agent</p>
             <p className="text-[11px] text-muted-foreground">Ask for shots, looks or a full sequence. It sees your images and sends results to Generations and the timeline.</p>
-            <CreativeChat messages={msgs} brief={brief} setBrief={setBrief} busy={busy} send={(t) => send(t, "orchestrator")} onAttach={(f) => void ingest(f)} references={assets.map((a) => a.name)} /><ComfyAgentPanel brief={brief} onAsset={(url, kind, name) => addAsset(url, kind, name, true)} />
+            <CreativeChat messages={msgs} brief={brief} setBrief={setBrief} busy={busy} send={(t) => send(t, "orchestrator")} onAttach={(f) => void ingest(f)} references={assets.map((a) => a.name)} /><ComfyAgentPanel brief={brief} onOutput={({ url, kind, name }) => { if (kind === "image" || kind === "video") addAsset(url, kind, name, true); }} />
           </aside>
         </main>
       ) : mode === "workflows" ? (
         <main className="flex-1 p-2 sm:p-3">
-          <ComfyAgentPanel brief={brief} onAsset={(url, kind, name) => addAsset(url, kind, name, true)} /><WorkflowStudio assets={assets} clips={clips} onAsset={addAsset} onComfy={() => { setComfyFirst(true); setMode("creative"); }} />
+          <ComfyAgentPanel brief={brief} onOutput={({ url, kind, name }) => { if (kind === "image" || kind === "video") addAsset(url, kind, name, true); }} /><WorkflowStudio assets={assets} clips={clips} onAsset={addAsset} onComfy={() => { setComfyFirst(true); setMode("creative"); }} />
         </main>
       ) : mode === "layers" ? (
         <main className="flex-1 p-2 sm:p-3">
