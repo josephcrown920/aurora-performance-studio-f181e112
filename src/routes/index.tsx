@@ -501,6 +501,16 @@ function LandingPage() {
             )}
           </div>
         </div>
+        <div className="flex items-center justify-center gap-5 px-5 pb-2 text-[13px] font-medium text-zinc-300 drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
+          <Link to="/" className="hover:text-white">Home</Link>
+          <Link to="/studio" className="hover:text-white">Studio</Link>
+          <Link to="/billing" className="hover:text-white">Pricing</Link>
+          {!user && (
+            <Link to="/auth" className="rounded-full bg-[#8b5cf6] px-3 py-1 font-semibold text-white">
+              Start free
+            </Link>
+          )}
+        </div>
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
