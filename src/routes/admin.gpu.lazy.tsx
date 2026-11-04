@@ -136,12 +136,24 @@ function AdminGpuPage() {
       <div className="max-w-6xl mx-auto p-6 md:p-10 space-y-10">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight flex items-center gap-2">
-            <Rocket className="h-7 w-7 text-primary" /> Launch a free GPU worker
+            <Rocket className="h-7 w-7 text-primary" /> Connect a notebook GPU
           </h1>
           <p className="text-muted-foreground mt-1 max-w-2xl">
-            Run Aurora's worker on a free Kaggle or Colab GPU. The script installs everything, opens a
-            stable ngrok tunnel, health-checks, and self-registers below — no dashboard edits.
+            Kaggle and Colab GPU availability varies. Motion requires at least 20 GB on a single GPU
+            and 30 GB free disk in the current setup. Passing the hardware check does not prove a render.
           </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button variant="outline" asChild>
+              <a href="/downloads/gpu/aurora_motion_preflight.ipynb" download>
+                <Download className="size-4 mr-2" /> Motion GPU check
+              </a>
+            </Button>
+            <Button variant="outline" asChild>
+              <a href="https://colab.research.google.com/" target="_blank" rel="noreferrer">
+                <ExternalLink className="size-4 mr-2" /> Open Colab
+              </a>
+            </Button>
+          </div>
         </div>
 
         {/* Required secrets */}

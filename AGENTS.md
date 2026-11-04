@@ -32,3 +32,4 @@
 - Preserve PureMix's upstream Python engine under artifacts/puremix-original; it requires a separate Python-capable worker for hosted mastering, never a subprocess inside a web server function.
 - GUI editor sessions use owner-protected video_studio_projects with a GUI-tagged context entry; this preserves source session behavior without a competing session table.
 - StudioModeDock owns visual mode navigation and only changes GuyStudio mode; keeping editor state in GuyStudio prevents previews from resetting the editing session.
+- Free notebook motion setup must run a hardware-only preflight before credentials or model downloads; match the existing MimicMotion setup limits and never combine separate GPUs' memory or treat hardware readiness as render proof.
