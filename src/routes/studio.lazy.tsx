@@ -87,7 +87,7 @@ function StudioWorkspace() {
   if (mode === "canvas") return <NodeWorkspace canvasOnly />;
   // The complete GUI Video Editor is the primary Video Agent workspace.
   if (mode === "codex") return <ClientOnly fallback={<p role="status">Opening studio…</p>}><CodexStudio /></ClientOnly>;
-  if (!mode || mode === "edit") return <ClientOnly fallback={<p role="status">Opening Video Agent…</p>}><GuyStudio initialMode="edit" /></ClientOnly>;
+  if (!mode || mode === "edit") return <ClientOnly fallback={<p role="status">Opening Video Agent…</p>}><GuyStudio key={mode ?? "start"} initialMode={mode === "edit" ? "edit" : "start"} /></ClientOnly>;
   if (mode !== "perform") return <StudioPage />;
   return <main className="min-h-screen bg-background text-foreground">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">

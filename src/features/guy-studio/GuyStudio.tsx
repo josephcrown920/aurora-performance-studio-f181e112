@@ -177,6 +177,12 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   const [voiceOn, setVoiceOn] = useState(false);
   const [genBusy, setGenBusy] = useState(false);
   const [mode, setMode] = useState<"start" | "edit" | "canvas" | "layers" | "workflows" | "creative" | "perform">(initialMode);
+  // Let the app shell show the tab bar + starred sidebar only on the cover screen.
+  useEffect(() => {
+    document.documentElement.dataset.studioMode = mode;
+    window.dispatchEvent(new Event("aurora-studio-mode"));
+    return () => { delete document.documentElement.dataset.studioMode; window.dispatchEvent(new Event("aurora-studio-mode")); };
+  }, [mode]);
   const [comfyFirst, setComfyFirst] = useState(false);
   const [imgEngine, setImgEngine] = useState(DEFAULT_IMAGE_ENGINE);
   const [vidEngine, setVidEngine] = useState(DEFAULT_VIDEO_ENGINE);
