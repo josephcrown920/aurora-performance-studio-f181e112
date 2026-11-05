@@ -1,6 +1,8 @@
 import { describe, it, expect, mock } from "bun:test";
 const store: Record<string,string> = {};
-(globalThis as any).localStorage = { getItem:(k:string)=>store[k]??null, setItem:(k:string,v:string)=>{store[k]=v} };
+const ls = { getItem:(k:string)=>store[k]??null, setItem:(k:string,v:string)=>{store[k]=v} };
+(globalThis as any).localStorage = ls;
+(globalThis as any).window = { localStorage: ls, dispatchEvent: () => true };
 (globalThis as any).fetch = mock(async (url: string) => {
   if (String(url).startsWith("/api/guy/image")) return new Response(JSON.stringify({ data: [{ url: "https://x/img.png" }] }));
   return new Response(new Blob(["x"]));
