@@ -307,7 +307,17 @@ function RootComponent() {
   // (h-dvh stage + timeline + tool dock), so the tab bar and chat bubble
   // would overlap its dock — hide them there, like on the video agent.
   const isFullScreenEditor = pathname === "/edit";
-  const isNodeWorkspace = ["/", "/studio", "/canvas", "/directors-room"].includes(pathname);
+  const [studioMode, setStudioMode] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    const sync = () => setStudioMode(document.documentElement.dataset.studioMode);
+    sync();
+    window.addEventListener("aurora-studio-mode", sync);
+    return () => window.removeEventListener("aurora-studio-mode", sync);
+  }, []);
+  // The Studio cover (basketball court start screen) keeps the app navigation;
+  // full editor modes own the whole screen.
+  const isStudioCover = pathname === "/studio" && studioMode === "start";
+  const isNodeWorkspace = !isStudioCover && ["/", "/studio", "/canvas", "/directors-room"].includes(pathname);
   // The persistent sidebar / tab-bar chrome is app navigation for signed-in
   // creators only. Logged-out visitors (landing, public pages) get each page's
   // own nav — never the studio sidebar. While the session is still resolving,
