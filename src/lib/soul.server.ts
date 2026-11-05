@@ -427,6 +427,22 @@ export type SoulImageResult = {
   insufficient?: boolean;
 };
 
+/** Built-in AI model used when a character has photos but no trained face model. */
+export const SOUL_REFERENCE_IMAGE_MODEL = "google/gemini-2.5-flash-image";
+
+/**
+ * Trained face model wins when it exists and training is configured;
+ * otherwise any uploaded photo enables reference-photo generation.
+ */
+export function soulImageMode(
+  soul: Pick<SoulRow, "status" | "lora_url" | "training_image_paths" | "reference_image_paths">,
+  trainedConfigured: boolean,
+): "trained" | "reference" | "none" {
+  if (soul.status === "ready" && soul.lora_url && trainedConfigured) return "trained";
+  if (soul.training_image_paths.length + soul.reference_image_paths.length > 0) return "reference";
+  return "none";
+}
+
 export async function generateSoulImage(
   soulId: string,
   userId: string,
@@ -435,12 +451,28 @@ export async function generateSoulImage(
   numOutputs: number,
 ): Promise<{ results: SoulImageResult[] }> {
   const soul = await getOwnedSoul(soulId, userId);
-  if (soul.status !== "ready" || !soul.lora_url) {
-    throw new Error("This soul isn't trained yet — finish training before generating images.");
+  const mode = soulImageMode(soul, !!process.env.FAL_KEY);
+  if (mode === "none") {
+    throw new Error("Add at least one photo of this character before generating images.");
   }
   const count = Math.max(1, Math.min(4, Math.round(numOutputs)));
   const perImageCost = soulImageCost();
-  const fullPrompt = `${soul.trigger_word}, ${prompt}`.trim();
+  const fullPrompt =
+    mode === "trained"
+      ? `${soul.trigger_word}, ${prompt}`.trim()
+      : `Keep the exact same person from the reference photos — same face, skin tone, hair and features. ${prompt}`.trim();
+  const referenceUrls: string[] = [];
+  if (mode === "reference") {
+    const paths = [...soul.reference_image_paths, ...soul.training_image_paths].slice(0, 3);
+    for (const p of paths) {
+      try {
+        referenceUrls.push(await signPath("soul-training", p, 3600));
+      } catch {
+        // skip unreadable photo
+      }
+    }
+    if (referenceUrls.length === 0) throw new Error("Couldn't read this character's photos.");
+  }
 
   const results: SoulImageResult[] = [];
   for (let i = 0; i < count; i++) {
@@ -451,10 +483,14 @@ export async function generateSoulImage(
         cost: perImageCost,
         reason: "soul_image",
         prompt: fullPrompt,
-        model: SOUL_IMAGE_MODEL,
         pinnedModelOnly: true,
         aspectRatio,
-        params: { loraUrl: soul.lora_url, triggerWord: soul.trigger_word, numOutputs: 1 },
+        ...(mode === "trained"
+          ? {
+              model: SOUL_IMAGE_MODEL,
+              params: { loraUrl: soul.lora_url, triggerWord: soul.trigger_word, numOutputs: 1 },
+            }
+          : { model: SOUL_REFERENCE_IMAGE_MODEL, imageUrls: referenceUrls }),
       });
       if (!outcome.ok) {
         results.push({ index: i, status: "failed", error: outcome.error, insufficient: outcome.insufficient });
