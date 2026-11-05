@@ -26,7 +26,11 @@ function SoulGenerateImagePage() {
   const generateFn = useServerFn(generateSoulImage);
 
   const { data: souls = [], isLoading: soulsLoading } = useQuery({ queryKey: ["souls"], queryFn: () => listFn() });
-  const readySouls = souls.filter((s) => s.status === "ready");
+  // Trained characters use their face model; any character with photos can
+  // still generate from those photos.
+  const readySouls = souls.filter(
+    (s) => s.status === "ready" || s.training_image_paths.length + s.reference_image_paths.length > 0,
+  );
 
   const [soulId, setSoulId] = useState(search.soulId ?? "");
   const [prompt, setPrompt] = useState("");
@@ -62,9 +66,9 @@ function SoulGenerateImagePage() {
     return (
       <div className="rounded-2xl border border-dashed border-[color:var(--border-strong)] p-8 text-center">
         <AlertCircle className="mx-auto mb-3 size-6 text-muted-foreground" />
-        <p className="mb-3 text-sm text-muted-foreground">You need at least one trained soul before generating images.</p>
+        <p className="mb-3 text-sm text-muted-foreground">Add photos of a character first. Training is optional.</p>
         <Button asChild variant="premium">
-          <Link to="/soul">Train a soul</Link>
+          <Link to="/soul">Add a character</Link>
         </Button>
       </div>
     );
