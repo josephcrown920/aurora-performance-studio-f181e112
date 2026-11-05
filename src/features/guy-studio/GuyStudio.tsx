@@ -429,7 +429,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
     if (!p || genBusy) return;
     setGenBusy(true);
     try {
-      const url = await generateImage(p, imgEngine);
+      const url = await generateImage(p, imgEngine, undefined, false, [], undefined, true);
       const a: Asset = {
         id: uid(),
         name: `gen_${uid()}.png`,
@@ -470,7 +470,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
     if (!p || genBusy) return;
     setGenBusy(true);
     try {
-      const url = await generateVideo(p, vidEngine, motionPhrase(motion), {
+      const url = await generateVideo(p, vidEngine, motionPhrase(motion), { characterLock: true,
         resolution,
         image: firstFrame ?? undefined,
         lastFrame: lastFrame ?? undefined,
@@ -765,8 +765,8 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
         setMsgs((m) => [...m, { role: "assistant", agent: "orchestrator", text: `Making shot ${i + 1} of ${shots.length} (${shot.kind})…` }]);
         try {
           const url = shot.kind === "video"
-            ? await generateVideo(shot.prompt, vidEngine, motionPhrase(motion), { resolution })
-            : await generateImage(shot.prompt, imgEngine);
+            ? await generateVideo(shot.prompt, vidEngine, motionPhrase(motion), { resolution, characterLock: true })
+            : await generateImage(shot.prompt, imgEngine, undefined, false, [], undefined, true);
           const a: Asset = { id: uid(), name: `shot_${String(i + 1).padStart(2, "0")}.${shot.kind === "video" ? "mp4" : "png"}`, kind: shot.kind, url, dur: shot.dur, generated: true };
           setAssets((x) => [...x, a]);
           addToTimeline(a, "V1");
@@ -1056,7 +1056,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           setGenBusy(true);
           setMode("edit");
           try {
-            const url = kind === "video" ? await generateVideo(prompt, vidEngine, motionPhrase(motion), { resolution }) : await generateImage(prompt, imgEngine);
+            const url = kind === "video" ? await generateVideo(prompt, vidEngine, motionPhrase(motion), { resolution, characterLock: true }) : await generateImage(prompt, imgEngine, undefined, false, [], undefined, true);
             const name = `cli_${uid()}.${kind === "video" ? "mp4" : "png"}`;
             addAsset(url, kind, name, true);
             return `✓ ${name} ready — in Generations and on the timeline.`;

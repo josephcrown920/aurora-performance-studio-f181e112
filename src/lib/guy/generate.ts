@@ -44,10 +44,12 @@ function errMsg(d: unknown, fallback: string) {
 }
 
 /** Generate an image, or edit `source` by prompt when given. Returns a displayable URL. */
-export async function generateImage(prompt: string, engine: string, source?: Blob, raw = false, refs: Blob[] = [], identity?: IdentitySettings): Promise<string> {
+export async function generateImage(prompt: string, engine: string, source?: Blob, raw = false, refs: Blob[] = [], identity?: IdentitySettings, useCharacterLock = false): Promise<string> {
   if (!raw) {
     prompt = withCreativeContext(prompt);
-    const lock = await lockedCharacter();
+    // The Library character lock only applies where the caller opts in (GuyStudio);
+    // other tools pick engines that cannot carry identity and must not be blocked.
+    const lock = useCharacterLock ? await lockedCharacter() : { guide: "", refs: [] as Blob[] };
     if (lock.refs.length) {
       prompt += `\n\n${lock.guide}`;
       refs = [...refs, ...lock.refs];
@@ -106,10 +108,10 @@ export async function generateVideo(
   prompt: string,
   engine: string,
   motion: string,
-  opts: { image?: Blob | undefined; lastFrame?: Blob | undefined; video?: Blob | undefined; audio?: Blob | undefined; depth?: Blob | undefined; refs?: Blob[]; duration?: string; resolution?: string; onStatus?: (s: string) => void } = {},
+  opts: { image?: Blob | undefined; lastFrame?: Blob | undefined; video?: Blob | undefined; audio?: Blob | undefined; depth?: Blob | undefined; refs?: Blob[]; characterLock?: boolean; duration?: string; resolution?: string; onStatus?: (s: string) => void } = {},
 ): Promise<string> {
   const draft = isDraftMode();
-  const lock = await lockedCharacter();
+  const lock = opts.characterLock ? await lockedCharacter() : { guide: "", refs: [] as Blob[] };
   if (lock.refs.length) {
     assertIdentityRequest({ identityRequired: true }, "video", engine, lock.refs.length);
     prompt += `\n\n${lock.guide}`;
