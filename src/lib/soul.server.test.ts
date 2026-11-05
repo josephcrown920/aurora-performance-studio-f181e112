@@ -5,6 +5,7 @@ import {
   coerceVibeResult,
   VIBE_FALLBACK,
   trainSoul,
+  soulImageMode,
   type SoulRow,
   type TrainSoulDeps,
 } from "./soul.server";
@@ -342,5 +343,20 @@ describe("trainSoul", () => {
     expect(result.error).toContain("already training");
     expect(reserveCalled).toBe(false);
     expect(fetchCalled).toBe(false);
+  });
+});
+
+describe("soulImageMode", () => {
+  it("uses the trained face model when ready and training is configured", () => {
+    expect(soulImageMode(makeSoul({ status: "ready", lora_url: "x", training_image_paths: ["a"] }), true)).toBe("trained");
+  });
+  it("falls back to reference photos when training isn't configured", () => {
+    expect(soulImageMode(makeSoul({ status: "ready", lora_url: "x", training_image_paths: ["a"] }), false)).toBe("reference");
+  });
+  it("allows an untrained character with one photo", () => {
+    expect(soulImageMode(makeSoul({ status: "pending", reference_image_paths: ["a"] }), true)).toBe("reference");
+  });
+  it("refuses a character with no photos", () => {
+    expect(soulImageMode(makeSoul({ status: "pending" }), true)).toBe("none");
   });
 });
