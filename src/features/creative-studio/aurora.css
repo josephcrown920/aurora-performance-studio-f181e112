@@ -1212,3 +1212,43 @@
 .aurora-codex-preview ul { margin: 6px 0 8px; padding-left: 16px; list-style: disc; }
 .aurora-codex-preview li.rejected { opacity: .6; text-decoration: line-through; }
 .aurora-draft-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; max-height: 200px; overflow: auto; }
+
+/* ── Mac glass refresh ── */
+.aurora-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; letter-spacing: -0.01em; }
+.aurora-body .aurora-bg-overlay { background: linear-gradient(180deg, oklch(0.1 0.02 250 / 0.35), oklch(0.08 0.02 250 / 0.7)); }
+.aurora-macbar {
+  position: sticky; top: 10px; z-index: 30; margin: 10px auto 0; width: min(960px, calc(100% - 20px));
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 16px;
+  background: oklch(1 0 0 / 0.07); border: 1px solid oklch(1 0 0 / 0.14);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.18), 0 20px 50px -20px oklch(0 0 0 / 0.6);
+  backdrop-filter: blur(28px) saturate(170%); color: oklch(0.97 0 0);
+}
+.aurora-traffic { display: flex; gap: 6px; }
+.aurora-traffic span { width: 11px; height: 11px; border-radius: 50%; background: oklch(0.68 0.2 25); }
+.aurora-traffic span:nth-child(2) { background: oklch(0.82 0.16 85); }
+.aurora-traffic span:nth-child(3) { background: oklch(0.75 0.18 145); }
+.aurora-macbar-title { flex: 1; text-align: center; font-size: 13px; font-weight: 600; opacity: 0.85; }
+.aurora-mac-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 500;
+  color: inherit; text-decoration: none; background: oklch(1 0 0 / 0.08); border: 1px solid oklch(1 0 0 / 0.12); cursor: pointer;
+  transition: background 0.15s;
+}
+.aurora-mac-btn:hover { background: oklch(1 0 0 / 0.16); }
+.aurora-mac-btn.icon { padding: 6px 8px; }
+.aurora-mac-btn.primary { background: oklch(0.7 0.12 220 / 0.35); border-color: oklch(0.8 0.1 220 / 0.4); }
+@media (max-width: 560px) { .aurora-traffic, .aurora-macbar-title { display: none; } .aurora-macbar { justify-content: space-between; } }
+.aurora-stream {
+  width: min(720px, 100%); margin: 8px auto 18px; padding: 16px 18px; border-radius: 20px; text-align: left;
+  background: oklch(1 0 0 / 0.06); border: 1px solid oklch(1 0 0 / 0.14);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.2), 0 30px 60px -30px oklch(0 0 0 / 0.7);
+  backdrop-filter: blur(30px) saturate(170%); color: oklch(0.97 0 0);
+}
+.aurora-stream-head { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; }
+.aurora-stream-dot { width: 8px; height: 8px; border-radius: 50%; background: oklch(0.78 0.17 150); box-shadow: 0 0 10px oklch(0.78 0.17 150); animation: aurora-pulse 1.4s infinite; }
+@keyframes aurora-pulse { 50% { opacity: 0.35; } }
+.aurora-stream-text { margin: 10px 0 12px; font-size: 18px; font-weight: 500; line-height: 1.4; min-height: 50px; }
+.aurora-stream-caret { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -2px; background: currentColor; animation: aurora-pulse 0.9s infinite; }
+.aurora-stream-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.aurora-stream-chips button { padding: 5px 11px; border-radius: 999px; font-size: 12px; color: inherit; cursor: pointer; background: oklch(1 0 0 / 0.08); border: 1px solid oklch(1 0 0 / 0.14); }
+.aurora-stream-chips button:hover { background: oklch(1 0 0 / 0.16); }
+.aurora-body .aurora-director, .aurora-body .aurora-mode-switch { backdrop-filter: blur(28px) saturate(170%); border-color: oklch(1 0 0 / 0.14); }
