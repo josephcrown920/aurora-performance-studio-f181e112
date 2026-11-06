@@ -24,6 +24,7 @@ import {
 import { SKILLS, buildSystemPrompt } from "@/features/creative-studio/lib/aurora-skills";
 import { primeSpeech, speak, stopSpeech } from "@/features/creative-studio/lib/aurora-voice";
 import { classifySeedanceReferenceError, isLasAssetReference } from "@/features/creative-studio/lib/seedance-reference";
+import { FeatureShowcase } from "@/features/creative-studio/components/FeatureShowcase";
 import { AgentStream } from "@/features/creative-studio/components/AgentStream";
 
 export const Route = createFileRoute("/video-agent")({
@@ -550,7 +551,7 @@ function Index() {
   };
 
   const runDirector = async (action: "treat" | "film") => {
-    const idea = dirInput.trim();
+    const idea = (dirInput || prompt).trim();
     if (!idea || dirBusy || busy) return;
     setDirError("");
     setDirOut("");
@@ -762,7 +763,8 @@ function Index() {
       <div className="aurora-wrap">
 
         <section className="aurora-hero">
-          <AgentStream onPick={(t) => setDirInput(t)} />
+          <AgentStream onPick={(t) => setPrompt(t)} />
+          <FeatureShowcase />
 
           <div className="aurora-mode-switch">
             <button
@@ -819,29 +821,17 @@ function Index() {
                 )}
               </div>
             </div>
-            <textarea
-              className="aurora-dir-input"
-              placeholder="Describe a scene — “courtside tunnel walk, chrome chains, rain outside” — and film it"
-              value={dirInput}
-              onChange={(e) => setDirInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  void runDirector("film");
-                }
-              }}
-            />
             <div className="aurora-dir-actions">
               <button
                 className="aurora-btn-p"
-                disabled={!dirInput.trim() || dirBusy || busy}
+                disabled={!prompt.trim() || dirBusy || busy}
                 onClick={() => void runDirector("film")}
               >
                 {dirBusy || busy ? "Filming…" : "Film this scene"}
               </button>
               <button
                 className="aurora-btn-s"
-                disabled={!dirInput.trim() || dirBusy}
+                disabled={!prompt.trim() || dirBusy}
                 onClick={() => void runDirector("treat")}
               >
                 Treatment
