@@ -931,6 +931,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           <span className="hidden font-display text-xs font-bold sm:inline">GUI Video Studio</span>
         </div>
         <div className="studio-header-tools ml-auto flex min-w-0 items-center gap-1.5">
+          <Button asChild size="sm" variant="ghost" className="h-7 shrink-0 px-2 text-[11px]"><Link to="/templates">Templates</Link></Button>
           <Button
             size="sm"
             variant="ghost"
