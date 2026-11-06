@@ -10,7 +10,7 @@ import bg4 from "@/features/creative-studio/assets/aurora-bg-4.jpg";
 import bg5 from "@/features/creative-studio/assets/aurora-bg-5.jpg";
 import moonAsset from "@/features/creative-studio/assets/aurora-moon.jpg";
 import chromeAsset from "@/features/creative-studio/assets/aurora-chrome.jpg";
-import courtBg from "@/features/creative-studio/assets/aurora-court.jpg";
+import glassWallpaper from "@/features/creative-studio/assets/aurora-glass-wallpaper.jpg";
 import {
   CHAT_MODELS,
   DIRECTOR_MODELS,
@@ -24,7 +24,7 @@ import {
 import { SKILLS, buildSystemPrompt } from "@/features/creative-studio/lib/aurora-skills";
 import { primeSpeech, speak, stopSpeech } from "@/features/creative-studio/lib/aurora-voice";
 import { classifySeedanceReferenceError, isLasAssetReference } from "@/features/creative-studio/lib/seedance-reference";
-import { StudioNav } from "@/features/creative-studio/components/studio/StudioNav";
+import { AgentStream } from "@/features/creative-studio/components/AgentStream";
 
 export const Route = createFileRoute("/video-agent")({
   head: () => ({
@@ -727,87 +727,42 @@ function Index() {
     [bg3, bg1],
   ];
 
-  const singleBg =
-    bg === "moon" ? moonAsset : bg === "court" ? courtBg : chromeAsset;
 
   return (
     <div className="aurora-body">
       <div className="aurora-bg-layer">
-        {bg === "collage" ? (
-          <div className="aurora-collage">
-            {collageCols.map((col, i) => (
-              <div className={`aurora-collage-col c${i + 1}`} key={i}>
-                {col.map((src, j) => (
-                  <img
-                    key={j}
-                    src={src}
-                    alt=""
-                    width={768}
-                    height={1024}
-                    loading={i === 1 && j === 0 ? "eager" : "lazy"}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="aurora-bg-single">
-            <img src={singleBg} alt="" />
-          </div>
-        )}
+        <div className="aurora-bg-single">
+          <img src={glassWallpaper} alt="" width={1920} height={1088} />
+        </div>
         <div className="aurora-bg-overlay" />
       </div>
 
-      <div className="aurora-logo-top">
-        <div className="aurora-logo-mark">A</div>
-        Aurora
-        <div className="aurora-bg-switch" role="group" aria-label="Background">
-          {(["court", "moon", "chrome", "collage"] as BgTheme[]).map((t) => (
-            <button
-              key={t}
-              className={`aurora-bg-btn ${bg === t ? "active" : ""}`}
-              onClick={() => setBg(t)}
-              aria-pressed={bg === t}
-            >
-              {t === "court"
-                ? "Court"
-                : t === "moon"
-                  ? "Moon"
-                  : t === "chrome"
-                    ? "Chrome"
-                    : "Collage"}
-            </button>
-          ))}
+      <header className="aurora-macbar">
+        <div className="aurora-traffic" aria-hidden>
+          <span /><span /><span />
         </div>
-        <Link to="/studio" search={{ mode: "edit" }} className="aurora-bg-btn" style={{ marginLeft: 8 }}>
-          GUI Video Studio
+        <button
+          type="button"
+          className="aurora-mac-btn"
+          aria-label="Open menu"
+          onClick={() => window.dispatchEvent(new Event("aurora-open-nav"))}
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          Menu
+        </button>
+        <span className="aurora-macbar-title">Aurora</span>
+        <Link to="/studio" search={{ mode: "edit" }} className="aurora-mac-btn primary">
+          GUI Video Editor
         </Link>
-      </div>
-
-      <button
-        className="aurora-settings-fab"
-        aria-label="Settings"
-        onClick={() => setSettingsOpen(true)}
-      >
-        ⚙️
-      </button>
-
-      <StudioNav />
+        <button className="aurora-mac-btn icon" aria-label="Settings" onClick={() => setSettingsOpen(true)}>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>
+        </button>
+      </header>
 
       <div className="aurora-wrap">
 
         <section className="aurora-hero">
-          <div className="aurora-top-badge">
-            <span className="new-pill">New</span>
-            Seedance 2.5 &amp; Seedream 5.0 are live
-          </div>
-
-          <h1 className="aurora-h1">Create AI Images &amp; Videos in Seconds</h1>
-
-          <p className="aurora-subhead">
-            Seedream and Seedance models, plus a creative director in chat. Turn any idea into
-            stunning visuals — no design skills needed.
-          </p>
+          <AgentStream onPick={(t) => setDirInput(t)} />
 
           <div className="aurora-mode-switch">
             <button
