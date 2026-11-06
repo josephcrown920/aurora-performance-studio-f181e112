@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -46,6 +46,10 @@ export const Route = createFileRoute("/studio")({
     mode: typeof search.mode === "string" ? search.mode : undefined,
     q: typeof search.q === "string" ? search.q : undefined,
   }),
+  // Plain /studio opens the Video Agent studio; ?mode=edit etc. keep the editor.
+  beforeLoad: ({ search }) => {
+    if (!search.mode && !search.q) throw redirect({ to: "/video-agent" });
+  },
   component: StudioPage,
   head: () => ({
     meta: [

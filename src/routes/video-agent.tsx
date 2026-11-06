@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useEffect, useRef, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import "@/features/creative-studio/aurora.css";
 import bg1 from "@/features/creative-studio/assets/aurora-bg-1.jpg";
@@ -779,6 +779,9 @@ function Index() {
             </button>
           ))}
         </div>
+        <Link to="/studio" search={{ mode: "edit" }} className="aurora-bg-btn" style={{ marginLeft: 8 }}>
+          GUI Video Studio
+        </Link>
       </div>
 
       <button
