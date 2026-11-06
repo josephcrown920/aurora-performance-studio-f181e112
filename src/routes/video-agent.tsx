@@ -26,6 +26,7 @@ import { primeSpeech, speak, stopSpeech } from "@/features/creative-studio/lib/a
 import { classifySeedanceReferenceError, isLasAssetReference } from "@/features/creative-studio/lib/seedance-reference";
 import { FeatureShowcase } from "@/features/creative-studio/components/FeatureShowcase";
 import { AgentStream } from "@/features/creative-studio/components/AgentStream";
+import { kieImage, kieVideo } from "@/lib/kie-client";
 
 export const Route = createFileRoute("/video-agent")({
   head: () => ({
@@ -433,7 +434,12 @@ function Index() {
     setBusy(true);
 
     try {
-      if (currentMode === "image") {
+      if (provider === "kie") {
+        const url = currentMode === "image"
+          ? await kieImage(text, { aspect: currentAspect, refs: references })
+          : await kieVideo(currentModel, applyMotion(text, cameraMove, motion), { aspect: currentAspect, duration, image: references[0] });
+        updateCreation(id, { status: "done", url });
+      } else if (currentMode === "image") {
         const data = await callApi<{ data?: { url?: string; b64_json?: string }[] }>(
           provider,
           {
