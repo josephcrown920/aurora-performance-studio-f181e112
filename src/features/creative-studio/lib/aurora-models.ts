@@ -1,5 +1,5 @@
 // @ts-nocheck
-export type Provider = "ark" | "zenmux";
+export type Provider = "ark" | "zenmux" | "kie";
 
 export interface ModelOption {
   id: string;
@@ -10,6 +10,7 @@ export interface ModelOption {
 }
 
 export const IMAGE_MODELS: ModelOption[] = [
+  { id: "google/nano-banana", label: "Nano Banana", vendor: "Kie.ai", provider: "kie", note: "Fast, cheap images" },
   { id: "seedream-5-0-260128", label: "Seedream 5.0", vendor: "ByteDance", provider: "ark" },
   {
     id: "dola-seedream-5-0-pro-260628",
@@ -78,6 +79,8 @@ export const IMAGE_MODELS: ModelOption[] = [
 ];
 
 export const VIDEO_MODELS: ModelOption[] = [
+  { id: "kling-2.6/text-to-video", label: "Kling 2.6", vendor: "Kie.ai", provider: "kie", note: "Text or photo to video" },
+  { id: "grok-imagine/text-to-video", label: "Grok Imagine", vendor: "Kie.ai", provider: "kie", note: "Cheapest drafts" },
   {
     id: "dreamina-seedance-2-5-260628",
     label: "Seedance 2.5",

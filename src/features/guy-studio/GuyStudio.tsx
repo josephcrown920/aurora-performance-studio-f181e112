@@ -171,6 +171,16 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   const agent = agentState;
   const [pickerOpen, setPickerOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([GREETING]);
+  // Keep the editing chat history across reloads so users can scroll back through prompts and edits.
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem("aurora-editor-chat") ?? "null") as Msg[] | null;
+      if (Array.isArray(saved) && saved.length > 1) setMsgs(saved);
+    } catch { /* ignore */ }
+  }, []);
+  useEffect(() => {
+    try { if (msgs.length > 1) window.localStorage.setItem("aurora-editor-chat", JSON.stringify(msgs.slice(-200))); } catch { /* storage full */ }
+  }, [msgs]);
   const [directingStyle, setDirectingStyle] = useState("original");
   const [brief, setBrief] = useState("");
   const [busy, setBusy] = useState(false);
@@ -787,7 +797,6 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   async function send(text: string, agentOverride?: string) {
     const t = text.trim();
     if (!t || busy) return;
-    appendNotebook(`Asked: ${t}`);
     const intent = generationIntent(t);
     if (intent && !genBusy) {
       setBrief("");

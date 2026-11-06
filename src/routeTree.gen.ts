@@ -121,6 +121,7 @@ import { Route as ApiBalanceRouteImport } from './routes/api/balance'
 import { Route as ApiContentAgentRouteImport } from './routes/api/content-agent'
 import { Route as ApiEstimateRouteImport } from './routes/api/estimate'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiKieRouteImport } from './routes/api/kie'
 import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as ApiModelarkRouteImport } from './routes/api/modelark'
 import { Route as ApiReadyRouteImport } from './routes/api/ready'
@@ -831,6 +832,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiKieRoute = ApiKieRouteImport.update({
+  id: '/api/kie',
+  path: '/api/kie',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMcpRoute = ApiMcpRouteImport.update({
   id: '/api/mcp',
   path: '/api/mcp',
@@ -1512,6 +1518,7 @@ export interface FileRoutesByFullPath {
   '/api/content-agent': typeof ApiContentAgentRoute
   '/api/estimate': typeof ApiEstimateRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/kie': typeof ApiKieRoute
   '/api/mcp': typeof ApiMcpRoute
   '/api/modelark': typeof ApiModelarkRoute
   '/api/ready': typeof ApiReadyRoute
@@ -1735,6 +1742,7 @@ export interface FileRoutesByTo {
   '/api/content-agent': typeof ApiContentAgentRoute
   '/api/estimate': typeof ApiEstimateRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/kie': typeof ApiKieRoute
   '/api/mcp': typeof ApiMcpRoute
   '/api/modelark': typeof ApiModelarkRoute
   '/api/ready': typeof ApiReadyRoute
@@ -1960,6 +1968,7 @@ export interface FileRoutesById {
   '/api/content-agent': typeof ApiContentAgentRoute
   '/api/estimate': typeof ApiEstimateRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/kie': typeof ApiKieRoute
   '/api/mcp': typeof ApiMcpRoute
   '/api/modelark': typeof ApiModelarkRoute
   '/api/ready': typeof ApiReadyRoute
@@ -2186,6 +2195,7 @@ export interface FileRouteTypes {
     | '/api/content-agent'
     | '/api/estimate'
     | '/api/health'
+    | '/api/kie'
     | '/api/mcp'
     | '/api/modelark'
     | '/api/ready'
@@ -2409,6 +2419,7 @@ export interface FileRouteTypes {
     | '/api/content-agent'
     | '/api/estimate'
     | '/api/health'
+    | '/api/kie'
     | '/api/mcp'
     | '/api/modelark'
     | '/api/ready'
@@ -2633,6 +2644,7 @@ export interface FileRouteTypes {
     | '/api/content-agent'
     | '/api/estimate'
     | '/api/health'
+    | '/api/kie'
     | '/api/mcp'
     | '/api/modelark'
     | '/api/ready'
@@ -2842,6 +2854,7 @@ export interface RootRouteChildren {
   ApiContentAgentRoute: typeof ApiContentAgentRoute
   ApiEstimateRoute: typeof ApiEstimateRoute
   ApiHealthRoute: typeof ApiHealthRoute
+  ApiKieRoute: typeof ApiKieRoute
   ApiMcpRoute: typeof ApiMcpRoute
   ApiModelarkRoute: typeof ApiModelarkRoute
   ApiReadyRoute: typeof ApiReadyRoute
@@ -3735,6 +3748,13 @@ declare module '@tanstack/react-router' {
       path: '/api/health'
       fullPath: '/api/health'
       preLoaderRoute: typeof ApiHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/kie': {
+      id: '/api/kie'
+      path: '/api/kie'
+      fullPath: '/api/kie'
+      preLoaderRoute: typeof ApiKieRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mcp': {
@@ -4719,6 +4739,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiContentAgentRoute: ApiContentAgentRoute,
   ApiEstimateRoute: ApiEstimateRoute,
   ApiHealthRoute: ApiHealthRoute,
+  ApiKieRoute: ApiKieRoute,
   ApiMcpRoute: ApiMcpRoute,
   ApiModelarkRoute: ApiModelarkRoute,
   ApiReadyRoute: ApiReadyRoute,
