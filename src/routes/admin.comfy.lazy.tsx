@@ -207,7 +207,7 @@ function AdminComfyPage() {
           <Link to="/admin" className="text-muted-foreground hover:text-foreground">
             Overview
           </Link>
-          <Link to="/comfy" className="text-muted-foreground hover:text-foreground">
+          <Link to="/admin" className="text-muted-foreground hover:text-foreground">
             Run page
           </Link>
         </div>

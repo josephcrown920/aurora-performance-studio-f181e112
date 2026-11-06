@@ -107,6 +107,7 @@ import { Route as AdminCostsRouteImport } from './routes/admin.costs'
 import { Route as AdminDesignRouteImport } from './routes/admin.design'
 import { Route as AdminGpuRouteImport } from './routes/admin.gpu'
 import { Route as AdminLedgerRouteImport } from './routes/admin.ledger'
+import { Route as AdminLoopingOfficersRouteImport } from './routes/admin.looping-officers'
 import { Route as AdminModelarkRouteImport } from './routes/admin.modelark'
 import { Route as AdminModelsRouteImport } from './routes/admin.models'
 import { Route as AdminOrchestrationRouteImport } from './routes/admin.orchestration'
@@ -337,7 +338,7 @@ const ComfyRoute = ComfyRouteImport.update({
   id: '/comfy',
   path: '/comfy',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/comfy.lazy').then((d) => d.Route))
+} as any)
 const ConnectRoute = ConnectRouteImport.update({
   id: '/connect',
   path: '/connect',
@@ -739,6 +740,11 @@ const AdminLedgerRoute = AdminLedgerRouteImport.update({
   path: '/ledger',
   getParentRoute: () => AdminRoute,
 } as any).lazy(() => import('./routes/admin.ledger.lazy').then((d) => d.Route))
+const AdminLoopingOfficersRoute = AdminLoopingOfficersRouteImport.update({
+  id: '/looping-officers',
+  path: '/looping-officers',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminModelarkRoute = AdminModelarkRouteImport.update({
   id: '/modelark',
   path: '/modelark',
@@ -1492,6 +1498,7 @@ export interface FileRoutesByFullPath {
   '/admin/design': typeof AdminDesignRoute
   '/admin/gpu': typeof AdminGpuRoute
   '/admin/ledger': typeof AdminLedgerRoute
+  '/admin/looping-officers': typeof AdminLoopingOfficersRoute
   '/admin/modelark': typeof AdminModelarkRoute
   '/admin/models': typeof AdminModelsRoute
   '/admin/orchestration': typeof AdminOrchestrationRoute
@@ -1714,6 +1721,7 @@ export interface FileRoutesByTo {
   '/admin/design': typeof AdminDesignRoute
   '/admin/gpu': typeof AdminGpuRoute
   '/admin/ledger': typeof AdminLedgerRoute
+  '/admin/looping-officers': typeof AdminLoopingOfficersRoute
   '/admin/modelark': typeof AdminModelarkRoute
   '/admin/models': typeof AdminModelsRoute
   '/admin/orchestration': typeof AdminOrchestrationRoute
@@ -1938,6 +1946,7 @@ export interface FileRoutesById {
   '/admin/design': typeof AdminDesignRoute
   '/admin/gpu': typeof AdminGpuRoute
   '/admin/ledger': typeof AdminLedgerRoute
+  '/admin/looping-officers': typeof AdminLoopingOfficersRoute
   '/admin/modelark': typeof AdminModelarkRoute
   '/admin/models': typeof AdminModelsRoute
   '/admin/orchestration': typeof AdminOrchestrationRoute
@@ -2163,6 +2172,7 @@ export interface FileRouteTypes {
     | '/admin/design'
     | '/admin/gpu'
     | '/admin/ledger'
+    | '/admin/looping-officers'
     | '/admin/modelark'
     | '/admin/models'
     | '/admin/orchestration'
@@ -2385,6 +2395,7 @@ export interface FileRouteTypes {
     | '/admin/design'
     | '/admin/gpu'
     | '/admin/ledger'
+    | '/admin/looping-officers'
     | '/admin/modelark'
     | '/admin/models'
     | '/admin/orchestration'
@@ -2608,6 +2619,7 @@ export interface FileRouteTypes {
     | '/admin/design'
     | '/admin/gpu'
     | '/admin/ledger'
+    | '/admin/looping-officers'
     | '/admin/modelark'
     | '/admin/models'
     | '/admin/orchestration'
@@ -3620,6 +3632,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLedgerRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/looping-officers': {
+      id: '/admin/looping-officers'
+      path: '/looping-officers'
+      fullPath: '/admin/looping-officers'
+      preLoaderRoute: typeof AdminLoopingOfficersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/modelark': {
       id: '/admin/modelark'
       path: '/modelark'
@@ -4491,6 +4510,7 @@ interface AdminRouteChildren {
   AdminDesignRoute: typeof AdminDesignRoute
   AdminGpuRoute: typeof AdminGpuRoute
   AdminLedgerRoute: typeof AdminLedgerRoute
+  AdminLoopingOfficersRoute: typeof AdminLoopingOfficersRoute
   AdminModelarkRoute: typeof AdminModelarkRoute
   AdminModelsRoute: typeof AdminModelsRoute
   AdminOrchestrationRoute: typeof AdminOrchestrationRoute
@@ -4511,6 +4531,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDesignRoute: AdminDesignRoute,
   AdminGpuRoute: AdminGpuRoute,
   AdminLedgerRoute: AdminLedgerRoute,
+  AdminLoopingOfficersRoute: AdminLoopingOfficersRoute,
   AdminModelarkRoute: AdminModelarkRoute,
   AdminModelsRoute: AdminModelsRoute,
   AdminOrchestrationRoute: AdminOrchestrationRoute,

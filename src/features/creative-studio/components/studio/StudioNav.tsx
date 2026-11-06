@@ -9,7 +9,6 @@ export const WORKSPACES = [
 ] as const;
 
 const CREATOR_TOOLS = [
-  { to: "/comfy", name: "ComfyUI Apps" },
   { to: "/lipsync", name: "Lip Sync" },
   { to: "/perform-anywhere", name: "Perform Anywhere" },
   { to: "/spin", name: "TikTok30" },
