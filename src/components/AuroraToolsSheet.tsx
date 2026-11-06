@@ -62,7 +62,6 @@ const SECTIONS: { title: string; tools: Tool[] }[] = [
       { label: "Director's Room", to: "/director-room", icon: Clapperboard, badge: "New", dot: true },
       { label: "Motion Control", to: "/motion", icon: Wand2, dot: true },
       { label: "Music Video Studio", to: "/music-video", icon: Music },
-      { label: "ComfyUI Workflow Studio", to: "/comfy", icon: Workflow, badge: "New", dot: true },
     ],
   },
   {
@@ -80,7 +79,6 @@ const SECTIONS: { title: string; tools: Tool[] }[] = [
       { label: "Creator Hub", to: "/creator/dashboard", icon: LineChart },
       { label: "Plan & Billing", to: "/billing", icon: CreditCard },
       { label: "Settings", to: "/settings", icon: Settings },
-      { label: "Earn Free Aura", to: "/partners", icon: Users, dot: true },
     ],
   },
 ];
