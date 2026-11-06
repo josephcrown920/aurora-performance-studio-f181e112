@@ -229,7 +229,6 @@ function AdminPage() {
               { to: "/avatar", search: { tab: "avatars" }, label: "My Avatars" },
               { to: "/avatar", search: { tab: "shots" }, label: "Avatar Shots" },
               { to: "/content-machine",  label: "Content Machine" },
-              { to: "/tiktok",           label: "TikTok Studio" },
               { to: "/edit",             label: "AutoCut" },
               { to: "/lipsync",          label: "Lip Sync Studio" },
               { to: "/music-video",      label: "Music Video Studio" },

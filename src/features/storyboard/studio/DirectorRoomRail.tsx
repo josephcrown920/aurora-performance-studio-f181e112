@@ -36,7 +36,7 @@ type RouteTool = {
   kind: "route";
   label: string;
   icon: LucideIcon;
-  to: "/edit" | "/canvas" | "/scene-weaver" | "/photo-edit" | "/puremix" | "/video-agent" | "/agent" | "/layers" | "/previs";
+  to: "/edit" | "/canvas" | "/scene-weaver" | "/photo-edit" | "/puremix" | "/video-agent" | "/agent" | "/layers" | "/previs" | "/likeness";
 };
 
 const PLANNING_TOOLS: Array<PanelTool | RouteTool> = [
@@ -45,6 +45,7 @@ const PLANNING_TOOLS: Array<PanelTool | RouteTool> = [
   { kind: "panel", id: "wardrobe", label: "Character Lock", icon: Camera, tab: "characters" },
   { kind: "route", label: "Layers", icon: Layers3, to: "/layers" },
   { kind: "route", label: "Previs", icon: Grid2X2, to: "/previs" },
+  { kind: "route", label: "Locked Likeness", icon: Camera, to: "/likeness" },
 ];
 const AGENTS: RouteTool[] = [];
 

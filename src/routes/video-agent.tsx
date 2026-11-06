@@ -752,6 +752,7 @@ function Index() {
           Menu
         </button>
         <span className="aurora-macbar-title">Aurora</span>
+        <Link to="/templates" className="aurora-mac-btn">Templates</Link>
         <Link to="/studio" search={{ mode: "edit" }} className="aurora-mac-btn primary">
           GUI Video Editor
         </Link>

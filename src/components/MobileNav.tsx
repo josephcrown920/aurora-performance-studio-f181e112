@@ -71,12 +71,10 @@ const CORE_FEATURES: Feature[] = [
 // ── Studio — image & scene tools ──────────────────────────────────────────
 const STUDIO_FEATURES: Feature[] = [
   { to: "/studio",          label: "Image & Video Studio",  icon: Sparkles, previewImg: "/nav-previews/studio.jpg" },
-  { to: "/previs",          label: "Previs Workspace",      icon: Clapperboard, previewImg: "/nav-previews/music-video.jpg", badge: "New" },
-  { to: "/likeness",        label: "Locked Likeness Shoot", icon: Camera,   previewImg: "/nav-previews/avatar.jpg",        badge: "New" },
   { to: "/reshoot",         label: "Multi-Angle Photoshoot", icon: Camera,  previewImg: "/nav-previews/avatar.jpg",        badge: "New" },
   { to: "/library",         label: "My Video Library", icon: Camera },
   { to: "/scene-builder",   label: "Scene Builder",         icon: Layers,   previewImg: "/nav-previews/scene-builder.jpg" },
-  { to: "/comfy",           label: "ComfyUI Workflow Studio", icon: Workflow, badge: "New" },
+  { to: "/admin/comfy",     label: "ComfyUI (Admin)", icon: Workflow, adminOnly: true },
 ];
 
 // ── Music & audio ──────────────────────────────────────────────────────────
@@ -85,14 +83,13 @@ const MUSIC_FEATURES: Feature[] = [
 ];
 
 // ── Promotion — artist stats across streaming/social platforms ────────────
-const PROMOTION_FEATURES: Feature[] = [
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _PROMOTION_FEATURES: Feature[] = [
   { to: "/promotion", label: "Promotion Hub", icon: BarChart3, badge: "New" },
 ];
 
 // ── More — everything else that's live ────────────────────────────────────
 const MORE_FEATURES: Feature[] = [
-  { to: "/tiktok-live", label: "TikTok LIVE Studio",     icon: Radio },
-  { to: "/templates",   label: "Templates",              icon: Layers },
   { to: "/eromify",     label: "Adult School",           icon: Camera, previewImg: "/sample-photos/model-yuki-1.jpg", badge: "18+" },
   { to: "/tools",       label: "All Tools",              icon: LayoutGrid },
 ];
@@ -105,17 +102,15 @@ const CONTENT_FEATURES: Feature[] = [
   { to: "/soul",            label: "Aurora Soul",    icon: Sparkles,   badge: "New" },
   { to: "/content-machine", label: "Content Machine",icon: LayoutGrid },
   { to: "/ads",             label: "Ads Studio",     icon: Megaphone },
-  { to: "/tiktok",          label: "TikTok Studio",  icon: Music2 },
 ];
 
 const ACCOUNT_FEATURES: Feature[] = [
   { to: "/gallery", label: "Gallery", icon: Images },
-  { to: "/jobs",    label: "Job Queue", icon: Layers },
   { to: "/billing", label: "Plan & Billing", icon: CreditCard },
   { to: "/creator/dashboard", label: "Creator Hub", icon: TrendingUp },
   { to: "/settings", label: "Settings", icon: UserRound },
-  { to: "/partners", label: "Earn Free Aura", icon: Users },
   { to: "/admin", label: "Admin", icon: Shield, adminOnly: true },
+  { to: "/admin/looping-officers", label: "Looping Officers", icon: Clapperboard, adminOnly: true },
 ];
 
 /** Archived — hidden from the main nav; still reachable from /admin.
@@ -183,17 +178,15 @@ export function getGlobalMobileNavBranches({
       ...(tiktokThirty
         ? [{ label: "TikTok30 Premium", features: [tiktokThirty] }]
         : []),
-      { label: "Studio", features: STUDIO_FEATURES },
+      { label: "Studio", features: visible(STUDIO_FEATURES) },
       { label: "Music & Audio", features: MUSIC_FEATURES },
-      { label: "Promotion", features: PROMOTION_FEATURES },
       ...(content.length > 0 ? [{ label: "Content", features: content }] : []),
       { label: "Account", features: visible(ACCOUNT_FEATURES) },
     ],
     mobileDrawer: [
       { label: "Start Here", features: CORE_FEATURES },
-      { label: "Studio", features: STUDIO_FEATURES },
+      { label: "Studio", features: visible(STUDIO_FEATURES) },
       { label: "Music & Audio", features: MUSIC_FEATURES },
-      { label: "Promotion", features: PROMOTION_FEATURES },
       ...(content.length > 0 ? [{ label: "Content", features: content }] : []),
       { label: "More", features: visible(MORE_FEATURES) },
       { label: "Account", features: visible(ACCOUNT_FEATURES) },
