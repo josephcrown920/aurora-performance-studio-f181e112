@@ -145,7 +145,7 @@ export function CreativeChat({
   }, [busy]);
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", compact ? "gap-2" : "gap-4")}>
-      <Conversation className={cn(compact ? "min-h-[56px] max-h-[130px]" : "min-h-[120px]", !compact && (spacious ? "max-h-[340px]" : "max-h-[300px]"))}>
+      <Conversation className={cn(compact ? "min-h-[160px] max-h-[45vh]" : "min-h-[200px]", !compact && (spacious ? "max-h-[60vh]" : "max-h-[50vh]"))}>
         <ConversationContent className="gap-5 p-0 pb-3">
           {messages.map((m, i) => (
             <Message key={i} from={m.role} className="max-w-full">

@@ -787,7 +787,6 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   async function send(text: string, agentOverride?: string) {
     const t = text.trim();
     if (!t || busy) return;
-    appendNotebook(`Asked: ${t}`);
     const intent = generationIntent(t);
     if (intent && !genBusy) {
       setBrief("");

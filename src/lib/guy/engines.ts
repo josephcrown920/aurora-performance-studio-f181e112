@@ -12,6 +12,7 @@ export type Engine = {
 
 /** Image engines. Seedream is the requested default but is not served by the gateway. */
 export const IMAGE_ENGINES: Engine[] = [
+  { id: "kie:google/nano-banana", name: "Nano Banana (Kie)", model: "google/nano-banana", note: "Kie.ai · fast, cheap images & edits", available: true },
   { id: "seedream5pro", name: "Seedream 5.0 Pro", model: "ep-20261019095901-gj979", provider: "ark", note: "ModelArk · top quality, up to 4K", available: true },
   { id: "seedream5", name: "Seedream 5.0", model: "seedream-5-0-260128", provider: "ark", note: "ModelArk · photoreal plates & edits", available: true },
   { id: "seedream45", name: "Seedream 4.5", model: "seedream-4-5-251128", provider: "ark", note: "ModelArk · fast plates", available: true },
@@ -28,6 +29,8 @@ export const IMAGE_ENGINES: Engine[] = [
 
 /** Video engines. Seedance is the requested default but is not served by the gateway. */
 export const VIDEO_ENGINES: Engine[] = [
+  { id: "kie:kling-2.6/text-to-video", name: "Kling 2.6 (Kie)", model: "kling-2.6/text-to-video", note: "Kie.ai · text or photo to video", available: true },
+  { id: "kie:grok-imagine/text-to-video", name: "Grok Imagine (Kie)", model: "grok-imagine/text-to-video", note: "Kie.ai · cheapest drafts", available: true },
   { id: "seedance25", name: "Seedance 2.5", model: "dreamina-seedance-2-5-260628", provider: "ark", note: "ModelArk · best motion, image-to-video", available: true },
   { id: "seedance2", name: "Seedance 2.0", model: "dreamina-seedance-2-0-260128", provider: "ark", note: "ModelArk · multimodal video", available: true },
   { id: "seedance2fast", name: "Seedance 2.0 Fast", model: "dreamina-seedance-2-0-fast-260128", provider: "ark", note: "ModelArk · quick drafts", available: true },
@@ -43,8 +46,8 @@ export const VIDEO_ENGINES: Engine[] = [
   { id: "kling", name: "Kling 2.5", model: "kwaivgi/kling-v2.5", note: "Motion control · needs provider account", available: true },
 ];
 
-export const DEFAULT_IMAGE_ENGINE = "sunburst";
-export const DEFAULT_VIDEO_ENGINE = "omni";
+export const DEFAULT_IMAGE_ENGINE = "kie:google/nano-banana";
+export const DEFAULT_VIDEO_ENGINE = "kie:kling-2.6/text-to-video";
 
 export function engineModel(list: Engine[], id: string) {
   return list.find((e) => e.id === id && e.available)?.model;

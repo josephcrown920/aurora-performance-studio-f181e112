@@ -57,6 +57,10 @@ export async function generateImage(prompt: string, engine: string, source?: Blo
       assertIdentityRequest(identity, "image", engine, refs.length + (source ? 1 : 0));
     }
   }
+  if (engine.startsWith("kie:")) {
+    const { kieImage } = await import("@/lib/kie-client");
+    return kieImage(prompt, { refs: [...(source ? [source] : []), ...refs] });
+  }
   let r: Response;
   if (!source && refs.length) { source = refs[0]; refs = refs.slice(1); }
   if (source) {
@@ -116,6 +120,12 @@ export async function generateVideo(
     assertIdentityRequest({ identityRequired: true }, "video", engine, lock.refs.length);
     prompt += `\n\n${lock.guide}`;
     opts = { ...opts, refs: [...(opts.refs ?? []), ...lock.refs] };
+  }
+  if (engine.startsWith("kie:")) {
+    const { kieVideo, kieLipSync } = await import("@/lib/kie-client");
+    const full = `${withCreativeContext(prompt)}\n${motion}`.trim();
+    if (opts.audio && opts.image) return kieLipSync(opts.image, opts.audio, prompt, opts.onStatus);
+    return kieVideo(engine.slice(4), full, { image: opts.image ?? opts.refs?.[0], duration: parseInt(opts.duration ?? "5", 10), onStatus: opts.onStatus });
   }
   const body: Record<string, unknown> = { prompt: withCreativeContext(prompt), engine, motion, duration: draft ? "4s" : opts.duration ?? "6s", resolution: opts.resolution, draft };
   let image = opts.image;
