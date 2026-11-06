@@ -1252,3 +1252,12 @@
 .aurora-stream-chips button { padding: 5px 11px; border-radius: 999px; font-size: 12px; color: inherit; cursor: pointer; background: oklch(1 0 0 / 0.08); border: 1px solid oklch(1 0 0 / 0.14); }
 .aurora-stream-chips button:hover { background: oklch(1 0 0 / 0.16); }
 .aurora-body .aurora-director, .aurora-body .aurora-mode-switch { backdrop-filter: blur(28px) saturate(170%); border-color: oklch(1 0 0 / 0.14); }
+.aurora-showcase { position: relative; width: min(720px, 100%); aspect-ratio: 16/9; margin: 0 auto 18px; border-radius: 22px; overflow: hidden; border: 1px solid oklch(1 0 0 / 0.14); box-shadow: 0 30px 60px -30px oklch(0 0 0 / 0.7); }
+.aurora-showcase img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 0.9s, transform 4s; }
+.aurora-showcase img.on { opacity: 1; transform: scale(1); }
+.aurora-showcase-cap { position: absolute; left: 12px; right: 12px; bottom: 30px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 14px; text-align: left; color: oklch(0.98 0 0); background: oklch(0.15 0.01 250 / 0.4); border: 1px solid oklch(1 0 0 / 0.14); backdrop-filter: blur(24px) saturate(170%); }
+.aurora-showcase-cap strong { display: block; font-size: 15px; }
+.aurora-showcase-cap span { font-size: 12px; opacity: 0.8; }
+.aurora-showcase-dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+.aurora-showcase-dots button { width: 6px; height: 6px; border-radius: 99px; border: 0; padding: 0; background: oklch(1 0 0 / 0.4); cursor: pointer; transition: width 0.3s; }
+.aurora-showcase-dots button.on { width: 18px; background: oklch(1 0 0 / 0.95); }
