@@ -317,6 +317,14 @@ export function MobileNav() {
     setOpen(false);
   }, [pathname]);
 
+  // Pages with their own menu button (Video Agent's Mac bar) open this drawer.
+  useEffect(() => {
+    const openNav = () => setOpen(true);
+    window.addEventListener("aurora-open-nav", openNav);
+    return () => window.removeEventListener("aurora-open-nav", openNav);
+  }, []);
+  const ownTrigger = pathname === "/video-agent";
+
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0]?.clientX ?? null;
   };
@@ -358,6 +366,7 @@ export function MobileNav() {
         aria-expanded={open}
         aria-label="Open navigation menu"
         style={{ top: isCanvas ? "0.75rem" : "calc(env(safe-area-inset-top, 0px) + 4.25rem)" }}
+        hidden={ownTrigger}
         className={cn(
           "phone-edge-left aurora-navigation-trigger fixed z-40 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium shadow-[var(--shadow-soft)] transition-[filter,color] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           open ? "text-primary" : "text-foreground",
