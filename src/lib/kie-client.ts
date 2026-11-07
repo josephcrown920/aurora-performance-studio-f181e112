@@ -25,7 +25,10 @@ const toDataUrl = (blob: Blob) =>
 export async function kieUpload(src: string | Blob, fileName?: string): Promise<string> {
   if (typeof src === "string" && /^https?:\/\//.test(src)) return src;
   const blob = typeof src === "string" ? await (await fetch(src)).blob() : src;
-  const { url } = await call<{ url: string }>({ kind: "upload", dataUrl: await toDataUrl(blob), fileName });
+  // Kie checks the file extension, so always name uploads with one.
+  const ext = ({ "video/quicktime": "mov", "image/jpeg": "jpg", "audio/mpeg": "mp3" } as Record<string, string>)[blob.type] ?? (blob.type.split("/")[1] || "bin").split(";")[0];
+  const name = fileName && /\.\w+$/.test(fileName) ? fileName : `${fileName || `upload-${Date.now()}`}.${ext}`;
+  const { url } = await call<{ url: string }>({ kind: "upload", dataUrl: await toDataUrl(blob), fileName: name });
   return url;
 }
 

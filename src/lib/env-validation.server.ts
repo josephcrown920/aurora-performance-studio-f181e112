@@ -80,7 +80,9 @@ export function validateEnvAtStartup(env: NodeJS.ProcessEnv = process.env): void
 
   if (missingRequired.length > 0) {
     const message = `Missing required environment variable(s): ${missingRequired.join(", ")}. The app cannot start without these.`;
-    console.error(`[env] FATAL: ${message}`);
-    throw new Error(message);
+    console.error(`[env] ${message}`);
+    // The admin key only powers privileged features; those fail per-request instead
+    // of taking every page down when it is absent.
+    if (missingRequired.some((k) => k !== "SUPABASE_SERVICE_ROLE_KEY")) throw new Error(message);
   }
 }
