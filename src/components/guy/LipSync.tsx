@@ -7,8 +7,7 @@ import { readSse } from "@/lib/guy/agent-stream";
 import { CreativeContext } from "@/components/guy/CreativeContext";
 
 const ENGINES = [
-  { id: "omni", label: "Gemini Omni (built-in)" },
-  { id: "omnihuman", label: "OmniHuman 1.5 (ModelArk key)" },
+  { id: "kie:omnihuman-2-0", label: "OmniHuman 2.0 (Kie)" },
 ];
 
 async function toJpeg(file: File) {
@@ -32,7 +31,7 @@ export function LipSync({ onDone }: { onDone: (url: string) => void }) {
   const [faceUrl, setFaceUrl] = useState("");
   const [audioUrl, setAudioUrl] = useState("");
   const [line, setLine] = useState("");
-  const [engine, setEngine] = useState("omni");
+  const [engine, setEngine] = useState("kie:omnihuman-2-0");
   const [useAgent, setUseAgent] = useState(true);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");

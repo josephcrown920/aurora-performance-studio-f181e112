@@ -109,10 +109,9 @@ function Perform({ onAsset }: { onAsset: AddAsset }) {
     setBusy(true);
     try {
       const still = await urlToBlob(pick);
-      setStatus("Building depth map…");
-      const depth = await urlToBlob(await depthMap(still));
+      const depth = engine.startsWith("kie:") ? undefined : await urlToBlob(await depthMap(still));
       setStatus("Transferring your performance…");
-      const url = await generateVideo(`Animate this exact still with the motion of the attached performance clip. ${motionCtx}. ${DEPTH_GUIDE}`, engine, "", { image: still, video: clip, depth, onStatus: (s) => setStatus(`Video: ${s}`) });
+      const url = await generateVideo(`Animate this exact still with the motion of the attached performance clip. ${motionCtx}. ${depth ? DEPTH_GUIDE : ""}`, engine, "", { image: still, video: clip, depth, onStatus: (s) => setStatus(`Video: ${s}`) });
       onAsset(url, "video", `perform_${uid()}.mp4`, true);
       setStatus("✓ Performance render added to Generations and the timeline.");
     } catch (e) { setStatus(`✗ ${e instanceof Error ? e.message : "Render failed"}`); }
@@ -191,15 +190,15 @@ function MotionStyle({ onAsset }: { onAsset: AddAsset }) {
     if (kind === "motion" && !drive) return setStatus("Upload the motion video to copy.");
     setBusy(true);
     try {
-      const depth = await withDepth(char);
+      const depth = kind === "motion" && engine.startsWith("kie:") ? undefined : await withDepth(char);
       const styleTxt = `${style}${styleRef ? " — match the attached style reference" : ""}`;
       if (kind === "style-image") {
         setStatus("Restyling on the depth map…");
-        const url = await generateImage(`Restyle the first image as: ${styleTxt}. ${DEPTH_GUIDE} ${styleRef ? "The third image is the style reference." : ""} Preserve identity, pose and layout.`, "", char, false, [depth, ...(styleRef ? [styleRef] : [])]);
+        const url = await generateImage(`Restyle the first image as: ${styleTxt}. ${DEPTH_GUIDE} ${styleRef ? "The third image is the style reference." : ""} Preserve identity, pose and layout.`, "", char, false, [...(depth ? [depth] : []), ...(styleRef ? [styleRef] : [])]);
         onAsset(url, "image", `style_${uid()}.png`); setStatus("✓ Style transfer ready in Generations.");
       } else {
         const prompt = kind === "motion"
-          ? `Use the given video as a motion reference, not as a source for editing. Animate the first character image following its movement. Keep identity and outfit locked. ${DEPTH_GUIDE}`
+          ? `Use the given video as a motion reference, not as a source for editing. Animate the first character image following its movement. Keep identity and outfit locked. ${depth ? DEPTH_GUIDE : ""}`
           : `Style transfer video: bring this still to life in the style ${styleTxt}, gentle camera move. ${DEPTH_GUIDE}`;
         const refs = styleRef ? [styleRef] : [];
         const url = await generateVideo(prompt, engine, "", { image: char, lastFrame: last ?? undefined, video: kind === "motion" ? drive ?? undefined : undefined, depth, refs, onStatus: (s) => setStatus(`Video: ${s}`) });

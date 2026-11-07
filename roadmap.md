@@ -113,3 +113,8 @@
 - [ ] Repair GUI ModelArk transfer contract: mixed first/last-frame + video inputs and missing reference roles; real transfer still requires working provider/worker, and worker depth/identity/camera/audio promises are unproven.
 - [ ] Confirm code reaches GitHub after audit; latest StudioModeDock read returned 404 on repository default branch. Blocked on owner checking Git sync repository/branch/status in Project settings → Git; issue update succeeded, not a code push.
 - [ ] Launch Kaggle/Colab motion worker without paid services: first run the GPU preflight; existing MimicMotion setup requires ≥20 GB on one GPU and ≥30 GB disk. Waiting on the creator's notebook GPU result; no free-tier motion success is established.
+
+## Current Kie continuation
+- [ ] Recover the previous motion task and actual spend before another paid test; task ID and billing evidence are missing, OmniHuman rejected the earlier input (no replay).
+- [ ] Verify authenticated Kie generations end-to-end with the creator's own photo; keep combined tests below $1 and use only cheap Kling/OmniHuman for motion/lip sync.
+- [ ] Repair editor project-specific chat persistence and Kie motion/lip-sync dispatch; verify no-cost regression and browser flows.
