@@ -80,7 +80,8 @@ export function validateEnvAtStartup(env: NodeJS.ProcessEnv = process.env): void
 
   if (missingRequired.length > 0) {
     const message = `Missing required environment variable(s): ${missingRequired.join(", ")}. The app cannot start without these.`;
-    console.error(`[env] FATAL: ${message}`);
-    throw new Error(message);
+    // Log loudly but keep serving: features needing the missing key fail per-request
+    // instead of taking every page down.
+    console.error(`[env] ${message}`);
   }
 }
