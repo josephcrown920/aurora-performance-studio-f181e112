@@ -33,3 +33,5 @@
 - GUI editor sessions use owner-protected video_studio_projects with a GUI-tagged context entry; this preserves source session behavior without a competing session table.
 - StudioModeDock owns visual mode navigation and only changes GuyStudio mode; keeping editor state in GuyStudio prevents previews from resetting the editing session.
 - Free notebook motion setup must run a hardware-only preflight before credentials or model downloads; match the existing MimicMotion setup limits and never combine separate GPUs' memory or treat hardware readiness as render proof.
+- Editor conversation caches are keyed by account and GUI session, with full messages also in the existing session document; this prevents cross-project chat mixing.
+- Kie driving-video requests dispatch to motion control, never image-to-video, and reject unsupported depth or ending frames; this prevents silent loss of reference inputs.

@@ -122,9 +122,16 @@ export async function generateVideo(
     opts = { ...opts, refs: [...(opts.refs ?? []), ...lock.refs] };
   }
   if (engine.startsWith("kie:")) {
-    const { kieVideo, kieLipSync } = await import("@/lib/kie-client");
+    const { kieVideo, kieLipSync, kieMotion } = await import("@/lib/kie-client");
     const full = `${withCreativeContext(prompt)}\n${motion}`.trim();
+    if (opts.depth) throw new Error("Kie motion does not support depth conditioning. Remove the depth input before generating.");
+    if (opts.lastFrame) throw new Error("This Kie workflow does not support an ending frame.");
+    if (opts.video) {
+      if (!opts.image) throw new Error("Motion control needs your photo and a driving video.");
+      return kieMotion(opts.image, opts.video, full, opts.onStatus);
+    }
     if (opts.audio && opts.image) return kieLipSync(opts.image, opts.audio, prompt, opts.onStatus);
+    if (engine === "kie:omnihuman-2-0") throw new Error("OmniHuman needs both your photo and audio.");
     return kieVideo(engine.slice(4), full, { image: opts.image ?? opts.refs?.[0], duration: parseInt(opts.duration ?? "5", 10), onStatus: opts.onStatus });
   }
   const body: Record<string, unknown> = { prompt: withCreativeContext(prompt), engine, motion, duration: draft ? "4s" : opts.duration ?? "6s", resolution: opts.resolution, draft };

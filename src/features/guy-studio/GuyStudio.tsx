@@ -18,6 +18,7 @@ import { PerformStudio } from "@/components/guy/PerformStudio";
 import logoIcon from "@/assets/guy/gui-video-studio-logo.png";
 import { TimelineHoverPreview } from "@/components/guy/TimelineHoverPreview";
 import { sourceTime } from "@/lib/guy/media-time";
+import { editorChatKey, readEditorChat } from "@/lib/guy/editor-chat";
 import { EffectPreview } from "@/components/guy/EffectPreview";
 import { supabase } from "@/integrations/supabase/client";
 import { listCloudSessions, saveToCloudGallery, syncSessionToCloud } from "@/lib/guy/cloud";
@@ -139,6 +140,10 @@ const GREETING: Msg = {
 function Editor({ initialMode }: { initialMode: StudioMode }) {
   const [userName, setUserName] = useState("");
   const [signedIn, setSignedIn] = useState(false);
+  const [chatOwner, setChatOwner] = useState<string | null>(null);
+  const [chatProject, setChatProject] = useState("draft");
+  const [loadedChatKey, setLoadedChatKey] = useState("");
+  const restoredChatOwner = useRef<string | null>(null);
   const accountName = useRef("");
   function updateName(name: string) {
     const resolved = accountName.current || name.trim().slice(0, 80);
@@ -156,8 +161,8 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
       setMsgs((previous) => previous.length === 1 && previous[0]?.text === GREETING.text ? [{ ...GREETING, text: greetingText(name) }] : previous);
     };
     apply();
-    void supabase.auth.getUser().then(({ data }) => { setSignedIn(!!data.user); apply(data.user?.user_metadata); });
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => { setSignedIn(!!session?.user); apply(session?.user.user_metadata); });
+    void supabase.auth.getUser().then(({ data }) => { if (!active) return; setSignedIn(!!data.user); setChatOwner(data.user?.id ?? "guest"); apply(data.user?.user_metadata); });
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => { if (!active) return; setSignedIn(!!session?.user); setChatOwner(session?.user.id ?? "guest"); apply(session?.user.user_metadata); });
     return () => { active = false; data.subscription.unsubscribe(); };
   }, []);
   const [assets, setAssets] = useState<Asset[]>(() => starterTimeline([fireHouse, LIBRARY[0]?.url ?? fireHouse, LIBRARY[5]?.url ?? fireHouse], ["fire-house.jpg", "josh.jpg", "officers.jpg"]).assets);
@@ -171,16 +176,23 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   const agent = agentState;
   const [pickerOpen, setPickerOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([GREETING]);
-  // Keep the editing chat history across reloads so users can scroll back through prompts and edits.
   useEffect(() => {
+    if (!chatOwner) return;
+    if (restoredChatOwner.current !== chatOwner) {
+      restoredChatOwner.current = chatOwner;
+      const active = window.localStorage.getItem(`aurora-editor-active:${chatOwner}`) ?? "draft";
+      if (active !== chatProject) { setChatProject(active); return; }
+    }
+    setMsgs(readEditorChat(window.localStorage, chatOwner, chatProject) ?? [{ ...GREETING, text: greetingText(accountName.current) }]);
+    setLoadedChatKey(editorChatKey(chatOwner, chatProject));
+  }, [chatOwner, chatProject]);
+  useEffect(() => {
+    if (!chatOwner || loadedChatKey !== editorChatKey(chatOwner, chatProject)) return;
     try {
-      const saved = JSON.parse(window.localStorage.getItem("aurora-editor-chat") ?? "null") as Msg[] | null;
-      if (Array.isArray(saved) && saved.length > 1) setMsgs(saved);
-    } catch { /* ignore */ }
-  }, []);
-  useEffect(() => {
-    try { if (msgs.length > 1) window.localStorage.setItem("aurora-editor-chat", JSON.stringify(msgs.slice(-200))); } catch { /* storage full */ }
-  }, [msgs]);
+      window.localStorage.setItem(loadedChatKey, JSON.stringify(msgs));
+      window.localStorage.setItem(`aurora-editor-active:${chatOwner}`, chatProject);
+    } catch { /* cloud/session save remains available */ }
+  }, [msgs, chatOwner, chatProject, loadedChatKey]);
   const [directingStyle, setDirectingStyle] = useState("original");
   const [brief, setBrief] = useState("");
   const [busy, setBusy] = useState(false);
@@ -310,6 +322,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
 
   function newSession() {
     if (busy || genBusy || exporting) return;
+    setChatProject(crypto.randomUUID());
     const starter = starterTimeline([fireHouse, LIBRARY[0]?.url ?? fireHouse, LIBRARY[5]?.url ?? fireHouse], ["fire-house.jpg", "josh.jpg", "officers.jpg"]);
     setAssets(starter.assets);
     setClips(starter.clips);
@@ -342,7 +355,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
       });
     });
     const session: SavedSession = {
-      id: uid(),
+      id: chatProject === "draft" ? crypto.randomUUID() : chatProject,
       name: sessionName.trim() || "Untitled cut",
       updatedAt: new Date().toISOString(),
       ...timeline,
@@ -352,6 +365,10 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
       videoEngine: vidEngine,
     };
     const result = await persistSession(session, sessions, window.localStorage, syncSessionToCloud);
+    if ((result.localSaved || result.cloudSaved) && chatOwner) {
+      window.localStorage.setItem(editorChatKey(chatOwner, session.id), JSON.stringify(msgs));
+      setChatProject(session.id);
+    }
     setSessions(result.sessions);
     const notice = result.localSaved
       ? result.cloudSaved ? "Session saved on this device and to your account." : "Session saved on this device only."
@@ -370,6 +387,8 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   function openSession(id: string) {
     const session = sessions.find((item) => item.id === id);
     if (!session) return;
+    if (chatOwner) window.localStorage.setItem(editorChatKey(chatOwner, session.id), JSON.stringify(session.messages));
+    setChatProject(session.id);
     setMode("edit");
     setPlaying(false);
     setCrew([]);
@@ -840,7 +859,7 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
       }
       setMsgs((m) => [...m, { role: "assistant", agent, text: "" }]);
       const setLast = (patch: Partial<Msg>) =>
-        setMsgs((m) => [...m.slice(0, -1), { ...m[m.length - 1]!, ...patch }]);
+        setMsgs((m) => { const last = m.at(-1); return last ? [...m.slice(0, -1), { ...last, ...patch }] : m; });
       let final: Done | null = null;
       let failed = false;
       await readSse(r.body, (event, data) => {
