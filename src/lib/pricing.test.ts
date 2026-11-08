@@ -278,6 +278,8 @@ describe("motion pricing (×10 rebase) — base = 300", () => {
       // heygen-photo: single-stage photo→talking-head via HeyGen's own audio-driven
       // API (no relip stage) — priced at the ultra lipsync tier (100 Aura).
       "heygen-photo": LIPSYNC_TIER_AURA.ultra,
+      // OmniHuman 2.0 on Kie: single-stage photo + audio, premium tier (90 Aura).
+      "kie-omnihuman": LIPSYNC_TIER_AURA.premium,
     };
     for (const engine of Object.keys(LIPSYNC_ENGINE_MODEL) as LipsyncEngine[]) {
       expect(lipsyncEngineCost(engine), `engine "${engine}"`).toBe(expectedByEngine[engine]);
