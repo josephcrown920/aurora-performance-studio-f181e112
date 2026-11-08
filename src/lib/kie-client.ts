@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeUprightVideo } from "@/lib/video-orientation";
 
 async function call<T>(body: unknown): Promise<T> {
   const { data } = await supabase.auth.getSession();
@@ -24,7 +25,9 @@ const toDataUrl = (blob: Blob) =>
 /** Returns a public URL Kie can fetch. http(s) URLs pass through. */
 export async function kieUpload(src: string | Blob, fileName?: string): Promise<string> {
   if (typeof src === "string" && /^https?:\/\//.test(src)) return src;
-  const blob = typeof src === "string" ? await (await fetch(src)).blob() : src;
+  const raw = typeof src === "string" ? await (await fetch(src)).blob() : src;
+  // Kling ignores phone rotation tags, so straighten sideways clips first.
+  const blob = raw.type.startsWith("video/") ? await normalizeUprightVideo(raw instanceof File ? raw : new File([raw], fileName || "clip.mov", { type: raw.type })) : raw;
   // Kie checks the file extension, so always name uploads with one.
   const ext = ({ "video/quicktime": "mov", "image/jpeg": "jpg", "audio/mpeg": "mp3" } as Record<string, string>)[blob.type] ?? (blob.type.split("/")[1] || "bin").split(";")[0];
   const name = fileName && /\.\w+$/.test(fileName) ? fileName : `${fileName || `upload-${Date.now()}`}.${ext}`;
