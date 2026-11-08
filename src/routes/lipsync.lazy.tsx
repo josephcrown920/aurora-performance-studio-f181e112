@@ -106,7 +106,8 @@ function LipSyncForm() {
 
   const isXaiUgc = engine === "xai-ugc";
   const isHeygenPhoto = engine === "heygen-photo";
-  const isPhotoEngine = isXaiUgc || isHeygenPhoto;
+  const isOmniHuman = engine === "kie-omnihuman";
+  const isPhotoEngine = isXaiUgc || isHeygenPhoto || isOmniHuman;
 
   // lipsyncEngineCost is the shared UI+server price source; for xai-ugc it is
   // the full two-stage price (xAI video + mandatory relip to your audio).
@@ -229,7 +230,7 @@ function LipSyncForm() {
     if (!likelyConsent) return toast.error("Please confirm you have the rights to use this voice and likeness before generating");
 
     if (isPhotoEngine) {
-      if (!img) return toast.error(`Upload a still photo for the ${isXaiUgc ? "xAI UGC" : "HeyGen Photo"} engine`);
+      if (!img) return toast.error("Upload a still photo first");
       if (!aud) return toast.error("Upload a vocal track");
     } else {
       if (!vid || !aud) return toast.error("Upload both a clip and a vocal first");
@@ -490,7 +491,7 @@ function LipSyncForm() {
           <div className="grid grid-cols-2 gap-2 rounded-2xl aurora-glass p-1">
             {([
               { id: "sync-v2", label: "Video clip", icon: Video },
-              { id: "heygen-photo", label: "Photo", icon: ImageIcon },
+              { id: "kie-omnihuman", label: "Photo", icon: ImageIcon },
             ] as const).map(o => {
               const on = o.id === "sync-v2" ? !isPhotoEngine : isPhotoEngine;
               return (
@@ -555,7 +556,7 @@ function LipSyncForm() {
               ? `${engineCost} Aura · your GPU worker`
               : engine === "xai-ugc"
               ? `${engineCost} Aura · ~90s · 9:16 vertical`
-              : engine === "heygen-photo"
+              : engine === "heygen-photo" || engine === "kie-omnihuman"
               ? `${engineCost} Aura · ~60s`
               : `${engineCost} Aura · ~${engine === "sync-v2" ? "45" : "25"}s`}
           </p>
@@ -614,6 +615,7 @@ function LipSyncForm() {
                 : engine === "wav2lip" ? "Wav2Lip (Fast)"
                 : engine === "xai-ugc" ? "xAI grok-imagine-video-1.5 (UGC)"
                 : engine === "heygen-photo" ? "HeyGen Photo"
+                : engine === "kie-omnihuman" ? "OmniHuman 2.0"
                 : "LatentSync (self-hosted)"}.
             </p>
           </div>
