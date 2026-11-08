@@ -66,6 +66,7 @@ export const LIPSYNC_MODEL_TIERS: Record<string, ModelTier> = {
   "heygen/lipsync": "ultra",
   "xai/grok-imagine-video-1.5": "premium",
   "heygen/photo-video": "ultra",
+  "kie/omnihuman-2-0": "premium",
   "heygen/avatar": "ultra",
 };
 export const DEFAULT_VIDEO_TIER: ModelTier = "standard";
