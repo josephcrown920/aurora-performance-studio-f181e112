@@ -5,7 +5,7 @@ import { buildLatentSyncRequest } from "./lipsync-workflows.server";
 import { lipsyncEngineCost, XAI_UGC_RELIP_MODEL } from "./pricing";
 import { isAdmin } from "./admin.server";
 
-export type Engine = "sync-v2" | "wav2lip" | "latentsync" | "xai-ugc" | "heygen-photo";
+export type Engine = "sync-v2" | "wav2lip" | "latentsync" | "xai-ugc" | "heygen-photo" | "kie-omnihuman";
 
 // Engine → model key. "latentsync" is self-hosted: it carries no hosted-API
 // model, so it routes ONLY to the registered GPU worker pool (capability lipsync).
@@ -21,11 +21,12 @@ const MODEL: Record<Engine, string> = {
   "latentsync": "latentsync",
   "xai-ugc": "xai/grok-imagine-video-1.5",
   "heygen-photo": "heygen/photo-video",
+  "kie-omnihuman": "omnihuman-2-0",
 };
 
 // Engines that require a still photo (rather than an existing video clip) as
 // their source.
-const PHOTO_ENGINES: ReadonlySet<Engine> = new Set<Engine>(["xai-ugc", "heygen-photo"]);
+const PHOTO_ENGINES: ReadonlySet<Engine> = new Set<Engine>(["xai-ugc", "heygen-photo", "kie-omnihuman"]);
 
 // Engines that must run on the user's own GPU worker pool (no hosted fallback).
 const SELF_HOSTED: ReadonlySet<Engine> = new Set<Engine>(["latentsync"]);
@@ -68,7 +69,7 @@ export async function runLipsyncJob(opts: {
     throw new Error(
       isXaiUgc
         ? "xAI UGC engine requires a still photo. Upload a selfie or portrait."
-        : "HeyGen Photo engine requires a still photo. Upload a selfie or portrait.",
+        : "This engine needs a still photo. Upload a selfie or portrait.",
     );
   }
 
@@ -126,7 +127,13 @@ export async function runLipsyncJob(opts: {
   try {
     let out: Awaited<ReturnType<typeof orchestrate>>;
 
-    if (isXaiUgc) {
+    if (opts.engine === "kie-omnihuman") {
+      // OmniHuman 2.0 on Kie.ai: one call animates the photo and syncs it to
+      // the creator's own audio. Never falls back to another engine.
+      const { runKieTask } = await import("./kie.server");
+      const url = await runKieTask(MODEL["kie-omnihuman"], { image_urls: [opts.imageUrl!], audio_url: opts.audioUrl, prompt: "" });
+      out = { url } as Awaited<ReturnType<typeof orchestrate>>;
+    } else if (isXaiUgc) {
       // xAI UGC — two mandatory stages:
       //   1. xAI image→video: still photo → walking talking-head UGC clip.
       //   2. Relip to the USER'S audio: xAI invents its own (inconsistent)

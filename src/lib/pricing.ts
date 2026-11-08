@@ -127,6 +127,7 @@ export const LIPSYNC_ENGINE_MODEL = {
   latentsync: "latentsync",
   "xai-ugc": "xai/grok-imagine-video-1.5",
   "heygen-photo": "heygen/photo-video",
+  "kie-omnihuman": "kie/omnihuman-2-0",
 } as const;
 export type LipsyncEngine = keyof typeof LIPSYNC_ENGINE_MODEL;
 export const XAI_UGC_RELIP_MODEL = "fal-ai/sync-lipsync/v2";
