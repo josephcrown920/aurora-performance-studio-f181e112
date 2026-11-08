@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { readVideoRotation } from "./video-orientation";
 
 const ONE = 0x10000;
