@@ -66,6 +66,7 @@ export const LIPSYNC_MODEL_TIERS: Record<string, ModelTier> = {
   "heygen/lipsync": "ultra",
   "xai/grok-imagine-video-1.5": "premium",
   "heygen/photo-video": "ultra",
+  "kie/omnihuman-2-0": "premium",
   "heygen/avatar": "ultra",
 };
 export const DEFAULT_VIDEO_TIER: ModelTier = "standard";
@@ -127,6 +128,7 @@ export const LIPSYNC_ENGINE_MODEL = {
   latentsync: "latentsync",
   "xai-ugc": "xai/grok-imagine-video-1.5",
   "heygen-photo": "heygen/photo-video",
+  "kie-omnihuman": "kie/omnihuman-2-0",
 } as const;
 export type LipsyncEngine = keyof typeof LIPSYNC_ENGINE_MODEL;
 export const XAI_UGC_RELIP_MODEL = "fal-ai/sync-lipsync/v2";

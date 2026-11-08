@@ -6,6 +6,7 @@ import { Check, Loader2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeUprightVideo } from "@/lib/video-orientation";
 import { useAuth } from "@/hooks/use-auth";
 import { generateMimicMotion, listGenerations } from "@/lib/studio.functions";
 import {
@@ -108,8 +109,9 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
     return () => clearTimeout(timer);
   }, [draft, ready, user]);
 
-  async function upload(file: File, slot: string, media: "image" | "video" | "audio", skipIfSet = false) {
+  async function upload(original: File, slot: string, media: "image" | "video" | "audio", skipIfSet = false) {
     if (!user) return;
+    const file = media === "video" ? await normalizeUprightVideo(original, (m) => toast.message(m)) : original;
     const extension = file.name.split(".").pop() || (media === "image" ? "jpg" : media === "audio" ? "mp3" : "mp4");
     const path = `${user.id}/performance-variants/${kind}/${slot}-${crypto.randomUUID()}.${extension}`;
     const { error } = await supabase.storage.from("studio").upload(path, file, { contentType: file.type, upsert: false });

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeUprightVideo } from "@/lib/video-orientation";
 import { COLOR_PRESETS } from "@/lib/colors.presets";
 import {
   COLORS_SHOW_STEPS,
@@ -41,7 +42,8 @@ export const Route = createLazyFileRoute("/colors-show")({
 
 type ShotResult = PerformancePlate | null;
 
-async function uploadToStudio(userId: string, file: File): Promise<string> {
+async function uploadToStudio(userId: string, original: File): Promise<string> {
+  const file = original.type.startsWith("video/") ? await normalizeUprightVideo(original) : original;
   if (file.size > 100 * 1024 * 1024) throw new Error("File must be under 100 MB");
   const ext = file.name.split(".").pop() || "jpg";
   const path = `${userId}/uploads/${crypto.randomUUID()}.${ext}`;

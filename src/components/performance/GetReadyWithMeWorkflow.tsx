@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeUprightVideo } from "@/lib/video-orientation";
 import { generateMimicMotion, generatePerformanceReskin, listGenerations } from "@/lib/studio.functions";
 import { loadPerformanceVariant, savePerformanceVariant, type PerformanceVariantPayload } from "@/lib/performance-variant.functions";
 import { computeCost } from "@/lib/pricing";
@@ -73,6 +74,7 @@ export function GetReadyWithMeWorkflow() {
       if (slot === "phone") {
         const duration = await videoDuration(file);
         if (duration > 30.5) throw new Error("Choose a dressing clip of 30 seconds or less.");
+        file = await normalizeUprightVideo(file);
       }
       const path = `${user.id}/performance-variants/build_scene/grwm-${slot}-${crypto.randomUUID()}.${file.name.split(".").pop() || "mp4"}`;
       const uploaded = await supabase.storage.from("studio").upload(path, file, { contentType: file.type, upsert: false });

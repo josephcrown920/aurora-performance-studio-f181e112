@@ -26,38 +26,14 @@ const PROVIDERS: Attempt[] = [
 ];
 
 async function runKieKling(i: CloudMotionInput): Promise<string> {
-  const key = process.env.KIE_API_KEY!;
-  const headers = { Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
-  const r = await fetch("https://api.kie.ai/api/v1/jobs/createTask", {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      model: "kling-2.6/motion-control",
-      input: {
-        prompt: i.prompt?.trim() || "Copy the exact body movement from the reference video onto the subject, keeping their face and identity unchanged.",
-        input_urls: [i.imageUrl],
-        video_urls: [i.drivingVideoUrl],
-        character_orientation: "video",
-        mode: "720p",
-      },
-    }),
+  const { runKieTask } = await import("./kie.server");
+  return runKieTask("kling-2.6/motion-control", {
+    prompt: i.prompt?.trim() || "Copy the exact body movement from the reference video onto the subject, keeping their face and identity unchanged.",
+    input_urls: [i.imageUrl],
+    video_urls: [i.drivingVideoUrl],
+    character_orientation: "video",
+    mode: "720p",
   });
-  const j = (await r.json().catch(() => ({}))) as { code?: number; msg?: string; data?: { taskId?: string } };
-  if (j.code !== 200 || !j.data?.taskId) throw new Error(j.msg || "Kie rejected the motion request");
-  const taskId = j.data.taskId;
-  const deadline = Date.now() + 10 * 60_000;
-  while (Date.now() < deadline) {
-    await new Promise((res) => setTimeout(res, 5000));
-    const s = await fetch(`https://api.kie.ai/api/v1/jobs/recordInfo?taskId=${taskId}`, { headers });
-    const d = ((await s.json().catch(() => ({}))) as { data?: { state?: string; resultJson?: string; failMsg?: string } }).data;
-    if (d?.state === "fail") throw new Error(d.failMsg || "Kling motion failed");
-    if (d?.state === "success") {
-      const urls = (JSON.parse(d.resultJson || "{}") as { resultUrls?: string[] }).resultUrls ?? [];
-      if (urls[0]) return urls[0];
-      throw new Error("Kling returned no video");
-    }
-  }
-  throw new Error("Kling motion timed out");
 }
 
 export function cloudMotionAvailable(): boolean {

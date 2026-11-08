@@ -10,7 +10,7 @@ export const startLipsync = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({
     videoUrl: z.string().url(),
     audioUrl: z.string().url(),
-    engine: z.enum(["sync-v2", "wav2lip", "latentsync", "xai-ugc", "heygen-photo"]).default("sync-v2"),
+    engine: z.enum(["sync-v2", "wav2lip", "latentsync", "xai-ugc", "heygen-photo", "kie-omnihuman"]).default("sync-v2"),
     imageUrl: z.string().url().optional(),
   }).parse(d))
   .handler(async ({ data, context }) => {
@@ -50,7 +50,7 @@ export const startBatchLipsync = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => z.object({
     sourceUrls: z.array(z.string().url()).min(2).max(8),
     audioUrl: z.string().url(),
-    engine: z.enum(["sync-v2", "wav2lip", "latentsync", "xai-ugc", "heygen-photo"]).default("heygen-photo"),
+    engine: z.enum(["sync-v2", "wav2lip", "latentsync", "xai-ugc", "heygen-photo", "kie-omnihuman"]).default("heygen-photo"),
   }).parse(d))
   .handler(async ({ data, context }) => {
     const { error: consentErr } = await supabaseAdmin.from("consent_logs").insert({
