@@ -106,7 +106,7 @@ export async function normalizeUprightVideo(file: File, onProgress?: (message: s
     video.currentTime = 0;
     recorder.start(250);
     draw();
-    await video.play();
+    await video.play().catch(async () => { video.muted = true; await video.play(); });
     await new Promise<void>((res) => { video.onended = () => res(); });
     cancelAnimationFrame(raf);
     recorder.stop();
