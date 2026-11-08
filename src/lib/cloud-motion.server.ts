@@ -16,32 +16,48 @@ export type CloudMotionInput = {
 
 type Attempt = { name: string; configured: () => boolean; run: (i: CloudMotionInput) => Promise<string> };
 
+// Only cheap Kling 2.6 Motion Control via Kie.ai. Seedance is never used.
 const PROVIDERS: Attempt[] = [
   {
-    name: "modelark-seedance-2.5",
-    configured: () => Boolean(process.env.ARK_API_KEY || process.env.BYTEPLUS_API_KEY),
-    run: async (i) => (await runArk("seedance-2.5", i)),
-  },
-  {
-    name: "modelark-seedance-2.0-fast",
-    configured: () => Boolean(process.env.ARK_API_KEY || process.env.BYTEPLUS_API_KEY),
-    run: async (i) => (await runArk("seedance-2.0-fast", i)),
+    name: "kie-kling-2.6-motion-control",
+    configured: () => Boolean(process.env.KIE_API_KEY),
+    run: (i) => runKieKling(i),
   },
 ];
 
-async function runArk(modelKey: "seedance-2.5" | "seedance-2.0-fast", i: CloudMotionInput) {
-  const { generateModelArkMotion } = await import("./modelark-seedance-motion.server");
-  const out = await generateModelArkMotion({
-    modelKey,
-    subjectImageUrl: i.imageUrl,
-    motionVideoUrl: i.drivingVideoUrl,
-    prompt: i.prompt?.trim() || "Copy the exact body movement and performance from the reference video onto the subject, keeping their face and identity unchanged.",
-    duration: i.duration ?? 5,
-    resolution: "720p",
-    cameraMovement: i.cameraMovement,
-    motionType: i.motionType ?? "faithful",
+async function runKieKling(i: CloudMotionInput): Promise<string> {
+  const key = process.env.KIE_API_KEY!;
+  const headers = { Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
+  const r = await fetch("https://api.kie.ai/api/v1/jobs/createTask", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      model: "kling-2.6/motion-control",
+      input: {
+        prompt: i.prompt?.trim() || "Copy the exact body movement from the reference video onto the subject, keeping their face and identity unchanged.",
+        input_urls: [i.imageUrl],
+        video_urls: [i.drivingVideoUrl],
+        character_orientation: "video",
+        mode: "720p",
+      },
+    }),
   });
-  return out.videoUrl;
+  const j = (await r.json().catch(() => ({}))) as { code?: number; msg?: string; data?: { taskId?: string } };
+  if (j.code !== 200 || !j.data?.taskId) throw new Error(j.msg || "Kie rejected the motion request");
+  const taskId = j.data.taskId;
+  const deadline = Date.now() + 10 * 60_000;
+  while (Date.now() < deadline) {
+    await new Promise((res) => setTimeout(res, 5000));
+    const s = await fetch(`https://api.kie.ai/api/v1/jobs/recordInfo?taskId=${taskId}`, { headers });
+    const d = ((await s.json().catch(() => ({}))) as { data?: { state?: string; resultJson?: string; failMsg?: string } }).data;
+    if (d?.state === "fail") throw new Error(d.failMsg || "Kling motion failed");
+    if (d?.state === "success") {
+      const urls = (JSON.parse(d.resultJson || "{}") as { resultUrls?: string[] }).resultUrls ?? [];
+      if (urls[0]) return urls[0];
+      throw new Error("Kling returned no video");
+    }
+  }
+  throw new Error("Kling motion timed out");
 }
 
 export function cloudMotionAvailable(): boolean {
