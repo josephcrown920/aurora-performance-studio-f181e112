@@ -8,6 +8,13 @@
       "when": 1793745048887,
       "tag": "0000_enable_private_studio_project_access",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794185899100,
+      "tag": "0001_admin_unlimited_aura",
+      "breakpoints": true
     }
   ]
 }
