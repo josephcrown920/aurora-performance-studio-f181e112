@@ -118,3 +118,7 @@
 - [ ] Recover the previous motion task and actual spend before another paid test; task ID and billing evidence are missing, OmniHuman rejected the earlier input (no replay).
 - [ ] Verify authenticated Kie generations end-to-end with the creator's own photo; keep combined tests below $1 and use only cheap Kling/OmniHuman for motion/lip sync.
 - [ ] Repair editor project-specific chat persistence and Kie motion/lip-sync dispatch; verify no-cost regression and browser flows.
+
+- [ ] Re-run Perform Anywhere motion test with the creator's Mercedes/leather-jacket human clip (Kling 2.6 via Kie).
+- [ ] Add other Kie models the creator asked for (Seedance 2.0 Mini, MiniMax, other motion/lip-sync "Omni" options) where Kie actually hosts them; test within the $3 cap.
+- [ ] Confirm Aurora main repo sync is current.
