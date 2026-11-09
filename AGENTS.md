@@ -35,3 +35,4 @@
 - Free notebook motion setup must run a hardware-only preflight before credentials or model downloads; match the existing MimicMotion setup limits and never combine separate GPUs' memory or treat hardware readiness as render proof.
 - Editor conversation caches are keyed by account and GUI session, with full messages also in the existing session document; this prevents cross-project chat mixing.
 - Kie driving-video requests dispatch to motion control, never image-to-video, and reject unsupported depth or ending frames; this prevents silent loss of reference inputs.
+- Admin accounts (user_roles admin) bypass Aura charges inside the reserve/release/deduct database functions, so every generation path is free for admins without per-feature checks.
