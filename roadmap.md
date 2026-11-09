@@ -122,3 +122,4 @@
 - [ ] Re-run Perform Anywhere motion test with the creator's Mercedes/leather-jacket human clip (Kling 2.6 via Kie).
 - [ ] Add other Kie models the creator asked for (Seedance 2.0 Mini, MiniMax, other motion/lip-sync "Omni" options) where Kie actually hosts them; test within the $3 cap.
 - [ ] Confirm Aurora main repo sync is current.
+- [ ] Finish requested in-app motion, lip sync, TikTok30, multi-angle and Soul tests; report every actual result and preserve the combined $3 provider limit, with no publish.
