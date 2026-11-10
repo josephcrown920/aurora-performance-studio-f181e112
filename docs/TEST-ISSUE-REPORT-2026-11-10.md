@@ -23,4 +23,6 @@ Tested local revision: `2164728ca8fe916dfc73b1982fdb13085b6140b1` plus the added
 - [ ] Production build/deployment, rollback and restore proofs: not verified this run; nothing published.
 
 ## Launch comparison
+GitHub updates confirmed: [implementation test checklist #144](https://github.com/josephcrown920/Auroraglobal/issues/144#issuecomment-6761137987) and [launch comparison #125](https://github.com/josephcrown920/Auroraglobal/issues/125#issuecomment-6761140636), both created successfully. Checked items are in the dated evidence comments; original unproven feature gates remain unchanged.
+
 GitHub #125 definition of done requires real UI → real pipeline → real provider → persisted output → preview/export. Therefore its existing 2/39 product checks remain checked, and **no new real-output gate is checked** from this run. GitHub #144's full-CI/e2e prerequisites remain failing; no paid jobs were submitted while those checks failed. No new provider spending incurred; the prior combined $3 limit remains in force.
