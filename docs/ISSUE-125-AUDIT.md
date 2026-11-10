@@ -1,5 +1,7 @@
 # Issue #125 audit — 2026-11-03
 
+Latest follow-up: see `TEST-ISSUE-REPORT-2026-11-10.md`. The fresh full run has 1,613 passing tests, 91 failures and one unhandled error; 32 focused checks pass. No new real-output launch gate is satisfied.
+
 ## Checklist outcome
 
 GitHub issue #125 updated successfully using Out's GitHub API: 2/39 checked, 37 open.
