@@ -611,7 +611,7 @@ function LandingPage() {
           ))}
 
           {/* Buttons always visible below the slide text area */}
-          <div className="mt-8 flex flex-col gap-3">
+          <div className="relative z-20 mt-8 flex flex-col gap-3">
             <Link
               to={ctaTo}
               className="inline-flex w-fit items-center rounded-full bg-[#8b5cf6] py-3.5 pl-5 pr-6 text-base font-semibold text-white shadow-[0_10px_40px_-10px_rgba(139,92,246,0.7)] transition-transform hover:scale-[1.02] active:scale-95"
