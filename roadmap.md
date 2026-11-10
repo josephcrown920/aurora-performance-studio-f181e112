@@ -125,4 +125,4 @@
 - [ ] Finish requested in-app motion, lip sync, TikTok30, multi-angle and Soul tests; report every actual result and preserve the combined $3 provider limit, with no publish.
 
 - [x] Run current automated and signed-in screen checks; record 1,613 passes / 91 failures / one error and 32 focused passes in docs/TEST-ISSUE-REPORT-2026-11-10.md. No real-output gate marked passed.
-- [ ] Update GitHub test/issue checklist with the November 10 evidence for launch comparison.
+- [x] Update GitHub #144 and #125 with checked verified tests, unchecked real-output gates, and November 10 launch comparison; both comments confirmed HTTP 201. No publication or paid jobs.
