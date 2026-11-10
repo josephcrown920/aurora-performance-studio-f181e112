@@ -611,7 +611,7 @@ function LandingPage() {
           ))}
 
           {/* Buttons always visible below the slide text area */}
-          <div className="mt-8 flex flex-col gap-3">
+          <div className="relative z-20 mt-8 flex flex-col gap-3">
             <Link
               to={ctaTo}
               className="inline-flex w-fit items-center rounded-full bg-[#8b5cf6] py-3.5 pl-5 pr-6 text-base font-semibold text-white shadow-[0_10px_40px_-10px_rgba(139,92,246,0.7)] transition-transform hover:scale-[1.02] active:scale-95"
@@ -926,6 +926,27 @@ function LandingPage() {
           <Play className="size-4 fill-current" />
           Start directing
         </Link>
+      </section>
+
+      {/* ── Testimonials (sample quotes — replace with real artist quotes) ── */}
+      <section aria-label="What artists say" className="py-20 px-5 border-t border-white/5">
+        <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#8b5cf6]">Artists on Aurora</span>
+        <h2 className="mt-3 text-4xl font-semibold leading-tight">Made by creators, for creators.</h2>
+        <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+          {[
+            { q: "I shot one take on my phone and had a full music video concept by the evening.", n: "Independent artist", r: "Lagos" },
+            { q: "Perform Anywhere put me in a Rolls-Royce without leaving my bedroom.", n: "Afrobeats singer", r: "London" },
+            { q: "TikTok 30 gave me a month of content from one song. My streams doubled.", n: "Rapper", r: "Accra" },
+            { q: "Lip sync and multi-angle shots look like a real crew filmed it.", n: "Music producer", r: "Atlanta" },
+            { q: "Mastering with PureMix and editing in Studio — everything in one place.", n: "Label A&R", r: "Johannesburg" },
+            { q: "My character looks the same in every shot. That consistency sold me.", n: "Visual creator", r: "Toronto" },
+          ].map((t) => (
+            <li key={t.q} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-sm leading-relaxed text-zinc-200">“{t.q}”</p>
+              <p className="mt-3 text-xs font-semibold text-zinc-400">{t.n} · {t.r}</p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <Suspense fallback={null}><PricingSection /></Suspense>
