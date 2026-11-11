@@ -131,3 +131,4 @@
 - [ ] Live Genjutsu render tests — blocked: needs a connected ComfyUI GPU worker and the Genjutsu workflow file re-uploaded
 
 - [ ] Switch Perform Anywhere + Get Ready With Me renders to Genjutsu (blocked: creator ComfyUI address + Genjutsu workflow file)
+- [ ] Pull Auroraglobal updates and republish
