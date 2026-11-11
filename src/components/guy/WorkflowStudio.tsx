@@ -39,6 +39,7 @@ function Genjutsu({ onAsset, onComfy }: { onAsset: Props["onAsset"]; onComfy: ()
   const [approved, setApproved] = useState(false);
   const [status, setStatus] = useState("");
   const [draftUrl, setDraftUrl] = useState("");
+  const [finalUrl, setFinalUrl] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function run(hd: boolean) {
@@ -49,6 +50,7 @@ function Genjutsu({ onAsset, onComfy }: { onAsset: Props["onAsset"]; onComfy: ()
         image: refImg, duration: "5s", onStatus: (s) => setStatus(`${hd ? "HD" : "Draft"}: ${s}`),
       });
       if (!hd) setDraftUrl(url);
+      else setFinalUrl(url);
       onAsset(url, "video", hd ? "genjutsu-hd.mp4" : "genjutsu-draft.mp4", hd);
       setStatus(hd ? "HD added to the timeline." : "Draft ready — review it, then approve HD.");
     } catch (e) {
@@ -103,6 +105,7 @@ function Genjutsu({ onAsset, onComfy }: { onAsset: Props["onAsset"]; onComfy: ()
           </>
         )}
         {status && <p className="text-muted-foreground">{status}</p>}
+        {finalUrl && <div className="rounded-md border border-border p-3"><p className="font-bold">Optional next step — Lip Sync</p><p className="mt-1 text-muted-foreground">Your final Genjutsu video is ready. Open Aurora’s existing Lip Sync Studio only if you want to synchronize a different vocal track. Save or download the finished video first, then import it into Lip Sync.</p><Button asChild size="sm" variant="outline" className="mt-2"><a href="/lipsync">Open existing Lip Sync Studio</a></Button></div>}
       </div>
       <div className="flex items-center justify-center rounded-md border border-border bg-background/30 p-2">
         {draftUrl ? <video src={draftUrl} controls className="max-h-full w-full rounded-md" /> : <span className="text-xs text-muted-foreground">Draft preview appears here</span>}
