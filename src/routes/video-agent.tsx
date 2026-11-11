@@ -25,6 +25,7 @@ import { SKILLS, buildSystemPrompt } from "@/features/creative-studio/lib/aurora
 import { primeSpeech, speak, stopSpeech } from "@/features/creative-studio/lib/aurora-voice";
 import { classifySeedanceReferenceError, isLasAssetReference } from "@/features/creative-studio/lib/seedance-reference";
 import { FeatureShowcase } from "@/features/creative-studio/components/FeatureShowcase";
+import { isChatOnly } from "@/lib/chat-only";
 import { AgentStream } from "@/features/creative-studio/components/AgentStream";
 import { kieImage, kieVideo } from "@/lib/kie-client";
 
@@ -404,6 +405,12 @@ function Index() {
   const handleGenerate = async (override?: { text?: string; mode?: Mode }) => {
     const text = (override?.text ?? prompt).trim();
     if (!text || busy) return;
+    if (isChatOnly(text)) {
+      setPrompt("");
+      setChatInput(text);
+      setChatOpen(true);
+      return;
+    }
     const id = nextId.current++;
     const currentMode = override?.mode ?? mode;
     const currentAspect = aspect;
