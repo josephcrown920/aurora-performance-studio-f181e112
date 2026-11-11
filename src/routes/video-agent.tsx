@@ -173,6 +173,13 @@ const MOTION_LEVELS: { id: MotionLevel; label: string; cue: string }[] = [
   { id: "dynamic", label: "Dynamic", cue: "high-energy motion, fast action and movement" },
 ];
 
+/** Greetings and short chit-chat belong in chat, never in a paid generation. */
+export function isChatOnly(text: string) {
+  const t = text.trim().toLowerCase().replace(/[!?.,\s]+$/g, "");
+  if (/^(hi+|hey+|hello+|yo+|sup|wassup|what'?s up|hiya|howdy|good (morning|afternoon|evening)|thanks?|thank you|ok(ay)?|test(ing)?|help|how are you)( aurora)?$/.test(t)) return true;
+  return t.split(/\s+/).length < 2 && t.length < 5;
+}
+
 function applyMotion(text: string, move: CameraMove, level: MotionLevel) {
   const cues = [
     CAMERA_MOVES.find((c) => c.id === move)?.cue,
@@ -404,6 +411,12 @@ function Index() {
   const handleGenerate = async (override?: { text?: string; mode?: Mode }) => {
     const text = (override?.text ?? prompt).trim();
     if (!text || busy) return;
+    if (isChatOnly(text)) {
+      setPrompt("");
+      setChatInput(text);
+      setChatOpen(true);
+      return;
+    }
     const id = nextId.current++;
     const currentMode = override?.mode ?? mode;
     const currentAspect = aspect;
