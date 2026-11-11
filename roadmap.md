@@ -126,3 +126,6 @@
 
 - [x] Run current automated and signed-in screen checks; record 1,613 passes / 91 failures / one error and 32 focused passes in docs/TEST-ISSUE-REPORT-2026-11-10.md. No real-output gate marked passed.
 - [x] Update GitHub #144 and #125 with checked verified tests, unchecked real-output gates, and November 10 launch comparison; both comments confirmed HTTP 201. No publication or paid jobs.
+
+- [x] Synced Canvas agent tools from auroraglobal.main (2026-11-11)
+- [ ] Live Genjutsu render tests — blocked: needs a connected ComfyUI GPU worker and the Genjutsu workflow file re-uploaded
