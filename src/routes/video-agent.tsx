@@ -25,6 +25,7 @@ import { SKILLS, buildSystemPrompt } from "@/features/creative-studio/lib/aurora
 import { primeSpeech, speak, stopSpeech } from "@/features/creative-studio/lib/aurora-voice";
 import { classifySeedanceReferenceError, isLasAssetReference } from "@/features/creative-studio/lib/seedance-reference";
 import { FeatureShowcase } from "@/features/creative-studio/components/FeatureShowcase";
+import { isChatOnly } from "@/lib/chat-only";
 import { AgentStream } from "@/features/creative-studio/components/AgentStream";
 import { kieImage, kieVideo } from "@/lib/kie-client";
 
@@ -172,13 +173,6 @@ const MOTION_LEVELS: { id: MotionLevel; label: string; cue: string }[] = [
   { id: "balanced", label: "Balanced", cue: "natural subject motion" },
   { id: "dynamic", label: "Dynamic", cue: "high-energy motion, fast action and movement" },
 ];
-
-/** Greetings and short chit-chat belong in chat, never in a paid generation. */
-export function isChatOnly(text: string) {
-  const t = text.trim().toLowerCase().replace(/[!?.,\s]+$/g, "");
-  if (/^(hi+|hey+|hello+|yo+|sup|wassup|what'?s up|hiya|howdy|good (morning|afternoon|evening)|thanks?|thank you|ok(ay)?|test(ing)?|help|how are you)( aurora)?$/.test(t)) return true;
-  return t.split(/\s+/).length < 2 && t.length < 5;
-}
 
 function applyMotion(text: string, move: CameraMove, level: MotionLevel) {
   const cues = [

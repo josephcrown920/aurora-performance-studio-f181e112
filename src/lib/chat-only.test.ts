@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isChatOnly } from "./video-agent";
+import { isChatOnly } from "./chat-only";
 describe("isChatOnly", () => {
   it("treats hi as chat", () => expect(isChatOnly("Hi")).toBe(true));
   it("treats hello aurora! as chat", () => expect(isChatOnly("hello aurora!")).toBe(true));
