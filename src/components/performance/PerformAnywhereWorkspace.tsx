@@ -10,6 +10,8 @@ import { PerformWorlds } from "@/components/performance/PerformWorlds";
 import studioClip from "@/assets/josh/generated/clip-05-studio-gel.webm";
 import studioPoster from "@/assets/josh/generated/still-05-studio-gel.jpg";
 import micScene from "@/assets/environments/mic/mic-street.jpg.asset.json";
+import klingRender from "@/assets/perform/motion-kling.mp4.asset.json";
+import wanRender from "@/assets/perform/motion-wan.mp4.asset.json";
 
 function PhoneRecordingSlot({ active, onActivate }: { active: boolean; onActivate: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -82,6 +84,14 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
               <video src={studioClip} poster={studioPoster} controls playsInline preload="metadata" aria-label="Final render" onPlay={() => setActive(2)} />
               <Button variant="ghost" onClick={() => setActive(2)} aria-pressed={active === 2} className="h-11 w-full justify-start whitespace-normal text-left text-xs">Final render</Button>
             </article>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2" aria-label="Real motion renders">
+            {[[klingRender.url, "Kling 2.6 · real 5s render"], [wanRender.url, "Wan 2.2 · real 5s render"]].map(([src, label]) => (
+              <figure key={label} className="performance-example">
+                <video src={src} controls playsInline preload="metadata" aria-label={label} className="aspect-[9/16] w-full rounded-md object-cover" />
+                <figcaption className="px-1 py-2 text-xs text-muted-foreground">{label}</figcaption>
+              </figure>
+            ))}
           </div>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-y border-border py-3"><span className="flex items-center gap-2 text-xs text-muted-foreground"><Film size={14} />Your scene. Your performance.</span><Button asChild size="sm" variant="outline"><Link to="/motion">Motion controls<ArrowUpRight size={13} /></Link></Button></div>
         </section>
