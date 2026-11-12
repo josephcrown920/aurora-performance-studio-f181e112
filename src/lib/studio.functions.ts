@@ -1099,7 +1099,7 @@ export const generateMimicMotion = createServerFn({ method: "POST" })
       }
     }
 
-    const useCloud = !(await hasActiveWorkerForKind("motion"));
+    const useCloud = true; // Genjutsu runs through the configured Kie motion API.
     if (useCloud) {
       const { cloudMotionAvailable } = await import("./cloud-motion.server");
       if (!cloudMotionAvailable()) throw new Error(NO_MOTION_BACKEND_MSG);
@@ -1168,7 +1168,7 @@ export async function _enqueuePerformanceReskin(
   if (data.audioUrl) assertOwnStudioUpload(data.audioUrl, userId);
   if (data.depthGuideUrl) assertOwnStudioUpload(data.depthGuideUrl, userId);
 
-  const useCloud = !(await hasActiveWorkerForKind("motion"));
+  const useCloud = true; // Genjutsu runs through the configured Kie motion API.
   if (useCloud) {
     const { cloudMotionAvailable } = await import("./cloud-motion.server");
     if (!cloudMotionAvailable()) throw new Error(NO_MOTION_BACKEND_MSG);
