@@ -190,7 +190,7 @@ const ITEMS: RoadmapItem[] = [
     to: "/gifts",
     status: "planned",
   },
-  {
+];
 
 const SECTIONS: {
   key: RoadmapItem["status"];
