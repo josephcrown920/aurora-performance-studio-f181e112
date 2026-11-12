@@ -108,8 +108,8 @@ export function GetReadyWithMeWorkflow() {
       const prompt = `Get Ready With Me in a ${location}. The final shot ends fully dressed in this scene. Preserve the recorded dressing gestures and timing, character identity and fixed camera. No captions or added dialogue.`;
       const params = { motionType: "faithful" as const, cameraMovement: "static" as const, frames: 240, fps: 16, preserveFace: true };
       return transform === "sync"
-        ? sync({ data: { performanceVideoUrl: draft.phoneVideoUrl, avatarImageUrl: target, outfit: outfit || undefined, location: location || undefined, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } })
-        : transfer({ data: { imageUrl: target, drivingVideoUrl: draft.phoneVideoUrl, prompt, params, confirmPreviewId, depthGuideUrl: depth?.url } });
+        ? sync({ data: { performanceVideoUrl: draft.phoneVideoUrl, avatarImageUrl: target, outfit: outfit || undefined, location: location || undefined, prompt, params, confirmPreviewId } })
+        : transfer({ data: { imageUrl: target, drivingVideoUrl: draft.phoneVideoUrl, prompt, params, confirmPreviewId } });
     },
     onMutate: () => setError(null),
     onSuccess: result => { setJob({ id: result.generationId, preview: result.preview }); void history.refetch(); },

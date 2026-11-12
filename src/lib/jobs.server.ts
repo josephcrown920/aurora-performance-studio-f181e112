@@ -13,6 +13,7 @@ import {
 } from "./orchestrator.server";
 import { buildMimicMotionRequest, type MotionParams } from "./motion-workflows.server";
 import { hfTextToSpeech } from "./hf.server";
+const KIDS_TTS_MODEL = "facebook/mms-tts-eng";
 import {
   generateUGCScript,
   providedUGCScript,
