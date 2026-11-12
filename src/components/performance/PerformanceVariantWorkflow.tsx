@@ -51,7 +51,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
   const [pickerSlot, setPickerSlot] = useState<"location" | "interior" | null>(null);
   const [pickedIds, setPickedIds] = useState<Record<string, string | null>>({});
   const [envId, setEnvId] = useState<string | null>(null);
-  // Default Perform Anywhere scene: the graffiti wall, until the creator picks or uploads another.
+  // Default Genjutsu scene: the graffiti wall, until the creator picks or uploads another.
   useEffect(() => {
     // Wait for the saved workflow to load (ready) before applying the default,
     // otherwise the async preset copy overwrites the creator's saved scene.
@@ -220,7 +220,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
         {!compact && <WorkflowVisualGuide kind={kind} />}
         {mode === "anywhere" && <PerformanceSourceStrip references={draft.references} phoneVideoUrl={draft.phoneVideoUrl} finalUrl={finalUrl} onUpload={(file) => { void upload(file, "original-performance", "video").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); }} />}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div><p className="aurora-kicker">{mode === "anywhere" ? "Perform Anywhere" : "Colors Studio"}</p><h1 className="font-display text-3xl">{catalog.label}</h1></div>
+          <div><p className="aurora-kicker">{mode === "anywhere" ? "Genjutsu" : "Colors Studio"}</p><h1 className="font-display text-3xl">{catalog.label}</h1></div>
           <Link to="/colors-show" search={mode === "anywhere" ? { mode: "anywhere" } : {}}><Button variant="outline">Two-angle workflow</Button></Link>
         </div>
 
