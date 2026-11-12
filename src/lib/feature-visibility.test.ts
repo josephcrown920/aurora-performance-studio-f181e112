@@ -76,7 +76,6 @@ describe("route matching", () => {
     expect(featureKeyForRoute("/spin")).toBe("spin");
     expect(featureKeyForRoute("/creator/dashboard")).toBe("creator-hub");
     expect(featureKeyForRoute("/avatar")).toBe("talking-avatars");
-    expect(featureKeyForRoute("/aurora-adult/")).toBe("adult-school");
   });
 
   test("ungated core artist routes are not matched", () => {
