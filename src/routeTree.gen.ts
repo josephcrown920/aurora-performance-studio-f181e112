@@ -15,10 +15,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AdsRouteImport } from './routes/ads'
-import { Route as AdultRouteImport } from './routes/adult'
 import { Route as AffiliateRouteImport } from './routes/affiliate'
 import { Route as AgentRouteImport } from './routes/agent'
-import { Route as AuroraAdultRouteImport } from './routes/aurora-adult'
 import { Route as AuroraCanvasRouteImport } from './routes/aurora-canvas'
 import { Route as AuroraCommandCenterRouteImport } from './routes/aurora-command-center'
 import { Route as AuroraStudioShellRouteImport } from './routes/aurora-studio-shell'
@@ -42,14 +40,11 @@ import { Route as DirectorsBoardRouteImport } from './routes/directors-board'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as EditRouteImport } from './routes/edit'
 import { Route as EditorRouteImport } from './routes/editor'
-import { Route as EromifyRouteImport } from './routes/eromify'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as GiftsRouteImport } from './routes/gifts'
 import { Route as GrowthRouteImport } from './routes/growth'
-import { Route as HeygenTemplatesRouteImport } from './routes/heygen-templates'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JobsRouteImport } from './routes/jobs'
-import { Route as KidsRouteImport } from './routes/kids'
 import { Route as Lagos40RouteImport } from './routes/lagos40'
 import { Route as LayersRouteImport } from './routes/layers'
 import { Route as LibraryRouteImport } from './routes/library'
@@ -61,7 +56,6 @@ import { Route as MasteringRouteImport } from './routes/mastering'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MotionRouteImport } from './routes/motion'
 import { Route as MusicVideoRouteImport } from './routes/music-video'
-import { Route as NexusarbRouteImport } from './routes/nexusarb'
 import { Route as OrchestrateRouteImport } from './routes/orchestrate'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as PerformRouteImport } from './routes/perform'
@@ -83,7 +77,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SoulRouteImport } from './routes/soul'
 import { Route as SpeechRouteImport } from './routes/speech'
 import { Route as SpinRouteImport } from './routes/spin'
-import { Route as SplitRealityRouteImport } from './routes/split-reality'
 import { Route as StoryboardRouteImport } from './routes/storyboard'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TemplatesRouteImport } from './routes/templates'
@@ -148,7 +141,6 @@ import { Route as ApiAdminRunSmokeStep14RouteImport } from './routes/api/admin/r
 import { Route as ApiAdminUploadImageRouteImport } from './routes/api/admin/upload-image'
 import { Route as ApiAdminUploadSiteImageRouteImport } from './routes/api/admin/upload-site-image'
 import { Route as ApiAdminVerifyPasscodeRouteImport } from './routes/api/admin/verify-passcode'
-import { Route as ApiAdultAdminGenerateRouteImport } from './routes/api/adult-admin/generate'
 import { Route as ApiAiGatewayFluxSchnellRouteImport } from './routes/api/ai-gateway/flux-schnell'
 import { Route as ApiAiGatewayFreeChatRouteImport } from './routes/api/ai-gateway/free-chat'
 import { Route as ApiAiGatewayLagunaRouteImport } from './routes/api/ai-gateway/laguna'
@@ -258,11 +250,6 @@ const AdsRoute = AdsRouteImport.update({
   path: '/ads',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/ads.lazy').then((d) => d.Route))
-const AdultRoute = AdultRouteImport.update({
-  id: '/adult',
-  path: '/adult',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/adult.lazy').then((d) => d.Route))
 const AffiliateRoute = AffiliateRouteImport.update({
   id: '/affiliate',
   path: '/affiliate',
@@ -271,11 +258,6 @@ const AffiliateRoute = AffiliateRouteImport.update({
 const AgentRoute = AgentRouteImport.update({
   id: '/agent',
   path: '/agent',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuroraAdultRoute = AuroraAdultRouteImport.update({
-  id: '/aurora-adult',
-  path: '/aurora-adult',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuroraCanvasRoute = AuroraCanvasRouteImport.update({
@@ -404,11 +386,6 @@ const EditorRoute = EditorRouteImport.update({
   path: '/editor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EromifyRoute = EromifyRouteImport.update({
-  id: '/eromify',
-  path: '/eromify',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/eromify.lazy').then((d) => d.Route))
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
@@ -424,13 +401,6 @@ const GrowthRoute = GrowthRouteImport.update({
   path: '/growth',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/growth.lazy').then((d) => d.Route))
-const HeygenTemplatesRoute = HeygenTemplatesRouteImport.update({
-  id: '/heygen-templates',
-  path: '/heygen-templates',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/heygen-templates.lazy').then((d) => d.Route),
-)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -441,11 +411,6 @@ const JobsRoute = JobsRouteImport.update({
   path: '/jobs',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/jobs.lazy').then((d) => d.Route))
-const KidsRoute = KidsRouteImport.update({
-  id: '/kids',
-  path: '/kids',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/kids.lazy').then((d) => d.Route))
 const Lagos40Route = Lagos40RouteImport.update({
   id: '/lagos40',
   path: '/lagos40',
@@ -501,11 +466,6 @@ const MusicVideoRoute = MusicVideoRouteImport.update({
   path: '/music-video',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NexusarbRoute = NexusarbRouteImport.update({
-  id: '/nexusarb',
-  path: '/nexusarb',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/nexusarb.lazy').then((d) => d.Route))
 const OrchestrateRoute = OrchestrateRouteImport.update({
   id: '/orchestrate',
   path: '/orchestrate',
@@ -615,11 +575,6 @@ const SpinRoute = SpinRouteImport.update({
   path: '/spin',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/spin.lazy').then((d) => d.Route))
-const SplitRealityRoute = SplitRealityRouteImport.update({
-  id: '/split-reality',
-  path: '/split-reality',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/split-reality.lazy').then((d) => d.Route))
 const StoryboardRoute = StoryboardRouteImport.update({
   id: '/storyboard',
   path: '/storyboard',
@@ -968,11 +923,6 @@ const ApiAdminUploadSiteImageRoute = ApiAdminUploadSiteImageRouteImport.update({
 const ApiAdminVerifyPasscodeRoute = ApiAdminVerifyPasscodeRouteImport.update({
   id: '/api/admin/verify-passcode',
   path: '/api/admin/verify-passcode',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAdultAdminGenerateRoute = ApiAdultAdminGenerateRouteImport.update({
-  id: '/api/adult-admin/generate',
-  path: '/api/adult-admin/generate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAiGatewayFluxSchnellRoute = ApiAiGatewayFluxSchnellRouteImport.update({
@@ -1411,10 +1361,8 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
   '/ads': typeof AdsRoute
-  '/adult': typeof AdultRoute
   '/affiliate': typeof AffiliateRoute
   '/agent': typeof AgentRoute
-  '/aurora-adult': typeof AuroraAdultRoute
   '/aurora-canvas': typeof AuroraCanvasRoute
   '/aurora-command-center': typeof AuroraCommandCenterRoute
   '/aurora-studio-shell': typeof AuroraStudioShellRoute
@@ -1438,14 +1386,11 @@ export interface FileRoutesByFullPath {
   '/download': typeof DownloadRoute
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
-  '/eromify': typeof EromifyRoute
   '/gallery': typeof GalleryRoute
   '/gifts': typeof GiftsRoute
   '/growth': typeof GrowthRoute
-  '/heygen-templates': typeof HeygenTemplatesRoute
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
-  '/kids': typeof KidsRoute
   '/lagos40': typeof Lagos40Route
   '/layers': typeof LayersRoute
   '/library': typeof LibraryRouteWithChildren
@@ -1457,7 +1402,6 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/motion': typeof MotionRoute
   '/music-video': typeof MusicVideoRoute
-  '/nexusarb': typeof NexusarbRoute
   '/orchestrate': typeof OrchestrateRoute
   '/partners': typeof PartnersRoute
   '/perform': typeof PerformRoute
@@ -1479,7 +1423,6 @@ export interface FileRoutesByFullPath {
   '/soul': typeof SoulRouteWithChildren
   '/speech': typeof SpeechRoute
   '/spin': typeof SpinRoute
-  '/split-reality': typeof SplitRealityRoute
   '/storyboard': typeof StoryboardRoute
   '/studio': typeof StudioRoute
   '/templates': typeof TemplatesRoute
@@ -1547,7 +1490,6 @@ export interface FileRoutesByFullPath {
   '/api/admin/upload-image': typeof ApiAdminUploadImageRoute
   '/api/admin/upload-site-image': typeof ApiAdminUploadSiteImageRoute
   '/api/admin/verify-passcode': typeof ApiAdminVerifyPasscodeRoute
-  '/api/adult-admin/generate': typeof ApiAdultAdminGenerateRoute
   '/api/ai-gateway/flux-schnell': typeof ApiAiGatewayFluxSchnellRoute
   '/api/ai-gateway/free-chat': typeof ApiAiGatewayFreeChatRoute
   '/api/ai-gateway/laguna': typeof ApiAiGatewayLagunaRoute
@@ -1635,10 +1577,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/ads': typeof AdsRoute
-  '/adult': typeof AdultRoute
   '/affiliate': typeof AffiliateRoute
   '/agent': typeof AgentRoute
-  '/aurora-adult': typeof AuroraAdultRoute
   '/aurora-canvas': typeof AuroraCanvasRoute
   '/aurora-command-center': typeof AuroraCommandCenterRoute
   '/aurora-studio-shell': typeof AuroraStudioShellRoute
@@ -1662,14 +1602,11 @@ export interface FileRoutesByTo {
   '/download': typeof DownloadRoute
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
-  '/eromify': typeof EromifyRoute
   '/gallery': typeof GalleryRoute
   '/gifts': typeof GiftsRoute
   '/growth': typeof GrowthRoute
-  '/heygen-templates': typeof HeygenTemplatesRoute
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
-  '/kids': typeof KidsRoute
   '/lagos40': typeof Lagos40Route
   '/layers': typeof LayersRoute
   '/library': typeof LibraryRouteWithChildren
@@ -1681,7 +1618,6 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/motion': typeof MotionRoute
   '/music-video': typeof MusicVideoRoute
-  '/nexusarb': typeof NexusarbRoute
   '/orchestrate': typeof OrchestrateRoute
   '/partners': typeof PartnersRoute
   '/perform': typeof PerformRoute
@@ -1703,7 +1639,6 @@ export interface FileRoutesByTo {
   '/soul': typeof SoulRouteWithChildren
   '/speech': typeof SpeechRoute
   '/spin': typeof SpinRoute
-  '/split-reality': typeof SplitRealityRoute
   '/storyboard': typeof StoryboardRoute
   '/studio': typeof StudioRoute
   '/templates': typeof TemplatesRoute
@@ -1771,7 +1706,6 @@ export interface FileRoutesByTo {
   '/api/admin/upload-image': typeof ApiAdminUploadImageRoute
   '/api/admin/upload-site-image': typeof ApiAdminUploadSiteImageRoute
   '/api/admin/verify-passcode': typeof ApiAdminVerifyPasscodeRoute
-  '/api/adult-admin/generate': typeof ApiAdultAdminGenerateRoute
   '/api/ai-gateway/flux-schnell': typeof ApiAiGatewayFluxSchnellRoute
   '/api/ai-gateway/free-chat': typeof ApiAiGatewayFreeChatRoute
   '/api/ai-gateway/laguna': typeof ApiAiGatewayLagunaRoute
@@ -1861,10 +1795,8 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
   '/ads': typeof AdsRoute
-  '/adult': typeof AdultRoute
   '/affiliate': typeof AffiliateRoute
   '/agent': typeof AgentRoute
-  '/aurora-adult': typeof AuroraAdultRoute
   '/aurora-canvas': typeof AuroraCanvasRoute
   '/aurora-command-center': typeof AuroraCommandCenterRoute
   '/aurora-studio-shell': typeof AuroraStudioShellRoute
@@ -1888,14 +1820,11 @@ export interface FileRoutesById {
   '/download': typeof DownloadRoute
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
-  '/eromify': typeof EromifyRoute
   '/gallery': typeof GalleryRoute
   '/gifts': typeof GiftsRoute
   '/growth': typeof GrowthRoute
-  '/heygen-templates': typeof HeygenTemplatesRoute
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
-  '/kids': typeof KidsRoute
   '/lagos40': typeof Lagos40Route
   '/layers': typeof LayersRoute
   '/library': typeof LibraryRouteWithChildren
@@ -1907,7 +1836,6 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/motion': typeof MotionRoute
   '/music-video': typeof MusicVideoRoute
-  '/nexusarb': typeof NexusarbRoute
   '/orchestrate': typeof OrchestrateRoute
   '/partners': typeof PartnersRoute
   '/perform': typeof PerformRoute
@@ -1929,7 +1857,6 @@ export interface FileRoutesById {
   '/soul': typeof SoulRouteWithChildren
   '/speech': typeof SpeechRoute
   '/spin': typeof SpinRoute
-  '/split-reality': typeof SplitRealityRoute
   '/storyboard': typeof StoryboardRoute
   '/studio': typeof StudioRoute
   '/templates': typeof TemplatesRoute
@@ -1997,7 +1924,6 @@ export interface FileRoutesById {
   '/api/admin/upload-image': typeof ApiAdminUploadImageRoute
   '/api/admin/upload-site-image': typeof ApiAdminUploadSiteImageRoute
   '/api/admin/verify-passcode': typeof ApiAdminVerifyPasscodeRoute
-  '/api/adult-admin/generate': typeof ApiAdultAdminGenerateRoute
   '/api/ai-gateway/flux-schnell': typeof ApiAiGatewayFluxSchnellRoute
   '/api/ai-gateway/free-chat': typeof ApiAiGatewayFreeChatRoute
   '/api/ai-gateway/laguna': typeof ApiAiGatewayLagunaRoute
@@ -2088,10 +2014,8 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin'
     | '/ads'
-    | '/adult'
     | '/affiliate'
     | '/agent'
-    | '/aurora-adult'
     | '/aurora-canvas'
     | '/aurora-command-center'
     | '/aurora-studio-shell'
@@ -2115,14 +2039,11 @@ export interface FileRouteTypes {
     | '/download'
     | '/edit'
     | '/editor'
-    | '/eromify'
     | '/gallery'
     | '/gifts'
     | '/growth'
-    | '/heygen-templates'
     | '/home'
     | '/jobs'
-    | '/kids'
     | '/lagos40'
     | '/layers'
     | '/library'
@@ -2134,7 +2055,6 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/motion'
     | '/music-video'
-    | '/nexusarb'
     | '/orchestrate'
     | '/partners'
     | '/perform'
@@ -2156,7 +2076,6 @@ export interface FileRouteTypes {
     | '/soul'
     | '/speech'
     | '/spin'
-    | '/split-reality'
     | '/storyboard'
     | '/studio'
     | '/templates'
@@ -2224,7 +2143,6 @@ export interface FileRouteTypes {
     | '/api/admin/upload-image'
     | '/api/admin/upload-site-image'
     | '/api/admin/verify-passcode'
-    | '/api/adult-admin/generate'
     | '/api/ai-gateway/flux-schnell'
     | '/api/ai-gateway/free-chat'
     | '/api/ai-gateway/laguna'
@@ -2312,10 +2230,8 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/ads'
-    | '/adult'
     | '/affiliate'
     | '/agent'
-    | '/aurora-adult'
     | '/aurora-canvas'
     | '/aurora-command-center'
     | '/aurora-studio-shell'
@@ -2339,14 +2255,11 @@ export interface FileRouteTypes {
     | '/download'
     | '/edit'
     | '/editor'
-    | '/eromify'
     | '/gallery'
     | '/gifts'
     | '/growth'
-    | '/heygen-templates'
     | '/home'
     | '/jobs'
-    | '/kids'
     | '/lagos40'
     | '/layers'
     | '/library'
@@ -2358,7 +2271,6 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/motion'
     | '/music-video'
-    | '/nexusarb'
     | '/orchestrate'
     | '/partners'
     | '/perform'
@@ -2380,7 +2292,6 @@ export interface FileRouteTypes {
     | '/soul'
     | '/speech'
     | '/spin'
-    | '/split-reality'
     | '/storyboard'
     | '/studio'
     | '/templates'
@@ -2448,7 +2359,6 @@ export interface FileRouteTypes {
     | '/api/admin/upload-image'
     | '/api/admin/upload-site-image'
     | '/api/admin/verify-passcode'
-    | '/api/adult-admin/generate'
     | '/api/ai-gateway/flux-schnell'
     | '/api/ai-gateway/free-chat'
     | '/api/ai-gateway/laguna'
@@ -2537,10 +2447,8 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin'
     | '/ads'
-    | '/adult'
     | '/affiliate'
     | '/agent'
-    | '/aurora-adult'
     | '/aurora-canvas'
     | '/aurora-command-center'
     | '/aurora-studio-shell'
@@ -2564,14 +2472,11 @@ export interface FileRouteTypes {
     | '/download'
     | '/edit'
     | '/editor'
-    | '/eromify'
     | '/gallery'
     | '/gifts'
     | '/growth'
-    | '/heygen-templates'
     | '/home'
     | '/jobs'
-    | '/kids'
     | '/lagos40'
     | '/layers'
     | '/library'
@@ -2583,7 +2488,6 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/motion'
     | '/music-video'
-    | '/nexusarb'
     | '/orchestrate'
     | '/partners'
     | '/perform'
@@ -2605,7 +2509,6 @@ export interface FileRouteTypes {
     | '/soul'
     | '/speech'
     | '/spin'
-    | '/split-reality'
     | '/storyboard'
     | '/studio'
     | '/templates'
@@ -2673,7 +2576,6 @@ export interface FileRouteTypes {
     | '/api/admin/upload-image'
     | '/api/admin/upload-site-image'
     | '/api/admin/verify-passcode'
-    | '/api/adult-admin/generate'
     | '/api/ai-gateway/flux-schnell'
     | '/api/ai-gateway/free-chat'
     | '/api/ai-gateway/laguna'
@@ -2763,10 +2665,8 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRouteWithChildren
   AdsRoute: typeof AdsRoute
-  AdultRoute: typeof AdultRoute
   AffiliateRoute: typeof AffiliateRoute
   AgentRoute: typeof AgentRoute
-  AuroraAdultRoute: typeof AuroraAdultRoute
   AuroraCanvasRoute: typeof AuroraCanvasRoute
   AuroraCommandCenterRoute: typeof AuroraCommandCenterRoute
   AuroraStudioShellRoute: typeof AuroraStudioShellRoute
@@ -2790,14 +2690,11 @@ export interface RootRouteChildren {
   DownloadRoute: typeof DownloadRoute
   EditRoute: typeof EditRoute
   EditorRoute: typeof EditorRoute
-  EromifyRoute: typeof EromifyRoute
   GalleryRoute: typeof GalleryRoute
   GiftsRoute: typeof GiftsRoute
   GrowthRoute: typeof GrowthRoute
-  HeygenTemplatesRoute: typeof HeygenTemplatesRoute
   HomeRoute: typeof HomeRoute
   JobsRoute: typeof JobsRoute
-  KidsRoute: typeof KidsRoute
   Lagos40Route: typeof Lagos40Route
   LayersRoute: typeof LayersRoute
   LibraryRoute: typeof LibraryRouteWithChildren
@@ -2809,7 +2706,6 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   MotionRoute: typeof MotionRoute
   MusicVideoRoute: typeof MusicVideoRoute
-  NexusarbRoute: typeof NexusarbRoute
   OrchestrateRoute: typeof OrchestrateRoute
   PartnersRoute: typeof PartnersRoute
   PerformRoute: typeof PerformRoute
@@ -2831,7 +2727,6 @@ export interface RootRouteChildren {
   SoulRoute: typeof SoulRouteWithChildren
   SpeechRoute: typeof SpeechRoute
   SpinRoute: typeof SpinRoute
-  SplitRealityRoute: typeof SplitRealityRoute
   StoryboardRoute: typeof StoryboardRoute
   StudioRoute: typeof StudioRoute
   TemplatesRoute: typeof TemplatesRoute
@@ -2876,7 +2771,6 @@ export interface RootRouteChildren {
   ApiAdminUploadImageRoute: typeof ApiAdminUploadImageRoute
   ApiAdminUploadSiteImageRoute: typeof ApiAdminUploadSiteImageRoute
   ApiAdminVerifyPasscodeRoute: typeof ApiAdminVerifyPasscodeRoute
-  ApiAdultAdminGenerateRoute: typeof ApiAdultAdminGenerateRoute
   ApiAiGatewayFluxSchnellRoute: typeof ApiAiGatewayFluxSchnellRoute
   ApiAiGatewayFreeChatRoute: typeof ApiAiGatewayFreeChatRoute
   ApiAiGatewayLagunaRoute: typeof ApiAiGatewayLagunaRoute
@@ -2987,13 +2881,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/adult': {
-      id: '/adult'
-      path: '/adult'
-      fullPath: '/adult'
-      preLoaderRoute: typeof AdultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/affiliate': {
       id: '/affiliate'
       path: '/affiliate'
@@ -3006,13 +2893,6 @@ declare module '@tanstack/react-router' {
       path: '/agent'
       fullPath: '/agent'
       preLoaderRoute: typeof AgentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/aurora-adult': {
-      id: '/aurora-adult'
-      path: '/aurora-adult'
-      fullPath: '/aurora-adult'
-      preLoaderRoute: typeof AuroraAdultRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/aurora-canvas': {
@@ -3183,13 +3063,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/eromify': {
-      id: '/eromify'
-      path: '/eromify'
-      fullPath: '/eromify'
-      preLoaderRoute: typeof EromifyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/gallery': {
       id: '/gallery'
       path: '/gallery'
@@ -3211,13 +3084,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GrowthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/heygen-templates': {
-      id: '/heygen-templates'
-      path: '/heygen-templates'
-      fullPath: '/heygen-templates'
-      preLoaderRoute: typeof HeygenTemplatesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -3230,13 +3096,6 @@ declare module '@tanstack/react-router' {
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof JobsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/kids': {
-      id: '/kids'
-      path: '/kids'
-      fullPath: '/kids'
-      preLoaderRoute: typeof KidsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lagos40': {
@@ -3314,13 +3173,6 @@ declare module '@tanstack/react-router' {
       path: '/music-video'
       fullPath: '/music-video'
       preLoaderRoute: typeof MusicVideoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nexusarb': {
-      id: '/nexusarb'
-      path: '/nexusarb'
-      fullPath: '/nexusarb'
-      preLoaderRoute: typeof NexusarbRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orchestrate': {
@@ -3468,13 +3320,6 @@ declare module '@tanstack/react-router' {
       path: '/spin'
       fullPath: '/spin'
       preLoaderRoute: typeof SpinRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/split-reality': {
-      id: '/split-reality'
-      path: '/split-reality'
-      fullPath: '/split-reality'
-      preLoaderRoute: typeof SplitRealityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/storyboard': {
@@ -3937,13 +3782,6 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/verify-passcode'
       fullPath: '/api/admin/verify-passcode'
       preLoaderRoute: typeof ApiAdminVerifyPasscodeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/adult-admin/generate': {
-      id: '/api/adult-admin/generate'
-      path: '/api/adult-admin/generate'
-      fullPath: '/api/adult-admin/generate'
-      preLoaderRoute: typeof ApiAdultAdminGenerateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/ai-gateway/flux-schnell': {
@@ -4647,10 +4485,8 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   AdminRoute: AdminRouteWithChildren,
   AdsRoute: AdsRoute,
-  AdultRoute: AdultRoute,
   AffiliateRoute: AffiliateRoute,
   AgentRoute: AgentRoute,
-  AuroraAdultRoute: AuroraAdultRoute,
   AuroraCanvasRoute: AuroraCanvasRoute,
   AuroraCommandCenterRoute: AuroraCommandCenterRoute,
   AuroraStudioShellRoute: AuroraStudioShellRoute,
@@ -4674,14 +4510,11 @@ const rootRouteChildren: RootRouteChildren = {
   DownloadRoute: DownloadRoute,
   EditRoute: EditRoute,
   EditorRoute: EditorRoute,
-  EromifyRoute: EromifyRoute,
   GalleryRoute: GalleryRoute,
   GiftsRoute: GiftsRoute,
   GrowthRoute: GrowthRoute,
-  HeygenTemplatesRoute: HeygenTemplatesRoute,
   HomeRoute: HomeRoute,
   JobsRoute: JobsRoute,
-  KidsRoute: KidsRoute,
   Lagos40Route: Lagos40Route,
   LayersRoute: LayersRoute,
   LibraryRoute: LibraryRouteWithChildren,
@@ -4693,7 +4526,6 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   MotionRoute: MotionRoute,
   MusicVideoRoute: MusicVideoRoute,
-  NexusarbRoute: NexusarbRoute,
   OrchestrateRoute: OrchestrateRoute,
   PartnersRoute: PartnersRoute,
   PerformRoute: PerformRoute,
@@ -4715,7 +4547,6 @@ const rootRouteChildren: RootRouteChildren = {
   SoulRoute: SoulRouteWithChildren,
   SpeechRoute: SpeechRoute,
   SpinRoute: SpinRoute,
-  SplitRealityRoute: SplitRealityRoute,
   StoryboardRoute: StoryboardRoute,
   StudioRoute: StudioRoute,
   TemplatesRoute: TemplatesRoute,
@@ -4761,7 +4592,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminUploadImageRoute: ApiAdminUploadImageRoute,
   ApiAdminUploadSiteImageRoute: ApiAdminUploadSiteImageRoute,
   ApiAdminVerifyPasscodeRoute: ApiAdminVerifyPasscodeRoute,
-  ApiAdultAdminGenerateRoute: ApiAdultAdminGenerateRoute,
   ApiAiGatewayFluxSchnellRoute: ApiAiGatewayFluxSchnellRoute,
   ApiAiGatewayFreeChatRoute: ApiAiGatewayFreeChatRoute,
   ApiAiGatewayLagunaRoute: ApiAiGatewayLagunaRoute,

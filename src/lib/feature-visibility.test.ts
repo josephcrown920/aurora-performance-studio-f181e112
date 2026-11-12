@@ -76,14 +76,6 @@ describe("route matching", () => {
     expect(featureKeyForRoute("/spin")).toBe("spin");
     expect(featureKeyForRoute("/creator/dashboard")).toBe("creator-hub");
     expect(featureKeyForRoute("/avatar")).toBe("talking-avatars");
-    expect(featureKeyForRoute("/heygen-templates")).toBe("heygen-templates");
-    expect(featureKeyForRoute("/kids")).toBe("kids");
-    expect(featureKeyForRoute("/nexusarb")).toBe("nexusarb");
-    expect(featureKeyForRoute("/split-reality")).toBe("split-reality");
-    expect(featureKeyForRoute("/eromify")).toBe("adult-school");
-    expect(featureKeyForRoute("/adult")).toBe("adult-school");
-    expect(featureKeyForRoute("/aurora-adult")).toBe("adult-school");
-    expect(featureKeyForRoute("/aurora-adult/")).toBe("adult-school");
   });
 
   test("ungated core artist routes are not matched", () => {

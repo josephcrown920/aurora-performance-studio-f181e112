@@ -90,7 +90,6 @@ const _PROMOTION_FEATURES: Feature[] = [
 
 // ── More — everything else that's live ────────────────────────────────────
 const MORE_FEATURES: Feature[] = [
-  { to: "/eromify",     label: "Adult School",           icon: Camera, previewImg: "/sample-photos/model-yuki-1.jpg", badge: "18+" },
   { to: "/tools",       label: "All Tools",              icon: LayoutGrid },
 ];
 
@@ -118,13 +117,11 @@ const ACCOUNT_FEATURES: Feature[] = [
 export const ARCHIVED_FEATURES: Feature[] = [
   // ── Studio tools (coming soon) ────────────────────────────────────────
   { to: "/photo-edit",      label: "Photo Editor",     icon: Brush },
-  { to: "/split-reality",   label: "Split Reality",    icon: Wand2 },
   { to: "/live-studio",     label: "Live Studios",     icon: Music2 },
   { to: "/scene-weaver",    label: "Scene Weaver",     icon: Camera },
   { to: "/storyboard",      label: "Storyboard",       icon: Clapperboard },
   // ── Legacy / dev tools ───────────────────────────────────────────────
   { to: "/colors-show",      label: "Colors Show Creator", icon: Film },
-  { to: "/heygen-templates", label: "HeyGen Templates", icon: Film },
   { to: "/growth",           label: "Growth Tools",     icon: Sparkles },
   { to: "/guides",           label: "Viral Guides",     icon: Sparkles },
   { to: "/dashboard",        label: "Dashboard",        icon: Sparkles },
@@ -134,7 +131,6 @@ export const ARCHIVED_FEATURES: Feature[] = [
   { to: "/clips",            label: "Clips",            icon: Sparkles },
   { to: "/cli",              label: "CLI",              icon: Sparkles },
   { to: "/gifts",            label: "Gifts",            icon: Sparkles },
-  { to: "/nexusarb",         label: "NexusARB (Sim)",   icon: Sparkles },
 ];
 
 // Bottom tab — flagship trio with premium badge treatment.

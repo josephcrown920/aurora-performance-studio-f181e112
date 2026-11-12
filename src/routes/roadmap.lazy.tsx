@@ -142,13 +142,6 @@ const ITEMS: RoadmapItem[] = [
     status: "planned",
   },
   {
-    label: "Kids Stories",
-    description: "Illustrated, narrated short-form stories with consistent AI characters.",
-    icon: BookOpen,
-    to: "/kids",
-    status: "planned",
-  },
-  {
     label: "TikTok Studio",
     description: "Trending audio detection + auto-matched visual styles for TikTok.",
     icon: Music2,
@@ -195,13 +188,6 @@ const ITEMS: RoadmapItem[] = [
     description: "Send Aura credits to collaborators or fans.",
     icon: Gift,
     to: "/gifts",
-    status: "planned",
-  },
-  {
-    label: "NexusARB",
-    description: "Simulated trading & financial scenario visualisation toolkit.",
-    icon: TrendingUp,
-    to: "/nexusarb",
     status: "planned",
   },
 ];
