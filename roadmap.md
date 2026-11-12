@@ -133,3 +133,4 @@
 - [ ] Switch Perform Anywhere + Get Ready With Me renders to Genjutsu (blocked: creator ComfyUI address + Genjutsu workflow file)
 - [x] Pull Auroraglobal updates (PRs 149-151) — republish pending
 - [x] Show real Kling/Wan renders in Perform Anywhere
+- [x] Remove unused big files from the project (uploaded zips are outside the project)
