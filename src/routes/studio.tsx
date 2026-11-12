@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate, Link, redirect } from "@tanstack/react-ro
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { authNextSearch } from "@/lib/auth-return-path";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { UploadSlot } from "@/components/studio/UploadSlot";
@@ -125,9 +126,11 @@ function StudioPage() {
 
   const [onboardOpen, setOnboardOpen] = useState(false);
 
-  useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth" });
-  }, [user, loading, navigate]);
+  const requireAccount = () => {
+    if (user) return;
+    navigate({ to: "/auth", search: authNextSearch() });
+    throw new Error("Sign in to generate, purchase credits or save to your account.");
+  };
 
   useEffect(() => {
     if (user && shouldShowOnboarding()) {
@@ -145,7 +148,7 @@ function StudioPage() {
   const checkoutFn = useServerFn(createPaystackCheckout);
   const publishFn = useServerFn(publishGeneration);
   const shareMut = useMutation({
-    mutationFn: async (id: string) => publishFn({ data: { id } }),
+    mutationFn: async (id: string) => { requireAccount(); return publishFn({ data: { id } }); },
     onSuccess: async (r) => {
       const url = `${window.location.origin}${r.url}`;
       try { await navigator.clipboard.writeText(url); toast.success("Public link copied", { description: url }); }
@@ -182,6 +185,7 @@ function StudioPage() {
 
   const mut = useMutation({
     mutationFn: async () => {
+      requireAccount();
       // Build labeled reference list so Gemini knows which slot each image is.
       // When a pose is provided we strip outfit/lighting cues from the pose ref
       // via the prompt; ordering doesn't matter as long as labels are clear.
@@ -210,6 +214,7 @@ function StudioPage() {
 
   const reangleMut = useMutation({
     mutationFn: async (anglePrompt: string) => {
+      requireAccount();
       if (!latest?.result_image_url) throw new Error("Generate a base shot first");
       return genFn({ data: { prompt: anglePrompt, imageUrls: [latest.result_image_url], motionVideoUrl: null, model } });
     },
@@ -223,6 +228,7 @@ function StudioPage() {
 
   const videoMut = useMutation({
     mutationFn: async () => {
+      requireAccount();
       if (!latest?.result_image_url) throw new Error("Generate a base shot first");
       return videoFn({
         data: {
@@ -246,6 +252,7 @@ function StudioPage() {
 
   const lipSyncMut = useMutation({
     mutationFn: async () => {
+      requireAccount();
       if (!audioUrl) throw new Error("Upload your audio first");
       let videoUrl = latestVideo?.result_video_url ?? null;
       if (!videoUrl) {
@@ -299,6 +306,7 @@ function StudioPage() {
 
   const demoMut = useMutation({
     mutationFn: async () => {
+      requireAccount();
       if (!demoUrl) throw new Error("Demo selfie not ready yet — try again in a second");
       return genFn({ data: { prompt: PRESETS[3].prompt, imageUrls: [demoUrl], motionVideoUrl: null, model } });
     },
@@ -338,14 +346,14 @@ function StudioPage() {
   }, [user, demoUrl, recipeFired, genFn, model, qc]);
 
   const checkoutMut = useMutation({
-    mutationFn: async (plan: "starter" | "creator" | "studio") => checkoutFn({ data: { plan, currency } }),
+    mutationFn: async (plan: "starter" | "creator" | "studio") => { requireAccount(); return checkoutFn({ data: { plan, currency } }); },
     onSuccess: (res) => {
       window.location.href = res.authorizationUrl;
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Checkout failed"),
   });
 
-  if (loading || !user) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="size-6 animate-spin text-primary" />
@@ -361,7 +369,7 @@ function StudioPage() {
 
       {user && (
         <OnboardingModal
-          userId={user.id}
+          userId={user?.id ?? ""}
           open={onboardOpen}
           onOpenChange={setOnboardOpen}
           onApply={({ selfieUrl, prompt: p }) => {
@@ -400,7 +408,7 @@ function StudioPage() {
             <span className="text-muted-foreground text-xs">Aurora</span>
           </div>
           <span className="text-sm text-muted-foreground hidden md:inline">
-            Hi, <span className="text-foreground font-medium">{profile?.display_name || user.email?.split("@")[0]}</span> 👋
+            Hi, <span className="text-foreground font-medium">{profile?.display_name || user?.email?.split("@")[0] || "Guest"}</span> 👋
           </span>
           <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground hidden md:inline-flex items-center gap-1.5">
             <LayoutDashboard className="size-3.5" /> Dashboard
@@ -465,12 +473,12 @@ function StudioPage() {
 
           {/* Compact 5-slot reference row */}
           <div className="grid grid-cols-5 gap-2">
-            <UploadSlot userId={user.id} label="You" hint="Selfie" value={selfie} onChange={setSelfie} />
-            <UploadSlot userId={user.id} label="Outfit" hint="Wear" value={outfit} onChange={setOutfit} />
-            <UploadSlot userId={user.id} label="Scene" hint="Vibe" value={scene} onChange={setScene} />
-            <UploadSlot userId={user.id} label="Prop" hint="Mic / car" value={prop} onChange={setProp} />
+            <UploadSlot userId={user?.id ?? ""} label="You" hint="Selfie" value={selfie} onChange={setSelfie} />
+            <UploadSlot userId={user?.id ?? ""} label="Outfit" hint="Wear" value={outfit} onChange={setOutfit} />
+            <UploadSlot userId={user?.id ?? ""} label="Scene" hint="Vibe" value={scene} onChange={setScene} />
+            <UploadSlot userId={user?.id ?? ""} label="Prop" hint="Mic / car" value={prop} onChange={setProp} />
             <UploadSlot
-              userId={user.id}
+              userId={user?.id ?? ""}
               label="Pose"
               hint="Reference photo"
               value={motion}
@@ -791,7 +799,7 @@ function StudioPage() {
                   <label className="text-[10px] uppercase tracking-wider text-muted-foreground">End frame (optional, Kling motion control)</label>
                   <div className="w-32">
                     <UploadSlot
-                      userId={user.id}
+                      userId={user?.id ?? ""}
                       label=""
                       hint="Where it ends"
                       value={endFrameUrl}
@@ -846,7 +854,7 @@ function StudioPage() {
                 ))}
               </div>
               <UploadSlot
-                userId={user.id}
+                userId={user?.id ?? ""}
                 label="Audio"
                 hint="Upload mp3 / wav"
                 accept="audio/*"
