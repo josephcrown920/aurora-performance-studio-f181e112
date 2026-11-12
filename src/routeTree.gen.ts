@@ -41,6 +41,7 @@ import { Route as DownloadRouteImport } from './routes/download'
 import { Route as EditRouteImport } from './routes/edit'
 import { Route as EditorRouteImport } from './routes/editor'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as GiftsRouteImport } from './routes/gifts'
 import { Route as GrowthRouteImport } from './routes/growth'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JobsRouteImport } from './routes/jobs'
@@ -390,6 +391,11 @@ const GalleryRoute = GalleryRouteImport.update({
   path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/gallery.lazy').then((d) => d.Route))
+const GiftsRoute = GiftsRouteImport.update({
+  id: '/gifts',
+  path: '/gifts',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/gifts.lazy').then((d) => d.Route))
 const GrowthRoute = GrowthRouteImport.update({
   id: '/growth',
   path: '/growth',
@@ -1381,6 +1387,7 @@ export interface FileRoutesByFullPath {
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
   '/gallery': typeof GalleryRoute
+  '/gifts': typeof GiftsRoute
   '/growth': typeof GrowthRoute
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
@@ -1596,6 +1603,7 @@ export interface FileRoutesByTo {
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
   '/gallery': typeof GalleryRoute
+  '/gifts': typeof GiftsRoute
   '/growth': typeof GrowthRoute
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
@@ -1813,6 +1821,7 @@ export interface FileRoutesById {
   '/edit': typeof EditRoute
   '/editor': typeof EditorRoute
   '/gallery': typeof GalleryRoute
+  '/gifts': typeof GiftsRoute
   '/growth': typeof GrowthRoute
   '/home': typeof HomeRoute
   '/jobs': typeof JobsRoute
@@ -2031,6 +2040,7 @@ export interface FileRouteTypes {
     | '/edit'
     | '/editor'
     | '/gallery'
+    | '/gifts'
     | '/growth'
     | '/home'
     | '/jobs'
@@ -2246,6 +2256,7 @@ export interface FileRouteTypes {
     | '/edit'
     | '/editor'
     | '/gallery'
+    | '/gifts'
     | '/growth'
     | '/home'
     | '/jobs'
@@ -2462,6 +2473,7 @@ export interface FileRouteTypes {
     | '/edit'
     | '/editor'
     | '/gallery'
+    | '/gifts'
     | '/growth'
     | '/home'
     | '/jobs'
@@ -2679,6 +2691,7 @@ export interface RootRouteChildren {
   EditRoute: typeof EditRoute
   EditorRoute: typeof EditorRoute
   GalleryRoute: typeof GalleryRoute
+  GiftsRoute: typeof GiftsRoute
   GrowthRoute: typeof GrowthRoute
   HomeRoute: typeof HomeRoute
   JobsRoute: typeof JobsRoute
@@ -3055,6 +3068,13 @@ declare module '@tanstack/react-router' {
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gifts': {
+      id: '/gifts'
+      path: '/gifts'
+      fullPath: '/gifts'
+      preLoaderRoute: typeof GiftsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/growth': {
@@ -4491,6 +4511,7 @@ const rootRouteChildren: RootRouteChildren = {
   EditRoute: EditRoute,
   EditorRoute: EditorRoute,
   GalleryRoute: GalleryRoute,
+  GiftsRoute: GiftsRoute,
   GrowthRoute: GrowthRoute,
   HomeRoute: HomeRoute,
   JobsRoute: JobsRoute,
