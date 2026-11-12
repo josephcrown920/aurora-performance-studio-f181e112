@@ -24,6 +24,11 @@ export function UploadSlot({ userId, label, hint, accept = "image/*", kind = "im
       toast.error("Max 20MB");
       return;
     }
+    if (!userId) {
+      const next = window.location.pathname + window.location.search + window.location.hash;
+      window.location.assign(`/auth?next=${encodeURIComponent(next)}`);
+      return;
+    }
     setBusy(true);
     try {
       const ext = file.name.split(".").pop() || (kind === "video" ? "mp4" : "jpg");
