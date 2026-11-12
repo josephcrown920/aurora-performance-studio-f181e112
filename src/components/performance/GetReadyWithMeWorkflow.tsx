@@ -173,7 +173,7 @@ export function GetReadyWithMeWorkflow() {
       {draft.phoneVideoUrl && <div className="flex items-center gap-3 rounded-lg border border-border p-3">
         {depth ? <img src={depth.preview} alt="Depth guide" className="h-24 w-16 rounded object-cover" /> : <div className="flex h-24 w-16 items-center justify-center rounded bg-muted text-[10px] text-muted-foreground">Depth</div>}
         <div className="min-w-0 flex-1 space-y-1"><p className="text-sm font-semibold">Depth guide · Depth Anything → Genjutsu</p><p className="text-xs text-muted-foreground">Builds a reference depth map. Kie motion models do not support depth conditioning.</p>
-          <Button size="sm" variant="outline" disabled={depthBusy || running || mutation.isPending} onClick={() => void buildDepth()}>{depthBusy ? <><Loader2 className="animate-spin" />Building…</> : depth ? "Rebuild depth guide" : "Build depth guide"}</Button></div>
+          {depth && <Button size="sm" variant="outline" onClick={() => { setDepth(null); setJob(null); }}>Remove depth guide</Button>}<Button size="sm" variant="outline" disabled={depthBusy || running || mutation.isPending} onClick={() => void buildDepth()}>{depthBusy ? <><Loader2 className="animate-spin" />Building…</> : depth ? "Rebuild depth guide" : "Build depth guide"}</Button></div>
       </div>}
       <div className="space-y-2"><p className="text-xs font-bold uppercase tracking-widest text-primary">Scene · final environment</p>
         <div role="group" aria-label="Scene"><EnvironmentGrid presets={GRWM_ENVIRONMENTS} selectedId={sceneId} disabled={running || mutation.isPending} onPick={(scene) => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); })} /></div></div>
