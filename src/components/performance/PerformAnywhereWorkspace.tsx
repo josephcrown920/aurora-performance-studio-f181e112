@@ -67,8 +67,8 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
   return <main className={`workspace-duo text-foreground ${embedded ? "" : "min-h-screen pb-24"}`}>
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-8">
       {!embedded && <Link to="/studio" className="inline-flex items-center gap-2 text-sm text-muted-foreground"><ArrowLeft size={15} />Studio</Link>}
-      <header className="workspace-heading"><h1>PERFORM ANYWHERE</h1><span>Environment swap</span></header>
-      <nav aria-label="Perform Anywhere features" className="mt-4 flex flex-wrap gap-2">
+      <header className="workspace-heading"><h1>GENJUTSU</h1><span>Environment swap</span></header>
+      <nav aria-label="Genjutsu features" className="mt-4 flex flex-wrap gap-2">
         {[["pa-scene","Build a scene"],["pa-luxury","Luxury interior"],["pa-twoangle","Two-angle"],["pa-grwm","Get Ready With Me"]].map(([id,label]) => <Button key={id} variant="outline" size="sm" onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}>{label}</Button>)}
       </nav>
       <div className="perform-workspace-grid mt-5">
