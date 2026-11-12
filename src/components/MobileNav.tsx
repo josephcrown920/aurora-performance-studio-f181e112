@@ -90,7 +90,6 @@ const _PROMOTION_FEATURES: Feature[] = [
 
 // ── More — everything else that's live ────────────────────────────────────
 const MORE_FEATURES: Feature[] = [
-  { to: "/eromify",     label: "Adult School",           icon: Camera, previewImg: "/sample-photos/model-yuki-1.jpg", badge: "18+" },
   { to: "/tools",       label: "All Tools",              icon: LayoutGrid },
 ];
 
@@ -134,7 +133,6 @@ export const ARCHIVED_FEATURES: Feature[] = [
   { to: "/clips",            label: "Clips",            icon: Sparkles },
   { to: "/cli",              label: "CLI",              icon: Sparkles },
   { to: "/gifts",            label: "Gifts",            icon: Sparkles },
-  { to: "/nexusarb",         label: "NexusARB (Sim)",   icon: Sparkles },
 ];
 
 // Bottom tab — flagship trio with premium badge treatment.
