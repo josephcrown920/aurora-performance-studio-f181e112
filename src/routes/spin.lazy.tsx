@@ -677,11 +677,7 @@ function SpinPage() {
                 </div>
               ) : heygenTpls.length === 0 ? (
                 <div className="rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-muted-foreground">
-                  No Aurora templates saved yet. Visit{" "}
-                  <Link to="/heygen-templates" className="text-primary underline underline-offset-2">
-                    HeyGen Templates
-                  </Link>{" "}
-                  to create one.
+                  No Aurora templates saved yet.
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2">
