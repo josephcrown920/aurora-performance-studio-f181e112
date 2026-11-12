@@ -102,6 +102,7 @@ export function GetReadyWithMeWorkflow() {
   const mutation = useMutation({
     mutationFn: async (full: boolean) => {
       if (!draft?.phoneVideoUrl || !target) throw new Error("Add your character photo and dressing clip first.");
+      if (depth) throw new Error("Remove the depth guide before rendering: Kie motion models do not accept depth conditioning.");
       const confirmPreviewId = full && job?.preview && completed ? job.id : undefined;
       if (full && !confirmPreviewId) throw new Error("Review a completed preview first.");
       const prompt = `Get Ready With Me in a ${location}. The final shot ends fully dressed in this scene. Preserve the recorded dressing gestures and timing, character identity and fixed camera. No captions or added dialogue.`;
@@ -149,7 +150,7 @@ export function GetReadyWithMeWorkflow() {
         <GrwmFrame src={grwmFull} label="Dressed" highlight />
       </div>
       <div className="flex items-end justify-between gap-3 border-t border-border px-4 py-3">
-        <div><p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">Perform Anywhere</p><h2 className="flex items-center gap-2 font-display text-3xl text-foreground"><Shirt className="size-6" />Get Ready With Me</h2></div>
+        <div><p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">Genjutsu</p><h2 className="flex items-center gap-2 font-display text-3xl text-foreground"><Shirt className="size-6" />Get Ready With Me</h2></div>
         <span className="shrink-0 rounded-full border border-border px-2 py-1 text-[11px] text-muted-foreground">Clip ≤ 30s</span>
       </div>
     </div>
@@ -171,14 +172,14 @@ export function GetReadyWithMeWorkflow() {
       {draft.phoneVideoUrl && <video ref={videoRef} src={draft.phoneVideoUrl} crossOrigin="anonymous" controls playsInline preload="metadata" aria-label="Your dressing clip" className="max-h-80 w-full bg-muted" />}
       {draft.phoneVideoUrl && <div className="flex items-center gap-3 rounded-lg border border-border p-3">
         {depth ? <img src={depth.preview} alt="Depth guide" className="h-24 w-16 rounded object-cover" /> : <div className="flex h-24 w-16 items-center justify-center rounded bg-muted text-[10px] text-muted-foreground">Depth</div>}
-        <div className="min-w-0 flex-1 space-y-1"><p className="text-sm font-semibold">Depth guide · Depth Anything → Genjutsu</p><p className="text-xs text-muted-foreground">Builds a depth map from your clip's current frame and locks the render to it.</p>
+        <div className="min-w-0 flex-1 space-y-1"><p className="text-sm font-semibold">Depth guide · Depth Anything → Genjutsu</p><p className="text-xs text-muted-foreground">Builds a reference depth map. Kie motion models do not support depth conditioning.</p>
           <Button size="sm" variant="outline" disabled={depthBusy || running || mutation.isPending} onClick={() => void buildDepth()}>{depthBusy ? <><Loader2 className="animate-spin" />Building…</> : depth ? "Rebuild depth guide" : "Build depth guide"}</Button></div>
       </div>}
       <div className="space-y-2"><p className="text-xs font-bold uppercase tracking-widest text-primary">Scene · final environment</p>
-        <div role="group" aria-label="Scene"><EnvironmentGrid presets={GRWM_ENVIRONMENTS} selectedId={sceneId} disabled={running || mutation.isPending} onPick={(scene) => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); setAutoRender(true); })} /></div></div>
+        <div role="group" aria-label="Scene"><EnvironmentGrid presets={GRWM_ENVIRONMENTS} selectedId={sceneId} disabled={running || mutation.isPending} onPick={(scene) => changeInputs(() => { setSceneId(scene.id); setLocation(scene.prompt); })} /></div></div>
       <div role="group" aria-label="Transformation" className="grid grid-cols-2 gap-2">{(["sync", "transfer"] as const).map(value => <Button key={value} variant={transform === value ? "default" : "outline"} aria-pressed={transform === value} disabled={running || mutation.isPending} onClick={() => changeInputs(() => setTransform(value))}>{value === "sync" ? "Motion Sync" : "Motion Transfer"}</Button>)}</div>
       {transform === "sync" && <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Outfit<input aria-label="Target outfit" value={outfit} disabled={running || mutation.isPending} onChange={e => changeInputs(() => setOutfit(e.target.value))} className="mt-1 w-full rounded border border-border bg-background p-2" /></label><label className="text-sm font-medium">Scene details<input aria-label="Target location" value={location} disabled={running || mutation.isPending} onChange={e => changeInputs(() => { setSceneId("custom"); setLocation(e.target.value); })} className="mt-1 w-full rounded border border-border bg-background p-2" /></label></div>}
-      <p className="text-xs text-muted-foreground">Preview up to 5 seconds; reviewed render up to 15 seconds.</p>
+      <p className="text-xs text-muted-foreground">Kie motion preview: 4 seconds. Approved render: 5 seconds.</p>
       {(error || failed) && <p role="alert" className="text-sm text-destructive">{error ?? current?.error ?? "Render did not complete."}</p>}
       {uploading && <p role="status" className="text-sm">Saving upload…</p>}
       {running && <p role="status" className="flex items-center gap-2 text-sm"><Loader2 className="size-4 animate-spin" />{current?.status ?? "Queued"}</p>}
