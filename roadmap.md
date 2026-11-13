@@ -128,9 +128,11 @@
 - [x] Update GitHub #144 and #125 with checked verified tests, unchecked real-output gates, and November 10 launch comparison; both comments confirmed HTTP 201. No publication or paid jobs.
 
 - [x] Synced Canvas agent tools from auroraglobal.main (2026-11-11)
-- [ ] Live Genjutsu render tests — blocked: needs a connected ComfyUI GPU worker and the Genjutsu workflow file re-uploaded
+- [ ] Live Genjutsu render tests through Kie API — blocked on prior spending evidence and verified provider output, not a local GPU.
 
-- [ ] Switch Perform Anywhere + Get Ready With Me renders to Genjutsu (blocked: creator ComfyUI address + Genjutsu workflow file)
+- [ ] Import live Genjutsu appearance into Perform Anywhere and Get Ready With Me while preserving existing private drafts.
+- [ ] Add optional completed-video lip-sync finishing for a replacement promotional song.
+- [ ] Create the new video-agent experience using the shared Director and existing editing session.
 - [x] Pull Auroraglobal updates (PRs 149-151) — republish pending
 - [x] Show real Kling/Wan renders in Perform Anywhere
 - [x] Remove unused big files from the project (uploaded zips are outside the project)
