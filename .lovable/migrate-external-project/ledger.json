@@ -1,0 +1,11 @@
+{
+  "source": "https://genjustsu-workflow.woodsy-snail-1521.chatgpt.site",
+  "capabilities": [
+    {"capability":"Genjutsu layout and media","source":"published site","outcome":"recreate natively","status":"in_progress","next_action":"Import layout and media without embedding the site"},
+    {"capability":"Scene, motion and GRWM","source":"static browser preview","outcome":"reuse Aurora authenticated workflows","status":"in_progress","next_action":"Connect native screens to existing private drafts"},
+    {"capability":"Finishing lip sync","source":"specification export only","outcome":"use existing video-to-audio engine, not photo animation","status":"in_progress","next_action":"Add optional finishing control and verify"},
+    {"capability":"Database, users, secrets, webhooks, callbacks and schedules","source":"published static preview","outcome":"no external services detected; retain Aurora services","status":"not_applicable","next_action":null},
+    {"capability":"Drafts and render library","source":"device-local preview","outcome":"Aurora owner-scoped drafts and completed generations","status":"in_progress","next_action":"Retain existing records; add native library entry"},
+    {"capability":"Production render verification","source":"Aurora providers","outcome":"pending","status":"pending","next_action":"Verify authenticated controls; no paid test until prior spend is established"}
+  ]
+}
