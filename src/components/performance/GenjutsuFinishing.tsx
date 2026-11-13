@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Download, Loader2, Mic2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { lipSyncVideo, listGenerations } from "@/lib/studio.functions";
 import { computeCost } from "@/lib/pricing";
+import { putEditorHandoff } from "@/lib/genjutsu-handoff";
 import { finishingSource, validateFinishingInput, GENJUTSU_FINISHING_MODEL } from "@/lib/genjutsu-finishing";
 
-export function GenjutsuFinishing({ videoUrl, audioUrl, onAudio }: { videoUrl?: string | null; audioUrl?: string | null; onAudio?: (file: File) => Promise<void> }) {
+export function GenjutsuFinishing({ videoUrl, audioUrl, onAudio, onAsset }: { videoUrl?: string | null; audioUrl?: string | null; onAudio?: (file: File) => Promise<void>; onAsset?: (url: string, kind: "image" | "video", name: string, place?: boolean) => void }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [sent, setSent] = useState(false);
   const enqueue = useServerFn(lipSyncVideo);
   const list = useServerFn(listGenerations);
   const [imported, setImported] = useState<string | null>(null);
@@ -49,8 +52,8 @@ export function GenjutsuFinishing({ videoUrl, audioUrl, onAudio }: { videoUrl?: 
     finally { setBusy(false); }
   }
   return <section className="genjutsu-finish" aria-label="Finishing lip sync">
-    <p className="genjutsu-eyebrow">03 / FINISH · OPTIONAL</p><h2>Your visuals. Your song.</h2>
-    <p className="text-sm text-muted-foreground">Keep your finished performance. Match its lips to the song you want to promote — even when the original take used another track.</p>
+    <p className="genjutsu-eyebrow">03 / FINISH · OPTIONAL LIP SYNC</p><h2>Your visuals. Your song.</h2>
+    <p className="text-sm text-muted-foreground">Optional. After your Genjutsu render — or with your own finished performance video — swap in the song you want to promote. The lips are re-synced to the new track; the motion render stays as it is.</p>
     {!user ? <Button asChild><Link to="/auth" search={{ next: "/perform-anywhere" }}>Sign in to finish</Link></Button> : <>
       <div className="genjutsu-upload-pair">
         <label>Completed performance<input aria-label="Upload completed performance" type="file" accept="video/*" disabled={busy || running} onChange={e => { const f = e.target.files?.[0]; if (f) void upload(f, "video"); e.target.value = ""; }} /></label>
@@ -63,7 +66,7 @@ export function GenjutsuFinishing({ videoUrl, audioUrl, onAudio }: { videoUrl?: 
       {(error || failed) && <p role="alert" className="text-sm text-destructive">{error || current?.error || "Lip sync failed."}</p>}
       {running && <p role="status" className="flex items-center gap-2"><Loader2 className="size-4 animate-spin" />{current?.status ?? "Queued"}</p>}
       <Button disabled={busy || running || !source || !audio || !consent} onClick={() => void render()}>{busy ? <Loader2 className="size-4 animate-spin" /> : <Mic2 className="size-4" />}Finish with lip sync</Button>
-      {done && <><video src={current.result_video_url ?? ""} controls playsInline aria-label="Finished song-synced performance" className="max-h-80 w-full" /><Button asChild variant="outline"><a href={current.result_video_url ?? ""} download><Download className="size-4" />Download finished video</a></Button><Button asChild variant="outline"><Link to="/studio" search={{ mode: "edit" }}>Open video editor</Link></Button></>}
+      {done && <><video src={current.result_video_url ?? ""} controls playsInline aria-label="Finished song-synced performance" className="max-h-80 w-full" /><Button asChild variant="outline"><a href={current.result_video_url ?? ""} download><Download className="size-4" />Download finished video</a></Button><Button variant="outline" disabled={sent} onClick={() => { const url = current.result_video_url ?? ""; const name = `genjutsu-lipsync-${current.id.slice(0, 6)}.mp4`; if (onAsset) { onAsset(url, "video", name, true); setSent(true); } else { putEditorHandoff({ url, kind: "video", name }); void navigate({ to: "/studio", search: { mode: "edit" } }); } }}>{onAsset ? (sent ? "Added to timeline" : "Add to timeline") : "Open in video editor"}</Button></>}
     </>}
   </section>;
 }
