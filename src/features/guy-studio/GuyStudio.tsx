@@ -1,4 +1,5 @@
 import "./guy-studio.css";
+import { takeEditorHandoff } from "@/lib/genjutsu-handoff";
 import "@fontsource/manrope/400.css";
 import "@fontsource/manrope/500.css";
 import "@fontsource/manrope/600.css";
@@ -549,6 +550,12 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
       setGenBusy(false);
     }
   }
+
+  useEffect(() => {
+    const handoff = takeEditorHandoff();
+    if (handoff) { setMode("edit"); addAsset(handoff.url, handoff.kind, handoff.name, true); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function addAsset(url: string, kind: "image" | "video", name: string, place = false) {
     const asset: Asset = {

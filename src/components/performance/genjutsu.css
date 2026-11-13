@@ -30,7 +30,7 @@
 .genjutsu-gallery strong {font-size:20px;}
 .genjutsu-band {padding:48px 0;border-bottom:1px solid var(--border);}
 .genjutsu-band h2,.genjutsu-finish h2 {font-size:34px;font-weight:800;line-height:1.12;letter-spacing:0;}
-.genjutsu-directions {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:26px;}
+.genjutsu-directions {display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-top:26px;}
 .genjutsu-directions article {border-top:1px solid var(--border);padding-top:18px;}
 .genjutsu-directions h3 {font-size:23px;font-weight:700;margin:8px 0;}
 .genjutsu-directions p {font-size:13px;color:var(--muted-foreground);margin-bottom:18px;}

@@ -60,7 +60,7 @@ export function PerformStudio({ onAsset, initialTab = "perform" }: { onAsset: Ad
           <Button key={id} size="sm" variant={tab === id ? "secondary" : "ghost"} aria-pressed={tab === id} onClick={() => setTab(id)}><Icon />{name}</Button>
         ))}
       </nav>
-      {tab === "perform" && <PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} />}
+      {tab === "perform" && <PerformAnywhereWorkspace embedded grwm={grwm} onExperienceChange={setGrwm} onAsset={onAsset} />}
       {tab === "motion" && <MotionStyle onAsset={onAsset} />}
       {tab === "background" && <BackgroundSwap onAsset={onAsset} />}
       {tab === "blender" && <BlenderBridge onAsset={onAsset} />}

@@ -136,3 +136,6 @@
 - [x] Pull Auroraglobal updates (PRs 149-151) — republish pending
 - [x] Show real Kling/Wan renders in Perform Anywhere
 - [x] Remove unused big files from the project (uploaded zips are outside the project)
+- [ ] Refix the luxury car interior scene in Perform Anywhere.
+- [ ] Prepare an Android App Bundle (AAB) for the Expo app.
+- [ ] Run repository resizing again (remove remaining bloat).
