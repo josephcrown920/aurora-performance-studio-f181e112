@@ -221,7 +221,6 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
         {mode === "anywhere" && <PerformanceSourceStrip references={draft.references} phoneVideoUrl={draft.phoneVideoUrl} finalUrl={finalUrl} onUpload={(file) => { void upload(file, "original-performance", "video").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); }} />}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div><p className="aurora-kicker">{mode === "anywhere" ? "Genjutsu" : "Colors Studio"}</p><h1 className="font-display text-3xl">{catalog.label}</h1></div>
-          <Link to="/colors-show" search={mode === "anywhere" ? { mode: "anywhere" } : {}}><Button variant="outline">Two-angle workflow</Button></Link>
         </div>
 
         <section className="grid grid-cols-2 gap-2 sm:grid-cols-3">

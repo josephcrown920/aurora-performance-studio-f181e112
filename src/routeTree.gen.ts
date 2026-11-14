@@ -51,6 +51,7 @@ import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LikenessRouteImport } from './routes/likeness'
 import { Route as LipsyncRouteImport } from './routes/lipsync'
 import { Route as LiveStudioRouteImport } from './routes/live-studio'
+import { Route as LuxuryInteriorRouteImport } from './routes/luxury-interior'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as MasteringRouteImport } from './routes/mastering'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -74,7 +75,6 @@ import { Route as SceneWeaverRouteImport } from './routes/scene-weaver'
 import { Route as SeedanceMotionRouteImport } from './routes/seedance-motion'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SoulRouteImport } from './routes/soul'
 import { Route as SpeechRouteImport } from './routes/speech'
 import { Route as SpinRouteImport } from './routes/spin'
 import { Route as StoryboardRouteImport } from './routes/storyboard'
@@ -126,6 +126,7 @@ import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as LibraryVideoIdRouteImport } from './routes/library.$videoId'
 import { Route as RTokenRouteImport } from './routes/r.$token'
+import { Route as SoulIndexRouteImport } from './routes/soul.index'
 import { Route as SoulGenerateRouteImport } from './routes/soul.generate'
 import { Route as SoulLibraryRouteImport } from './routes/soul.library'
 import { Route as SoulTrainRouteImport } from './routes/soul.train'
@@ -441,6 +442,11 @@ const LiveStudioRoute = LiveStudioRouteImport.update({
   path: '/live-studio',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/live-studio.lazy').then((d) => d.Route))
+const LuxuryInteriorRoute = LuxuryInteriorRouteImport.update({
+  id: '/luxury-interior',
+  path: '/luxury-interior',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketplaceRoute = MarketplaceRouteImport.update({
   id: '/marketplace',
   path: '/marketplace',
@@ -560,11 +566,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SoulRoute = SoulRouteImport.update({
-  id: '/soul',
-  path: '/soul',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/soul.lazy').then((d) => d.Route))
 const SpeechRoute = SpeechRouteImport.update({
   id: '/speech',
   path: '/speech',
@@ -849,25 +850,30 @@ const RTokenRoute = RTokenRouteImport.update({
   path: '/r/$token',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/r.$token.lazy').then((d) => d.Route))
+const SoulIndexRoute = SoulIndexRouteImport.update({
+  id: '/soul/',
+  path: '/soul/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/soul.index.lazy').then((d) => d.Route))
 const SoulGenerateRoute = SoulGenerateRouteImport.update({
-  id: '/generate',
-  path: '/generate',
-  getParentRoute: () => SoulRoute,
+  id: '/soul/generate',
+  path: '/soul/generate',
+  getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/soul.generate.lazy').then((d) => d.Route))
 const SoulLibraryRoute = SoulLibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
-  getParentRoute: () => SoulRoute,
+  id: '/soul/library',
+  path: '/soul/library',
+  getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/soul.library.lazy').then((d) => d.Route))
 const SoulTrainRoute = SoulTrainRouteImport.update({
-  id: '/train',
-  path: '/train',
-  getParentRoute: () => SoulRoute,
+  id: '/soul/train',
+  path: '/soul/train',
+  getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/soul.train.lazy').then((d) => d.Route))
 const SoulVibeRoute = SoulVibeRouteImport.update({
-  id: '/vibe',
-  path: '/vibe',
-  getParentRoute: () => SoulRoute,
+  id: '/soul/vibe',
+  path: '/soul/vibe',
+  getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/soul.vibe.lazy').then((d) => d.Route))
 const VideoAgentBeatDirectorRoute = VideoAgentBeatDirectorRouteImport.update({
   id: '/video-agent_/beat-director',
@@ -1397,6 +1403,7 @@ export interface FileRoutesByFullPath {
   '/likeness': typeof LikenessRoute
   '/lipsync': typeof LipsyncRoute
   '/live-studio': typeof LiveStudioRoute
+  '/luxury-interior': typeof LuxuryInteriorRoute
   '/marketplace': typeof MarketplaceRoute
   '/mastering': typeof MasteringRoute
   '/mcp': typeof McpRoute
@@ -1420,7 +1427,6 @@ export interface FileRoutesByFullPath {
   '/seedance-motion': typeof SeedanceMotionRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/soul': typeof SoulRouteWithChildren
   '/speech': typeof SpeechRoute
   '/spin': typeof SpinRoute
   '/storyboard': typeof StoryboardRoute
@@ -1483,6 +1489,7 @@ export interface FileRoutesByFullPath {
   '/admin/observability': typeof AdminObservabilityLazyRoute
   '/cli/': typeof CliIndexRoute
   '/guides/': typeof GuidesIndexRoute
+  '/soul/': typeof SoulIndexRoute
   '/admin/': typeof AdminIndexLazyRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/admin/feature-visibility': typeof ApiAdminFeatureVisibilityRoute
@@ -1613,6 +1620,7 @@ export interface FileRoutesByTo {
   '/likeness': typeof LikenessRoute
   '/lipsync': typeof LipsyncRoute
   '/live-studio': typeof LiveStudioRoute
+  '/luxury-interior': typeof LuxuryInteriorRoute
   '/marketplace': typeof MarketplaceRoute
   '/mastering': typeof MasteringRoute
   '/mcp': typeof McpRoute
@@ -1636,7 +1644,6 @@ export interface FileRoutesByTo {
   '/seedance-motion': typeof SeedanceMotionRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/soul': typeof SoulRouteWithChildren
   '/speech': typeof SpeechRoute
   '/spin': typeof SpinRoute
   '/storyboard': typeof StoryboardRoute
@@ -1699,6 +1706,7 @@ export interface FileRoutesByTo {
   '/admin/observability': typeof AdminObservabilityLazyRoute
   '/cli': typeof CliIndexRoute
   '/guides': typeof GuidesIndexRoute
+  '/soul': typeof SoulIndexRoute
   '/admin': typeof AdminIndexLazyRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/admin/feature-visibility': typeof ApiAdminFeatureVisibilityRoute
@@ -1831,6 +1839,7 @@ export interface FileRoutesById {
   '/likeness': typeof LikenessRoute
   '/lipsync': typeof LipsyncRoute
   '/live-studio': typeof LiveStudioRoute
+  '/luxury-interior': typeof LuxuryInteriorRoute
   '/marketplace': typeof MarketplaceRoute
   '/mastering': typeof MasteringRoute
   '/mcp': typeof McpRoute
@@ -1854,7 +1863,6 @@ export interface FileRoutesById {
   '/seedance-motion': typeof SeedanceMotionRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/soul': typeof SoulRouteWithChildren
   '/speech': typeof SpeechRoute
   '/spin': typeof SpinRoute
   '/storyboard': typeof StoryboardRoute
@@ -1917,6 +1925,7 @@ export interface FileRoutesById {
   '/admin/observability': typeof AdminObservabilityLazyRoute
   '/cli/': typeof CliIndexRoute
   '/guides/': typeof GuidesIndexRoute
+  '/soul/': typeof SoulIndexRoute
   '/admin/': typeof AdminIndexLazyRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/admin/feature-visibility': typeof ApiAdminFeatureVisibilityRoute
@@ -2050,6 +2059,7 @@ export interface FileRouteTypes {
     | '/likeness'
     | '/lipsync'
     | '/live-studio'
+    | '/luxury-interior'
     | '/marketplace'
     | '/mastering'
     | '/mcp'
@@ -2073,7 +2083,6 @@ export interface FileRouteTypes {
     | '/seedance-motion'
     | '/settings'
     | '/sitemap.xml'
-    | '/soul'
     | '/speech'
     | '/spin'
     | '/storyboard'
@@ -2136,6 +2145,7 @@ export interface FileRouteTypes {
     | '/admin/observability'
     | '/cli/'
     | '/guides/'
+    | '/soul/'
     | '/admin/'
     | '/.lovable/oauth/consent'
     | '/api/admin/feature-visibility'
@@ -2266,6 +2276,7 @@ export interface FileRouteTypes {
     | '/likeness'
     | '/lipsync'
     | '/live-studio'
+    | '/luxury-interior'
     | '/marketplace'
     | '/mastering'
     | '/mcp'
@@ -2289,7 +2300,6 @@ export interface FileRouteTypes {
     | '/seedance-motion'
     | '/settings'
     | '/sitemap.xml'
-    | '/soul'
     | '/speech'
     | '/spin'
     | '/storyboard'
@@ -2352,6 +2362,7 @@ export interface FileRouteTypes {
     | '/admin/observability'
     | '/cli'
     | '/guides'
+    | '/soul'
     | '/admin'
     | '/.lovable/oauth/consent'
     | '/api/admin/feature-visibility'
@@ -2483,6 +2494,7 @@ export interface FileRouteTypes {
     | '/likeness'
     | '/lipsync'
     | '/live-studio'
+    | '/luxury-interior'
     | '/marketplace'
     | '/mastering'
     | '/mcp'
@@ -2506,7 +2518,6 @@ export interface FileRouteTypes {
     | '/seedance-motion'
     | '/settings'
     | '/sitemap.xml'
-    | '/soul'
     | '/speech'
     | '/spin'
     | '/storyboard'
@@ -2569,6 +2580,7 @@ export interface FileRouteTypes {
     | '/admin/observability'
     | '/cli/'
     | '/guides/'
+    | '/soul/'
     | '/admin/'
     | '/.lovable/oauth/consent'
     | '/api/admin/feature-visibility'
@@ -2701,6 +2713,7 @@ export interface RootRouteChildren {
   LikenessRoute: typeof LikenessRoute
   LipsyncRoute: typeof LipsyncRoute
   LiveStudioRoute: typeof LiveStudioRoute
+  LuxuryInteriorRoute: typeof LuxuryInteriorRoute
   MarketplaceRoute: typeof MarketplaceRoute
   MasteringRoute: typeof MasteringRoute
   McpRoute: typeof McpRoute
@@ -2724,7 +2737,6 @@ export interface RootRouteChildren {
   SeedanceMotionRoute: typeof SeedanceMotionRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SoulRoute: typeof SoulRouteWithChildren
   SpeechRoute: typeof SpeechRoute
   SpinRoute: typeof SpinRoute
   StoryboardRoute: typeof StoryboardRoute
@@ -2758,6 +2770,10 @@ export interface RootRouteChildren {
   GuidesSlugRoute: typeof GuidesSlugRoute
   LegalSlugRoute: typeof LegalSlugRoute
   RTokenRoute: typeof RTokenRoute
+  SoulGenerateRoute: typeof SoulGenerateRouteWithChildren
+  SoulLibraryRoute: typeof SoulLibraryRoute
+  SoulTrainRoute: typeof SoulTrainRoute
+  SoulVibeRoute: typeof SoulVibeRoute
   VideoAgentBeatDirectorRoute: typeof VideoAgentBeatDirectorRoute
   VideoAgentMusicVideoRoute: typeof VideoAgentMusicVideoRoute
   VideoAgentPhotoLabRoute: typeof VideoAgentPhotoLabRoute
@@ -2765,6 +2781,7 @@ export interface RootRouteChildren {
   VideoAgentWorkflowsRoute: typeof VideoAgentWorkflowsRoute
   CliIndexRoute: typeof CliIndexRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
+  SoulIndexRoute: typeof SoulIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiAdminFeatureVisibilityRoute: typeof ApiAdminFeatureVisibilityRoute
   ApiAdminRunSmokeStep14Route: typeof ApiAdminRunSmokeStep14Route
@@ -3140,6 +3157,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/luxury-interior': {
+      id: '/luxury-interior'
+      path: '/luxury-interior'
+      fullPath: '/luxury-interior'
+      preLoaderRoute: typeof LuxuryInteriorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/marketplace': {
       id: '/marketplace'
       path: '/marketplace'
@@ -3299,13 +3323,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/soul': {
-      id: '/soul'
-      path: '/soul'
-      fullPath: '/soul'
-      preLoaderRoute: typeof SoulRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/speech': {
@@ -3679,33 +3696,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/soul/': {
+      id: '/soul/'
+      path: '/soul'
+      fullPath: '/soul/'
+      preLoaderRoute: typeof SoulIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/soul/generate': {
       id: '/soul/generate'
-      path: '/generate'
+      path: '/soul/generate'
       fullPath: '/soul/generate'
       preLoaderRoute: typeof SoulGenerateRouteImport
-      parentRoute: typeof SoulRoute
+      parentRoute: typeof rootRouteImport
     }
     '/soul/library': {
       id: '/soul/library'
-      path: '/library'
+      path: '/soul/library'
       fullPath: '/soul/library'
       preLoaderRoute: typeof SoulLibraryRouteImport
-      parentRoute: typeof SoulRoute
+      parentRoute: typeof rootRouteImport
     }
     '/soul/train': {
       id: '/soul/train'
-      path: '/train'
+      path: '/soul/train'
       fullPath: '/soul/train'
       preLoaderRoute: typeof SoulTrainRouteImport
-      parentRoute: typeof SoulRoute
+      parentRoute: typeof rootRouteImport
     }
     '/soul/vibe': {
       id: '/soul/vibe'
-      path: '/vibe'
+      path: '/soul/vibe'
       fullPath: '/soul/vibe'
       preLoaderRoute: typeof SoulVibeRouteImport
-      parentRoute: typeof SoulRoute
+      parentRoute: typeof rootRouteImport
     }
     '/video-agent_/beat-director': {
       id: '/video-agent_/beat-director'
@@ -4428,22 +4452,6 @@ const SoulGenerateRouteWithChildren = SoulGenerateRoute._addFileChildren(
   SoulGenerateRouteChildren,
 )
 
-interface SoulRouteChildren {
-  SoulGenerateRoute: typeof SoulGenerateRouteWithChildren
-  SoulLibraryRoute: typeof SoulLibraryRoute
-  SoulTrainRoute: typeof SoulTrainRoute
-  SoulVibeRoute: typeof SoulVibeRoute
-}
-
-const SoulRouteChildren: SoulRouteChildren = {
-  SoulGenerateRoute: SoulGenerateRouteWithChildren,
-  SoulLibraryRoute: SoulLibraryRoute,
-  SoulTrainRoute: SoulTrainRoute,
-  SoulVibeRoute: SoulVibeRoute,
-}
-
-const SoulRouteWithChildren = SoulRoute._addFileChildren(SoulRouteChildren)
-
 interface ApiAudioMasterRouteChildren {
   ApiAudioMasterIdStatusRoute: typeof ApiAudioMasterIdStatusRoute
 }
@@ -4521,6 +4529,7 @@ const rootRouteChildren: RootRouteChildren = {
   LikenessRoute: LikenessRoute,
   LipsyncRoute: LipsyncRoute,
   LiveStudioRoute: LiveStudioRoute,
+  LuxuryInteriorRoute: LuxuryInteriorRoute,
   MarketplaceRoute: MarketplaceRoute,
   MasteringRoute: MasteringRoute,
   McpRoute: McpRoute,
@@ -4544,7 +4553,6 @@ const rootRouteChildren: RootRouteChildren = {
   SeedanceMotionRoute: SeedanceMotionRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SoulRoute: SoulRouteWithChildren,
   SpeechRoute: SpeechRoute,
   SpinRoute: SpinRoute,
   StoryboardRoute: StoryboardRoute,
@@ -4579,6 +4587,10 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesSlugRoute: GuidesSlugRoute,
   LegalSlugRoute: LegalSlugRoute,
   RTokenRoute: RTokenRoute,
+  SoulGenerateRoute: SoulGenerateRouteWithChildren,
+  SoulLibraryRoute: SoulLibraryRoute,
+  SoulTrainRoute: SoulTrainRoute,
+  SoulVibeRoute: SoulVibeRoute,
   VideoAgentBeatDirectorRoute: VideoAgentBeatDirectorRoute,
   VideoAgentMusicVideoRoute: VideoAgentMusicVideoRoute,
   VideoAgentPhotoLabRoute: VideoAgentPhotoLabRoute,
@@ -4586,6 +4598,7 @@ const rootRouteChildren: RootRouteChildren = {
   VideoAgentWorkflowsRoute: VideoAgentWorkflowsRoute,
   CliIndexRoute: CliIndexRoute,
   GuidesIndexRoute: GuidesIndexRoute,
+  SoulIndexRoute: SoulIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   ApiAdminFeatureVisibilityRoute: ApiAdminFeatureVisibilityRoute,
   ApiAdminRunSmokeStep14Route: ApiAdminRunSmokeStep14Route,
