@@ -856,24 +856,24 @@ const SoulIndexRoute = SoulIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/soul.index.lazy').then((d) => d.Route))
 const SoulGenerateRoute = SoulGenerateRouteImport.update({
-  id: '/soul/generate',
-  path: '/soul/generate',
-  getParentRoute: () => rootRouteImport,
+  id: '/generate',
+  path: '/generate',
+  getParentRoute: () => SoulRoute,
 } as any).lazy(() => import('./routes/soul.generate.lazy').then((d) => d.Route))
 const SoulLibraryRoute = SoulLibraryRouteImport.update({
-  id: '/soul/library',
-  path: '/soul/library',
-  getParentRoute: () => rootRouteImport,
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => SoulRoute,
 } as any).lazy(() => import('./routes/soul.library.lazy').then((d) => d.Route))
 const SoulTrainRoute = SoulTrainRouteImport.update({
-  id: '/soul/train',
-  path: '/soul/train',
-  getParentRoute: () => rootRouteImport,
+  id: '/train',
+  path: '/train',
+  getParentRoute: () => SoulRoute,
 } as any).lazy(() => import('./routes/soul.train.lazy').then((d) => d.Route))
 const SoulVibeRoute = SoulVibeRouteImport.update({
-  id: '/soul/vibe',
-  path: '/soul/vibe',
-  getParentRoute: () => rootRouteImport,
+  id: '/vibe',
+  path: '/vibe',
+  getParentRoute: () => SoulRoute,
 } as any).lazy(() => import('./routes/soul.vibe.lazy').then((d) => d.Route))
 const VideoAgentBeatDirectorRoute = VideoAgentBeatDirectorRouteImport.update({
   id: '/video-agent_/beat-director',
@@ -2770,10 +2770,6 @@ export interface RootRouteChildren {
   GuidesSlugRoute: typeof GuidesSlugRoute
   LegalSlugRoute: typeof LegalSlugRoute
   RTokenRoute: typeof RTokenRoute
-  SoulGenerateRoute: typeof SoulGenerateRouteWithChildren
-  SoulLibraryRoute: typeof SoulLibraryRoute
-  SoulTrainRoute: typeof SoulTrainRoute
-  SoulVibeRoute: typeof SoulVibeRoute
   VideoAgentBeatDirectorRoute: typeof VideoAgentBeatDirectorRoute
   VideoAgentMusicVideoRoute: typeof VideoAgentMusicVideoRoute
   VideoAgentPhotoLabRoute: typeof VideoAgentPhotoLabRoute
@@ -3705,31 +3701,31 @@ declare module '@tanstack/react-router' {
     }
     '/soul/generate': {
       id: '/soul/generate'
-      path: '/soul/generate'
+      path: '/generate'
       fullPath: '/soul/generate'
       preLoaderRoute: typeof SoulGenerateRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SoulRoute
     }
     '/soul/library': {
       id: '/soul/library'
-      path: '/soul/library'
+      path: '/library'
       fullPath: '/soul/library'
       preLoaderRoute: typeof SoulLibraryRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SoulRoute
     }
     '/soul/train': {
       id: '/soul/train'
-      path: '/soul/train'
+      path: '/train'
       fullPath: '/soul/train'
       preLoaderRoute: typeof SoulTrainRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SoulRoute
     }
     '/soul/vibe': {
       id: '/soul/vibe'
-      path: '/soul/vibe'
+      path: '/vibe'
       fullPath: '/soul/vibe'
       preLoaderRoute: typeof SoulVibeRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SoulRoute
     }
     '/video-agent_/beat-director': {
       id: '/video-agent_/beat-director'
@@ -4440,18 +4436,6 @@ const LibraryRouteChildren: LibraryRouteChildren = {
 const LibraryRouteWithChildren =
   LibraryRoute._addFileChildren(LibraryRouteChildren)
 
-interface SoulGenerateRouteChildren {
-  SoulGenerateVideoRoute: typeof SoulGenerateVideoRoute
-}
-
-const SoulGenerateRouteChildren: SoulGenerateRouteChildren = {
-  SoulGenerateVideoRoute: SoulGenerateVideoRoute,
-}
-
-const SoulGenerateRouteWithChildren = SoulGenerateRoute._addFileChildren(
-  SoulGenerateRouteChildren,
-)
-
 interface ApiAudioMasterRouteChildren {
   ApiAudioMasterIdStatusRoute: typeof ApiAudioMasterIdStatusRoute
 }
@@ -4587,10 +4571,6 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesSlugRoute: GuidesSlugRoute,
   LegalSlugRoute: LegalSlugRoute,
   RTokenRoute: RTokenRoute,
-  SoulGenerateRoute: SoulGenerateRouteWithChildren,
-  SoulLibraryRoute: SoulLibraryRoute,
-  SoulTrainRoute: SoulTrainRoute,
-  SoulVibeRoute: SoulVibeRoute,
   VideoAgentBeatDirectorRoute: VideoAgentBeatDirectorRoute,
   VideoAgentMusicVideoRoute: VideoAgentMusicVideoRoute,
   VideoAgentPhotoLabRoute: VideoAgentPhotoLabRoute,
