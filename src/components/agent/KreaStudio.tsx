@@ -66,7 +66,7 @@ export function KreaStudio() {
       <Link to="/" aria-label="Home" className="mb-4 text-muted-foreground"><ArrowLeft size={18} /></Link>
       {TOOLS.map((t) => <button key={t.id} onClick={() => setTool(t.id)} aria-label={t.label} title={t.label}
         className={`flex h-11 w-11 flex-col items-center justify-center rounded-xl text-[9px] ${tool === t.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"}`}><t.icon size={18} />{t.label}</button>)}
-      <Link to="/studio" search={{ mode: "edit" } as never} aria-label="Editor" title="Editor" className="mt-auto flex h-11 w-11 flex-col items-center justify-center rounded-xl text-[9px] text-muted-foreground hover:bg-muted"><Scissors size={18} />Edit</Link>
+      <Link to="/studio" search={{ mode: "edit" }} aria-label="Editor" title="Editor" className="mt-auto flex h-11 w-11 flex-col items-center justify-center rounded-xl text-[9px] text-muted-foreground hover:bg-muted"><Scissors size={18} />Edit</Link>
     </aside>
 
     <main className="w-full pb-56 md:pl-16">

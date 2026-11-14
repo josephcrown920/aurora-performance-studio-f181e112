@@ -104,20 +104,15 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
 
       <section id="pa-luxury" aria-label="Luxury interior" className="genjutsu-band scroll-mt-20">
         <p className="genjutsu-eyebrow">SCENE PRESET</p>
-        {user ? <PerformanceVariantWorkflow kind="luxury_interior" mode="anywhere" compact /> : <>
-          <h2>Luxury interior.</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Film yourself seated anywhere — Genjutsu rebuilds the world as a Maybach, Rolls-Royce or private jet.</p>
-          <div className="genjutsu-actions"><Button asChild><Link to="/auth" search={{ next: "/perform-anywhere" }}>Sign in to start<ArrowUpRight size={14} /></Link></Button></div>
-        </>}
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4">
-          <span className="text-sm text-muted-foreground">Two-angle workflow: one wide and one close-up shot, both driven by your phone take.</span>
-          <Button asChild size="sm" variant="outline"><Link to="/colors-show" search={{ mode: "anywhere" }}>Open two-angle workflow<ArrowUpRight size={13} /></Link></Button>
-        </div>
+        <h2>Luxury interior.</h2>
+        <p className="mt-2 text-sm text-muted-foreground">Film yourself seated anywhere — Genjutsu rebuilds the world as a Maybach, Rolls-Royce or private jet.</p>
+        <div className="genjutsu-actions"><Button asChild><Link to="/luxury-interior">Open luxury interior<ArrowUpRight size={14} /></Link></Button></div>
       </section>
 
       <section id="pa-grwm" aria-label="Get Ready With Me" className="genjutsu-band scroll-mt-20">
         <p className="genjutsu-eyebrow">GET READY WITH ME · POWERED BY GENJUTSU</p>
-        <h2 className="mb-6">Restyle the look. Keep the moment.</h2>
+        <h2 className="mb-2">Restyle the look. Keep the moment.</h2>
+        <p className="mb-6 text-sm text-muted-foreground">The full Genjutsu flow: 01 build the look, 02 drive it with your dressing clip, 03 finish with optional lip sync.</p>
         <GetReadyWithMeWorkflow />
       </section>
 

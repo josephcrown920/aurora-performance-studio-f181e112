@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createSoul, listSouls, deleteSoul, trainSoul } from "@/lib/soul.functions";
 
-export const Route = createLazyFileRoute("/soul")({
+export const Route = createLazyFileRoute("/soul/")({
   component: () => (
     <SoulShell>
       <SoulDashboard />

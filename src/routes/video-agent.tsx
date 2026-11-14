@@ -28,6 +28,7 @@ import { FeatureShowcase } from "@/features/creative-studio/components/FeatureSh
 import { isChatOnly } from "@/lib/chat-only";
 import { AgentStream } from "@/features/creative-studio/components/AgentStream";
 import { kieImage, kieVideo } from "@/lib/kie-client";
+import { KreaStudio } from "@/components/agent/KreaStudio";
 
 export const Route = createFileRoute("/video-agent")({
   head: () => ({
@@ -48,7 +49,7 @@ export const Route = createFileRoute("/video-agent")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Index,
+  component: KreaStudio,
 });
 
 type CameraMove = "auto" | "static" | "push" | "orbit" | "track" | "crane" | "handheld";
@@ -183,7 +184,7 @@ function applyMotion(text: string, move: CameraMove, level: MotionLevel) {
   return `${text.trim().replace(/[.\s]+$/, "")}. Camera: ${cues.join("; ")}.`;
 }
 
-function Index() {
+export function ClassicVideoAgent() {
   const [hydrated, setHydrated] = useState(false);
   const [mode, setMode] = useState<Mode>("image");
   const [prompt, setPrompt] = useState("");

@@ -5,7 +5,7 @@ import {
   featureVisibilityRobotsMeta,
 } from "@/lib/feature-visibility-seo.functions";
 
-export const Route = createFileRoute("/soul")({
+export const Route = createFileRoute("/soul/")({
   loader: featureVisibilityLoader("soul"),
   head: ({ loaderData }) => ({
     meta: [
