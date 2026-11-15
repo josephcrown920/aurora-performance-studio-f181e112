@@ -32,6 +32,7 @@ import { Route as ConnectRouteImport } from './routes/connect'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as ContentMachineRouteImport } from './routes/content-machine'
+import { Route as CreateRouteImport } from './routes/create'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DeleteAccountRouteImport } from './routes/delete-account'
 import { Route as DirectorRouteImport } from './routes/director'
@@ -345,6 +346,11 @@ const ContentMachineRoute = ContentMachineRouteImport.update({
 } as any).lazy(() =>
   import('./routes/content-machine.lazy').then((d) => d.Route),
 )
+const CreateRoute = CreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -1384,6 +1390,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/content': typeof ContentRoute
   '/content-machine': typeof ContentMachineRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/delete-account': typeof DeleteAccountRoute
   '/director': typeof DirectorRoute
@@ -1601,6 +1608,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/content': typeof ContentRoute
   '/content-machine': typeof ContentMachineRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/delete-account': typeof DeleteAccountRoute
   '/director': typeof DirectorRoute
@@ -1820,6 +1828,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/content': typeof ContentRoute
   '/content-machine': typeof ContentMachineRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/delete-account': typeof DeleteAccountRoute
   '/director': typeof DirectorRoute
@@ -2040,6 +2049,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/content'
     | '/content-machine'
+    | '/create'
     | '/dashboard'
     | '/delete-account'
     | '/director'
@@ -2257,6 +2267,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/content'
     | '/content-machine'
+    | '/create'
     | '/dashboard'
     | '/delete-account'
     | '/director'
@@ -2475,6 +2486,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/content'
     | '/content-machine'
+    | '/create'
     | '/dashboard'
     | '/delete-account'
     | '/director'
@@ -2694,6 +2706,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   ContentRoute: typeof ContentRoute
   ContentMachineRoute: typeof ContentMachineRoute
+  CreateRoute: typeof CreateRoute
   DashboardRoute: typeof DashboardRoute
   DeleteAccountRoute: typeof DeleteAccountRoute
   DirectorRoute: typeof DirectorRoute
@@ -3022,6 +3035,13 @@ declare module '@tanstack/react-router' {
       path: '/content-machine'
       fullPath: '/content-machine'
       preLoaderRoute: typeof ContentMachineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create': {
+      id: '/create'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof CreateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -4510,6 +4530,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   ContentRoute: ContentRoute,
   ContentMachineRoute: ContentMachineRoute,
+  CreateRoute: CreateRoute,
   DashboardRoute: DashboardRoute,
   DeleteAccountRoute: DeleteAccountRoute,
   DirectorRoute: DirectorRoute,

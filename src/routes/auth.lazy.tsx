@@ -66,7 +66,7 @@ function AuthPage() {
   const [hydrated, setHydrated] = useState(false);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   // New signups land in Studio (the product); returning sign-ins land on Home.
-  const returnTo = search.next ?? "/studio";
+  const returnTo = search.next ?? "/create";
   // TanStack Router treats `to` as a pathname only — query/hash must be passed
   // separately or a deep link like /video-agent-edit?id=… fails to match.
   const navigateToReturnPath = useCallback(() => {
@@ -242,7 +242,7 @@ function AuthPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
+          emailRedirectTo: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/create")}`,
         },
       });
       if (error) throw error;
@@ -290,7 +290,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
+            emailRedirectTo: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/create")}`,
             // persona is read back out of user_metadata when the profile row is
             // first created, so it survives the email-confirmation round trip.
             data: { display_name: displayName.trim() || email.split("@")[0], persona },
@@ -351,7 +351,7 @@ function AuthPage() {
       }
       const { lovable } = await import("@/integrations/lovable/index");
       const result = await lovable.auth.signInWithOAuth(provider, {
-        redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/studio")}`,
+        redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(search.next ?? "/create")}`,
       });
       if (result.error) throw result.error;
       if (result.redirected) return;

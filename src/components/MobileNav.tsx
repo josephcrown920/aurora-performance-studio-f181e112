@@ -56,6 +56,7 @@ type Feature = {
 // Note: Video Agent and TikTok30 are pinned in the bottom tab bar (TAB_ITEMS)
 // — keep them OUT of CORE_FEATURES to avoid showing the same entry twice.
 const CORE_FEATURES: Feature[] = [
+  { to: "/create",        label: "Create",   icon: LayoutGrid },
   { to: "/perform-anywhere",        label: "Perform Anywhere",   icon: Wand2,        previewImg: "/nav-previews/perform-anywhere.jpg", starred: true },
   { to: "/colors",        label: "Colors Studio",      icon: Palette,      previewImg: "/nav-previews/colors.jpg",          starred: true },
   { to: "/lipsync",       label: "Lip Sync",           icon: Mic,          previewImg: "/nav-previews/lipsync.jpg",         starred: true },
@@ -211,15 +212,15 @@ function LiveNavItem({ f, active, onClick, hiddenBadge }: { f: Feature; active: 
   const className = cn(
     "group relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm no-underline transition-all duration-150",
     active
-      ? "bg-[image:var(--gradient-hero)] text-white shadow-[var(--shadow-glow-soft)]"
-      : "text-muted-foreground hover:bg-accent/40 hover:text-foreground",
+      ? "hub-nav-item bg-[var(--hub-lime)] text-[var(--hub-lime-foreground)]"
+      : "hub-nav-item text-foreground hover:bg-accent/40",
   );
   const content = (
     <>
       <span
         className={cn(
           "flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors",
-          active ? "bg-white/20" : "aurora-glass group-hover:bg-accent/50",
+          active ? "bg-background/20" : "aurora-glass group-hover:bg-accent/50",
         )}
       >
         <f.icon className="size-3.5" />
@@ -227,14 +228,12 @@ function LiveNavItem({ f, active, onClick, hiddenBadge }: { f: Feature; active: 
       <span
         className={cn(
           "font-medium flex-1 min-w-0 inline-flex items-center gap-1.5",
-          !active &&
-            "bg-gradient-to-r from-[#f6d365] via-[#fbbf24] to-[#b8860b] bg-clip-text text-transparent font-semibold tracking-wide drop-shadow-[0_0_8px_rgba(251,191,36,0.35)]",
         )}
       >
         {f.label}
         {f.starred && (
           <Star
-            className="size-3.5 shrink-0 fill-[#fbbf24] text-[#fbbf24] drop-shadow-[0_0_6px_rgba(251,191,36,0.7)]"
+            className="size-3 shrink-0 fill-[var(--hub-lime)] text-[var(--hub-lime)]"
             aria-label="Featured"
           />
         )}
