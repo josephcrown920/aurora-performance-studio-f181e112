@@ -93,7 +93,7 @@ export function SoulShell({ children }: { children: ReactNode }) {
   return (
     <div className="aurora-page-shell min-h-screen pb-24">
       <span aria-hidden className="aurora-ambient opacity-40 pointer-events-none" />
-      <div className="relative z-10 mx-auto max-w-2xl px-4 pt-10">
+      <div className="relative z-10 mx-auto max-w-2xl px-4 pt-28 md:pt-10">
         <header className="mb-6">
           <p className="aurora-kicker mb-1 flex items-center gap-1.5">
             <Sparkles className="size-3" /> Aurora Soul

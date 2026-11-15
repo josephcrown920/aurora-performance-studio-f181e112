@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 type Work = { src: string; title: string; tool: string; to: string };
 
@@ -47,10 +47,7 @@ function NbaJoshPage() {
           className="absolute inset-0 h-full w-full object-cover opacity-40"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
-        <div className="relative mx-auto max-w-6xl px-5 pb-12 pt-24">
-          <Link to="/" className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground no-underline hover:text-foreground">
-            <ArrowLeft className="size-4" /> Home
-          </Link>
+        <div className="relative mx-auto max-w-6xl px-5 pb-12 pt-28">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Featured artist</p>
           <h1 className="mt-2 text-5xl font-black uppercase leading-none md:text-7xl">NBA Josh</h1>
           <p className="mt-4 max-w-[46ch] text-base text-muted-foreground">
