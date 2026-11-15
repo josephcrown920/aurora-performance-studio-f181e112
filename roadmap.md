@@ -139,3 +139,4 @@
 - [ ] Refix the luxury car interior scene in Perform Anywhere.
 - [ ] Prepare an Android App Bundle (AAB) for the Expo app.
 - [ ] Run repository resizing again (remove remaining bloat).
+- [ ] Post-sign-in 'Create something new' tool index (colored style, prices on the left) + matching side menu.
