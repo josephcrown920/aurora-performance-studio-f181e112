@@ -4,7 +4,7 @@ import { HUB_TOOLS } from "./tools";
 export function CreateHub() {
   return (
     <div className="create-hub min-h-screen pb-24">
-      <section className="px-5 pt-10 pb-8 sm:px-10">
+      <section className="px-5 pt-28 pb-8 sm:px-10 sm:pt-10">
         <p className="hub-eyebrow">Every tool</p>
         <h1 className="hub-title">
           <span>Create</span>

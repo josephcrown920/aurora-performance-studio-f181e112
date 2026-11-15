@@ -23,7 +23,7 @@ import { SiteImagesProvider } from "@/components/landing/SiteImagesProvider";
 import { SiteCopyProvider } from "@/components/landing/SiteCopyProvider";
 import { FeatureVisibilityProvider } from "@/components/FeatureVisibilityProvider";
 import { MobileNav } from "@/components/MobileNav";
-import { WelcomeSplash } from "@/components/WelcomeSplash";
+import { WelcomeSplash, WELCOME_BOOT_SCRIPT } from "@/components/WelcomeSplash";
 import { BackButton } from "@/components/BackButton";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { useEffect, useState } from "react";
@@ -190,8 +190,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
             __html: `(function(){try{var t=localStorage.getItem('aurora-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
           }}
         />
+        <script dangerouslySetInnerHTML={{ __html: WELCOME_BOOT_SCRIPT }} />
       </head>
       <body>
+        <WelcomeSplash />
         {/* No <noscript> GTM fallback: with JS disabled there is no way to
             show the consent banner or read a consent decision, so the only
             compliant option for JS-disabled visitors is to not load
@@ -345,7 +347,6 @@ function RootComponent() {
             <Outlet />
             <Toaster />
             <CookieConsentBanner />
-            <WelcomeSplash />
           </FeatureVisibilityProvider>
         </QueryClientProvider>
       </ErrorBoundary>
@@ -378,7 +379,6 @@ function RootComponent() {
             <ReferralAttacher />
             {hasPersistentNavigation && <MobileNav />}
             <CookieConsentBanner />
-            <WelcomeSplash />
           </FeatureVisibilityProvider>
         </QueryClientProvider>
       </ThemeProvider>
