@@ -54,7 +54,7 @@ export function FeaturedArtist() {
 
             <div className="mt-8 flex flex-col gap-3">
               <Link
-                to="/gallery"
+                to="/artists/nba-josh"
                 className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#8b5cf6] px-5 py-3 text-sm font-semibold text-white shadow-[0_6px_24px_-4px_rgba(139,92,246,0.55)] transition-transform hover:scale-[1.02] active:scale-95 no-underline"
               >
                 See his work <ArrowRight className="size-4" />

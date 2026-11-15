@@ -119,6 +119,7 @@ import { Route as ApiKieRouteImport } from './routes/api/kie'
 import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as ApiModelarkRouteImport } from './routes/api/modelark'
 import { Route as ApiReadyRouteImport } from './routes/api/ready'
+import { Route as ArtistsNbaJoshRouteImport } from './routes/artists.nba-josh'
 import { Route as CliIndexRouteImport } from './routes/cli.index'
 import { Route as CliAuthorizeRouteImport } from './routes/cli.authorize'
 import { Route as CreatorDashboardRouteImport } from './routes/creator.dashboard'
@@ -814,6 +815,11 @@ const ApiReadyRoute = ApiReadyRouteImport.update({
   path: '/api/ready',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtistsNbaJoshRoute = ArtistsNbaJoshRouteImport.update({
+  id: '/artists/nba-josh',
+  path: '/artists/nba-josh',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CliIndexRoute = CliIndexRouteImport.update({
   id: '/cli/',
   path: '/cli/',
@@ -1478,6 +1484,7 @@ export interface FileRoutesByFullPath {
   '/api/mcp': typeof ApiMcpRoute
   '/api/modelark': typeof ApiModelarkRoute
   '/api/ready': typeof ApiReadyRoute
+  '/artists/nba-josh': typeof ArtistsNbaJoshRoute
   '/cli/authorize': typeof CliAuthorizeRoute
   '/creator/dashboard': typeof CreatorDashboardRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -1696,6 +1703,7 @@ export interface FileRoutesByTo {
   '/api/mcp': typeof ApiMcpRoute
   '/api/modelark': typeof ApiModelarkRoute
   '/api/ready': typeof ApiReadyRoute
+  '/artists/nba-josh': typeof ArtistsNbaJoshRoute
   '/cli/authorize': typeof CliAuthorizeRoute
   '/creator/dashboard': typeof CreatorDashboardRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -1916,6 +1924,7 @@ export interface FileRoutesById {
   '/api/mcp': typeof ApiMcpRoute
   '/api/modelark': typeof ApiModelarkRoute
   '/api/ready': typeof ApiReadyRoute
+  '/artists/nba-josh': typeof ArtistsNbaJoshRoute
   '/cli/authorize': typeof CliAuthorizeRoute
   '/creator/dashboard': typeof CreatorDashboardRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -2137,6 +2146,7 @@ export interface FileRouteTypes {
     | '/api/mcp'
     | '/api/modelark'
     | '/api/ready'
+    | '/artists/nba-josh'
     | '/cli/authorize'
     | '/creator/dashboard'
     | '/guides/$slug'
@@ -2355,6 +2365,7 @@ export interface FileRouteTypes {
     | '/api/mcp'
     | '/api/modelark'
     | '/api/ready'
+    | '/artists/nba-josh'
     | '/cli/authorize'
     | '/creator/dashboard'
     | '/guides/$slug'
@@ -2574,6 +2585,7 @@ export interface FileRouteTypes {
     | '/api/mcp'
     | '/api/modelark'
     | '/api/ready'
+    | '/artists/nba-josh'
     | '/cli/authorize'
     | '/creator/dashboard'
     | '/guides/$slug'
@@ -2778,6 +2790,7 @@ export interface RootRouteChildren {
   ApiMcpRoute: typeof ApiMcpRoute
   ApiModelarkRoute: typeof ApiModelarkRoute
   ApiReadyRoute: typeof ApiReadyRoute
+  ArtistsNbaJoshRoute: typeof ArtistsNbaJoshRoute
   CliAuthorizeRoute: typeof CliAuthorizeRoute
   CreatorDashboardRoute: typeof CreatorDashboardRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
@@ -3658,6 +3671,13 @@ declare module '@tanstack/react-router' {
       path: '/api/ready'
       fullPath: '/api/ready'
       preLoaderRoute: typeof ApiReadyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artists/nba-josh': {
+      id: '/artists/nba-josh'
+      path: '/artists/nba-josh'
+      fullPath: '/artists/nba-josh'
+      preLoaderRoute: typeof ArtistsNbaJoshRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cli/': {
@@ -4603,6 +4623,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMcpRoute: ApiMcpRoute,
   ApiModelarkRoute: ApiModelarkRoute,
   ApiReadyRoute: ApiReadyRoute,
+  ArtistsNbaJoshRoute: ArtistsNbaJoshRoute,
   CliAuthorizeRoute: CliAuthorizeRoute,
   CreatorDashboardRoute: CreatorDashboardRoute,
   GuidesSlugRoute: GuidesSlugRoute,
