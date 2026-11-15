@@ -14,7 +14,7 @@ const WORKS: Work[] = [
   { src: "/josh/josh-orange-performance.jpg", title: "Orange energy", tool: "UGC", to: "/ugc" },
   { src: "/josh/generated2/colors-royal-blue.webp", title: "Colors — royal blue", tool: "Colors", to: "/create" },
   { src: "/josh/looping-officers-rain-red.png", title: "Looping Officers — red rain", tool: "Studio", to: "/studio" },
-  { src: "/josh/josh-mirror-getready.webp", title: "Get ready with me", tool: "Genjutsu", to: "/get-ready-with-me" },
+  { src: "/josh/josh-mirror-getready.webp", title: "Get ready with me", tool: "Genjutsu", to: "/perform-anywhere" },
   { src: "/josh/generated2/viral-10-performance.webp", title: "Performance cut", tool: "TikTok 30", to: "/spin" },
   { src: "/josh/looping-officers-city.png", title: "Looping Officers — city", tool: "Studio", to: "/studio" },
   { src: "/josh/josh-concert-performance.webp", title: "Concert moment", tool: "Perform Anywhere", to: "/perform-anywhere" },
