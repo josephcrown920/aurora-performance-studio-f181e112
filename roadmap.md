@@ -137,7 +137,9 @@
 - [x] Show real Kling/Wan renders in Perform Anywhere
 - [x] Remove unused big files from the project (uploaded zips are outside the project)
 - [ ] Refix the luxury car interior scene in Perform Anywhere.
-- [ ] Prepare an Android App Bundle (AAB) for the Expo app.
+- [x] Android App Bundle build started on Expo (production profile, build ce5345bf) — download when Expo finishes.
 - [ ] Run repository resizing again (remove remaining bloat).
 - [x] Post-sign-in 'Create something new' tool index (colored style, prices on the left) + matching side menu; phone heading clear of Menu/back buttons.
 - [x] Welcome message on each fresh app launch, shown on first paint.
+- [x] 'See his work' now opens a public NBA Josh showcase page instead of the visitor's private gallery.
+- [x] Soul Studio sub-pages (Train/Generate/Video/Library/Vibe) open signed in; heading cleared of Menu button.
