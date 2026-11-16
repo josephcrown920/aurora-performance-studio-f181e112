@@ -1,3 +1,5 @@
+import { safeChatMessages } from "@/lib/chat-sanitize.server";
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const ARK_CHAT = "https://ark.ap-southeast.bytepluses.com/api/v3/chat/completions";
@@ -20,6 +22,8 @@ export const Route = createFileRoute("/api/canvas/chat-stream")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const body = (await request.json().catch(() => ({}))) as StreamBody;
         const provider = body.provider === "zenmux" ? "zenmux" : "ark";
         if (!body.messages?.length) return jsonError("Missing messages", 400);
@@ -38,7 +42,7 @@ export const Route = createFileRoute("/api/canvas/chat-stream")({
           },
           body: JSON.stringify({
             model: body.model || (provider === "zenmux" ? "z-ai/glm-4.7-flash-free" : "seed-2-0-pro-260328"),
-            messages: body.messages,
+            messages: safeChatMessages(body.messages),
             stream: true,
           }),
         });

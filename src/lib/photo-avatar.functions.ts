@@ -36,6 +36,10 @@ export type PhotoAvatarWithUrl = PhotoAvatarRow & { signedUrl: string };
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
+function isOwnPath(userId: string, path: string): boolean {
+  return path.startsWith(`${userId}/`) && !path.includes("..");
+}
+
 async function signPath(path: string, expiresIn = 3600): Promise<string> {
   const { data, error } = await supabaseAdmin.storage
     .from("studio")
@@ -71,6 +75,7 @@ export const savePhotoAvatar = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ context, data }) => {
+    if (!isOwnPath(context.userId, data.storagePath)) throw new Error("You can only save your own photos.");
     const { data: row, error } = await supabaseAdmin
       .from("user_photo_avatars" as never)
       .insert({
@@ -98,6 +103,7 @@ export const listPhotoAvatars = createServerFn({ method: "GET" })
     const withUrls = await Promise.all(
       rows.map(async (r) => {
         try {
+          if (!isOwnPath(context.userId, r.storage_path)) throw new Error("not owner");
           const signedUrl = await signPath(r.storage_path);
           return { ...r, signedUrl } as PhotoAvatarWithUrl;
         } catch {
@@ -129,9 +135,8 @@ export const deletePhotoAvatar = createServerFn({ method: "POST" })
     if (delErr) throw new Error(delErr.message);
 
     try {
-      await supabaseAdmin.storage
-        .from("studio")
-        .remove([(row as PhotoAvatarRow).storage_path]);
+      const p = (row as PhotoAvatarRow).storage_path;
+      if (isOwnPath(context.userId, p)) await supabaseAdmin.storage.from("studio").remove([p]);
     } catch {
       // best-effort
     }
@@ -167,6 +172,7 @@ export const generateFromPhotoAvatar = createServerFn({ method: "POST" })
     const avatar = row as PhotoAvatarRow;
 
     // 1. Sign the stored photo for HeyGen access (1 hour)
+    if (!isOwnPath(context.userId, avatar.storage_path)) throw new Error("Avatar not found");
     const photoUrl = await signPath(avatar.storage_path, 3600);
 
     // 2. Generate TTS audio from the script (HuggingFace MMS-TTS)

@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { GATEWAY, IMAGE_MODEL, apiKey, passthrough, shouldFallback, openRouterImage } from "@/lib/guy/gateway.server";
 import { IMAGE_ENGINES } from "@/lib/guy/engines";
@@ -22,6 +23,8 @@ export const Route = createFileRoute("/api/guy/image")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const type = request.headers.get("content-type") ?? "";
         if (type.includes("multipart")) {
           const form = await request.formData();

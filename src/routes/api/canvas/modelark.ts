@@ -1,3 +1,5 @@
+import { safeChatMessages } from "@/lib/chat-sanitize.server";
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const ARK_BASE = process.env["ARK_BASE_URL"]?.trim() || "https://ark.ap-southeast.bytepluses.com/api/v3";
@@ -50,13 +52,15 @@ export const Route = createFileRoute("/api/canvas/modelark")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const body = (await request.json().catch(() => ({}))) as ModelArkBody;
 
         if (body.action === "models") {
           return ark(request, "/models?page_size=200", { method: "GET" });
         }
 
-        const messages = body.messages || [];
+        const messages = safeChatMessages(body.messages);
         if (!messages.length && body.input === undefined) {
           return json({ error: { message: "Provide messages or input." } }, 400);
         }
@@ -64,7 +68,7 @@ export const Route = createFileRoute("/api/canvas/modelark")({
         // Responses API is the canonical agent/tool-calling path used by Aurora.
         const payload: Record<string, unknown> = {
           model: body.model || DEFAULT_MODEL,
-          input: body.input ?? messages,
+          input: Array.isArray(body.input) ? safeChatMessages(body.input as { role?: unknown; content?: unknown }[]) : (body.input ?? messages),
         };
 
         if (body.tools) payload.tools = body.tools;

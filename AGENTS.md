@@ -37,3 +37,4 @@
 - Kie driving-video requests dispatch to motion control, never image-to-video, and reject unsupported depth or ending frames; this prevents silent loss of reference inputs.
 - Admin accounts (user_roles admin) bypass Aura charges inside the reserve/release/deduct database functions, so every generation path is free for admins without per-feature checks.
 - Passkey (Face ID) origins list Aurora's Lovable hosts explicitly in webauthn-origins; passkeys bind to the exact host, so a missing host silently breaks Face ID sign-in there.
+- Non-public /api/* server routes call requireApiUser (api-auth.server); the browser fetch wrapper in src/lib/api-fetch-auth.ts attaches the bearer token automatically, so new routes stay protected without per-caller changes.

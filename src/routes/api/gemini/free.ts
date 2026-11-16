@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { GoogleGenAI } from "@google/genai";
 import { FREE_AI_MODELS } from "@/lib/ai-gateway-free-models";
@@ -16,6 +17,8 @@ export const Route = createFileRoute("/api/gemini/free")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) return new Response("GEMINI_API_KEY is not configured", { status: 503 });
 
@@ -29,7 +32,7 @@ export const Route = createFileRoute("/api/gemini/free")({
           const response = await ai.models.generateContent({
             model,
             contents: body.prompt.trim(),
-            config: body.system?.trim() ? { systemInstruction: body.system.trim() } : undefined,
+            config: { systemInstruction: "You are an Aurora AI assistant." },
           });
 
           return Response.json({ model, text: response.text ?? "" });

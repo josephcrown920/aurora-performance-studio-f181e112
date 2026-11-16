@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { routedGenerate } from "@/lib/ai-router";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const SYSTEM_PROMPT = `You are an expert AI art director and prompt writer for Aurora Studio, a cinematic AI image-to-video generation platform used by musicians, creators, and brands.
 
@@ -14,11 +15,12 @@ Rules:
 - Do NOT introduce people or faces unless the user explicitly mentioned them
 - Return ONLY the expanded prompt — no preamble, no labels, no explanation`;
 
-export const expandTemplatePrompt = createServerFn()
+export const expandTemplatePrompt = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator(
     z.object({
       userText: z.string().min(2).max(500),
-      templateTitle: z.string().optional(),
+      templateTitle: z.string().max(120).optional(),
     }),
   )
   .handler(async ({ data }) => {

@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const ARK_SESSIONS = "https://ark.ap-southeast.bytepluses.com/api/v3/sessions";
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/api/canvas/agent")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const key = process.env["ARK_API_KEY"];
         if (!key) return json({ error: { message: "Agent key is not configured." } }, 500);
 

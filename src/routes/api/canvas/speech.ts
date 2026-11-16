@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const TTS_URL = "https://ai.gateway.lovable.dev/v1/audio/speech";
@@ -19,6 +20,8 @@ export const Route = createFileRoute("/api/canvas/speech")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const key = process.env["LOVABLE_API_KEY"];
         if (!key) return jsonError("Voice is not configured.", 500);
 

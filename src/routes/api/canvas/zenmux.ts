@@ -1,3 +1,5 @@
+import { safeChatMessages } from "@/lib/chat-sanitize.server";
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const ZENMUX_BASE = "https://zenmux.ai/api/v1";
@@ -41,6 +43,8 @@ export const Route = createFileRoute("/api/canvas/zenmux")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const key =
           request.headers.get("x-zenmux-key")?.trim() || process.env["ZENMUX_API_KEY"]?.trim();
         if (!key) return jsonError("Missing ZenMux API key. Add it in Settings.", 401);
@@ -96,7 +100,7 @@ export const Route = createFileRoute("/api/canvas/zenmux")({
             method: "POST",
             body: JSON.stringify({
               model: body.model || "z-ai/glm-4.7-flash-free",
-              messages: body.messages,
+              messages: safeChatMessages(body.messages),
             }),
           });
         }

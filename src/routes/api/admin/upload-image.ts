@@ -69,7 +69,10 @@ export const Route = createFileRoute("/api/admin/upload-image")({
         const bulkFiles = form.getAll("files").filter((f): f is File => f instanceof File);
 
         const targets: Array<{ file: File; key: string }> = [];
-        if (singleFile && singleKey) targets.push({ file: singleFile, key: singleKey });
+        if (singleFile && singleKey) {
+          if (!(singleKey in SITE_IMAGE_DEFAULTS)) return json({ error: "Unknown image slot" }, 400);
+          targets.push({ file: singleFile, key: singleKey });
+        }
 
         for (const file of bulkFiles) {
           const base = (file.name.split("/").pop() ?? file.name).replace(/\.[^.]+$/, "").toLowerCase();
@@ -88,13 +91,16 @@ export const Route = createFileRoute("/api/admin/upload-image")({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const db = supabaseAdmin as any;
 
+        const ALLOWED: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/avif": "avif" };
         for (const { file, key } of targets) {
-          const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
+          const ext = ALLOWED[file.type];
+          if (!ext) { results.push({ key, url: "", skipped: "only JPG, PNG, WebP, GIF or AVIF images are allowed" }); continue; }
+          if (file.size > 15 * 1024 * 1024) { results.push({ key, url: "", skipped: "image is larger than 15MB" }); continue; }
           const path = `${key}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
           const buffer = new Uint8Array(await file.arrayBuffer());
           const { error: upErr } = await supabaseAdmin.storage
             .from(BUCKET)
-            .upload(path, buffer, { contentType: file.type || "image/jpeg", upsert: true });
+            .upload(path, buffer, { contentType: file.type, upsert: true });
           if (upErr) {
             results.push({ key, url: "", skipped: upErr.message });
             continue;

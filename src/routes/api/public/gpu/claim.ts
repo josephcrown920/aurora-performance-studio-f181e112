@@ -3,6 +3,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { UntypedDb } from "@/integrations/supabase/untyped";
 import { z } from "zod";
+import { verifyRenderWorker } from "@/lib/render-worker-auth.server";
 
 const Body = z.object({
   worker_id: z.string().uuid(),
@@ -11,7 +12,7 @@ const Body = z.object({
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "content-type, apikey",
+  "Access-Control-Allow-Headers": "content-type, apikey, authorization",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
@@ -20,6 +21,8 @@ export const Route = createFileRoute("/api/public/gpu/claim")({
     handlers: {
       OPTIONS: async () => new Response(null, { status: 204, headers: cors }),
       POST: async ({ request }) => {
+        const denied = verifyRenderWorker(request, cors);
+        if (denied) return denied;
         const parsed = Body.safeParse(await request.json().catch(() => null));
         if (!parsed.success) {
           return Response.json({ error: "Invalid body" }, { status: 400, headers: cors });

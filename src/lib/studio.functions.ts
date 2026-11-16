@@ -2,7 +2,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
-import { orchestrate, hasActiveWorkerForKind, assertFreeModeServable } from "./orchestrator.server";
+import { orchestrate, hasActiveWorkerForKind, assertFreeModeServable, assertOwnedStudioUrl } from "./orchestrator.server";
 import { buildLatentSyncRequest } from "./lipsync-workflows.server";
 import { fetchToBytes } from "./replicate.server";
 import { compressImageBytes } from "./compress.server";
@@ -478,6 +478,8 @@ async function _enqueueLipSync(
   userId: string,
   data: z.infer<typeof LipSyncSchema>,
 ): Promise<{ jobId: string; generationId: string }> {
+  assertOwnedStudioUrl(userId, data.videoUrl);
+  assertOwnedStudioUrl(userId, data.audioUrl);
   const model = data.model;
   const selfHosted = model === "latentsync";
   if (selfHosted && !(await hasActiveWorkerForKind("lipsync"))) {

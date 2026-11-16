@@ -4,10 +4,10 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { generateSceneText } from "./scene-weaver-ai.server";
 
 const Input = z.object({
-  messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(2000) })).min(1),
-  sceneName: z.string().optional(),
+  messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(2000) })).min(1).max(30),
+  sceneName: z.string().optional().transform((v) => v?.replace(/[\n\r`{}<>"]/g, " ").slice(0, 80)),
   hasResult: z.boolean().optional(),
-  variantCount: z.number().optional(),
+  variantCount: z.number().int().min(0).max(100).optional(),
 });
 export const sceneChat = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

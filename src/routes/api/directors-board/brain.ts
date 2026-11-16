@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 // POST /api/directors-board/brain
 // Structured-output reasoning for the Directors Board:
 //   task: "shot-prompts"   → fills prompt/camera/continuity for each shot in the board
@@ -23,6 +24,8 @@ export const Route = createFileRoute("/api/directors-board/brain")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const body = (await request.json().catch(() => ({}))) as {
           task?: Task;
           input?: unknown;

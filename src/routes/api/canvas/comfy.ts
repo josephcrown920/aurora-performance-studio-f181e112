@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const BASE_URL = process.env["COMFYUI_BASE_URL"]?.trim().replace(/\/$/, "") || "http://127.0.0.1:8188";
@@ -23,15 +24,19 @@ async function requestComfy(path: string, init: RequestInit = {}) {
 export const Route = createFileRoute("/api/canvas/comfy")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         try {
           const data = await requestComfy("/system_stats");
-          return responseJson({ ok: true, data, baseUrl: BASE_URL });
+          return responseJson({ ok: true, data });
         } catch (error) {
-          return responseJson({ ok: false, error: error instanceof Error ? error.message : "ComfyUI unavailable.", baseUrl: BASE_URL }, 503);
+          return responseJson({ ok: false, error: error instanceof Error ? error.message : "ComfyUI unavailable." }, 503);
         }
       },
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         try {
           const body = await request.json() as { workflow?: Record<string, unknown>; wait?: boolean; clientId?: string };
           if (!body.workflow) return responseJson({ ok: false, error: "workflow is required." }, 400);
