@@ -1,4 +1,5 @@
 import { requireApiUser } from "@/lib/api-auth.server";
+import { signJobId, signJobResponse } from "@/lib/job-id-sign.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { identityPrompt } from "@/lib/identity/contract";
 import { GATEWAY, VIDEO_MODEL, apiKey, passthrough } from "@/lib/guy/gateway.server";
@@ -29,7 +30,7 @@ export const Route = createFileRoute("/api/guy/video")({
           const r = await arkFetch("/contents/generations/tasks", { method: "POST", body: JSON.stringify({ model: "dreamina-seedance-2-5-260628", content, omni_reference_task_type: "edit", ratio: "adaptive", duration: -1, watermark: false }) });
           if (!r.ok) return arkError(r);
           const job = (await r.json()) as { id?: string };
-          return Response.json({ id: `ark_${job.id}`, status: "queued" });
+          return Response.json({ id: await signJobId(__auth.userId, `ark_${job.id}`), status: "queued" });
         }
 
         const e = VIDEO_ENGINES.find((x) => x.id === b.engine);
@@ -56,12 +57,12 @@ export const Route = createFileRoute("/api/guy/video")({
           const r = await arkFetch("/contents/generations/tasks", { method: "POST", body: JSON.stringify({ model, content }) });
           if (!r.ok) return arkError(r);
           const job = (await r.json()) as { id?: string };
-          return Response.json({ id: `ark_${job.id}`, status: "queued" });
+          return Response.json({ id: await signJobId(__auth.userId, `ark_${job.id}`), status: "queued" });
         }
         const key = apiKey();
         if (model.startsWith("google/veo-")) {
           if (b.depth || b.refs?.length || b.video || b.audio) return Response.json({ error: { message: "This Veo path does not support depth-guided motion or audio inputs. Choose Gemini Omni for depth-guided renders." } }, { status: 400 });
-          return passthrough(await fetch(`${GATEWAY}/v1/videos`, {
+          return signJobResponse(__auth.userId, passthrough(await fetch(`${GATEWAY}/v1/videos`, {
             method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
             body: JSON.stringify({ model, instances: [{ prompt, ...(b.image ? { image: { bytesBase64Encoded: b.image.data, mimeType: b.image.mime } } : {}), ...(b.lastFrame ? { lastFrame: { bytesBase64Encoded: b.lastFrame.data, mimeType: b.lastFrame.mime } } : {}) }], parameters: { durationSeconds: parseInt(settings.duration, 10), resolution: res, sampleCount: 1, generateAudio: true, ...(!b.image ? { aspectRatio: "16:9" } : {}) } }),
           }));
@@ -76,7 +77,7 @@ export const Route = createFileRoute("/api/guy/video")({
         const response_format: Record<string, string> = { type: "video", resolution: res, duration: settings.duration };
         if (!b.video) response_format["aspect_ratio"] = "16:9";
 
-        return passthrough(
+        return signJobResponse(__auth.userId, passthrough(
           await fetch(`${GATEWAY}/v1/videos`, {
             method: "POST",
             headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },

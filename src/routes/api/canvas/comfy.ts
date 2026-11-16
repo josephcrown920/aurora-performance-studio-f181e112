@@ -29,9 +29,9 @@ export const Route = createFileRoute("/api/canvas/comfy")({
         if (__auth instanceof Response) return __auth;
         try {
           const data = await requestComfy("/system_stats");
-          return responseJson({ ok: true, data, baseUrl: BASE_URL });
+          return responseJson({ ok: true, data });
         } catch (error) {
-          return responseJson({ ok: false, error: error instanceof Error ? error.message : "ComfyUI unavailable.", baseUrl: BASE_URL }, 503);
+          return responseJson({ ok: false, error: error instanceof Error ? error.message : "ComfyUI unavailable." }, 503);
         }
       },
       POST: async ({ request }) => {
