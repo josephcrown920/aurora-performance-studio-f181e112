@@ -76,3 +76,14 @@ describe("isAllowedOrigin", () => {
     expect(isAllowedOrigin("chrome-extension://abc")).toBe(false);
   });
 });
+
+describe("Lovable addresses", () => {
+  it("allows Face ID sign-in on the live Aurora site", () => {
+    process.env.NODE_ENV = "production";
+    expect(isAllowedOrigin("https://aurora-performance-studio.lovable.app")).toBe(true);
+  });
+  it("still rejects other lovable.app sites", () => {
+    process.env.NODE_ENV = "production";
+    expect(isAllowedOrigin("https://someone-else.lovable.app")).toBe(false);
+  });
+});

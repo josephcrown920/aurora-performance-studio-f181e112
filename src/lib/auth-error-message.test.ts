@@ -63,3 +63,13 @@ describe("describeAuthError", () => {
     expect(describeAuthError({ error_description: "access_denied by user" }, "x")).toBe("access_denied by user");
   });
 });
+
+describe("Lovable sign-in failures", () => {
+  test("an unconfirmed Lovable account email asks the person to confirm it", () => {
+    const r = classifyAuthError(new Error("Unverified email with custom:lovable. A confirmation email has been sent to your custom:lovable email"), "x");
+    expect(r.kind).toBe("email_not_confirmed");
+  });
+  test("the 'only request this after N seconds' block reads as a rate limit", () => {
+    expect(classifyAuthError(new Error("For security purposes, you can only request this after 49 seconds."), "x").kind).toBe("rate_limited");
+  });
+});
