@@ -1,3 +1,4 @@
+import { safeChatMessages } from "@/lib/chat-sanitize.server";
 import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -59,7 +60,7 @@ export const Route = createFileRoute("/api/canvas/modelark")({
           return ark(request, "/models?page_size=200", { method: "GET" });
         }
 
-        const messages = body.messages || [];
+        const messages = safeChatMessages(body.messages);
         if (!messages.length && body.input === undefined) {
           return json({ error: { message: "Provide messages or input." } }, 400);
         }

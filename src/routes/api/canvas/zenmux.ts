@@ -1,3 +1,4 @@
+import { safeChatMessages } from "@/lib/chat-sanitize.server";
 import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -99,7 +100,7 @@ export const Route = createFileRoute("/api/canvas/zenmux")({
             method: "POST",
             body: JSON.stringify({
               model: body.model || "z-ai/glm-4.7-flash-free",
-              messages: body.messages,
+              messages: safeChatMessages(body.messages),
             }),
           });
         }
