@@ -34,6 +34,9 @@ import { ThemeProvider } from "@/lib/theme-context";
 import { initCrashReporting } from "@/lib/crash-reporting";
 import { reloadOnceForStaleChunk } from "@/lib/stale-chunk";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { installApiFetchAuth } from "@/lib/api-fetch-auth";
+
+installApiFetchAuth();
 import { CONSENT_CHANGED_EVENT, hasAnalyticsConsent } from "@/lib/consent";
 
 function NotFoundComponent() {
