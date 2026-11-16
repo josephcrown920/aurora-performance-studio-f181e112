@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 // POST /api/directors-board/chat
 // Director AI chat — streams responses for the DirectorChat panel.
 // Adapted from the directors-board zip: uses Aurora's AI gateway (OpenAI-compatible)
@@ -19,6 +20,8 @@ export const Route = createFileRoute("/api/directors-board/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const { messages, boardContext } = (await request.json().catch(() => ({}))) as Body;
         if (!Array.isArray(messages)) {
           return new Response("Messages required", { status: 400 });

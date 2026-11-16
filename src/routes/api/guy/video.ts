@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { identityPrompt } from "@/lib/identity/contract";
 import { GATEWAY, VIDEO_MODEL, apiKey, passthrough } from "@/lib/guy/gateway.server";
@@ -13,6 +14,8 @@ export const Route = createFileRoute("/api/guy/video")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const b = (await request.json()) as Body;
         if (!b.prompt?.trim()) return new Response("Prompt required", { status: 400 });
 

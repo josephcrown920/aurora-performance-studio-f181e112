@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const ARK_BASE = "https://ark.ap-southeast.bytepluses.com/api/v3";
@@ -92,6 +93,8 @@ export const Route = createFileRoute("/api/canvas/ark")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const key = request.headers.get("x-ark-key")?.trim() || process.env["ARK_API_KEY"]?.trim();
         if (!key) return jsonError("Missing ARK API key. Add it in Settings.", 401);
 

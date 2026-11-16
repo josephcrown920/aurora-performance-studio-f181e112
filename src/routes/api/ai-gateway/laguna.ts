@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 // POST /api/ai-gateway/laguna
 // Vercel AI Gateway -> Poolside Laguna S 2.1 Free.
 // Requires the server-side AI_GATEWAY_API_KEY environment variable.
@@ -15,6 +16,8 @@ export const Route = createFileRoute("/api/ai-gateway/laguna")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         if (!process.env.AI_GATEWAY_API_KEY) {
           return new Response("AI_GATEWAY_API_KEY is not configured", { status: 503 });
         }

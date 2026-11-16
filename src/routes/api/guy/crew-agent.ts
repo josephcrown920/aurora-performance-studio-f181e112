@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { GATEWAY, ARK_BASE, apiKey, arkKey, chatCompletionsUrl, isOpenRouterKey } from "@/lib/guy/gateway.server";
 import { AGENTS, agentById } from "@/lib/guy/agents";
@@ -219,6 +220,8 @@ export const Route = createFileRoute("/api/guy/crew-agent")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const parsedBody = bodySchema.safeParse(await request.json().catch(() => null));
         if (!parsedBody.success) return Response.json({ reply: "Please send a valid creative brief." }, { status: 400 });
         const b = parsedBody.data;

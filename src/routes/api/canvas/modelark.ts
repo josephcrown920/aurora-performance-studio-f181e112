@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const ARK_BASE = process.env["ARK_BASE_URL"]?.trim() || "https://ark.ap-southeast.bytepluses.com/api/v3";
@@ -50,6 +51,8 @@ export const Route = createFileRoute("/api/canvas/modelark")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const body = (await request.json().catch(() => ({}))) as ModelArkBody;
 
         if (body.action === "models") {

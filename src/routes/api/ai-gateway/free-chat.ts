@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { streamText } from "ai";
 import { FREE_AI_MODELS } from "@/lib/ai-gateway-free-models";
@@ -18,6 +19,8 @@ export const Route = createFileRoute("/api/ai-gateway/free-chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         if (!process.env.AI_GATEWAY_API_KEY) {
           return new Response("AI_GATEWAY_API_KEY is not configured", { status: 503 });
         }

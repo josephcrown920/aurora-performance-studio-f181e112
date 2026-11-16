@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 
 const ZENMUX_BASE = "https://zenmux.ai/api/v1";
@@ -41,6 +42,8 @@ export const Route = createFileRoute("/api/canvas/zenmux")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         const key =
           request.headers.get("x-zenmux-key")?.trim() || process.env["ZENMUX_API_KEY"]?.trim();
         if (!key) return jsonError("Missing ZenMux API key. Add it in Settings.", 401);

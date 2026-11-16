@@ -1,3 +1,4 @@
+import { requireApiUser } from "@/lib/api-auth.server";
 import { createFileRoute } from "@tanstack/react-router";
 import { GATEWAY, apiKey } from "@/lib/guy/gateway.server";
 import { arkFetch } from "@/lib/guy/ark.server";
@@ -5,7 +6,9 @@ import { arkFetch } from "@/lib/guy/ark.server";
 export const Route = createFileRoute("/api/guy/video/$id/content")({
   server: {
     handlers: {
-      GET: async ({ params }) => {
+      GET: async ({ params, request }) => {
+        const __auth = await requireApiUser(request);
+        if (__auth instanceof Response) return __auth;
         if (params.id.startsWith("ark_")) {
           const t = (await (await arkFetch(`/contents/generations/tasks/${encodeURIComponent(params.id.slice(4))}`)).json()) as { content?: { video_url?: string } };
           if (!t.content?.video_url) return new Response("Video not ready", { status: 404 });
