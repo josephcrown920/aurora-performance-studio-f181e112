@@ -1,3 +1,4 @@
+import { assertPublicHttpsUrl, isPublicHttpsUrl } from "@/lib/outbound-url-guard";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
@@ -10,7 +11,7 @@ import crypto from "crypto";
  */
 
 const WebhookSchema = z.object({
-  url: z.string().url(),
+  url: z.string().url().max(2000).refine(isPublicHttpsUrl, "Webhook URL must be a public https:// address."),
   events: z.array(z.enum(["render_complete", "share_created", "low_credits"])),
   active: z.boolean().default(true),
 });
@@ -115,8 +116,10 @@ export const testWebhook = createServerFn({ method: "POST" })
       .update(JSON.stringify(payload))
       .digest("hex");
 
+    assertPublicHttpsUrl(webhook.url);
     try {
       const response = await fetch(webhook.url, {
+        redirect: "manual",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
