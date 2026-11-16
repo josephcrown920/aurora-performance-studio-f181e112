@@ -3474,6 +3474,21 @@ export async function assertFreeModeServable(kind: GenerateKind): Promise<void> 
 export async function orchestrate(rawReq: GenerateRequest): Promise<GenerateResult> {
   // Sign private-studio refs once, up front, so every adapter sees a fetchable URL.
   const req = await signStudioRefs(rawReq);
+  // Kie-first for Gemini/Nano Banana pictures: Kie is the connected image
+  // service, so Reshoot/TikTok30 don't depend on the AI gateway's balance.
+  if (req.kind === "image" && process.env.KIE_API_KEY && /gemini-.*image|nano-banana/.test(req.model ?? "")) {
+    try {
+      const { runKieTask } = await import("./kie.server");
+      const t0 = Date.now();
+      const refs = (req.imageUrls ?? []).filter((u) => /^https?:\/\//.test(u)).slice(0, 4);
+      const url = refs.length
+        ? await runKieTask("google/nano-banana-edit", { prompt: req.prompt ?? "", image_urls: refs, output_format: "png" }, 4 * 60_000)
+        : await runKieTask("google/nano-banana", { prompt: req.prompt ?? "", output_format: "png" }, 4 * 60_000);
+      return { url, provider: "kie", endpoint: "kie:nano-banana", backend: "external", latencyMs: Date.now() - t0, costUsd: 0.02 };
+    } catch (e) {
+      console.warn("[orchestrate] Kie image failed, falling back", e instanceof Error ? e.message : e);
+    }
+  }
   // Global safety mode: when ON, restrict EVERY request to the free pool + $0
   // providers. selfHostedOnly requests are already pool-only, so the extra read
   // is skipped for them.
