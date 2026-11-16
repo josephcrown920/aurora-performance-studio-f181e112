@@ -15,6 +15,7 @@ import { hfTextToSpeech } from "@/lib/hf.server";
 import { UGC_TTS_MODEL } from "@/lib/ugc.server";
 import { PLATFORM_TEMPLATES, type PlatformTemplate } from "@/lib/platform-templates";
 import { assertTrustedUrl } from "@/lib/url-guard";
+import { assertOwnedStudioUrl } from "@/lib/orchestrator.server";
 
 export const PLATFORM_VIDEO_MODEL = "sync/lipsync-2";
 export const PLATFORM_PHOTO_MODEL = "heygen/photo-video";
@@ -143,6 +144,8 @@ export async function _dispatchAvatarShot(
   },
   deps: AvatarShotDeps = DEFAULT_AVATAR_SHOT_DEPS,
 ): Promise<AvatarShotResult> {
+  try { assertOwnedStudioUrl(userId, imageUrl); }
+  catch (e) { return { ok: false, error: (e as Error).message }; }
   if (engine === "kling") {
     // If Kling credentials are not configured, skip the round-trip and fall back to a
     // SeedDream still image immediately. Only fall back for this configuration gap — an
