@@ -71,7 +71,9 @@ function LedgerPage() {
     if (!rows.length) return;
     const header = ["created_at", "user_email", "display_name", "user_id", "delta", "reason", "ref_id", "actor_email", "actor_id"];
     const escape = (v: unknown) => {
-      const s = v == null ? "" : String(v);
+      let s = v == null ? "" : String(v);
+      // Neutralise spreadsheet formulas in text cells (numbers stay numeric).
+      if (typeof v !== "number" && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
     };
     const lines = [header.join(",")];
