@@ -20,7 +20,8 @@ export function isPublicHttpsUrl(raw: string): boolean {
     if (a === 100 && b >= 64 && b <= 127) return false;
   }
   // Any IPv6 literal or numeric-looking host is rejected outright.
-  if (h.includes(":") || /^[0-9.x]+$/.test(h)) return !!v4 && true;
+  if (h.includes(":")) return false;
+  if (!v4 && /^[0-9.x]+$/.test(h)) return false;
   return true;
 }
 export function assertPublicHttpsUrl(raw: string): void {

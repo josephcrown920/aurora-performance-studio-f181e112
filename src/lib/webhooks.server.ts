@@ -165,8 +165,10 @@ export async function dispatchWebhookEvent(
       .update(JSON.stringify(payload))
       .digest("hex");
 
+    if (!isPublicHttpsUrl(webhook.url)) continue;
     // Fire and forget — log failures but don't block
     fetch(webhook.url, {
+      redirect: "manual",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
