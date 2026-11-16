@@ -68,12 +68,28 @@ export type GenerateKind =
 // returns 400. Rewrite any such URL to a short-lived signed URL before the
 // provider fetches it. Non-studio URLs pass through untouched.
 export const PUBLIC_STUDIO_RE = /\/storage\/v1\/object\/public\/studio\/(.+)$/;
+/** Extracts a private `studio` bucket object path from a public or signed URL. */
+export function studioPathFromUrl(url: string | undefined | null): string | null {
+  if (!url) return null;
+  const m = url.match(/\/storage\/v1\/object\/(?:public|sign|authenticated)\/studio\/(.+)$/);
+  return m ? decodeURIComponent(m[1].split("?")[0]) : null;
+}
+/** Throws unless a studio-bucket URL belongs to the given user (or shared admin packs). */
+export function assertOwnedStudioUrl(userId: string, url: string | undefined | null): void {
+  const path = studioPathFromUrl(url);
+  if (path === null) return;
+  if (path.includes("..") || !(path.startsWith(`${userId}/`) || path.startsWith("admin-packs/"))) {
+    throw new Error("You can only use your own uploaded files.");
+  }
+}
 export async function signIfStudio(
   url: string | undefined | null,
+  ownerId?: string | null,
 ): Promise<string | undefined | null> {
   if (!url) return url;
   const m = url.match(PUBLIC_STUDIO_RE);
   if (!m) return url;
+  if (ownerId) assertOwnedStudioUrl(ownerId, url);
   const path = decodeURIComponent(m[1].split("?")[0]);
   const { data, error } = await supabaseAdmin.storage.from("studio").createSignedUrl(path, 60 * 60); // 1 hour
   if (error || !data?.signedUrl) return url; // fall back; provider will surface error
@@ -82,10 +98,10 @@ export async function signIfStudio(
 export async function signStudioRefs(req: GenerateRequest): Promise<GenerateRequest> {
   const out: GenerateRequest = { ...req };
   if (req.imageUrls?.length) {
-    out.imageUrls = await Promise.all(req.imageUrls.map(async (u) => (await signIfStudio(u)) ?? u));
+    out.imageUrls = await Promise.all(req.imageUrls.map(async (u) => (await signIfStudio(u, req.userId)) ?? u));
   }
-  const audio = await signIfStudio(req.audioUrl);
-  const video = await signIfStudio(req.videoUrl);
+  const audio = await signIfStudio(req.audioUrl, req.userId);
+  const video = await signIfStudio(req.videoUrl, req.userId);
   if (audio) out.audioUrl = audio;
   if (video) out.videoUrl = video;
   return out;
