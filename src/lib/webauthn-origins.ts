@@ -18,6 +18,16 @@ export function getRP() {
  * foreign Replit-hosted origins must never be trusted for passkey
  * registration or authentication.
  */
+/**
+ * Addresses Aurora is served from on Lovable (live site, editor preview and
+ * project preview). Passkeys bind to the exact host, so each must be listed.
+ */
+export const LOVABLE_HOSTS = [
+  "aurora-performance-studio.lovable.app",
+  "id-preview--e84c86a8-749e-41bc-a578-0647310e18aa.lovable.app",
+  "e84c86a8-749e-41bc-a578-0647310e18aa.lovableproject.com",
+] as const;
+
 export function isAllowedOrigin(origin: string): boolean {
   let parsed: URL;
   try {
@@ -34,6 +44,8 @@ export function isAllowedOrigin(origin: string): boolean {
 
   const { origin: prodOrigin, rpID: prodRPID } = getRP();
   if (parsed.origin === prodOrigin || parsed.hostname === prodRPID) return true;
+
+  if ((LOVABLE_HOSTS as readonly string[]).includes(parsed.hostname)) return true;
 
   const ownDomains = [
     ...(process.env.REPLIT_DOMAINS ?? "").split(","),

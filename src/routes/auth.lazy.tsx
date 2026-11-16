@@ -170,7 +170,8 @@ function AuthPage() {
     const error = hashParams.get("error") ?? queryParams.get("error");
     if (!error) return;
     const description = hashParams.get("error_description") ?? queryParams.get("error_description");
-    toast.error(description ? description.replace(/\+/g, " ") : `Sign-in failed: ${error}`);
+    const raw = description ? description.replace(/\+/g, " ") : `Sign-in failed: ${error}`;
+    toast.error(describeAuthError(new Error(raw), raw));
     // Strip the error params so a refresh (or the redirect-back-to-/studio
     // effect above) doesn't re-show the same toast or leak it into history.
     const url = new URL(window.location.href);

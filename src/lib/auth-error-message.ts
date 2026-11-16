@@ -54,6 +54,13 @@ export function classifyAuthError(err: unknown, fallback: string): ClassifiedAut
       message: "Incorrect email or password. Check both and try again, or use “Forgot password?”.",
     };
   }
+  if (lower.includes("unverified email") || lower.includes("provider_email_needs_verification")) {
+    return {
+      kind: "email_not_confirmed",
+      message:
+        "Your account's email isn't confirmed yet. We've sent you a confirmation email — open it, then tap the same sign-in button again.",
+    };
+  }
   if (lower.includes("email not confirmed")) {
     return {
       kind: "email_not_confirmed",
@@ -66,7 +73,12 @@ export function classifyAuthError(err: unknown, fallback: string): ClassifiedAut
       message: "An account with this email already exists. Sign in instead, or reset your password.",
     };
   }
-  if (lower.includes("rate limit") || lower.includes("too many requests") || lower.includes("over_request_rate_limit")) {
+  if (
+    lower.includes("rate limit") ||
+    lower.includes("too many requests") || lower.includes("over_request_rate_limit") ||
+    lower.includes("over_email_send_rate_limit") ||
+    lower.includes("for security purposes, you can only request this after")
+  ) {
     return { kind: "rate_limited", message: "Too many attempts in a row. Wait a minute, then try again." };
   }
   if (lower.includes("provider is not enabled") || lower.includes("unsupported provider")) {
