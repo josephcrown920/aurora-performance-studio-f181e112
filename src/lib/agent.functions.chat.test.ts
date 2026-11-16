@@ -190,12 +190,13 @@ describe("Aurora chat router integration", () => {
       model: "mock-model",
     });
     expect(generated).toHaveBeenCalled();
-    const firstRequest = generated.mock.calls[0]?.[0] as { system?: string } | undefined;
-    expect(firstRequest?.system).toContain("DIRECTOR MEMORY — USER-SUPPLIED CREATIVE CONTEXT");
-    expect(firstRequest?.system).toContain("Brand voice: luxurious, restrained, and intimate.");
-    expect(firstRequest?.system).toContain("STRUCTURED BRAND PROFILE");
-    expect(firstRequest?.system).toContain("Nova");
-    expect(firstRequest?.system).not.toContain("I make moody performance videos.");
+    const firstRequest = generated.mock.calls[0]?.[0] as { system?: string; prompt?: string } | undefined;
+    // User-supplied memory must never enter the system role.
+    expect(firstRequest?.system).not.toContain("Brand voice: luxurious, restrained, and intimate.");
+    expect(firstRequest?.prompt).toContain("Brand voice: luxurious, restrained, and intimate.");
+    expect(firstRequest?.prompt).toContain("STRUCTURED BRAND PROFILE");
+    expect(firstRequest?.prompt).toContain("Nova");
+    expect(firstRequest?.prompt).not.toContain("I make moody performance videos.");
     expect(inserts).toHaveLength(1);
     expect(inserts[0]).toEqual([
       { user_id: "test-user", role: "user", content: "Help me shape a cinematic music video treatment." },
