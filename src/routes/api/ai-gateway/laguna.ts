@@ -29,7 +29,7 @@ export const Route = createFileRoute("/api/ai-gateway/laguna")({
 
         const result = streamText({
           model: MODEL,
-          system: body.system?.trim() || "You are Aurora's coding and technical reasoning agent.",
+          system: "You are Aurora's coding and technical reasoning agent.",
           prompt: body.prompt,
         });
 

@@ -68,7 +68,7 @@ export const Route = createFileRoute("/api/canvas/modelark")({
         // Responses API is the canonical agent/tool-calling path used by Aurora.
         const payload: Record<string, unknown> = {
           model: body.model || DEFAULT_MODEL,
-          input: body.input ?? messages,
+          input: Array.isArray(body.input) ? safeChatMessages(body.input as { role?: unknown; content?: unknown }[]) : (body.input ?? messages),
         };
 
         if (body.tools) payload.tools = body.tools;

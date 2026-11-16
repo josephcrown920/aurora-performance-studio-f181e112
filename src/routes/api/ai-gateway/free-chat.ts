@@ -32,7 +32,7 @@ export const Route = createFileRoute("/api/ai-gateway/free-chat")({
 
         const result = streamText({
           model,
-          system: body.system?.trim() || "You are an Aurora AI assistant.",
+          system: "You are an Aurora AI assistant.",
           prompt: body.prompt,
         });
 

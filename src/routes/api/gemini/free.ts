@@ -32,7 +32,7 @@ export const Route = createFileRoute("/api/gemini/free")({
           const response = await ai.models.generateContent({
             model,
             contents: body.prompt.trim(),
-            config: body.system?.trim() ? { systemInstruction: body.system.trim() } : undefined,
+            config: { systemInstruction: "You are an Aurora AI assistant." },
           });
 
           return Response.json({ model, text: response.text ?? "" });
