@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { generateSceneText } from "./scene-weaver-ai.server";
 
-const Input = z.object({ imageDataUrl: z.string().min(20), presetKeys: z.array(z.string()).min(1) });
+const Input = z.object({ imageDataUrl: z.string().min(20).max(15_000_000), presetKeys: z.array(z.string().regex(/^[A-Za-z0-9 _-]{1,40}$/)).min(1).max(60) });
 export const suggestGrade = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => Input.parse(raw))
