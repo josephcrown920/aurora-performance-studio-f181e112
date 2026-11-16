@@ -65,7 +65,7 @@ export const Route = createFileRoute("/api/guy/video")({
           return signJobResponse(__auth.userId, passthrough(await fetch(`${GATEWAY}/v1/videos`, {
             method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
             body: JSON.stringify({ model, instances: [{ prompt, ...(b.image ? { image: { bytesBase64Encoded: b.image.data, mimeType: b.image.mime } } : {}), ...(b.lastFrame ? { lastFrame: { bytesBase64Encoded: b.lastFrame.data, mimeType: b.lastFrame.mime } } : {}) }], parameters: { durationSeconds: parseInt(settings.duration, 10), resolution: res, sampleCount: 1, generateAudio: true, ...(!b.image ? { aspectRatio: "16:9" } : {}) } }),
-          }));
+          })));
         }
         if (b.audio) return Response.json({ error: { message: "Gemini Omni does not accept uploaded audio for lip sync. Use a connected dedicated avatar engine." } }, { status: 400 });
         const parts: unknown[] = [{ type: "text", text: prompt }];
@@ -83,7 +83,7 @@ export const Route = createFileRoute("/api/guy/video")({
             headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
             body: JSON.stringify({ model, input: parts.length === 1 ? prompt : parts, response_format }),
           }),
-        );
+        ));
       },
     },
   },
