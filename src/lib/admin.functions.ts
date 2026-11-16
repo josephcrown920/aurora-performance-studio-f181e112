@@ -765,14 +765,18 @@ export const adminSearchLedger = createServerFn({ method: "POST" })
     // ── Resolve optional user filter to a set of user_ids ────────────────
     let userIds: string[] | null = null;
     if (data.userQuery.trim()) {
-      const q = data.userQuery.trim();
-      const { data: profiles } = await supabaseAdmin
-        .from("profiles")
-        .select("user_id")
-        .or(
-          `email.ilike.%${q}%,display_name.ilike.%${q}%,user_id.eq.${q}`,
-        )
-        .limit(200);
+      // Strip PostgREST filter-grammar characters so the query can't alter the filter.
+      const q = data.userQuery.trim().replace(/[,()*%\\:"']/g, " ").trim().slice(0, 200);
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(q);
+      const { data: profiles } = q
+        ? await supabaseAdmin
+            .from("profiles")
+            .select("user_id")
+            .or(
+              `email.ilike.%${q}%,display_name.ilike.%${q}%${isUuid ? `,user_id.eq.${q}` : ""}`,
+            )
+            .limit(200)
+        : { data: [] };
       userIds = (profiles ?? []).map((p: { user_id: string }) => p.user_id);
       // If the query looks like a bare UUID try an exact match as well
       if (userIds.length === 0) return { rows: [], truncated: false };
