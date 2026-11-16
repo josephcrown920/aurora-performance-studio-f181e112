@@ -393,16 +393,11 @@ function TwoAngleWorkflow() {
           {/* ── Step 1: Upload selfie + optional Colors reference ── */}
           {currentStep.id === "upload" && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-white/5 p-3">
+              <div className="grid grid-cols-1 gap-2 rounded-2xl border border-white/10 bg-white/5 p-3">
                 <Link to="/colors-show" search={{ ...(search.mode === "anywhere" ? { mode: "anywhere" as const } : {}), flow: "build_scene" as const }} className="rounded-xl border border-white/10 p-3 text-left no-underline hover:border-primary/50">
                   <WorkflowSelectorVisual kind="build_scene" />
                   <span className="block text-xs font-bold text-white">Build a Scene</span>
                   <span className="text-[10px] text-white/50">5 role references + 3–5 re-angles</span>
-                </Link>
-                <Link to="/colors-show" search={{ ...(search.mode === "anywhere" ? { mode: "anywhere" as const } : {}), flow: "luxury_interior" as const }} className="rounded-xl border border-white/10 p-3 text-left no-underline hover:border-primary/50">
-                  <WorkflowSelectorVisual kind="luxury_interior" />
-                  <span className="block text-xs font-bold text-white">Luxury Interior</span>
-                  <span className="text-[10px] text-white/50">3 role references + seated performance</span>
                 </Link>
               </div>
               {/* Selfie — required */}

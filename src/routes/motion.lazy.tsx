@@ -1723,12 +1723,6 @@ function MotionStudio() {
                   cta: "Open workflow",
                 },
                 {
-                  title: "Luxury Interior", image: demoInterior, video: demoRollsVideo.url,
-                  body: "Three references place a faithful seated performance inside the vehicle, face and outfit preserved.",
-                  search: { mode: "anywhere" as const, flow: "luxury_interior" as const },
-                  cta: "Open workflow",
-                },
-                {
                   title: "Scene Builder", image: demoSceneBuilder.url,
                   body: "Design the world first — stage, rooftop, studio — then bring it back here to animate.",
                   to: "/scene-builder" as const,
@@ -1973,7 +1967,7 @@ const MOTION_CAPABILITIES = [
   { title: "Performance Shot", body: "Your phone clip drives a new take. Face, outfit and scene stay locked." },
   { title: "Pose → Video", body: "Stage a still into a cinematic pose, then animate it with a camera move." },
   { title: "Motion Transfer", body: "Copy the exact movement from any video onto your character image." },
-  { title: "Guided Workflow", body: "Step-by-step multi-angle builds: Build a Scene and Luxury Interior." },
+  { title: "Guided Workflow", body: "Step-by-step multi-angle builds: Build a Scene and multi-angle builds." },
   { title: "Music Video", body: "Beat-sync cuts and AI performance from your track." },
 ];
 

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { CANONICAL_ORIGIN } from "@/lib/seo";
 
 export const Route = createFileRoute("/colors-show")({
@@ -6,6 +6,10 @@ export const Route = createFileRoute("/colors-show")({
     mode: search.mode === "anywhere" ? "anywhere" : undefined,
     flow: search.flow === "build_scene" || search.flow === "luxury_interior" ? search.flow : undefined,
   }),
+  // Luxury Interior has one home: /luxury-interior. Old links land there.
+  beforeLoad: ({ search }) => {
+    if (search.flow === "luxury_interior") throw redirect({ to: "/luxury-interior" });
+  },
   head: () => ({
     meta: [
       { title: "Colors Show Creator — Aurora" },
