@@ -2,8 +2,6 @@
 import { authNextSearch } from "@/lib/auth-return-path";
 import demoTwoAngleAsset from "@/assets/josh-blue-side.jpg.asset.json";
 import demoBuild from "@/assets/tutorial-studio-final.jpg.asset.json";
-import demoInterior from "@/assets/environments/interior-maybach.jpg";
-import demoRollsVideo from "@/assets/demos/nba-josh-rolls-demo.mp4.asset.json";
 import demoSceneBuilder from "@/assets/tutorial-studio-refs.jpg.asset.json";
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AutoplayVideo } from "@/components/ui/AutoplayVideo";
