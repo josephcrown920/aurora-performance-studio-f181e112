@@ -121,17 +121,6 @@ const studioToolRows: StudioToolRow[] = [
       accent: ACCENTS.cyan,
     };
   })(),
-  {
-    key: "directors-chair",
-    name: "Director’s Chair",
-    description: "Build the shot: wardrobe, scenes, storyboard, and final frames in one room.",
-    to: "/director-room",
-    badge: "New",
-    image: "/nav-previews/music-video.jpg",
-    alt: "Director's Room cinematic shot planning preview",
-    icon: Clapperboard,
-    accent: ACCENTS.amber,
-  },
   (() => {
     const tool = TOOL_DIRECTORY.find((item) => item.name === "Colors")!;
     return {

@@ -59,7 +59,6 @@ const CORE_FEATURES: Feature[] = [
   { to: "/create",        label: "Create",   icon: LayoutGrid },
   { to: "/perform-anywhere",        label: "Perform Anywhere",   icon: Wand2,        previewImg: "/nav-previews/perform-anywhere.jpg", starred: true },
   { to: "/lipsync",       label: "Lip Sync",           icon: Mic,          previewImg: "/nav-previews/lipsync.jpg",         starred: true },
-  { to: "/director-room", label: "Director's Room",     icon: Clapperboard, previewImg: "/nav-previews/music-video.jpg",     starred: true, badge: "$20k Look" },
 ];
 
 // Director's Room's internal tools (Wardrobe, Scenes, Layers, AutoCut,

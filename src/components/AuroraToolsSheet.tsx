@@ -59,7 +59,6 @@ const SECTIONS: { title: string; tools: Tool[] }[] = [
     tools: [
       { label: "Image & Video Studio", to: "/studio", icon: Sparkles, dot: true },
       { label: "Colors Studio", to: "/colors", icon: Palette },
-      { label: "Director's Room", to: "/director-room", icon: Clapperboard, badge: "New", dot: true },
       { label: "Motion Control", to: "/motion", icon: Wand2, dot: true },
       { label: "Music Video Studio", to: "/music-video", icon: Music },
     ],
