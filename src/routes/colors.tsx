@@ -1,19 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { resolvePerformanceColor } from "@/lib/performance-world-selection";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
+// Colors Show was retired; old links go to Perform Anywhere.
 export const Route = createFileRoute("/colors")({
-  validateSearch: (search: Record<string, unknown>): { color?: string } => ({ color: search.color === undefined ? undefined : resolvePerformanceColor(search.color) }),
-  head: () => ({
-    meta: [
-      { title: "Colors Studio — Aurora" },
-      { name: "description", content: "Studio-grade color portrait shoots: pick a color, pick a scene (studio, indoor, rooftop, street), generate in seconds." },
-      { property: "og:title", content: "Colors Studio — Aurora" },
-      { property: "og:description", content: "Pick a color and a scene — get a finished cinematic portrait." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:url", content: "https://auroraperformancestudio.com/colors" },
-    ],
-    links: [{ rel: "canonical", href: "https://auroraperformancestudio.com/colors" }],
-  }),
+  validateSearch: (s: Record<string, unknown>): { color?: string; mode?: "anywhere"; flow?: "build_scene" | "luxury_interior" } => ({}),
+  beforeLoad: () => { throw redirect({ to: "/perform-anywhere", statusCode: 301 }); },
 });
-

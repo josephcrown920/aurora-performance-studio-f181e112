@@ -314,12 +314,12 @@ const ColorsRoute = ColorsRouteImport.update({
   id: '/colors',
   path: '/colors',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/colors.lazy').then((d) => d.Route))
+} as any)
 const ColorsShowRoute = ColorsShowRouteImport.update({
   id: '/colors-show',
   path: '/colors-show',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/colors-show.lazy').then((d) => d.Route))
+} as any)
 const ComfyRoute = ComfyRouteImport.update({
   id: '/comfy',
   path: '/comfy',
