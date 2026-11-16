@@ -40,7 +40,7 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           <strong>GENJUTSU · AURORA</strong>
         </div>
         <nav aria-label="Genjutsu sections">
-          {[["pa-scene", "Create"], ["pa-luxury", "Luxury interior"], ["pa-grwm", "Get Ready With Me"], ["pa-finish", "Lip sync"], ["pa-costs", "Costs"]].map(([id, label]) => <Button key={id} size="sm" variant="ghost" onClick={() => go(id)}>{label}</Button>)}
+          {[["pa-scene", "Create"], ["pa-grwm", "Get Ready With Me"], ["pa-finish", "Lip sync"], ["pa-costs", "Costs"]].map(([id, label]) => <Button key={id} size="sm" variant="ghost" onClick={() => go(id)}>{label}</Button>)}
         </nav>
       </header>
 
