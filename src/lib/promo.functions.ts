@@ -16,7 +16,11 @@ import { z } from "zod";
  */
 
 function genPromoCode(): string {
-  return `PROMO-${Math.random().toString(36).slice(2, 6)}-${Math.random().toString(36).slice(2, 6)}`.toUpperCase();
+  // Cryptographically random, ~80 bits — not guessable.
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  const chars = Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
+  return `PROMO-${chars.slice(0, 4)}-${chars.slice(4, 8)}-${chars.slice(8, 12)}-${chars.slice(12, 16)}`;
 }
 
 async function assertAdmin(userId: string) {
