@@ -36,3 +36,4 @@
 - Editor conversation caches are keyed by account and GUI session, with full messages also in the existing session document; this prevents cross-project chat mixing.
 - Kie driving-video requests dispatch to motion control, never image-to-video, and reject unsupported depth or ending frames; this prevents silent loss of reference inputs.
 - Admin accounts (user_roles admin) bypass Aura charges inside the reserve/release/deduct database functions, so every generation path is free for admins without per-feature checks.
+- Passkey (Face ID) origins list Aurora's Lovable hosts explicitly in webauthn-origins; passkeys bind to the exact host, so a missing host silently breaks Face ID sign-in there.
