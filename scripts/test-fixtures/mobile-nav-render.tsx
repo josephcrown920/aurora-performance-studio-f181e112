@@ -88,8 +88,8 @@ function linkLabels(container: string) {
 function assertRenderedGlobalNav(container: string, branch: string) {
   const labels = linkLabels(container);
   check(
-    labels.filter((label) => label === "Director's Room").length === 1,
-    `${branch} must render Director's Room exactly once`,
+    labels.filter((label) => label === "Director's Room").length === 0,
+    `${branch} must not render Director's Room`,
   );
 
   const headings = [...container.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map(

@@ -34,8 +34,7 @@ function expectGlobalBranchContract(
     (feature) => feature.label === DIRECTOR_ROOM_LABEL,
   );
 
-  expect(directorRoomLinks).toHaveLength(1);
-  expect(directorRoomLinks[0]?.to).toBe("/director-room");
+  expect(directorRoomLinks).toHaveLength(0);
   expect(sections.map((section) => section.label)).not.toContain(DIRECTOR_ROOM_LABEL);
 
   for (const internalTool of INTERNAL_DIRECTOR_ROOM_TOOLS) {
