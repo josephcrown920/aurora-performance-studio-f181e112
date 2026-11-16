@@ -172,6 +172,7 @@ export const generateFromPhotoAvatar = createServerFn({ method: "POST" })
     const avatar = row as PhotoAvatarRow;
 
     // 1. Sign the stored photo for HeyGen access (1 hour)
+    if (!isOwnPath(context.userId, avatar.storage_path)) throw new Error("Avatar not found");
     const photoUrl = await signPath(avatar.storage_path, 3600);
 
     // 2. Generate TTS audio from the script (HuggingFace MMS-TTS)
