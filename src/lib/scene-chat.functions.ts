@@ -5,7 +5,7 @@ import { generateSceneText } from "./scene-weaver-ai.server";
 
 const Input = z.object({
   messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(2000) })).min(1).max(30),
-  sceneName: z.string().max(80).regex(/^[^\n\r`{}<>]*$/).optional(),
+  sceneName: z.string().optional().transform((v) => v?.replace(/[\n\r`{}<>"]/g, " ").slice(0, 80)),
   hasResult: z.boolean().optional(),
   variantCount: z.number().int().min(0).max(100).optional(),
 });
