@@ -41,7 +41,7 @@ function initial(kind: PerformanceVariantKind, mode: "colors" | "anywhere"): Per
   };
 }
 
-export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { kind: PerformanceVariantKind; mode: "colors" | "anywhere"; compact?: boolean }) {
+export function PerformanceVariantWorkflow({ kind, mode, compact = false, studioLocation }: { kind: PerformanceVariantKind; mode: "colors" | "anywhere"; compact?: boolean; studioLocation?: string }) {
   const { user } = useAuth();
   const catalog = PERFORMANCE_VARIANT_CATALOG[kind];
   const [draft, setDraft] = useState(() => initial(kind, mode));
@@ -80,11 +80,13 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false }: { ki
     if (!user) return;
     loadFn({ data: { kind, mode } }).then((result) => {
       // Never pre-fill a demo portrait: the server only accepts the creator's own uploads.
-      setDraft(result.payload ?? initial(kind, mode));
+      const loaded = result.payload ?? initial(kind, mode);
+      // Colors Studio: the palette picked on the page is the scene location.
+      setDraft(studioLocation ? { ...loaded, settings: { ...loaded.settings, location: studioLocation } } : loaded);
       setRevision(result.revision);
       setReady(true);
     }).catch((error) => toast.error(error instanceof Error ? error.message : "Could not load workflow"));
-  }, [user, kind, mode]);
+  }, [user, kind, mode, studioLocation]);
 
   useEffect(() => {
     if (!ready || !user) return;
