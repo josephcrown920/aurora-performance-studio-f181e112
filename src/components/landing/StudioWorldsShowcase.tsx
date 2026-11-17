@@ -35,9 +35,9 @@ const WORLDS = [
 ];
 
 type Demo = { kind: "video"; src: string; poster: string } | { kind: "pair"; before: string; after: string; labels: [string, string] } | { kind: "grid"; srcs: string[] };
-const FEATURES: { icon: typeof Layers; kicker: string; title: string; demo: string; to: "/scene-builder" | "/reshoot" | "/spin" | "/studio" | "/perform-anywhere" | "/lipsync"; search?: Record<string, string>; media: Demo }[] = [
+const FEATURES: { icon: typeof Layers; kicker: string; title: string; demo: string; to: "/scene-builder" | "/multiangle" | "/spin" | "/studio" | "/perform-anywhere" | "/lipsync"; search?: Record<string, string>; media: Demo }[] = [
   { icon: Layers, kicker: "Scene Builder", title: "Build any scene from your own references.", demo: "Drop in a face, outfit and location. Aurora puts them together into one finished shot.", to: "/scene-builder", media: { kind: "pair", before: sceneRefs.url, after: sceneFinal.url, labels: ["Your refs", "Scene"] } },
-  { icon: Camera, kicker: "Multi-angle", title: "One performance. Wide, close-up and every angle between.", demo: "Upload one photo and get six camera angles of the same person in the same look.", to: "/reshoot", media: { kind: "video", src: lowAngle.url, poster: joshSide.url } },
+  { icon: Camera, kicker: "Multi-Angle Camera", title: "One performance. Wide, close-up and every angle between.", demo: "Upload one photo and get six camera angles of the same person in the same look.", to: "/multiangle", media: { kind: "video", src: lowAngle.url, poster: joshSide.url } },
   { icon: Flame, kicker: "TikTok 30", title: "1–2 photos in. 30 shots out.", demo: "Same character in every frame, new outfits, places and poses, ready to post.", to: "/spin", media: { kind: "grid", srcs: [spin1, spin2, spin3, spin4] } },
   { icon: ScanFace, kicker: "Face swap", title: "Swap a face in any photo or video.", demo: "Add the clip and a face photo. Motion, lighting and sound stay the same.", to: "/studio", media: { kind: "pair", before: joshPortrait.url, after: joshRed.url, labels: ["Face", "Result"] } },
   { icon: Film, kicker: "Perform Anywhere", title: "Film on your phone. Perform in any world.", demo: "Your phone take drives the motion while the scene, outfit and face stay locked.", to: "/perform-anywhere", media: { kind: "video", src: closeup.url, poster: stillPerf.url } },

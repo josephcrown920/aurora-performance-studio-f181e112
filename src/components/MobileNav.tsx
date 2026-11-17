@@ -57,7 +57,7 @@ type Feature = {
 // — keep them OUT of CORE_FEATURES to avoid showing the same entry twice.
 const CORE_FEATURES: Feature[] = [
   { to: "/create",        label: "Create",   icon: LayoutGrid },
-  { to: "/perform-anywhere",        label: "Perform Anywhere",   icon: Wand2,        previewImg: "/nav-previews/perform-anywhere.jpg", starred: true },
+  { to: "/perform-anywhere",        label: "Genjutsu · Perform Anywhere & GRWM",   icon: Wand2,        previewImg: "/nav-previews/perform-anywhere.jpg", starred: true },
   { to: "/lipsync",       label: "Lip Sync",           icon: Mic,          previewImg: "/nav-previews/lipsync.jpg",         starred: true },
 ];
 
@@ -70,7 +70,8 @@ const CORE_FEATURES: Feature[] = [
 // ── Studio — image & scene tools ──────────────────────────────────────────
 const STUDIO_FEATURES: Feature[] = [
   { to: "/studio",          label: "Image & Video Studio",  icon: Sparkles, previewImg: "/nav-previews/studio.jpg" },
-  { to: "/reshoot",         label: "Multi-Angle Photoshoot", icon: Camera,  previewImg: "/nav-previews/avatar.jpg",        badge: "New" },
+  { to: "/multiangle",         label: "Multi-Angle Camera", icon: Camera,  previewImg: "/nav-previews/avatar.jpg",        badge: "New" },
+  { to: "/colors", label: "Colors Studio", icon: Palette, previewImg: "/nav-previews/studio.jpg" },
   { to: "/library",         label: "My Video Library", icon: Camera },
   { to: "/scene-builder",   label: "Scene Builder",         icon: Layers,   previewImg: "/nav-previews/scene-builder.jpg" },
   { to: "/admin/comfy",     label: "ComfyUI (Admin)", icon: Workflow, adminOnly: true },
@@ -78,7 +79,7 @@ const STUDIO_FEATURES: Feature[] = [
 
 // ── Music & audio ──────────────────────────────────────────────────────────
 const MUSIC_FEATURES: Feature[] = [
-  { to: "/puremix",     label: "PureMix",     icon: Music2, previewImg: "/nav-previews/music-video.jpg", badge: "New" },
+  { to: "/puremix",     label: "PureMix Mastering",     icon: Music2, previewImg: "/nav-previews/music-video.jpg", badge: "New" },
 ];
 
 // ── Promotion — artist stats across streaming/social platforms ────────────
@@ -97,7 +98,7 @@ const CONTENT_FEATURES: Feature[] = [
   { to: "/ugc",             label: "UGC Ads",        icon: Megaphone },
   { to: "/ugc-line",        label: "Content Line",   icon: Layers },
   { to: "/avatar",          label: "Talking Avatars",icon: UserCircle2 },
-  { to: "/soul",            label: "Aurora Soul",    icon: Sparkles,   badge: "New" },
+  { to: "/soul",            label: "Soul Studio",    icon: Sparkles,   badge: "New" },
   { to: "/content-machine", label: "Content Machine",icon: LayoutGrid },
   { to: "/ads",             label: "Ads Studio",     icon: Megaphone },
 ];
@@ -133,8 +134,8 @@ export const ARCHIVED_FEATURES: Feature[] = [
 
 // Bottom tab — flagship trio with premium badge treatment.
 const TAB_ITEMS: (Feature & { premium?: boolean })[] = [
-  { to: "/studio",       label: "Video Agent",     icon: Film },
-  { to: "/reshoot",      label: "Multi-Angle",     icon: Camera },
+  { to: "/video-agent",       label: "Video Agent",     icon: Film },
+  { to: "/multiangle",      label: "Multi-Angle Camera",     icon: Camera },
   { to: "/spin",         label: "TikTok30",        icon: Flame,    premium: true },
 ];
 

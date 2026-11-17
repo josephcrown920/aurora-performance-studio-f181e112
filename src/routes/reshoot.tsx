@@ -3,21 +3,22 @@ import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/reshoot")({
   head: () => ({
     meta: [
-      { title: "Multi-Angle Reshoot — Aurora" },
+      { title: "Multi-Angle Camera — Aurora" },
       {
         name: "description",
         content:
-          "Upload one portrait and instantly reshoot it from six cinematic camera angles — fish-eye, bird's-eye, low angle, Dutch tilt, macro and worm's-eye — with identity, outfit and lighting preserved.",
+          "Generate six cinematic camera angles from one portrait with the Aurora Multi-Angle Camera.",
       },
-      { property: "og:title", content: "Multi-Angle Reshoot — Aurora" },
+      { property: "og:title", content: "Multi-Angle Camera — Aurora" },
       {
         property: "og:description",
         content:
           "One reference photo, six fixed camera angles. Same subject, same outfit, same scene — six brand-new vertical portraits in one click.",
       },
-      { property: "og:url", content: "https://auroraperformancestudio.com/reshoot" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://auroraperformancestudio.com/reshoot" }],
+    links: [{ rel: "canonical", href: "https://aurora-performance-studio.lovable.app/multiangle" }],
   }),
 });
 
