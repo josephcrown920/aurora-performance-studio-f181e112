@@ -11,6 +11,7 @@ export const KIE_VIDEO_MODELS: KieModel[] = [
   { id: "kling-2.6/image-to-video", label: "Kling 2.6 Image", kind: "video", note: "Kie · animate a photo" },
   { id: "grok-imagine/text-to-video", label: "Grok Imagine", kind: "video", note: "Kie · cheapest drafts" },
   { id: "grok-imagine/image-to-video", label: "Grok Imagine Image", kind: "video", note: "Kie · cheap photo animation" },
+  { id: "bytedance/seedance-2-mini", label: "Seedance 2.0 Mini", kind: "video", note: "Kie · 5-second text or first-frame video" },
   { id: "hailuo/02-image-to-video-standard", label: "MiniMax Hailuo 02", kind: "video", note: "Kie · photo animation, not driving-video transfer" },
 ];
 

@@ -59,6 +59,10 @@ export async function kieImage(prompt: string, opts: { aspect?: string; refs?: (
 export async function kieVideo(model: string, prompt: string, opts: { aspect?: string; duration?: number; image?: string | Blob; onStatus?: (s: string) => void } = {}) {
   const dur = (opts.duration ?? 5) > 7 ? "10" : "5";
   const image = opts.image ? await kieUpload(opts.image) : undefined;
+  if (model === "bytedance/seedance-2-mini") {
+    // Seedance 2.0 Mini: one model id for text and first-frame video; 480p keeps tests cheap.
+    return kieRun(model, { prompt, ...(image ? { first_frame_url: image } : {}), aspect_ratio: ratio(opts.aspect), duration: Number(dur), resolution: "480p", generate_audio: false }, opts.onStatus);
+  }
   const grok = model.startsWith("grok-imagine");
   const m = image ? model.replace("text-to-video", "image-to-video") : model.replace("image-to-video", "text-to-video");
   const input: Record<string, unknown> = grok
