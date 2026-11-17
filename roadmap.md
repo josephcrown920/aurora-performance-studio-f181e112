@@ -145,9 +145,10 @@
 - [x] Soul Studio sub-pages (Train/Generate/Video/Library/Vibe) open signed in; heading cleared of Menu button.
 
 ## Aurora finish-line continuation — 2026-11-17
-- [ ] Restore shared pricing contracts and run quote/startup regression tests.
-- [ ] Apply Multi-Angle Camera naming, restore Colors Studio and all eight flagship hub entries.
-- [ ] Add the supplied GRWM mirror example without substituting a creator's identity.
-- [ ] Verify signed-in flagship screens, then one real output per feature, including separate Genjutsu, GRWM and 5-second Seedance Mini checks; combined provider cap USD 6, including previous spend.
-- [ ] Verify PureMix hosted worker and Soul prerequisites; never count demo playback as a successful paid flow.
+- [x] Restore shared pricing contracts and run quote/startup regression tests (79 pass, 0 fail).
+- [x] Apply Multi-Angle Camera naming, restore Colors Studio and all eight flagship hub entries; Colors Studio build error fixed.
+- [x] Add the supplied GRWM mirror example without substituting a creator's identity.
+- [x] Real signed-in outputs (Kie balance 753.5 → 473.5 credits, ~USD 1.40): Multi-Angle Camera 6/6 angles; TikTok30 24/30 shots during check (job continues while the page is open); Video Agent Kling 2.6 motion 5s, Seedance 2.0 Mini 5s, OmniHuman lip sync 5s.
+- [ ] Run Genjutsu, GRWM and Colors through their own Perform Anywhere screens (engine verified via Video Agent motion test only).
+- [ ] Soul Studio training blocked: FAL_KEY not connected. PureMix hosted mastering blocked: needs separate Python worker.
 - [ ] Publish only after critical checks pass; confirm Android bundle availability.
