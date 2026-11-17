@@ -171,8 +171,8 @@ function PhotoEditPage() {
           Photo Editor
         </Link>
         <div className="flex items-center gap-3 text-sm">
-          <Link to="/reshoot" className="text-muted-foreground hover:text-foreground">
-            Reshoot
+          <Link to="/multiangle" className="text-muted-foreground hover:text-foreground">
+            Multi-Angle Camera
           </Link>
         </div>
       </header>
