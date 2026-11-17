@@ -57,6 +57,7 @@ import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as MasteringRouteImport } from './routes/mastering'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MotionRouteImport } from './routes/motion'
+import { Route as MultiangleRouteImport } from './routes/multiangle'
 import { Route as MusicVideoRouteImport } from './routes/music-video'
 import { Route as OrchestrateRouteImport } from './routes/orchestrate'
 import { Route as PartnersRouteImport } from './routes/partners'
@@ -472,6 +473,11 @@ const MotionRoute = MotionRouteImport.update({
   path: '/motion',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/motion.lazy').then((d) => d.Route))
+const MultiangleRoute = MultiangleRouteImport.update({
+  id: '/multiangle',
+  path: '/multiangle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MusicVideoRoute = MusicVideoRouteImport.update({
   id: '/music-video',
   path: '/music-video',
@@ -1419,6 +1425,7 @@ export interface FileRoutesByFullPath {
   '/mastering': typeof MasteringRoute
   '/mcp': typeof McpRoute
   '/motion': typeof MotionRoute
+  '/multiangle': typeof MultiangleRoute
   '/music-video': typeof MusicVideoRoute
   '/orchestrate': typeof OrchestrateRoute
   '/partners': typeof PartnersRoute
@@ -1638,6 +1645,7 @@ export interface FileRoutesByTo {
   '/mastering': typeof MasteringRoute
   '/mcp': typeof McpRoute
   '/motion': typeof MotionRoute
+  '/multiangle': typeof MultiangleRoute
   '/music-video': typeof MusicVideoRoute
   '/orchestrate': typeof OrchestrateRoute
   '/partners': typeof PartnersRoute
@@ -1859,6 +1867,7 @@ export interface FileRoutesById {
   '/mastering': typeof MasteringRoute
   '/mcp': typeof McpRoute
   '/motion': typeof MotionRoute
+  '/multiangle': typeof MultiangleRoute
   '/music-video': typeof MusicVideoRoute
   '/orchestrate': typeof OrchestrateRoute
   '/partners': typeof PartnersRoute
@@ -2081,6 +2090,7 @@ export interface FileRouteTypes {
     | '/mastering'
     | '/mcp'
     | '/motion'
+    | '/multiangle'
     | '/music-video'
     | '/orchestrate'
     | '/partners'
@@ -2300,6 +2310,7 @@ export interface FileRouteTypes {
     | '/mastering'
     | '/mcp'
     | '/motion'
+    | '/multiangle'
     | '/music-video'
     | '/orchestrate'
     | '/partners'
@@ -2520,6 +2531,7 @@ export interface FileRouteTypes {
     | '/mastering'
     | '/mcp'
     | '/motion'
+    | '/multiangle'
     | '/music-video'
     | '/orchestrate'
     | '/partners'
@@ -2741,6 +2753,7 @@ export interface RootRouteChildren {
   MasteringRoute: typeof MasteringRoute
   McpRoute: typeof McpRoute
   MotionRoute: typeof MotionRoute
+  MultiangleRoute: typeof MultiangleRoute
   MusicVideoRoute: typeof MusicVideoRoute
   OrchestrateRoute: typeof OrchestrateRoute
   PartnersRoute: typeof PartnersRoute
@@ -3221,6 +3234,13 @@ declare module '@tanstack/react-router' {
       path: '/motion'
       fullPath: '/motion'
       preLoaderRoute: typeof MotionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/multiangle': {
+      id: '/multiangle'
+      path: '/multiangle'
+      fullPath: '/multiangle'
+      preLoaderRoute: typeof MultiangleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/music-video': {
@@ -4573,6 +4593,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasteringRoute: MasteringRoute,
   McpRoute: McpRoute,
   MotionRoute: MotionRoute,
+  MultiangleRoute: MultiangleRoute,
   MusicVideoRoute: MusicVideoRoute,
   OrchestrateRoute: OrchestrateRoute,
   PartnersRoute: PartnersRoute,
