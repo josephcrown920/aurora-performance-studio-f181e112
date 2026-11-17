@@ -41,7 +41,7 @@ export function SiteFooter({ tone = "dark" }: { tone?: "dark" | "light" }) {
           {showFeature("ugc") && <Link to="/ugc" className={`no-underline ${muted}`}>UGC Ads Factory</Link>}
           <Link to="/motion" className={`no-underline ${muted}`}>Perform Anywhere</Link>
           <Link to="/lipsync" className={`no-underline ${muted}`}>Lip Sync</Link>
-          <Link to="/reshoot" className={`no-underline ${muted}`}>Multi-Angle Reshoot</Link>
+          <Link to="/multiangle" className={`no-underline ${muted}`}>Multi-Angle Camera</Link>
           <Link to="/gallery" className={`no-underline ${muted}`}>Gallery</Link>
           <Link to="/partners" className={`no-underline ${muted}`}>Partners</Link>
           <Link to="/contact" className={`no-underline ${muted}`}>Contact</Link>

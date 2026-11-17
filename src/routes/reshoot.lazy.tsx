@@ -30,7 +30,7 @@ import { publishGeneration } from "@/lib/share.functions";
 
 const TOTAL_COST = RESHOOT_ANGLES.length * RESHOOT_COST_PER_IMAGE;
 
-export const Route = createLazyFileRoute("/reshoot")({ component: ReshootPage });
+export const Route = createLazyFileRoute("/reshoot")({ component: MultiAngleCameraPage });
 
 /** Compact uploader, styled to match the other tool pages. */
 function MiniUpload({
@@ -168,7 +168,7 @@ function ResultCard({
             {result.generationId && (
               <button
                 type="button"
-                onClick={() => shareMut.mutate(result.generationId!)}
+                onClick={() => { if (result.generationId) shareMut.mutate(result.generationId); }}
                 disabled={shareMut.isPending}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/85 backdrop-blur text-xs font-medium hover:bg-background disabled:opacity-50"
                 title="Share"
@@ -183,7 +183,7 @@ function ResultCard({
             )}
             <button
               type="button"
-              onClick={() => saveAssetToDisk(result.url!, `aurora-reshoot-${angleId}.png`)}
+              onClick={() => { if (result.url) void saveAssetToDisk(result.url, `aurora-multiangle-${angleId}.png`); }}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/85 backdrop-blur text-xs font-medium hover:bg-background"
               title="Save image"
             >
@@ -215,7 +215,7 @@ function ResultCard({
   );
 }
 
-function ReshootPage() {
+export function MultiAngleCameraPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -241,7 +241,7 @@ function ReshootPage() {
         toast.success(`${ok}/${r.results.length} angles ready — failed ones were refunded.`);
       else toast.success("All six angles are in.");
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Reshoot failed"),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Multi-Angle Camera failed"),
   });
 
   if (loading || !user) {
@@ -261,7 +261,7 @@ function ReshootPage() {
         <Link to="/studio" className="flex items-center gap-2 font-semibold tracking-tight">
           <ArrowLeft className="size-4 text-muted-foreground" />
           <span className="flex size-8 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20"><span className="inline-block size-2.5 rounded-full bg-primary" /></span>
-          Multi-Angle Reshoot
+          Multi-Angle Camera
         </Link>
         <div className="flex items-center gap-3 text-sm">
           <Link to="/colors" className="text-muted-foreground hover:text-foreground">
@@ -284,7 +284,7 @@ function ReshootPage() {
               One photo. <span className="aurora-gradient-text">Six camera angles.</span>
             </h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Upload a single portrait and we reshoot the exact same subject — same face, outfit,
+              Upload a single portrait to capture the same subject — same face, outfit,
               scene and lighting — from six fixed cinematic angles. {TOTAL_COST} Aura · ~30–45s.
             </p>
           </div>
@@ -307,11 +307,11 @@ function ReshootPage() {
           >
             {mut.isPending ? (
               <>
-                <Loader2 className="size-5 mr-2 animate-spin" /> Reshooting six angles…
+                <Loader2 className="size-5 mr-2 animate-spin" /> Generating six angles…
               </>
             ) : (
               <>
-                <Camera className="size-5 mr-2" /> Reshoot · {TOTAL_COST} Aura
+                <Camera className="size-5 mr-2" /> Generate angles · {TOTAL_COST} Aura
               </>
             )}
           </Button>
@@ -340,7 +340,7 @@ function ReshootPage() {
               <div className="flex items-center gap-2">
                 <span className="size-1.5 rounded-full bg-primary animate-pulse" />
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                  Example reshoot — red studio · 4 of 6 angles shown
+                  Multi-Angle Camera example — red studio · 4 of 6 angles shown
                 </p>
               </div>
               <div className="grid grid-cols-4 gap-1.5 max-w-sm">
@@ -395,7 +395,7 @@ function ReshootPage() {
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
                 Saved to your gallery, tagged{" "}
-                <span className="text-foreground/80">[Reshoot]</span>.
+                <span className="text-foreground/80">Multi-Angle Camera</span>.
               </span>
               <Link to="/gallery" className="text-primary hover:underline">
                 Open gallery →
