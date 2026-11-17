@@ -27,7 +27,7 @@ export function ColorsStudio({ initialColor }: { initialColor?: string }) {
       </fieldset>
     </section>
     <section className="mx-auto max-w-6xl border-t border-border px-5 py-6" aria-label="Colors performance">
-      {user ? <PerformanceVariantWorkflow key={preset.id} kind="build_scene" mode="anywhere" initialColorId={preset.id} compact /> : <Button asChild><Link to="/auth" search={{ next: `/colors?color=${preset.id}` }}>Sign in to create</Link></Button>}
+      {user ? <PerformanceVariantWorkflow key={preset.id} kind="build_scene" mode="colors" studioLocation={`${preset.promptName} seamless cyclorama color studio`} compact /> : <Button asChild><Link to="/auth" search={{ next: `/colors?color=${preset.id}` }}>Sign in to create</Link></Button>}
     </section>
   </main>;
 }

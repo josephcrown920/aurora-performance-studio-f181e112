@@ -69,7 +69,7 @@ export function CanvasWorkflowShowcase() {
                   ))}
                 </div>
                 <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white">
-                  Open Reshoot Studio <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  Open Multi-Angle Camera <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             </div>

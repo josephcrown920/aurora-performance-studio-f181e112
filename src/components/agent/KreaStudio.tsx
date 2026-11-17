@@ -16,7 +16,7 @@ const TOOLS: { id: Tool; label: string; icon: typeof ImageIcon; hint: string }[]
   { id: "motion", label: "Motion", icon: Move, hint: "Photo + driving video: your moves on any character" },
   { id: "lipsync", label: "Lip sync", icon: Mic, hint: "Photo + song: make it perform your verse" },
 ];
-const VIDEO_MODELS = [["kling-2.6/text-to-video", "Kling 2.6"], ["grok-imagine/text-to-video", "Grok Imagine"]] as const;
+const VIDEO_MODELS = [["kling-2.6/text-to-video", "Kling 2.6"], ["grok-imagine/text-to-video", "Grok Imagine"], ["bytedance/seedance-2-mini", "Seedance 2.0 Mini"]] as const;
 const KEY = "aurora:krea-feed";
 
 export function KreaStudio() {
