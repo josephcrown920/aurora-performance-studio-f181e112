@@ -143,3 +143,11 @@
 - [x] Welcome message on each fresh app launch, shown on first paint.
 - [x] 'See his work' now opens a public NBA Josh showcase page instead of the visitor's private gallery.
 - [x] Soul Studio sub-pages (Train/Generate/Video/Library/Vibe) open signed in; heading cleared of Menu button.
+
+## Aurora finish-line continuation — 2026-11-17
+- [ ] Restore shared pricing contracts and run quote/startup regression tests.
+- [ ] Apply Multi-Angle Camera naming, restore Colors Studio and all eight flagship hub entries.
+- [ ] Add the supplied GRWM mirror example without substituting a creator's identity.
+- [ ] Verify signed-in flagship screens, then one real output per feature, including separate Genjutsu, GRWM and 5-second Seedance Mini checks; combined provider cap USD 6, including previous spend.
+- [ ] Verify PureMix hosted worker and Soul prerequisites; never count demo playback as a successful paid flow.
+- [ ] Publish only after critical checks pass; confirm Android bundle availability.

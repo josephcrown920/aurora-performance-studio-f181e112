@@ -69,7 +69,7 @@ export const LIPSYNC_MODEL_TIERS: Record<string, ModelTier> = {
   "kie/omnihuman-2-0": "premium",
   "heygen/avatar": "ultra",
 };
-export const DEFAULT_VIDEO_TIER: ModelTier = "standard";
+export const DEFAULT_VIDEO_TIER: ModelTier = "budget";
 export const DEFAULT_LIPSYNC_TIER: ModelTier = "premium";
 
 export function tierForModel(feature: "video" | "lipsync", model: string | null | undefined): ModelTier {
@@ -85,31 +85,32 @@ function baseFor(feature: Feature, model: string | null | undefined): number {
   return PRICING.base[feature];
 }
 
-export function computeCost(input: { features?: Feature[]; model?: string | null; resolution?: Resolution; durationSeconds?: number }): { total: number; breakdown: Record<string, number> } {
-  const features = input.features ?? [];
+export function computeCost(input: { features?: Feature[]; model?: string | null; resolution?: Resolution; durationSeconds?: number }) {
+  const requested = new Set(input.features ?? []);
+  const features = FEATURES.filter(feature => requested.has(feature));
   const resolution = input.resolution ?? PRICING.defaultResolution;
   const durationSeconds = Math.max(0, input.durationSeconds ?? PRICING.referenceSeconds);
-  const resolutionFactor = PRICING.resolutionMultiplier[resolution];
-  const lengthFactor = durationSeconds / PRICING.referenceSeconds;
-  const breakdown: Record<string, number> = {};
-  for (const feature of features) {
+  const temporal = features.some(feature => feature === "video" || feature === "motion" || feature === "lipsync");
+  const breakdown = features.map(feature => {
     const base = baseFor(feature, input.model);
-    const scalesResolution = feature === "image" || feature === "video" || feature === "lipsync" || feature === "motion";
+    const scalesResolution = feature === "video" || feature === "motion" || (feature === "image" && !temporal);
     const scalesLength = feature === "video" || feature === "lipsync" || feature === "motion";
-    const value = base * (scalesResolution ? resolutionFactor : 1) * (scalesLength ? lengthFactor : 1);
-    breakdown[feature] = (breakdown[feature] ?? 0) + value;
-  }
-  return { total: Math.max(1, Math.ceil(Object.values(breakdown).reduce((sum, value) => sum + value, 0))), breakdown };
+    const resolutionFactor = scalesResolution ? PRICING.resolutionMultiplier[resolution] : 1;
+    const lengthFactor = scalesLength ? durationSeconds / PRICING.referenceSeconds : 1;
+    return { feature, base, resolutionFactor, lengthFactor, subtotal: base * resolutionFactor * lengthFactor };
+  });
+  const sum = breakdown.reduce((total, item) => total + item.subtotal, 0);
+  return { total: features.length ? Math.max(1, Math.ceil(sum)) : 0, breakdown, resolution, durationSeconds };
 }
 
-export function detectFeatures(input: { kind?: string; model?: string | null }): Feature[] {
-  if (input.kind === "video") return ["video"];
-  if (input.kind === "lipsync") return ["lipsync"];
-  if (input.kind === "motion") return ["motion"];
-  if (input.kind === "audio") return ["audio"];
-  if (input.kind === "upscale") return ["upscale"];
-  if (input.kind === "text") return ["text"];
-  return ["image"];
+export function detectFeatures(input: { kind?: string; model?: string | null; features?: Feature[]; audioUrl?: string | null; videoUrl?: string | null; cameraMovement?: string | null }) {
+  const primaryKind = FEATURES.find(feature => feature === input.kind) ?? "image";
+  const requested = new Set<Feature>([primaryKind, ...(input.features ?? [])]);
+  if (primaryKind === "video") {
+    if (input.cameraMovement && input.cameraMovement !== "static") requested.add("motion");
+    if (input.audioUrl && input.videoUrl) requested.add("lipsync");
+  }
+  return { features: FEATURES.filter(feature => requested.has(feature)), primaryKind };
 }
 
 // Production pricing constants retained for compatibility with the existing UI/server surface.

@@ -6,6 +6,7 @@ import { Check, Download, Loader2, Shirt, Upload } from "lucide-react";
 import grwmFace from "@/assets/nba-josh/portrait.jpg.asset.json";
 import grwmFit from "@/assets/nba-josh/black-outfit.png.asset.json";
 import grwmFull from "@/assets/nba-josh/grwm-dressed-wardrobe.jpg";
+import grwmMirror from "@/assets/genjutsu/grwm-mirror.webp.asset.json";
 
 import { EnvironmentGrid } from "@/components/performance/EnvironmentPicker";
 import { GRWM_ENVIRONMENTS } from "@/lib/environment-presets";
@@ -147,7 +148,7 @@ export function GetReadyWithMeWorkflow() {
         <span className="text-primary">→</span>
         <GrwmFrame src={grwmFit.url} label="Outfit" />
         <span className="text-primary">→</span>
-        <GrwmFrame src={grwmFull} label="Dressed" highlight />
+        <GrwmFrame src={grwmMirror.url} label="Vanity mirror" highlight />
       </div>
       <div className="flex items-end justify-between gap-3 border-t border-border px-4 py-3">
         <div><p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">Genjutsu</p><h2 className="flex items-center gap-2 font-display text-3xl text-foreground"><Shirt className="size-6" />Get Ready With Me</h2></div>
