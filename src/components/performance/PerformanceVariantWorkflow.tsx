@@ -243,16 +243,6 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
           onUpload={() => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; fileRefs.current[slot]?.click(); if (slot === "location") setEnvId(null); else setPickedIds((m) => ({ ...m, [slot]: null })); }}
           onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); void usePresetImage(slot, preset.image).then(() => setAutoBuild(true)).catch((error) => toast.error(error instanceof Error ? error.message : "Could not use that scene")); }} />
 
-        <section className="border-t border-border pt-4">
-          <h2 className="mb-2 text-sm font-bold">Personalize the scene</h2>
-          <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
-            {Object.entries(draft.settings).map(([key, value]) => key === "vehicle" ? (
-              <label key={key} className="min-w-0 text-xs font-semibold capitalize">{key}<select value={value} onChange={(e) => setDraft((d) => ({ ...d, settings: { ...d.settings, [key]: e.target.value } }))} className="mt-1 h-9 w-full min-w-0 rounded-md border border-border bg-background px-2 text-xs">{VEHICLES.map((vehicle) => <option key={vehicle}>{vehicle}</option>)}</select></label>
-            ) : (
-              <label key={key} className="min-w-0 text-xs font-semibold capitalize">{key}<input value={value} onChange={(e) => setDraft((d) => ({ ...d, settings: { ...d.settings, [key]: e.target.value } }))} className="mt-1 h-9 w-full min-w-0 rounded-md border border-border bg-background px-2 text-xs" /></label>
-            ))}
-          </div>
-        </section>
 
         {kind === "build_scene" && <section><h2 className="mb-3 text-lg font-bold">Choose 3–5 re-angles</h2><div className="flex flex-wrap gap-2">{REANGLE_PRESETS.map((preset) => <Button key={preset.id} size="sm" variant={draft.selectedAngles.includes(preset.id) ? "default" : "outline"} onClick={() => setDraft((d) => ({ ...d, selectedAngles: d.selectedAngles.includes(preset.id) ? d.selectedAngles.filter((id) => id !== preset.id) : d.selectedAngles.length < 5 ? [...d.selectedAngles, preset.id] : d.selectedAngles }))}>{preset.label}</Button>)}</div></section>}
         {kind === "luxury_interior" && <section><h2 className="mb-3 text-lg font-bold">Alternate interiors using the same identity and performance</h2><div className="flex flex-wrap gap-2">{LUXURY_INTERIOR_PRESETS.map((preset) => <Button key={preset.id} size="sm" variant={draft.selectedAngles.includes(preset.id) ? "default" : "outline"} onClick={() => setDraft((d) => ({ ...d, selectedAngles: d.selectedAngles.includes(preset.id) ? d.selectedAngles.filter((id) => id !== preset.id) : [...d.selectedAngles, preset.id] }))}>{preset.label}</Button>)}</div></section>}

@@ -16,9 +16,9 @@ import {
 import { STUDIO_TEMPLATES } from "./template-studio";
 
 describe("artist-only defaults", () => {
-  test("TikTok30 stays visible while audience-specific features are hidden by default", () => {
+  test("TikTok30 and Soul Studio stay visible while audience-specific features are hidden by default", () => {
     expect(defaultHiddenKeys().sort()).toEqual(
-      FEATURE_KEYS.filter((key) => key !== "spin").sort(),
+      FEATURE_KEYS.filter((key) => key !== "spin" && key !== "soul").sort(),
     );
   });
 

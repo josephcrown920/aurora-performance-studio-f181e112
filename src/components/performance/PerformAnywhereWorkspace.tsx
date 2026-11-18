@@ -1,3 +1,4 @@
+import { LipSyncStudioPage } from "@/components/lipsync/LipSyncStudio";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Play } from "lucide-react";
@@ -120,6 +121,8 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
       </section>
 
       <div id="pa-finish" className="scroll-mt-20"><GenjutsuFinishing onAsset={onAsset} /></div>
+
+      <section id="pa-lipsync" aria-label="Lip Sync Studio" className="scroll-mt-20"><LipSyncStudioPage /></section>
 
       <section id="pa-costs" aria-label="Costs" className="genjutsu-band scroll-mt-20">
         <p className="genjutsu-eyebrow">PLAN YOUR SESSION</p>
