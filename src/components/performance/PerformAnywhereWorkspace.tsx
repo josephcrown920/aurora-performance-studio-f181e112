@@ -7,7 +7,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { PerformanceVariantWorkflow } from "@/components/performance/PerformanceVariantWorkflow";
 import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 import { GetReadyWithMeWorkflow } from "@/components/performance/GetReadyWithMeWorkflow";
-import { GenjutsuFinishing } from "@/components/performance/GenjutsuFinishing";
 import { PerformWorlds } from "@/components/performance/PerformWorlds";
 import "@/components/performance/genjutsu.css";
 import heroStill from "@/assets/genjutsu/performance.jpg.asset.json";
@@ -42,11 +41,11 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           <strong>GENJUTSU · AURORA</strong>
         </div>
         <nav aria-label="Genjutsu sections">
-          {[["pa-scene", "Create"], ["pa-grwm", "Get Ready With Me"], ["pa-finish", "Lip sync"], ["pa-costs", "Costs"]].map(([id, label]) => <Button key={id} size="sm" variant="ghost" onClick={() => go(id)}>{label}</Button>)}
+          {[["pa-scene", "Create"], ["pa-grwm", "Get Ready With Me"], ["pa-lipsync", "Lip sync"], ["pa-costs", "Costs"]].map(([id, label]) => <Button key={id} size="sm" variant="ghost" onClick={() => go(id)}>{label}</Button>)}
         </nav>
       </header>
 
-      {!embedded && <FeatureTopBox feature={grwm ? "grwm" : "genjutsu"} className="mx-0 mb-6 sm:mx-0" />}
+      {!embedded && <FeatureTopBox feature="genjutsu" className="mx-0 mb-6 sm:mx-0" />}
 
       <section className="genjutsu-hero" aria-label="Genjutsu">
         <img src={heroStill.url} alt="Artist performing at a mic in a new world" />
@@ -76,7 +75,7 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           {[["01 / DIRECT", "Make the world yours.", "Choose your identity, outfit, location and pose.", "Build a scene", "pa-scene"],
             ["02 / PERFORM", "Keep the energy.", "Add your phone performance — Genjutsu drives the scene with it.", "Open Genjutsu", "pa-scene"],
             ["03 / RESTYLE", "Change the look.", "Explore wardrobe and scene direction with Get Ready With Me.", "Explore GRWM", "pa-grwm"],
-            ["04 / FINISH", "Your song in the final cut.", "Optional lip sync swaps in the song you want to promote.", "Add lip sync", "pa-finish"]].map(([n, h, p, cta, id]) => (
+            ["04 / FINISH", "Your song in the final cut.", "Optional lip sync swaps in the song you want to promote.", "Add lip sync", "pa-lipsync"]].map(([n, h, p, cta, id]) => (
             <article key={n}><p className="genjutsu-eyebrow">{n}</p><h3>{h}</h3><p>{p}</p><Button size="sm" variant="outline" onClick={() => go(id)}>{cta}<ArrowUpRight size={13} /></Button></article>
           ))}
         </div>
@@ -106,6 +105,14 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
         </div>
       </section>
 
+
+      <section id="pa-grwm" aria-label="Get Ready With Me" className="genjutsu-band scroll-mt-20">
+        <p className="genjutsu-eyebrow">GET READY WITH ME · POWERED BY GENJUTSU</p>
+        <h2 className="mb-2">Restyle the look. Keep the moment.</h2>
+        <FeatureTopBox feature="grwm" className="mx-0 mb-6 sm:mx-0" />
+        <GetReadyWithMeWorkflow />
+      </section>
+
       <section id="pa-luxury" aria-label="Luxury interior" className="genjutsu-band scroll-mt-20">
         <p className="genjutsu-eyebrow">SCENE PRESET</p>
         <h2>Luxury interior.</h2>
@@ -113,14 +120,12 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
         <div className="genjutsu-actions"><Button asChild><Link to="/luxury-interior">Open luxury interior<ArrowUpRight size={14} /></Link></Button></div>
       </section>
 
-      <section id="pa-grwm" aria-label="Get Ready With Me" className="genjutsu-band scroll-mt-20">
-        <p className="genjutsu-eyebrow">GET READY WITH ME · POWERED BY GENJUTSU</p>
-        <h2 className="mb-2">Restyle the look. Keep the moment.</h2>
-        <p className="mb-6 text-sm text-muted-foreground">The full Genjutsu flow: 01 build the look, 02 drive it with your dressing clip, 03 finish with optional lip sync.</p>
-        <GetReadyWithMeWorkflow />
+      <section id="pa-motion" aria-label="Motion control" className="genjutsu-band scroll-mt-20">
+        <p className="genjutsu-eyebrow">STANDALONE TOOL</p>
+        <h2>Motion control.</h2>
+        <p className="mt-2 text-sm text-muted-foreground">Classic motion control: first frame, last frame and a driving video — on its own page.</p>
+        <div className="genjutsu-actions"><Button asChild><Link to="/motion">Open motion control<ArrowUpRight size={14} /></Link></Button></div>
       </section>
-
-      <div id="pa-finish" className="scroll-mt-20"><GenjutsuFinishing onAsset={onAsset} /></div>
 
       <section id="pa-lipsync" aria-label="Lip Sync Studio" className="scroll-mt-20"><LipSyncStudioPage /></section>
 

@@ -260,16 +260,9 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
 
         <section className="border-t border-border pt-4">
           <h2 className="font-bold">Performance controls</h2>
-          {kind === "luxury_interior" && <p className="my-2 text-sm text-amber-300">Record seated at the same angle and position. Keep gestures contained within the window frame. Mandatory context: performer rapping inside the vehicle.</p>}
           {!compact && <RecordingReferenceGuide kind={kind} className="my-3 max-w-md" />}
           <input type="file" accept="video/*" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, "original-performance", "video"); }} />
           
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            {["base", ...draft.selectedAngles].map((id) => {
-              const label = id === "base" ? "Base scene" : [...REANGLE_PRESETS, ...LUXURY_INTERIOR_PRESETS].find((item) => item.id === id)?.label ?? id;
-              return <div key={id} className="rounded-xl border border-border p-3"><label className="text-xs font-semibold">{label} motion direction<input value={draft.motionDirections[id] ?? ""} placeholder="Faithfully follow gestures and timing…" onChange={(e) => setDraft((d) => ({ ...d, motionDirections: { ...d.motionDirections, [id]: e.target.value } }))} className="mt-1 w-full rounded-lg border border-border bg-background p-2" /></label><label className="mt-2 block text-[11px] text-muted-foreground">Optional performance override<input type="file" accept="video/*" className="mt-1 block w-full" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, id, "video"); }} /></label></div>;
-            })}
-          </div>
           <h3 className="mt-5 font-semibold">Optional soundtrack</h3>
           <input type="file" accept="audio/*" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, "soundtrack", "audio"); }} />
           

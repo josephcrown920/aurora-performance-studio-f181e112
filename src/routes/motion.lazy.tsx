@@ -60,7 +60,6 @@ import { useGenerationProgress, type BackendJobStatus } from "@/hooks/use-genera
 import { GenerationProgress } from "@/components/ui/GenerationProgress";
 import { GenerationErrorCard } from "@/components/ui/GenerationErrorCard";
 import { BlurredPreview } from "@/components/ui/BlurredPreview";
-import { PerformAnywhereGuide } from "@/components/onboarding/PerformAnywhereGuide";
 import { Check, ArrowRight } from "lucide-react";
 import {
   MUSIC_VIDEO_STYLES,
@@ -963,7 +962,6 @@ function MotionStudio() {
         {mode !== "music-video" && (
           <div className="lg:hidden p-4 space-y-6">
             <MotionInspirationBlock />
-            <PerformAnywhereGuide />
           </div>
         )}
 
