@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "sdk_version": "3.0.4",
+  "sdk_version": "3.5.0",
   "path": "/mcp",
   "auth": {
     "type": "oauth",
@@ -26,22 +26,22 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "limit": {
+              "default": 20,
+              "description": "How many to return.",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "default": 20,
-              "description": "How many to return."
+              "maximum": 50
             },
             "kind": {
-              "type": "string",
-              "description": "Optional kind filter, e.g. image or video."
+              "description": "Optional kind filter, e.g. image or video.",
+              "type": "string"
             }
           },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -55,18 +55,18 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "limit": {
+              "default": 20,
+              "description": "How many to return.",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "default": 20,
-              "description": "How many to return."
+              "maximum": 50
             }
           },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          "additionalProperties": false
         },
         "outputSchema": null
       }
