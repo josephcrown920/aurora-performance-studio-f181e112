@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { saveAssetToDisk } from "@/lib/save";
 import { publishGeneration } from "@/lib/share.functions";
+import { FeatureTopBox } from "@/components/visual/FeatureTopBox";
 
 const TOTAL_COST = RESHOOT_ANGLES.length * RESHOOT_COST_PER_IMAGE;
 
@@ -275,6 +276,8 @@ export function MultiAngleCameraPage() {
           </Link>
         </div>
       </header>
+
+      <div className="mx-auto max-w-7xl"><FeatureTopBox feature="multiangle" /></div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr_1.4fr] gap-10">
         {/* LEFT — controls */}

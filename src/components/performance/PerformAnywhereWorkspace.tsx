@@ -15,6 +15,7 @@ import motionStill from "@/assets/genjutsu/motion.jpg.asset.json";
 import frameStill from "@/assets/genjutsu/frame.jpg.asset.json";
 import klingRender from "@/assets/perform/motion-kling.mp4.asset.json";
 import wanRender from "@/assets/perform/motion-wan.mp4.asset.json";
+import { FeatureTopBox } from "@/components/visual/FeatureTopBox";
 
 type AddAsset = (url: string, kind: "image" | "video", name: string, place?: boolean) => void;
 
@@ -43,6 +44,8 @@ export function PerformAnywhereWorkspace({ grwm, onExperienceChange, embedded = 
           {[["pa-scene", "Create"], ["pa-grwm", "Get Ready With Me"], ["pa-finish", "Lip sync"], ["pa-costs", "Costs"]].map(([id, label]) => <Button key={id} size="sm" variant="ghost" onClick={() => go(id)}>{label}</Button>)}
         </nav>
       </header>
+
+      {!embedded && <FeatureTopBox feature={grwm ? "grwm" : "genjutsu"} className="mx-0 mb-6 sm:mx-0" />}
 
       <section className="genjutsu-hero" aria-label="Genjutsu">
         <img src={heroStill.url} alt="Artist performing at a mic in a new world" />

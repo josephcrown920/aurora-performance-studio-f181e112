@@ -99,7 +99,7 @@ export type RoutedGenerateDeps = {
 export type RoutedGenerateArgs<T> = {
   system: string;
   prompt: string;
-  schema: z.ZodType<T, z.ZodTypeDef, unknown>;
+  schema: z.ZodType<T, unknown>;
   /** Pre-classified category — skips the classifier when already known. */
   category?: RequestCategory;
   /** Prior conversation turns. Passed as proper `messages` array to each provider. */

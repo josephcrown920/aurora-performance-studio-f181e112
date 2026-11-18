@@ -149,7 +149,7 @@ export type SkillName = (typeof SKILL_NAMES)[number];
 
 export const SkillCallSchema = z.object({
   skill: z.enum(SKILL_NAMES),
-  args: z.record(z.unknown()),
+  args: z.record(z.string(), z.unknown()),
 });
 
 export type SkillCall = z.infer<typeof SkillCallSchema>;
@@ -194,7 +194,7 @@ export const ChatTurnSchema = z.object({
         : v,
     ),
   memoryUpdate: z
-    .union([z.string(), z.record(z.unknown())])
+    .union([z.string(), z.record(z.string(), z.unknown())])
     .nullable()
     .optional()
     .describe(

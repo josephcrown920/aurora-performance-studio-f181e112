@@ -7,7 +7,7 @@ export async function removeImageBackground(source: string, onProgress?: (value:
     model: "isnet_quint8",
     device: "cpu",
     output: { format: "image/png", quality: 1 },
-    progress: (_key, current, total) => onProgress?.(total ? `Preparing cutout · ${Math.round(current / total * 100)}%` : "Removing background…"),
+    progress: (_key: string, current: number, total: number) => onProgress?.(total ? `Preparing cutout · ${Math.round(current / total * 100)}%` : "Removing background…"),
   });
   return await new Promise<string>((resolve, reject) => {
     const reader = new FileReader();

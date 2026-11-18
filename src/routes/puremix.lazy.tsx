@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Upload, Download, Music2, Wand2, SlidersHorizontal, Layers3, Disc3, Send, PanelRightClose, PanelRightOpen, Play, Pause } from "lucide-react";
+import { FeatureTopBox } from "@/components/visual/FeatureTopBox";
 
 export const Route = createLazyFileRoute("/puremix")({ component: PureMixStudio });
 type Stage = "separation" | "mixing" | "mastering";
@@ -97,6 +98,7 @@ function PureMixStudio() {
       <div><div className="flex items-center gap-2 text-2xl font-bold"><Music2 className="text-amber-300"/> PureMix <span className="font-normal text-violet-300">Studio</span></div><p className="mt-1 text-xs text-white/50">Aurora · Music & Audio · Mixing and mastering workstation</p></div>
       <div className="flex gap-2"><button className={button} onClick={()=>setAgentOpen(v=>!v)}>{agentOpen?<PanelRightClose size={17}/>:<PanelRightOpen size={17}/>}</button><label className="flex cursor-pointer items-center gap-2 rounded-2xl bg-violet-500 px-4 py-3 text-sm font-bold"><Upload size={17}/> Upload Song<input type="file" accept="audio/*,.wav,.flac,.m4a" className="hidden" onChange={e=>load(e.target.files?.[0])}/></label></div>
     </header>
+    <FeatureTopBox feature="puremix" className="mx-auto mb-6 mt-0 max-w-[1600px] sm:mx-auto" />
     <div className="mx-auto grid max-w-[1600px] gap-4 lg:grid-cols-[210px_minmax(0,1fr)_auto]">
       <nav className={panel+" h-fit p-3"} aria-label="Audio studio workspaces"><p className="px-3 py-3 text-xs uppercase tracking-widest text-white/40">Workspaces</p>{stages.map(({id,label,icon:Icon})=><button key={id} onClick={()=>setStage(id)} aria-current={stage===id?"page":undefined} className={"mb-2 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm "+(stage===id?"bg-violet-500/30 text-violet-100":"text-white/65 hover:bg-white/10")}><Icon size={18}/>{label}</button>)}<div className="mt-5 rounded-2xl bg-black/25 p-3 text-xs leading-5 text-white/50">Separation requires a dedicated stem model. Mixing and mastering are independent workspaces.</div></nav>
       <section className="min-w-0 space-y-4">

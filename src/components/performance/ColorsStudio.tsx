@@ -6,6 +6,7 @@ import { ColorStudioBackdrop } from "@/components/studio/ColorStudioBackdrop";
 import { COLOR_PRESETS } from "@/lib/colors.presets";
 import { PerformanceVariantWorkflow } from "@/components/performance/PerformanceVariantWorkflow";
 import { useAuth } from "@/hooks/use-auth";
+import { FeatureTopBox } from "@/components/visual/FeatureTopBox";
 
 export function ColorsStudio({ initialColor }: { initialColor?: string }) {
   const { user } = useAuth();
@@ -16,6 +17,7 @@ export function ColorsStudio({ initialColor }: { initialColor?: string }) {
       <Button asChild variant="ghost" size="icon"><Link to="/create" aria-label="Back to Create"><ArrowLeft /></Link></Button>
       <h1 className="font-display text-3xl">Colors Studio</h1>
     </header>
+    <div className="mx-auto max-w-6xl"><FeatureTopBox feature="colors" /></div>
     <section className="mx-auto max-w-6xl px-5 py-6">
       <div className="relative aspect-video overflow-hidden rounded-lg">
         <ColorStudioBackdrop colorId={preset.id} label={`${preset.name} cyclorama studio`} />

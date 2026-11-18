@@ -31,6 +31,7 @@ import {
 import { PageHeroBanner } from "@/components/visual/PageHeroBanner";
 import { Button } from "@/components/ui/button";
 import { DEMO_ASSETS } from "@/lib/demo-assets";
+import { FeatureTopBox } from "@/components/visual/FeatureTopBox";
 
 // Artist-only mode: this feature is hidden from regular users by default.
 // Admins always pass; regular users are redirected to /studio unless the
@@ -403,6 +404,7 @@ function SpinPage() {
           <ArrowLeft className="size-4" /> Back
         </Link>
 
+        <FeatureTopBox feature="tiktok30" className="mx-0 mb-6 sm:mx-0" />
         <header className="workspace-heading"><h1>TIKTOK30</h1><span>1–2 photos in · 30 shots out</span></header>
         <p className="mt-3 text-sm text-muted-foreground">Upload one or two photos of the same person, describe the vibe, and get 30 different shots with the same face in every one.</p>
 

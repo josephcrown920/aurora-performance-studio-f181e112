@@ -20,7 +20,17 @@ const SECTION_LABELS: Record<string, string> = {
   process:     "Process Step Images",
   gallery:     "Gallery Marquee Rows",
   studio_examples: "Studio Example Strip",
+  feature_boxes: "Feature Top Boxes (photo or video)",
 };
+
+const isVideoFile = (file: File) => file.type.startsWith("video/");
+const isVideoUrl = (url: string) => /\.(mp4|webm|mov)(\?|$)/i.test(url);
+
+function SlotMedia({ url, alt, className }: { url: string; alt: string; className: string }) {
+  return isVideoUrl(url)
+    ? <video src={url} className={className} muted loop playsInline autoPlay aria-label={alt} />
+    : <img src={url} alt={alt} className={className} loading="lazy" />;
+}
 
 function SiteImagesAdminPage() {
   const { user } = useAuth();
@@ -130,12 +140,13 @@ function ImagesGrid() {
   });
 
   // Group by section; merge DB rows with known defaults so every slot appears
-  const allKeys = Object.keys(SITE_IMAGE_DEFAULTS) as (keyof typeof SITE_IMAGE_DEFAULTS)[];
   const dbByKey  = new Map((images ?? []).map((r) => [r.key, r]));
+  // Bundled defaults plus database-only slots (such as the feature top boxes).
+  const allKeys = [...new Set([...Object.keys(SITE_IMAGE_DEFAULTS), ...dbByKey.keys()])];
 
   const rows: SiteImageRow[] = allKeys.map((key) => {
     const db  = dbByKey.get(key);
-    const def = SITE_IMAGE_DEFAULTS[key];
+    const def = SITE_IMAGE_DEFAULTS[key as keyof typeof SITE_IMAGE_DEFAULTS];
     return db ?? {
       key,
       url:         def.url,
@@ -147,7 +158,7 @@ function ImagesGrid() {
   });
 
   // Group by section, preserving order
-  const sectionOrder = ["hero_slides", "hero", "creator", "studio_examples", "tiktok", "process", "gallery"];
+  const sectionOrder = ["feature_boxes", "hero_slides", "hero", "creator", "studio_examples", "tiktok", "process", "gallery"];
   const grouped = new Map<string, SiteImageRow[]>();
   for (const row of rows) {
     const sec = row.section;
@@ -191,7 +202,7 @@ function ImagesGrid() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Landing page photos</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Upload a new image for any slot — changes go live immediately with no redeploy.
+            Upload a new image for any slot — feature top boxes also take videos (MP4, WebM or MOV, up to 50MB). Changes go live immediately with no redeploy.
             Click <strong>Reset</strong> to restore the original.
           </p>
         </div>
@@ -246,7 +257,7 @@ function ImagesGrid() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-semibold">Publish this photo?</h3>
+              <h3 className="text-sm font-semibold">Publish this {isVideoFile(pending.file) ? "video" : "photo"}?</h3>
               <button type="button" onClick={discardPending} className="rounded-md p-1 text-muted-foreground hover:text-foreground">
                 <X className="size-4" />
               </button>
@@ -259,7 +270,7 @@ function ImagesGrid() {
                 <p className="mb-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">Current</p>
                 <div className="aspect-[3/4] overflow-hidden rounded-lg border border-border bg-zinc-900">
                   {pending.currentUrl ? (
-                    <img src={pending.currentUrl} alt="Current" className="h-full w-full object-cover" />
+                    <SlotMedia url={pending.currentUrl} alt="Current" className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-[10px] text-muted-foreground/50">empty</div>
                   )}
@@ -268,7 +279,7 @@ function ImagesGrid() {
               <div>
                 <p className="mb-1.5 text-[10px] uppercase tracking-wider text-primary">New</p>
                 <div className="aspect-[3/4] overflow-hidden rounded-lg border border-primary/40 bg-zinc-900">
-                  <img src={pending.objectUrl} alt="New" className="h-full w-full object-cover" />
+                  {isVideoFile(pending.file) ? <video src={pending.objectUrl} className="h-full w-full object-cover" muted loop playsInline autoPlay aria-label="New" /> : <img src={pending.objectUrl} alt="New" className="h-full w-full object-cover" />}
                 </div>
               </div>
             </div>
@@ -317,12 +328,7 @@ function SlotCard({
       {/* Preview */}
       <div className="relative aspect-[3/4] bg-zinc-900 overflow-hidden">
         {hasImage ? (
-          <img
-            src={img.url}
-            alt={img.label}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          <SlotMedia url={img.url} alt={img.label} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-1.5 text-muted-foreground/40">
             <Image className="size-6" />
@@ -355,7 +361,7 @@ function SlotCard({
           {isUp ? "Uploading…" : "Upload"}
           <input
             type="file"
-            accept="image/*,image/webp"
+            accept={img.section === "feature_boxes" ? "image/*,video/mp4,video/webm,video/quicktime" : "image/*,image/webp"}
             className="sr-only"
             disabled={isUp}
             onChange={(e) => {

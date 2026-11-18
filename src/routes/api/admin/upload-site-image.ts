@@ -4,6 +4,8 @@ import { safeErrorMessage } from "@/lib/safe-error.server";
 
 const BUCKET = "site-images";
 const MAX_BYTES = 10 * 1024 * 1024; // 10MB per image
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024; // 50MB per feature-box video
+const VIDEO_TYPES = new Set(["video/mp4", "video/webm", "video/quicktime"]);
 
 async function ensureBucket() {
   await supabaseAdmin.storage.createBucket(BUCKET, { public: true }).catch(() => {});
@@ -41,11 +43,16 @@ async function isAuthorized(request: Request): Promise<boolean> {
 type UploadResult = { key: string; url: string; skipped?: string };
 
 async function storeOne(key: string, file: File): Promise<UploadResult> {
-  if (!file.type.startsWith("image/")) {
-    return { key, url: "", skipped: "not an image" };
+  // Feature top boxes accept a photo or a short video; every other slot is photo-only.
+  const isVideo = VIDEO_TYPES.has(file.type);
+  if (isVideo && !key.startsWith("feature-box-")) {
+    return { key, url: "", skipped: "videos are only allowed in feature boxes" };
   }
-  if (file.size > MAX_BYTES) {
-    return { key, url: "", skipped: "larger than 10MB" };
+  if (!isVideo && !file.type.startsWith("image/")) {
+    return { key, url: "", skipped: "not an image or supported video" };
+  }
+  if (file.size > (isVideo ? MAX_VIDEO_BYTES : MAX_BYTES)) {
+    return { key, url: "", skipped: isVideo ? "larger than 50MB" : "larger than 10MB" };
   }
 
   const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";

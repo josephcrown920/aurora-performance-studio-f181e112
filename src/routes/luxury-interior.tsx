@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { PerformanceVariantWorkflow } from "@/components/performance/PerformanceVariantWorkflow";
 import "@/components/performance/genjutsu.css";
+import { FeatureTopBox } from "@/components/visual/FeatureTopBox";
 
 export const Route = createFileRoute("/luxury-interior")({
   head: () => ({ meta: [
@@ -20,6 +21,7 @@ function LuxuryInterior() {
   const { user } = useAuth();
   return <main className="genjutsu min-h-screen pb-24"><div className="genjutsu-inner">
     <header className="genjutsu-nav"><div className="flex items-center gap-3"><Link to="/perform-anywhere" aria-label="Back to Genjutsu" className="text-muted-foreground"><ArrowLeft size={16} /></Link><strong>GENJUTSU · LUXURY INTERIOR</strong></div></header>
+    <FeatureTopBox feature="luxury" className="mx-0 mb-6 sm:mx-0" />
     <section className="genjutsu-band">
       {user ? <PerformanceVariantWorkflow kind="luxury_interior" mode="anywhere" compact /> : <>
         <h2>Luxury interior.</h2>

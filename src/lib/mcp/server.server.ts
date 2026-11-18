@@ -146,7 +146,7 @@ function unwrap(field: z.ZodTypeAny): { inner: z.ZodTypeAny; optional: boolean }
   let optional = false;
   while (f instanceof z.ZodOptional || f instanceof z.ZodDefault) {
     optional = true;
-    f = f instanceof z.ZodOptional ? f.unwrap() : (f as z.ZodDefault<z.ZodTypeAny>)._def.innerType;
+    f = (f instanceof z.ZodOptional ? f.unwrap() : (f as z.ZodDefault<z.ZodTypeAny>)._def.innerType) as z.ZodTypeAny;
   }
   return { inner: f, optional };
 }
@@ -156,7 +156,7 @@ function jsonType(field: z.ZodTypeAny): Record<string, unknown> {
   if (field instanceof z.ZodNumber) return { type: "number" };
   if (field instanceof z.ZodBoolean) return { type: "boolean" };
   if (field instanceof z.ZodEnum) return { type: "string", enum: field.options };
-  if (field instanceof z.ZodArray) return { type: "array", items: jsonType(field.element) };
+  if (field instanceof z.ZodArray) return { type: "array", items: jsonType(field.element as z.ZodTypeAny) };
   return { type: "string" };
 }
 
@@ -167,7 +167,7 @@ export function zodToJsonSchema(schema: z.ZodObject<z.ZodRawShape>): Record<stri
   for (const [key, field] of Object.entries(shape)) {
     const { inner, optional } = unwrap(field as z.ZodTypeAny);
     const description =
-      (field as z.ZodTypeAny)._def?.description ?? (inner as z.ZodTypeAny)._def?.description;
+      (field as z.ZodTypeAny).description ?? (inner as z.ZodTypeAny).description;
     properties[key] = { ...jsonType(inner), ...(description ? { description } : {}) };
     if (!optional) required.push(key);
   }

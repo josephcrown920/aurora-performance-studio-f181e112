@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { authNextSearch } from "@/lib/auth-return-path";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { FeatureTopBox } from "@/components/visual/FeatureTopBox";
 
 const TABS = [
   { to: "/soul", label: "Souls" },
@@ -94,7 +95,8 @@ export function SoulShell({ children }: { children: ReactNode }) {
     <div className="aurora-page-shell min-h-screen pb-24">
       <span aria-hidden className="aurora-ambient opacity-40 pointer-events-none" />
       <div className="relative z-10 mx-auto max-w-2xl px-4 pt-28 md:pt-10">
-        <header className="mb-6">
+        <FeatureTopBox feature="soul" className="mx-0 mb-6 mt-0 sm:mx-0" />
+        <header className="mb-6 sr-only">
           <p className="aurora-kicker mb-1 flex items-center gap-1.5">
             <Sparkles className="size-3" /> Aurora Soul
           </p>

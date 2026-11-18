@@ -152,3 +152,12 @@
 - [ ] Run Genjutsu, GRWM and Colors through their own Perform Anywhere screens (engine verified via Video Agent motion test only).
 - [ ] Soul Studio training blocked: FAL_KEY not connected. PureMix hosted mastering blocked: needs separate Python worker.
 - [ ] Publish only after critical checks pass; confirm Android bundle availability.
+
+## Final session — 2026-11-18
+- [ ] Add the Lip Sync-style hero box (kicker, gradient headline, subhead over artwork) to the top of every flagship feature page.
+- [ ] Redesign Video Agent as a HeyGen-style Creative Studio (card carousel, Video/Image switch, prompt box with character chips, model picker sheets).
+- [ ] Fix vulnerable dependencies reported by the security scan.
+- [ ] Review josephcrown920/Auroraglobal for the creator's latest work; sync happens through Project Settings → Git.
+- [ ] Let the creator swap each feature box's photo or video from Admin.
+- [ ] Remove clutter notes shown in the creator's screenshots across every page.
+- [ ] Fix the Create page row colors to match the creator's multi-colour reference (not green/black).
