@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { Check, Loader2, Upload } from "lucide-react";
+import { Check, Download, Layers3, Loader2, Plus, Upload, Video } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +23,7 @@ import {
   type PerformanceVariantKind,
 } from "@/lib/performance-variant-workflows";
 import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
+import { GenjutsuModelNotes, GenjutsuSheet, GenjutsuStep } from "@/components/performance/GenjutsuSheet";
 import { RecordingReferenceGuide, WorkflowVisualGuide } from "@/components/performance/WorkflowVisualGuide";
 import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
 import { SoulPicker } from "@/components/soul/SoulPicker";
@@ -51,6 +52,11 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
   const [pickerSlot, setPickerSlot] = useState<"location" | "interior" | null>(null);
   const [pickedIds, setPickedIds] = useState<Record<string, string | null>>({});
   const [envId, setEnvId] = useState<string | null>(null);
+  // Local copy of the phone take: lets the browser read frames for the depth
+  // pose guide without a cross-origin canvas read.
+  const [localTake, setLocalTake] = useState<string | null>(null);
+  const [depthBusy, setDepthBusy] = useState(false);
+  useEffect(() => () => { if (localTake) URL.revokeObjectURL(localTake); }, [localTake]);
   // Default Genjutsu scene: the graffiti wall, until the creator picks or uploads another.
   useEffect(() => {
     // Wait for the saved workflow to load (ready) before applying the default,
@@ -216,6 +222,103 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
   }, [autoBuild, draft.references, catalog.references, plateMutation]);
   const finishedMotion = draft.motions.find((item) => item.generationId !== item.previewId && generations.data?.items.some((g) => g.id === item.generationId && !!g.result_video_url && ["succeeded", "complete"].includes(g.status ?? "")));
   const finalUrl = finishedMotion ? generations.data?.items.find((g) => g.id === finishedMotion.generationId)?.result_video_url : null;
+  async function uploadTake(file: File) {
+    setLocalTake(URL.createObjectURL(file));
+    await upload(file, "original-performance", "video");
+  }
+
+  // Depth Anything runs in the browser on a frame of the creator's take, then
+  // the depth map becomes the Pose reference the scene image is built from.
+  async function depthPoseFromTake() {
+    const source = localTake ?? draft.phoneVideoUrl;
+    if (!source) { toast.message("Add your performance video in Step 02 first"); return; }
+    setDepthBusy(true);
+    try {
+      const { estimateDepthMap, firstFrameDataUrl } = await import("@/lib/depth-anything");
+      const frame = await firstFrameDataUrl(source);
+      const { blob } = await estimateDepthMap(frame);
+      const poseSlot = catalog.references.find((r) => r.id === "composition")?.id ?? catalog.references[catalog.references.length - 1].id;
+      await upload(new File([blob], "depth-pose.png", { type: "image/png" }), poseSlot, "image");
+      toast.success("Depth guide added as your Pose reference");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not build the depth guide");
+    } finally { setDepthBusy(false); }
+  }
+
+  if (mode === "anywhere") {
+    const hints: Record<string, string> = { identity: "Avatar or character", outfit: "Clothing reference", location: "World or background", composition: "Body composition", prop: "Cars, products, objects", interior: "Car or jet interior" };
+    const labelFor = (id: string, fallback: string) => ({ identity: "Identity", composition: "Pose", prop: "Props" } as Record<string, string>)[id] ?? fallback;
+    const takeUrl = localTake ?? draft.phoneVideoUrl;
+    const hasPose = catalog.references.some((r) => r.id === "composition");
+    return (
+      <GenjutsuSheet subtitle={kind === "luxury_interior" ? "Luxury interior · Genjutsu" : "Motion transfer · Genjutsu"} footer={<>
+        <span>Drafts save automatically to your account. Each render shows its Aura price before it starts.</span>
+        {finalUrl && <Button asChild variant="outline"><a href={finalUrl} download><Download className="size-4" />Download final render</a></Button>}
+      </>}>
+        <GenjutsuStep n="01" title="Build your scene" badge="SCENE BUILDER" description="Prepare the approved target image before transferring your performance." boxed>
+          <div className="gj-slots">
+            {catalog.references.map((reference) => {
+              const url = draft.references[reference.id];
+              const picker = reference.id === "location" || reference.id === "interior";
+              const inner = <>{url ? <img src={url} alt={reference.label} /> : <span className="gj-slot-plus"><Plus size={14} /></span>}<strong>{labelFor(reference.id, reference.label)}</strong><small>{hints[reference.id] ?? reference.guidance}</small></>;
+              return picker
+                ? <button key={reference.id} type="button" className={`gj-slot ${url ? "is-set" : ""}`} onClick={() => setPickerSlot(reference.id as "location" | "interior")}>{inner}</button>
+                : <label key={reference.id} htmlFor={`gj-ref-${kind}-${reference.id}`} className={`gj-slot ${url ? "is-set" : ""}`}>{inner}</label>;
+            })}
+          </div>
+          {catalog.references.filter((r) => r.id !== "location" && r.id !== "interior").map((reference) => (
+            <input key={reference.id} id={`gj-ref-${kind}-${reference.id}`} ref={(node) => { fileRefs.current[reference.id] = node; }} type="file" accept="image/*" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, reference.id, "image").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); event.target.value = ""; }} />
+          ))}
+          {hasPose && <Button type="button" size="sm" variant="outline" disabled={depthBusy} onClick={() => void depthPoseFromTake()}>
+            {depthBusy ? <Loader2 className="size-4 animate-spin" /> : <Layers3 className="size-4" />}
+            {depthBusy ? "Building depth guide…" : "Pose from my video · depth guide"}
+          </Button>}
+          <label className="grid gap-1 text-xs font-semibold text-primary">Scene direction
+            <textarea value={draft.settings.direction ?? ""} maxLength={700} onChange={(e) => { const direction = e.target.value; setDraft((d) => ({ ...d, settings: { ...d.settings, direction } })); }} placeholder="Put the performer in the selected outfit and location. Preserve identity, tattoos, proportions, and styling." />
+          </label>
+          <SoulPicker label="Use a Soul character as identity" onPick={(url) => setDraft((d) => ({ ...d, references: { ...d.references, identity: url } }))} />
+          <div>
+            <p className="mb-2 text-xs font-semibold">{kind === "build_scene" ? "Extra angles (3–5)" : "Alternate interiors"}</p>
+            <div className="flex flex-wrap gap-2">{(kind === "build_scene" ? REANGLE_PRESETS : LUXURY_INTERIOR_PRESETS).map((preset) => <Button key={preset.id} type="button" size="sm" variant={draft.selectedAngles.includes(preset.id) ? "default" : "outline"} onClick={() => setDraft((d) => ({ ...d, selectedAngles: d.selectedAngles.includes(preset.id) ? d.selectedAngles.filter((id) => id !== preset.id) : (kind !== "build_scene" || d.selectedAngles.length < 5) ? [...d.selectedAngles, preset.id] : d.selectedAngles }))}>{preset.label}</Button>)}</div>
+          </div>
+          <Button disabled={!requiredReady || plateMutation.isPending} onClick={() => plateMutation.mutate(undefined)}>{plateMutation.isPending ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}Build scene</Button>
+          {!requiredReady && <p className="text-xs text-muted-foreground">Add every reference to build the scene.</p>}
+          {draft.base && <PlateCard label="Base scene" plate={draft.base} motion={draft.motions.find((item) => item.presetId === "base")} generations={generations.data?.items ?? []} busy={motionMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, base: d.base && { ...d.base, approved: true } }))} onAnimate={() => motionMutation.mutate("base")} />}
+          {draft.base?.approved && draft.selectedAngles.map((id) => {
+            const preset = [...REANGLE_PRESETS, ...LUXURY_INTERIOR_PRESETS].find((item) => item.id === id);
+            if (!preset) return null;
+            const plate = draft.angles.find((item) => item.presetId === id);
+            return plate ? <PlateCard key={id} label={preset.label} plate={plate} motion={draft.motions.find((item) => item.presetId === id)} generations={generations.data?.items ?? []} busy={motionMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, angles: d.angles.map((item) => item.presetId === id ? { ...item, approved: true } : item) }))} onAnimate={() => motionMutation.mutate(id)} /> : <Button key={id} variant="outline" disabled={plateMutation.isPending} onClick={() => plateMutation.mutate(id)}>Generate {preset.label}</Button>;
+          })}
+        </GenjutsuStep>
+
+        <GenjutsuStep n="02" title="Drive it with your performance" badge="MOTION TRANSFER">
+          <label htmlFor={`gj-take-${kind}`} className="gj-drop">
+            {takeUrl ? <video src={takeUrl} muted playsInline controls /> : <span className="gj-slot-plus"><Video size={14} /></span>}
+            <strong>{takeUrl ? "Replace your performance video" : "Add reference video to extract motion"}</strong>
+            <small>Video duration · 4–30 seconds</small>
+          </label>
+          <input id={`gj-take-${kind}`} type="file" accept="video/*" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ""; if (file) void uploadTake(file).catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); }} />
+          <p className="text-xs text-muted-foreground">Approve your scene above, then press “Generate motion preview” on it — your take drives the motion.</p>
+          <RecordingReferenceGuide kind={kind} className="max-w-md" />
+          <label htmlFor={`gj-song-${kind}`} className="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold"><Upload className="size-4 text-primary" />{draft.audioUrl ? "Soundtrack added · replace" : "Optional soundtrack"}</label>
+          <input id={`gj-song-${kind}`} type="file" accept="audio/*" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ""; if (file) void upload(file, "soundtrack", "audio").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); }} />
+          <GenjutsuModelNotes motion="Genjutsu · Kling 2.6 Motion Control via Kie" scene="Nano Banana via Kie" />
+        </GenjutsuStep>
+
+        <EnvironmentPickerDialog open={pickerSlot !== null} onOpenChange={(v) => { if (!v) setPickerSlot(null); }}
+          presets={pickerSlot === "interior" ? LUXURY_INTERIORS : PERFORM_ENVIRONMENTS}
+          selectedId={pickerSlot === "interior" ? pickedIds.interior ?? null : envId}
+          onUpload={() => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; fileRefs.current[slot]?.click(); if (slot === "location") setEnvId(null); else setPickedIds((m) => ({ ...m, [slot]: null })); }}
+          onPick={(preset) => { const slot = pickerSlot; setPickerSlot(null); if (!slot) return; if (slot === "location") setEnvId(preset.id); else setPickedIds((m) => ({ ...m, [slot]: preset.id })); setDraft((d) => ({ ...d, settings: slot in d.settings ? { ...d.settings, [slot]: preset.prompt } : d.settings })); void usePresetImage(slot, preset.image).then(() => setAutoBuild(true)).catch((error) => toast.error(error instanceof Error ? error.message : "Could not use that scene")); }} />
+        {/* Hidden inputs for the picker's "upload your own" option. */}
+        {catalog.references.filter((r) => r.id === "location" || r.id === "interior").map((reference) => (
+          <input key={reference.id} ref={(node) => { fileRefs.current[reference.id] = node; }} type="file" accept="image/*" className="sr-only" tabIndex={-1} aria-hidden="true" onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file, reference.id, "image").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); event.target.value = ""; }} />
+        ))}
+      </GenjutsuSheet>
+    );
+  }
+
   return (
     <div className={compact ? "compact-performance text-foreground" : "workspace-duo min-h-screen text-foreground"}>
       <div className={compact ? "space-y-4" : "relative z-10 mx-auto max-w-6xl space-y-6 px-5 py-8"}>

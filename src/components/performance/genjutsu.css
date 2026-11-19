@@ -46,4 +46,34 @@
 .genjutsu-grwm-header img {width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px;}
 @media(min-width:1400px){.genjutsu-hero{min-height:540px;}}
 @media(max-width:700px){.genjutsu-inner{padding:16px;}.genjutsu-hero{min-height:460px;}.genjutsu-hero-content{padding:22px;}.genjutsu-hero h1{font-size:42px;}.genjutsu-gallery{grid-template-rows:150px 150px;}.genjutsu-gallery strong{font-size:16px;}.genjutsu-directions{grid-template-columns:1fr;gap:20px;}.genjutsu-band h2,.genjutsu-finish h2{font-size:28px;}.genjutsu-upload-pair{grid-template-columns:1fr;}.genjutsu-nav{margin-bottom:18px;}.genjutsu-nav nav{gap:4px;}.genjutsu-nav nav a{font-size:11px;}}
-@media(prefers-reduced-motion:reduce){.genjutsu *{scroll-behavior:auto!important;}}
+@media(prefers-reduced-motion:reduce){.genjutsu *{scroll-behavior:auto!important;}}/* Perform Anywhere tool card (Genjutsu sheet layout) */
+.gj-sheet {max-width:640px;margin:0 auto;border:1px solid var(--border);border-radius:24px;background:var(--card);padding:18px;box-shadow:0 30px 80px -40px color-mix(in oklab,var(--primary) 60%,transparent);}
+.gj-sheet-head {display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 16px;}
+.gj-sheet-head strong {font-size:20px;}
+.gj-sheet-head span {font-size:13px;color:var(--muted-foreground);}
+.gj-sheet-body {display:grid;gap:18px;}
+.gj-sheet-foot {margin-top:18px;display:grid;gap:8px;text-align:center;font-size:12px;color:var(--muted-foreground);}
+.gj-step {display:grid;gap:10px;}
+.gj-step-boxed {border:1px solid color-mix(in oklab,var(--primary) 35%,var(--border));border-radius:16px;padding:14px;background:color-mix(in oklab,var(--primary) 6%,var(--card));}
+.gj-step-head {display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.gj-step-n {color:var(--primary);font-size:11px;font-weight:800;letter-spacing:.12em;}
+.gj-step-head h3 {font-size:17px;font-weight:700;}
+.gj-badge {flex-shrink:0;border:1px solid color-mix(in oklab,var(--primary) 50%,transparent);background:var(--accent);color:var(--accent-foreground);border-radius:999px;padding:4px 10px;font-size:10px;font-weight:800;letter-spacing:.08em;}
+.gj-step-desc {font-size:13px;color:var(--muted-foreground);}
+.gj-slots {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;}
+.gj-slot {position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:84px;min-width:0;border:1px solid var(--border);border-radius:10px;background:var(--background);padding:10px;text-align:left;cursor:pointer;overflow:hidden;}
+.gj-slot[aria-disabled=true] {cursor:default;opacity:.8;}
+.gj-slot.is-set {border-color:var(--primary);}
+.gj-slot strong {font-size:12px;} .gj-slot small {font-size:10px;color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.gj-slot img {width:36px;height:36px;border-radius:6px;object-fit:cover;}
+.gj-slot-plus {display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;border-radius:6px;background:var(--accent);color:var(--primary);}
+.gj-drop {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1.5px dashed var(--border);border-radius:14px;padding:22px 14px;text-align:center;cursor:pointer;background:var(--background);}
+.gj-drop:hover {border-color:var(--primary);}
+.gj-drop strong {font-size:15px;} .gj-drop small {font-size:12px;color:var(--muted-foreground);}
+.gj-drop video {max-height:260px;border-radius:10px;}
+.gj-models {display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.gj-models div {border:1px solid var(--border);border-radius:10px;padding:10px;}
+.gj-models p {color:var(--primary);font-size:10px;font-weight:800;letter-spacing:.08em;}
+.gj-models span {font-size:11px;color:var(--muted-foreground);}
+.gj-sheet textarea {width:100%;min-height:72px;border:1px solid var(--border);border-radius:10px;background:var(--background);padding:10px;font-size:13px;color:var(--foreground);}
+@media(max-width:700px){.gj-sheet{padding:14px;border-radius:18px;}.gj-slots{grid-template-columns:repeat(3,minmax(0,1fr));}.gj-models{grid-template-columns:1fr;}}

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Layers3, Loader2 } from "lucide-react";
+import { ArrowUpRight, Download, Layers3, Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { COLOR_PRESETS } from "@/lib/colors.presets";
 import worlds from "@/assets/me/colors-worlds.jpg.asset.json";
@@ -24,13 +24,17 @@ export function PerformWorlds() {
   const [depth, setDepth] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  // The creator's own photo (object URL) replaces the NBA Josh sample when picked.
+  const [source, setSource] = useState<string | null>(null);
   useEffect(() => () => { if (depth) URL.revokeObjectURL(depth); }, [depth]);
+  useEffect(() => () => { if (source) URL.revokeObjectURL(source); }, [source]);
+  const sourceUrl = source ?? identity.url;
 
-  const buildDepth = async () => {
+  const buildDepth = async (from = sourceUrl) => {
     setBusy(true); setErr(null);
     try {
       const { estimateDepthMap } = await import("@/lib/depth-anything");
-      const { previewUrl } = await estimateDepthMap(new URL(identity.url, window.location.origin).href);
+      const { previewUrl } = await estimateDepthMap(from.startsWith("blob:") ? from : new URL(from, window.location.origin).href);
       setDepth(previewUrl);
     } catch (e) { setErr(e instanceof Error ? e.message : "Depth guide failed"); }
     finally { setBusy(false); }
@@ -50,12 +54,17 @@ export function PerformWorlds() {
     </div>
     <div className="min-w-0 rounded-lg border border-border p-3">
       <div className="flex items-center gap-2"><Layers3 size={16} className="text-primary" /><h3 className="text-sm font-bold">Depth guide · Depth Anything → Genjutsu</h3></div>
-      <p className="mt-1 text-xs text-muted-foreground">NBA Josh · source and depth preview</p>
+      <p className="mt-1 text-xs text-muted-foreground">{source ? "Your photo" : "NBA Josh sample"} · free, runs on your device. Use the guide as the Pose reference when you build your scene.</p>
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <figure><img src={identity.url} alt="Source photo" className="h-44 w-full rounded object-cover" /><figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Your photo</figcaption></figure>
-        <figure>{depth ? <img src={depth} alt="Depth map of your photo" className="h-44 w-full rounded object-cover" /> : <div className="flex h-44 w-full items-center justify-center rounded bg-muted text-xs text-muted-foreground">{busy ? <Loader2 className="animate-spin" /> : "Depth map"}</div>}<figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Depth guide</figcaption></figure>
+        <figure><img src={sourceUrl} alt="Source photo" className="aspect-[3/4] w-full rounded bg-muted object-contain" /><figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Photo</figcaption></figure>
+        <figure>{depth ? <img src={depth} alt="Depth map of your photo" className="aspect-[3/4] w-full rounded bg-muted object-contain" /> : <div className="flex aspect-[3/4] w-full items-center justify-center rounded bg-muted text-xs text-muted-foreground">{busy ? <Loader2 className="animate-spin" /> : "Depth map"}</div>}<figcaption className="mt-1 text-center text-[11px] text-muted-foreground">Depth guide</figcaption></figure>
       </div>
-      <Button size="sm" variant="outline" className="mt-3 w-full" disabled={busy} onClick={() => void buildDepth()}>{busy ? "Building depth…" : depth ? "Rebuild depth guide" : "See the depth guide"}</Button>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <label htmlFor="depth-photo" className="inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-border text-xs font-medium hover:bg-muted"><Upload size={14} />Use my photo</label>
+        <input id="depth-photo" type="file" accept="image/*" className="sr-only" onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ""; if (!file) return; const url = URL.createObjectURL(file); setSource(url); setDepth(null); void buildDepth(url); }} />
+        <Button size="sm" variant="outline" disabled={busy} onClick={() => void buildDepth()}>{busy ? "Building depth…" : depth ? "Rebuild" : "Build depth guide"}</Button>
+      </div>
+      {depth && <Button asChild size="sm" variant="ghost" className="mt-2 w-full"><a href={depth} download="depth-guide.png"><Download size={14} />Download depth guide</a></Button>}
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
     </div>
   </section>;
