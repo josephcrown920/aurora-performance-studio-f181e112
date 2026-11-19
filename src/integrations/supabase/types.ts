@@ -4763,10 +4763,17 @@ export type Database = {
           isSetofReturn: true
         }
       }
-      commit_reservation: {
-        Args: { _amount: number; _reason: string; _ref: string; _user: string }
-        Returns: undefined
-      }
+      commit_reservation:
+        | { Args: { _ref: string }; Returns: undefined }
+        | {
+            Args: {
+              _amount: number
+              _reason: string
+              _ref: string
+              _user: string
+            }
+            Returns: undefined
+          }
       create_generation_and_reserve: {
         Args: {
           _amount: number
@@ -4890,10 +4897,17 @@ export type Database = {
           pro_days: number
         }[]
       }
-      release_reservation: {
-        Args: { _amount: number; _reason: string; _ref: string; _user: string }
-        Returns: undefined
-      }
+      release_reservation:
+        | { Args: { _reason: string; _ref: string }; Returns: undefined }
+        | {
+            Args: {
+              _amount: number
+              _reason: string
+              _ref: string
+              _user: string
+            }
+            Returns: undefined
+          }
       requeue_failed_job: {
         Args: { _backoff_seconds: number; _job: string }
         Returns: string
@@ -4920,6 +4934,10 @@ export type Database = {
           _max_age_seconds: number
         }
         Returns: number
+      }
+      settle_aura_reservation_by_ref: {
+        Args: { _reason: string; _ref: string; _release: boolean }
+        Returns: undefined
       }
       watchdog_claim_transition: {
         Args: { p_kind: string; p_now: string; p_subsystem: string }
