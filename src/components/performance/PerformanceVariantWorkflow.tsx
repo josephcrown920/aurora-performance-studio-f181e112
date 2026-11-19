@@ -22,7 +22,6 @@ import {
   VEHICLES,
   type PerformanceVariantKind,
 } from "@/lib/performance-variant-workflows";
-import { PerformanceSourceStrip } from "@/components/performance/PerformanceSourceStrip";
 import { GenjutsuModelNotes, GenjutsuSheet, GenjutsuStep } from "@/components/performance/GenjutsuSheet";
 import { RecordingReferenceGuide, WorkflowVisualGuide } from "@/components/performance/WorkflowVisualGuide";
 import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
@@ -323,9 +322,8 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
     <div className={compact ? "compact-performance text-foreground" : "workspace-duo min-h-screen text-foreground"}>
       <div className={compact ? "space-y-4" : "relative z-10 mx-auto max-w-6xl space-y-6 px-5 py-8"}>
         {!compact && <WorkflowVisualGuide kind={kind} />}
-        {mode === "anywhere" && <PerformanceSourceStrip references={draft.references} phoneVideoUrl={draft.phoneVideoUrl} finalUrl={finalUrl} onUpload={(file) => { void upload(file, "original-performance", "video").catch((error) => toast.error(error instanceof Error ? error.message : "Upload failed")); }} />}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div><p className="aurora-kicker">{mode === "anywhere" ? "Genjutsu" : "Colors Studio"}</p><h1 className="font-display text-3xl">{catalog.label}</h1></div>
+          <div><p className="aurora-kicker">Colors Studio</p><h1 className="font-display text-3xl">{catalog.label}</h1></div>
         </div>
 
         <section className="grid grid-cols-2 gap-2 sm:grid-cols-3">

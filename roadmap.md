@@ -161,3 +161,4 @@
 - [ ] Let the creator swap each feature box's photo or video from Admin.
 - [ ] Remove clutter notes shown in the creator's screenshots across every page.
 - [ ] Fix the Create page row colors to match the creator's multi-colour reference (not green/black).
+- [ ] Billing page crash + Paystack checkout check

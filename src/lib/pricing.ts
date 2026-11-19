@@ -150,6 +150,8 @@ export const SOUL_TRAINING_COST = 300;
 
 export const AURA_VALUE_SCENARIOS = [
   { id: "image", label: "AI images", shortLabel: "images", cost: () => computeCost({ features: ["image"], resolution: "720p" }).total },
+  { id: "video", label: "AI videos", shortLabel: "videos", cost: () => computeCost({ features: ["video"], resolution: "720p" }).total },
+  { id: "lipsync", label: "Lip-sync clips", shortLabel: "lip-sync clips", cost: () => computeCost({ features: ["lipsync"], resolution: "720p" }).total },
   { id: "performance", label: "Perform Anywhere renders", shortLabel: "performance renders", cost: () => computeCost({ features: ["video", "motion"], resolution: "720p" }).total },
 ] as const;
 export type AuraValueScenarioId = (typeof AURA_VALUE_SCENARIOS)[number]["id"];
