@@ -3,6 +3,9 @@ import { DEMO_ASSETS, type DemoMediaAsset } from "@/lib/demo-assets";
 import { cn } from "@/lib/utils";
 import genjutsuVideo from "@/assets/genjutsu/performance.mp4.asset.json";
 import genjutsuPoster from "@/assets/genjutsu/performance.jpg.asset.json";
+import joshPortrait from "@/assets/nba-josh/portrait.jpg.asset.json";
+import soulRef from "@/assets/nba-josh/character-reference.jpeg.asset.json";
+import { TikTokFeed } from "@/components/visual/TikTokFeed";
 import grwmMirror from "@/assets/genjutsu/grwm-mirror.webp.asset.json";
 
 /** Copy for the Lip Sync-style box shown at the top of each flagship feature. */
@@ -24,7 +27,7 @@ const img = (id: string, src: string, alt: string): DemoMediaAsset => ({ id, src
 
 export const FEATURE_TOP_BOXES: Record<FeatureTopBoxId, Entry> = {
   genjutsu: {
-    kicker: "Genjutsu · Perform Anywhere",
+    kicker: "Perform Anywhere · powered by Genjutsu",
     headline: "Your performance. A new world.",
     sub: "Film yourself anywhere, then Genjutsu rebuilds the scene around your real moves.",
     media: { id: "genjutsu-hero", src: genjutsuVideo.url, type: "video", alt: "Genjutsu performance render", poster: genjutsuPoster.url },
@@ -51,7 +54,7 @@ export const FEATURE_TOP_BOXES: Record<FeatureTopBoxId, Entry> = {
     kicker: "Multi-Angle Camera",
     headline: "One photo. Six camera angles.",
     sub: "Same face, outfit and lighting — captured from six cinematic angles.",
-    media: img("multiangle-hero", "/nav-previews/avatar.jpg", "Portrait used for multiple camera angles"),
+    media: img("multiangle-hero", joshPortrait.url, "Portrait used for multiple camera angles"),
   },
   tiktok30: {
     kicker: "TikTok30",
@@ -75,7 +78,7 @@ export const FEATURE_TOP_BOXES: Record<FeatureTopBoxId, Entry> = {
     kicker: "Soul Studio",
     headline: "Your artist identity, on demand.",
     sub: "Train your look once, then generate photos and videos that stay true to you.",
-    media: img("soul-hero", "/nav-previews/avatar.jpg", "Artist identity portrait"),
+    media: img("soul-hero", soulRef.url, "Artist identity portrait"),
   },
   lipsync: {
     kicker: "Lip Sync Studio",
@@ -91,7 +94,7 @@ export const FEATURE_TOP_BOXES: Record<FeatureTopBoxId, Entry> = {
  */
 export function FeatureTopBox({ feature, className }: { feature: FeatureTopBoxId; className?: string }) {
   const entry = FEATURE_TOP_BOXES[feature];
-  return (
+  const banner = (
     <PageHeroBanner
       kicker={entry.kicker}
       headline={entry.headline}
@@ -100,4 +103,6 @@ export function FeatureTopBox({ feature, className }: { feature: FeatureTopBoxId
       className={cn("feature-top-box relative z-10 mx-4 mt-6 rounded-3xl border border-border sm:mx-6", className)}
     />
   );
+  if (feature !== "tiktok30") return banner;
+  return <>{banner}<TikTokFeed /></>;
 }
