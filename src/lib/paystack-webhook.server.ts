@@ -441,13 +441,16 @@ export async function processPaymentSuccess(
   if (payment.purpose === "pro_one_time") return settleOneTimeProPayment(payment, event);
 
   // Grant credits to user
-  await supabaseAdmin.rpc("grant_credits", {
+  const { error: grantError } = await supabaseAdmin.rpc("grant_credits", {
     _user: payment.user_id,
     _amount: payment.credits_granted,
     _reason: "purchase",
     _ref: payment.id,
     _actor: null,
   });
+  // A failed grant must not be acknowledged as a settled purchase.
+  // The webhook route will return a retriable response to the provider.
+  if (grantError) throw new Error(`Credit grant failed for payment ${payment.id}: ${grantError.message}`);
 
   // Day passes: auto-set the daily spend limit so usage is naturally spread
   // across the pass duration (e.g. 1-Day Pass → 150 Aura/day, 2-Day → 130/day).
