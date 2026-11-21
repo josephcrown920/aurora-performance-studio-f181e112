@@ -1,0 +1,23 @@
+name: Payment security tests
+on:
+  pull_request:
+    paths:
+      - 'src/lib/paystack-*.ts'
+      - 'src/routes/api/public/paystack-webhook.ts'
+      - '.github/workflows/payment-security-tests.yml'
+  push:
+    branches:
+      - security/audit-and-hardening
+jobs:
+  payment-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.2.22'
+      - run: bun install --frozen-lockfile
+      - name: Payment unit tests
+        run: bun test src/lib/paystack-webhook.server.test.ts src/lib/paystack-subscription.server.test.ts
