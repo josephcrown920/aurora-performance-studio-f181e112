@@ -258,6 +258,7 @@ export type PaystackSubscriptionCreateData = {
 
 export type PaystackSubscriptionRenewalData = {
   subscription_code?: string;
+  reference?: string;
   metadata?: {
     user_id?: string;
   };
@@ -310,25 +311,15 @@ export async function processSubscriptionCreate(data: PaystackSubscriptionCreate
 
   if (!userId || !subCode) return { status: "ignored" as const };
 
-  await supabaseAdmin.rpc("activate_pro_subscription", {
-    _user: userId,
-    _sub_code: subCode,
-    _expires_at: nextPaymentDate ? new Date(nextPaymentDate).toISOString() : fallbackSubscriptionExpiry(),
-  });
-
-  await supabaseAdmin.rpc("grant_monthly_aura", {
-    _user: userId,
-    _amount: SUBSCRIPTION_TIERS.pro.monthly_aura,
-    _ref: proMonthlyAuraRef(subCode),
-  });
-
+  // subscription.create is not proof of a successful charge.
+  // Entitlements and Aura are granted only by a signed charge.success event.
   await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
     paystack_subscription_code: subCode,
     paystack_customer_code: customerCode,
     paystack_email_token: emailToken,
     plan_code: planCode,
-    status: "active",
+    status: "pending",
     next_payment_date: nextPaymentDate,
     amount_minor: data.amount ?? SUBSCRIPTION_TIERS.pro.price_amount_minor,
     currency: data.currency ?? "USD",
@@ -342,7 +333,7 @@ export async function processSubscriptionCreate(data: PaystackSubscriptionCreate
  */
 export async function processSubscriptionRenewal(data: PaystackSubscriptionRenewalData) {
   const subCode = data.subscription_code ?? "";
-  if (!subCode) return { status: "ignored" as const };
+  if (!subCode || !data.reference) throw new Error("Subscription renewal requires a charge reference");
 
   const { data: sub } = await supabaseAdmin
     .from("subscriptions")
@@ -355,22 +346,27 @@ export async function processSubscriptionRenewal(data: PaystackSubscriptionRenew
 
   const newExpiry = fallbackSubscriptionExpiry();
 
-  await supabaseAdmin.rpc("activate_pro_subscription", {
+  const activation = await supabaseAdmin.rpc("activate_pro_subscription", {
     _user: userId,
     _sub_code: subCode,
     _expires_at: newExpiry,
   });
 
-  await supabaseAdmin.rpc("grant_monthly_aura", {
+  if (activation.error) throw new Error(activation.error.message);
+
+  const grant = await supabaseAdmin.rpc("grant_monthly_aura", {
     _user: userId,
     _amount: SUBSCRIPTION_TIERS.pro.monthly_aura,
-    _ref: proMonthlyAuraRef(subCode),
+    _ref: deterministicUuid(`paystack:${subCode}:${data.reference}`),
   });
 
-  await supabaseAdmin
+  if (grant.error) throw new Error(grant.error.message);
+
+  const update = await supabaseAdmin
     .from("subscriptions")
     .update({ status: "active", next_payment_date: newExpiry, updated_at: new Date().toISOString() })
     .eq("paystack_subscription_code", subCode);
+  if (update.error) throw new Error(update.error.message);
 
   return { status: "success" as const, userId, subscriptionCode: subCode };
 }
