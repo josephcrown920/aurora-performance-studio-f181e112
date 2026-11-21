@@ -911,9 +911,9 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
   const audioAsset = audioClip ? assetOf(audioClip.assetId) : null;
 
   return (
-    <div className="guy-studio mx-auto flex min-h-screen w-full max-w-[1800px] flex-col overflow-hidden border-border bg-background/65 font-sans text-foreground sm:min-h-[calc(100vh-32px)] sm:rounded-xl sm:border sm:studio-frame lg:my-4">
+    <div className="guy-studio mx-auto flex min-h-screen w-full max-w-[1920px] flex-col overflow-hidden border-border/70 bg-background/90 shadow-2xl font-sans text-foreground sm:min-h-[calc(100vh-32px)] sm:rounded-2xl sm:border sm:studio-frame lg:my-4">
       {/* compact control bar, pinned to the bottom */}
-      <header aria-label="Studio controls" className="studio-header sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-card/85 px-2 py-1 backdrop-blur-2xl sm:px-3">
+      <header aria-label="Studio controls" className="studio-header sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-card/95 px-3 py-1 shadow-sm backdrop-blur-2xl sm:px-3">
         <div className="flex min-w-0 items-center gap-2">
           <input
             aria-label="Session name"

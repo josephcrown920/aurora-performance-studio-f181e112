@@ -3,7 +3,7 @@
 // on top, multi-track timeline below, media import and WebM export in the bar.
 import { useRef, useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, HardDriveUpload, Layers, Loader2 } from "lucide-react";
+import { Download, HardDriveUpload, Layers, Loader2, Sparkles, Film, Music2, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { MultiTrackTimeline } from "@/features/creative-studio/components/video/MultiTrackTimeline";
 import { LayersEditor } from "@/features/creative-studio/components/video/LayersEditor";
@@ -23,6 +23,7 @@ export function VideoStudio() {
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showLayers, setShowLayers] = useState(false);
+  const [workspaceTab, setWorkspaceTab] = useState<"preview" | "timeline">("preview");
 
   const importFiles = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? []);
@@ -80,61 +81,34 @@ export function VideoStudio() {
   };
 
   return (
-    <div className="aurora-editor-workstation flex min-h-[calc(100vh-160px)] flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-lg font-bold">Video Studio</h2>
-        <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-          Shared timeline
-        </span>
-        <div className="flex-1" />
-        <input
-          ref={fileRef}
-          type="file"
-          accept="video/*,audio/*,image/*"
-          multiple
-          className="hidden"
-          onChange={importFiles}
-        />
-        <Button
-          type="button"
-          data-testid="video-studio-import"
-          onClick={() => fileRef.current?.click()}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 text-foreground py-1.5 text-xs font-semibold hover:border-primary/50"
-        >
-          <HardDriveUpload className="size-3.5" /> Import media
-        </Button>
-        <Button
-          type="button"
-          onClick={() => setShowLayers((v) => !v)}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 text-foreground py-1.5 text-xs font-semibold hover:border-primary/50"
-        >
-          <Layers className="size-3.5" /> {showLayers ? "Hide layers" : "Layers"}
-        </Button>
-        <Button
-          type="button"
-          data-testid="video-studio-export"
-          onClick={exportVideo}
-          disabled={exporting}
-          className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
-        >
-          {exporting ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />}
-          {exporting ? `Exporting ${Math.round(progress * 100)}%` : "Export video"}
-        </Button>
-      </div>
-
-      <div className="min-h-[320px] flex-1 rounded-lg border border-border bg-card/40 p-4">
-        <ProgramMonitor />
-      </div>
-
-      <div className="min-w-0 overflow-x-auto rounded-lg border border-border bg-card/40 p-2">
-        <MultiTrackTimeline />
-      </div>
-
-      {showLayers && (
-        <div className="rounded-lg border border-border bg-card/40 p-4">
-          <LayersEditor />
+    <main className="aurora-editor-workstation mx-auto flex min-h-[calc(100vh-160px)] w-full max-w-[1600px] flex-col gap-6 rounded-3xl border border-border/50 bg-background px-4 py-6 sm:px-8">
+      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-6">
+        <div>
+          <p className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-widest text-muted-foreground"><Sparkles className="size-4" /> AURORA CREATIVE</p>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Video Studio</h1>
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground">Create, preview and finish your next video in one focused workspace.</p>
         </div>
-      )}
-    </div>
+        <div className="flex flex-wrap gap-2">
+          <input ref={fileRef} type="file" accept="video/*,audio/*,image/*" multiple className="hidden" onChange={importFiles} />
+          <Button type="button" data-testid="video-studio-import" variant="outline" onClick={() => fileRef.current?.click()}><HardDriveUpload className="mr-2 size-4" /> Add media</Button>
+          <Button type="button" data-testid="video-studio-export" onClick={exportVideo} disabled={exporting}><Download className="mr-2 size-4" />{exporting ? `Exporting ${Math.round(progress * 100)}%` : "Export video"}</Button>
+        </div>
+      </header>
+      <section aria-label="Video creation workflow" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <button type="button" onClick={() => fileRef.current?.click()} className="group flex items-center gap-4 rounded-2xl border border-border/70 bg-card/60 p-5 text-left transition hover:border-primary/60 hover:bg-card focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"><Film className="size-6 text-primary" /><span><strong className="block text-sm">Start with footage</strong><small className="text-muted-foreground">Import video clips</small></span></button>
+        <button type="button" onClick={() => fileRef.current?.click()} className="group flex items-center gap-4 rounded-2xl border border-border/70 bg-card/60 p-5 text-left transition hover:border-primary/60 hover:bg-card focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"><ImageIcon className="size-6 text-primary" /><span><strong className="block text-sm">Animate images</strong><small className="text-muted-foreground">Add stills to your edit</small></span></button>
+        <button type="button" onClick={() => fileRef.current?.click()} className="group flex items-center gap-4 rounded-2xl border border-border/70 bg-card/60 p-5 text-left transition hover:border-primary/60 hover:bg-card focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"><Music2 className="size-6 text-primary" /><span><strong className="block text-sm">Add soundtrack</strong><small className="text-muted-foreground">Import audio tracks</small></span></button>
+      </section>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div role="tablist" aria-label="Workspace view" className="flex rounded-xl border border-border bg-card p-1">
+          <button role="tab" aria-selected={workspaceTab === "preview"} type="button" onClick={() => setWorkspaceTab("preview")} className={`rounded-lg px-4 py-2 text-sm ${workspaceTab === "preview" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>Preview</button>
+          <button role="tab" aria-selected={workspaceTab === "timeline"} type="button" onClick={() => setWorkspaceTab("timeline")} className={`rounded-lg px-4 py-2 text-sm ${workspaceTab === "timeline" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>Timeline</button>
+        </div>
+        <Button type="button" variant="outline" aria-expanded={showLayers} onClick={() => setShowLayers(v => !v)}><Layers className="mr-2 size-4" />{showLayers ? "Hide clip layers" : "Clip layers"}</Button>
+      </div>
+      <section aria-label="Program preview" className={`min-h-[320px] overflow-hidden rounded-2xl border border-border bg-card/40 p-3 sm:p-5 ${workspaceTab === "timeline" ? "hidden lg:block" : ""}`}><ProgramMonitor /></section>
+      <section aria-label="Video timeline" className={`min-w-0 overflow-x-auto rounded-2xl border border-border bg-card/40 p-3 ${workspaceTab === "preview" ? "hidden lg:block" : ""}`}><MultiTrackTimeline /></section>
+      {showLayers && <section aria-label="Clip layers" className="rounded-2xl border border-border bg-card/40 p-4"><LayersEditor /></section>}
+    </main>
   );
 }
