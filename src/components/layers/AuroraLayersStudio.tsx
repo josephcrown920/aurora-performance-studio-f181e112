@@ -3,8 +3,6 @@ import { ClientOnly, Link } from '@tanstack/react-router';
 import { useServerFn } from '@tanstack/react-start';
 import { ArrowDown, ArrowUp, Copy, Download, Eye, ImagePlus, Layers3, Loader2, Lock, Plus, RotateCcw, Save, Sparkles, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { MultiTrackTimeline } from '@/features/creative-studio/components/video/MultiTrackTimeline';
-import { LayersEditor } from '@/features/creative-studio/components/video/LayersEditor';
 import { loadTimeline, type Clip, type TimelineDoc } from '@/features/creative-studio/lib/timeline-state';
 import { renderLayersImage } from '@/lib/layers.functions';
 import { SCENE_BUILDER_COST_BASE } from '@/lib/scene-builder.templates';
@@ -209,7 +207,7 @@ function Studio() {
           <div className="border-t border-border pt-4"><p className="layers-label">Step 04 — Save &amp; export</p><div className="mt-3 flex flex-wrap gap-2"><Button variant="outline" size="sm" onClick={() => void save()} disabled={!source || !!busy}>{busy === 'save' ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}Save + sync</Button><Button variant="outline" size="sm" disabled={!display || !!busy} onClick={() => void task('png', async () => { if (display) await exportLayerPng(display); })}><Download className="size-4" />PNG</Button><Button variant="outline" size="sm" disabled={!shots.length || !!busy} onClick={() => void task('sheet', () => exportContactSheet(doc))}><Layers3 className="size-4" />Composite sheet</Button><Button className="layers-gradient" size="sm" disabled={!shots.length || !!busy} onClick={() => void task('zip', () => exportLayersZip(doc, name))}><Download className="size-4" />Export ZIP</Button></div></div>
         </section>
       </div>
-      <section className="aurora-editor-workstation mt-8 min-w-0 border-t border-border pt-6"><h2 className="mb-4 text-lg font-bold">Shared timeline</h2><div className="min-w-0 overflow-x-auto"><MultiTrackTimeline /></div><details className="mt-4"><summary className="cursor-pointer py-2 text-sm font-semibold">Timeline layers</summary><LayersEditor /></details></section>
+      <section aria-label="Image versions" className="mt-8 border-t border-border pt-6"><h2 className="mb-2 text-lg font-bold">Image versions</h2><p className="mb-4 text-sm text-muted-foreground">Select a generated image to preview it. Video editing stays in the separate GUI editor.</p><div className="flex flex-wrap gap-3">{shots.map(shot => <button key={shot.id} type="button" onClick={() => { setActive(shot.id); setOriginal(false); }} aria-pressed={result?.id === shot.id} className={`w-24 overflow-hidden rounded-xl border-2 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${result?.id === shot.id ? 'border-primary' : 'border-border'}`}><img src={shot.src} alt={shot.name || 'Generated image'} className="aspect-square w-full object-cover" /><span className="block truncate p-2 text-xs">{shot.name || 'Image'}</span></button>)}</div></section>
     </div>
   </main>;
 }

@@ -1,8 +1,8 @@
 import { ClientOnly, createLazyFileRoute } from "@tanstack/react-router";
-import { GuyStudio } from "@/features/guy-studio/GuyStudio";
+import { AuroraLayersStudio } from "@/components/layers/AuroraLayersStudio";
 
 export const Route = createLazyFileRoute("/layers")({ component: LayersWorkspace });
 
 function LayersWorkspace() {
-  return <ClientOnly fallback={<p role="status">Opening Layers…</p>}><GuyStudio initialMode="layers" /></ClientOnly>;
+  return <ClientOnly fallback={<p role="status">Opening Aurora Layers…</p>}><AuroraLayersStudio /></ClientOnly>;
 }
