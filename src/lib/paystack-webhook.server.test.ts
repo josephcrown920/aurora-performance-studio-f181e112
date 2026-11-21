@@ -137,6 +137,18 @@ describe("processPaymentSuccess", () => {
     });
   });
 
+  it("does not mark a payment succeeded when the credit grant RPC fails", async () => {
+    tables.payments = {
+      data: { id: "p-fail", user_id: "u1", credits_granted: 500, status: "pending", amount_kobo: 1000 },
+      error: null,
+    };
+    rpcResult.grant_credits = { data: null, error: { message: "database unavailable" } };
+    await expect(
+      processPaymentSuccess(ev({ reference: "ref-fail", status: "success", amount: 1000 }), { retryDelaysMs: [] }),
+    ).rejects.toThrow(/Credit grant failed/);
+    expect(calls.updates.some(c => c.table === "payments" && c.patch.status === "succeeded")).toBe(false);
+  });
+
   it("is idempotent — an already-succeeded payment is not re-granted", async () => {
     tables.payments = {
       data: {
