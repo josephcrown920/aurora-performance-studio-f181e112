@@ -313,7 +313,16 @@ export async function processSubscriptionCreate(data: PaystackSubscriptionCreate
 
   // subscription.create is not proof of a successful charge.
   // Entitlements and Aura are granted only by a signed charge.success event.
-  await supabaseAdmin.from("subscriptions").upsert({
+  // A delayed subscription.create must not downgrade a paid subscription.
+  const { data: existing, error: lookupError } = await supabaseAdmin
+    .from("subscriptions")
+    .select("status")
+    .eq("paystack_subscription_code", subCode)
+    .maybeSingle();
+  if (lookupError) throw new Error(lookupError.message);
+  if (existing) return { status: "success" as const, userId, subscriptionCode: subCode };
+
+  const { error: subscriptionError } = await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
     paystack_subscription_code: subCode,
     paystack_customer_code: customerCode,
@@ -324,6 +333,7 @@ export async function processSubscriptionCreate(data: PaystackSubscriptionCreate
     amount_minor: data.amount ?? SUBSCRIPTION_TIERS.pro.price_amount_minor,
     currency: data.currency ?? "USD",
   }, { onConflict: "paystack_subscription_code" });
+  if (subscriptionError) throw new Error(subscriptionError.message);
 
   return { status: "success" as const, userId, subscriptionCode: subCode };
 }
