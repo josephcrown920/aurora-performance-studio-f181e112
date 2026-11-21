@@ -80,9 +80,9 @@ export function VideoStudio() {
   };
 
   return (
-    <div className="aurora-editor-workstation flex min-h-[calc(100vh-160px)] flex-col gap-4">
+    <div className="aurora-editor-workstation mx-auto flex min-h-[calc(100vh-160px)] w-full max-w-[1920px] flex-col gap-4 rounded-2xl border border-border/60 bg-background/80 p-3 shadow-xl sm:p-5">
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-lg font-bold">Video Studio</h2>
+        <div className="min-w-0"><p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Aurora / Post-production</p><h2 className="text-xl font-bold tracking-tight">Video Studio</h2></div>
         <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
           Shared timeline
         </span>
@@ -122,11 +122,11 @@ export function VideoStudio() {
         </Button>
       </div>
 
-      <div className="min-h-[320px] flex-1 rounded-lg border border-border bg-card/40 p-4">
+      <div className="min-h-[320px] flex-1 overflow-hidden rounded-xl border border-border/70 bg-card/50 p-2 shadow-sm sm:p-4">
         <ProgramMonitor />
       </div>
 
-      <div className="min-w-0 overflow-x-auto rounded-lg border border-border bg-card/40 p-2">
+      <div className="min-w-0 overflow-x-auto rounded-xl border border-border/70 bg-card/50 p-2 shadow-sm sm:p-3">
         <MultiTrackTimeline />
       </div>
 
