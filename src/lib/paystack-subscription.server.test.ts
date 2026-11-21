@@ -82,151 +82,43 @@ beforeEach(() => {
   calls.upserts.length = 0;
 });
 
-// ── processSubscriptionCreate ─────────────────────────────────────────────────
-
+// Subscription creation is metadata only; a successful charge must arrive first.
 describe("processSubscriptionCreate", () => {
-  it("activates Pro, grants monthly Aura, and upserts the subscriptions row", async () => {
+  it("records a pending subscription without granting Pro or Aura", async () => {
     tables.profiles = { data: { user_id: "u1" }, error: null };
-
     const result = await processSubscriptionCreate({
       subscription_code: "SUB_abc",
-      customer: { email: "user@example.com", customer_code: "CUS_1" },
-      plan: { plan_code: "PLN_pro" },
-      next_payment_date: "2026-09-15T00:00:00Z",
-      email_token: "tok_xyz",
-      amount: 1500,
-    });
-
-    expect(result).toMatchObject({ status: "success", userId: "u1", subscriptionCode: "SUB_abc" });
-
-    const activate = calls.rpc.find((c) => c.name === "activate_pro_subscription");
-    expect(activate?.args).toMatchObject({
-      _user: "u1",
-      _sub_code: "SUB_abc",
-    });
-    expect(typeof activate?.args._expires_at).toBe("string");
-
-    const grantAura = calls.rpc.find((c) => c.name === "grant_monthly_aura");
-    expect(grantAura?.args).toMatchObject({
-      _user: "u1",
-      _amount: 2000, // SUBSCRIPTION_TIERS.pro.monthly_aura
-    });
-    expect(typeof grantAura?.args._ref).toBe("string");
-
-    const upsert = calls.upserts.find((u) => u.table === "subscriptions");
-    expect(upsert?.row).toMatchObject({
-      user_id: "u1",
-      paystack_subscription_code: "SUB_abc",
-      paystack_customer_code: "CUS_1",
-      plan_code: "PLN_pro",
-      status: "active",
-      amount_minor: 1500,
-      currency: "USD",
-    });
-  });
-
-  it("is idempotent — the monthly Aura ref is stable for the same subCode+month", async () => {
-    tables.profiles = { data: { user_id: "u1" }, error: null };
-
-    await processSubscriptionCreate({ subscription_code: "SUB_abc" });
-    const ref1 = calls.rpc.find((c) => c.name === "grant_monthly_aura")?.args._ref;
-    calls.rpc.length = 0;
-
-    tables.profiles = { data: { user_id: "u1" }, error: null };
-    await processSubscriptionCreate({ subscription_code: "SUB_abc" });
-    const ref2 = calls.rpc.find((c) => c.name === "grant_monthly_aura")?.args._ref;
-
-    expect(ref1).toBe(ref2);
-  });
-
-  it("returns ignored when the customer email matches no profile", async () => {
-    tables.profiles = { data: null, error: null };
-    const result = await processSubscriptionCreate({
-      subscription_code: "SUB_abc",
-      customer: { email: "nobody@example.com" },
-    });
-    expect(result).toEqual({ status: "ignored" });
-    expect(calls.rpc.length).toBe(0);
-  });
-
-  it("returns ignored when subscription_code is absent", async () => {
-    tables.profiles = { data: { user_id: "u1" }, error: null };
-    const result = await processSubscriptionCreate({
       customer: { email: "user@example.com" },
     });
-    expect(result).toEqual({ status: "ignored" });
-    expect(calls.rpc.length).toBe(0);
-  });
-
-  it("uses the fallback expiry (~32 days) when next_payment_date is absent", async () => {
-    tables.profiles = { data: { user_id: "u1" }, error: null };
-    await processSubscriptionCreate({ subscription_code: "SUB_abc" });
-    const activate = calls.rpc.find((c) => c.name === "activate_pro_subscription");
-    const expiry = new Date(activate?.args._expires_at as string);
-    const daysFromNow = (expiry.getTime() - Date.now()) / 86400000;
-    expect(daysFromNow).toBeGreaterThan(30);
-    expect(daysFromNow).toBeLessThan(35);
+    expect(result.status).toBe("success");
+    expect(calls.rpc).toHaveLength(0);
+    expect(calls.upserts[0]?.row.status).toBe("pending");
   });
 });
 
-// ── processSubscriptionRenewal ────────────────────────────────────────────────
-
 describe("processSubscriptionRenewal", () => {
-  it("extends Pro expiry, grants monthly Aura, and marks subscription active", async () => {
-    tables.subscriptions = { data: { user_id: "u1", next_payment_date: null }, error: null };
-
-    const result = await processSubscriptionRenewal({ subscription_code: "SUB_abc" });
-    expect(result).toMatchObject({ status: "success", userId: "u1", subscriptionCode: "SUB_abc" });
-
-    expect(calls.rpc.find((c) => c.name === "activate_pro_subscription")).toBeTruthy();
-    const grantAura = calls.rpc.find((c) => c.name === "grant_monthly_aura");
-    expect(grantAura?.args).toMatchObject({ _user: "u1", _amount: 2000 });
-
-    const upd = calls.updates.find((u) => u.table === "subscriptions");
-    expect(upd?.patch).toMatchObject({ status: "active" });
-    expect(typeof upd?.patch.next_payment_date).toBe("string");
-  });
-
-  it("falls back to metadata.user_id when the subscriptions row has no user_id", async () => {
-    tables.subscriptions = { data: null, error: null };
-    const result = await processSubscriptionRenewal({
-      subscription_code: "SUB_abc",
-      metadata: { user_id: "u_meta" },
-    });
-    expect(result).toMatchObject({ status: "success", userId: "u_meta" });
-    const grant = calls.rpc.find((c) => c.name === "grant_monthly_aura");
-    expect(grant?.args._user).toBe("u_meta");
-  });
-
-  it("returns ignored when subscription_code is absent", async () => {
-    const result = await processSubscriptionRenewal({});
-    expect(result).toEqual({ status: "ignored" });
-    expect(calls.rpc.length).toBe(0);
-  });
-
-  it("returns ignored when no userId can be resolved", async () => {
-    tables.subscriptions = { data: null, error: null };
-    const result = await processSubscriptionRenewal({ subscription_code: "SUB_abc" });
-    expect(result).toEqual({ status: "ignored" });
-    expect(calls.rpc.length).toBe(0);
-  });
-
-  it("produces the same monthly Aura ref as subscription.create for the same subCode in the same month", async () => {
-    // Both events must produce the same ref so the DB unique index deduplicates
-    // the grant whichever fires second (initial subscription race).
-    tables.profiles = { data: { user_id: "u1" }, error: null };
-    tables.subscriptions = { data: { user_id: "u1", next_payment_date: null }, error: null };
-
-    await processSubscriptionCreate({ subscription_code: "SUB_dup" });
-    const createRef = calls.rpc.find((c) => c.name === "grant_monthly_aura")?.args._ref;
+  it("grants on a confirmed charge and uses a stable charge-specific reference", async () => {
+    tables.subscriptions = { data: { user_id: "u1" }, error: null };
+    await processSubscriptionRenewal({ subscription_code: "SUB_abc", reference: "CHARGE_1" });
+    const first = calls.rpc.find(c => c.name === "grant_monthly_aura")?.args._ref;
     calls.rpc.length = 0;
+    await processSubscriptionRenewal({ subscription_code: "SUB_abc", reference: "CHARGE_1" });
+    const second = calls.rpc.find(c => c.name === "grant_monthly_aura")?.args._ref;
+    expect(first).toBe(second);
+    calls.rpc.length = 0;
+    await processSubscriptionRenewal({ subscription_code: "SUB_abc", reference: "CHARGE_2" });
+    expect(calls.rpc.find(c => c.name === "grant_monthly_aura")?.args._ref).not.toBe(first);
+  });
 
-    tables.subscriptions = { data: { user_id: "u1", next_payment_date: null }, error: null };
-    await processSubscriptionRenewal({ subscription_code: "SUB_dup" });
-    const renewRef = calls.rpc.find((c) => c.name === "grant_monthly_aura")?.args._ref;
+  it("refuses a subscription charge without a payment reference", async () => {
+    await expect(processSubscriptionRenewal({ subscription_code: "SUB_abc" })).rejects.toThrow(/charge reference/);
+    expect(calls.rpc).toHaveLength(0);
+  });
 
-    expect(createRef).toBe(renewRef);
-    expect(typeof createRef).toBe("string");
+  it("does not acknowledge failed Aura grants", async () => {
+    tables.subscriptions = { data: { user_id: "u1" }, error: null };
+    rpcResult.grant_monthly_aura = { data: null, error: { message: "grant failed" } };
+    await expect(processSubscriptionRenewal({ subscription_code: "SUB_abc", reference: "CHARGE_1" })).rejects.toThrow("grant failed");
   });
 });
 
