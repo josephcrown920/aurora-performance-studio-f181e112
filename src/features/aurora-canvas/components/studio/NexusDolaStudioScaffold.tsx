@@ -145,13 +145,16 @@ export default function NexusDolaStudioScaffold() {
   };
 
   const handleExport = () => {
-    if (!selectedResult) return;
+    if (!selectedResult || selectedResult.status !== "approved") return;
 
-    setResults((prev) =>
-      prev.map((result) =>
-        result.id === selectedResult.id ? { ...result, status: "exported" } : result,
-      ),
-    );
+    const summary = JSON.stringify({ ...selectedResult, brief, modelId: selectedModelId, exportedAt: new Date().toISOString() }, null, 2);
+    const url = URL.createObjectURL(new Blob([summary], { type: "application/json" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `dola-job-${selectedResult.id.replace(/[^a-zA-Z0-9_-]/g, "-")}.json`;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setResults((prev) => prev.map((result) => result.id === selectedResult.id ? { ...result, status: "exported" } : result));
     setRuntime((prev) => ({
       ...prev,
       currentStep: "export",
@@ -172,7 +175,9 @@ export default function NexusDolaStudioScaffold() {
       style={{
         minHeight: "100vh",
         display: "grid",
-        gridTemplateColumns: "260px minmax(0, 1fr)",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+        width: "100%",
+        minWidth: 0,
         background: "#05070d",
         color: "#edf2ff",
         fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
@@ -183,6 +188,8 @@ export default function NexusDolaStudioScaffold() {
           background: "rgba(15,19,30,0.94)",
           borderRight: "1px solid rgba(255,255,255,0.08)",
           padding: "22px 14px",
+          minWidth: 0,
+          overflowX: "auto",
         }}
       >
         <div
@@ -250,7 +257,9 @@ export default function NexusDolaStudioScaffold() {
 
       <main
         style={{
-          padding: "28px 24px 24px",
+          padding: "clamp(12px, 3vw, 28px)",
+          minWidth: 0,
+          overflowX: "hidden",
           background: "radial-gradient(circle at top, rgba(110,140,255,0.12), transparent 35%), #05070d",
         }}
       >
@@ -420,7 +429,7 @@ export default function NexusDolaStudioScaffold() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, minmax(0,1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
                   gap: 12,
                 }}
               >
@@ -641,6 +650,7 @@ export default function NexusDolaStudioScaffold() {
               <button
                 type="button"
                 onClick={handleExport}
+                disabled={!selectedResult || selectedResult.status !== "approved"}
                 style={{
                   background: "rgba(124,243,219,0.12)",
                   color: "#8ef7df",
@@ -651,11 +661,11 @@ export default function NexusDolaStudioScaffold() {
                   cursor: "pointer",
                 }}
               >
-                Export final
+                Download job summary
               </button>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0,1fr))", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))", gap: 12 }}>
               {results.map((result) => (
                 <button
                   key={result.id}
@@ -725,6 +735,7 @@ export default function NexusDolaStudioScaffold() {
                   <button
                     type="button"
                     onClick={handleExport}
+                disabled={!selectedResult || selectedResult.status !== "approved"}
                     style={{
                       background: "rgba(124,243,219,0.12)",
                       color: "#8ef7df",
@@ -735,7 +746,7 @@ export default function NexusDolaStudioScaffold() {
                       cursor: "pointer",
                     }}
                   >
-                    Send to export
+                    Download job summary
                   </button>
                 </div>
               </div>
