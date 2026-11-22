@@ -31,7 +31,7 @@ export function hasStoredSession(): boolean {
 
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser, ] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,12 +42,16 @@ export function useAuth() {
       return;
     }
 
+    let active = true;
+    let authEventSeen = false;
+
     // 1. Authoritative initial load: read the persisted session from localStorage.
     //    We only set loading=false once this resolves so we never flash a redirect
     //    to /auth while a valid stored session is still being retrieved.
     const sessionPromise = supabase.auth
       .getSession()
       .then(({ data }) => {
+        if (!active || authEventSeen) return;
         setSession(data.session);
         setUser(data.session?.user ?? null);
         // Associate this session's future analytics events with the user id.
@@ -63,6 +67,7 @@ export function useAuth() {
         }
       })
       .finally(() => {
+        if (!active) return;
         // getSession settled (session or not) — the UI can stop waiting.
         // Without this, only the safety-net timeout below ever cleared
         // `loading`, which left every loading-gated page (admin, kids,
@@ -74,6 +79,9 @@ export function useAuth() {
     //    onAuthStateChange can fire SIGNED_OUT before getSession resolves on
     //    some Supabase versions, so we intentionally do NOT use it to set loading.
     const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+      if (!active) return;
+      authEventSeen = true;
+      setLoading(false);
       setSession(s);
       setUser(s?.user ?? null);
       if (event === "SIGNED_IN" && s?.user && hasAnalyticsConsent()) {
@@ -93,6 +101,7 @@ export function useAuth() {
     const timeout = setTimeout(() => setLoading(false), safetyMs);
 
     return () => {
+      active = false;
       void sessionPromise;
       sub.subscription.unsubscribe();
       clearTimeout(timeout);
