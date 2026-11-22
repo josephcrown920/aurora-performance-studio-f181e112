@@ -77,8 +77,17 @@ export const Route = createFileRoute("/api/public/paystack-webhook")({
         // charge.success with a subscription_code is a recurring billing charge,
         // not a one-time purchase. Route it to the subscription renewal handler.
         if (event.event === "charge.success" && event.data.subscription_code) {
-          await processSubscriptionRenewal(event.data);
-          return new Response("ok", { status: 200 });
+          if (event.data.status !== "success" || !event.data.reference) {
+            return new Response("Invalid subscription charge", { status: 400 });
+          }
+          try {
+            const result = await processSubscriptionRenewal(event.data);
+            if (result.status !== "success") return new Response("retry", { status: 409 });
+            return new Response("ok", { status: 200 });
+          } catch (err) {
+            console.error("[paystack-webhook] subscription settlement retry needed", err);
+            return new Response("retry", { status: 409 });
+          }
         }
 
         // ── Subscription: disabled / cancelled ───────────────────────────────
