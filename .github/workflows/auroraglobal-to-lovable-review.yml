@@ -49,14 +49,13 @@ jobs:
           set -euo pipefail
           git config user.name 'aurora-sync[bot]'
           git config user.email 'aurora-sync[bot]@users.noreply.github.com'
-          git checkout -B sync/auroraglobal-review
+          SYNC_BRANCH="sync/auroraglobal-review-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git switch -c "$SYNC_BRANCH"
           git add integrations/auroraglobal-review
           if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
           git commit -m 'sync: stage Aurora Global updates for Lovable review'
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/josephcrown920/aurora-performance-studio-f181e112.git"
-          git push --force-with-lease origin HEAD:refs/heads/sync/auroraglobal-review
-          if ! gh pr list -R josephcrown920/aurora-performance-studio-f181e112 --head sync/auroraglobal-review --state open --json number --jq '.[0].number' | grep -q '[0-9]'; then
-            gh pr create -R josephcrown920/aurora-performance-studio-f181e112 --base main --head sync/auroraglobal-review \
-              --title 'Review Aurora Global updates for Lovable' \
-              --body 'Review-only snapshot: this does not modify live application routes. Selectively integrate tested fixes before merging.'
-          fi
+          git push origin "HEAD:refs/heads/$SYNC_BRANCH"
+          gh pr create -R josephcrown920/aurora-performance-studio-f181e112 --base main --head "$SYNC_BRANCH" \
+            --title 'Review Aurora Global updates for Lovable' \
+            --body 'Review-only snapshot: this does not modify live application routes. Selectively integrate tested fixes before merging.'
