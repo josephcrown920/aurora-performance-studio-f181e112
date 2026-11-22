@@ -1,0 +1,45 @@
+name: Aurora repository sync guard
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '13 */6 * * *'
+permissions:
+  contents: read
+jobs:
+  compare-repositories:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check sync token configuration
+        env:
+          SYNC_TOKEN: ${{ secrets.AURORA_SYNC_TOKEN }}
+        run: |
+          if [ -z "$SYNC_TOKEN" ]; then
+            echo 'Configure AURORA_SYNC_TOKEN with read access to both repositories.' >&2
+            exit 1
+          fi
+      - name: Compare Git histories without modifying either repository
+        env:
+          SYNC_TOKEN: ${{ secrets.AURORA_SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+          git init -q audit
+          cd audit
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w0)" fetch -q --no-tags https://github.com/josephcrown920/aurora-performance-studio-f181e112.git main
+          git update-ref refs/remotes/development/main FETCH_HEAD
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w0)" fetch -q --no-tags https://github.com/josephcrown920/Auroraglobal.git Main
+          git update-ref refs/remotes/consolidation/Main FETCH_HEAD
+          echo "Development: $(git rev-parse refs/remotes/development/main)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Consolidation: $(git rev-parse refs/remotes/consolidation/Main)" >> "$GITHUB_STEP_SUMMARY"
+          if git merge-base refs/remotes/development/main refs/remotes/consolidation/Main >/dev/null 2>&1; then
+            git rev-list --left-right --count refs/remotes/development/main...refs/remotes/consolidation/Main | awk '{print "Development-only commits: "$1"; consolidation-only commits: "$2}' | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Repositories have unrelated histories; manual reconciliation required.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor refs/remotes/development/main refs/remotes/consolidation/Main; then
+            echo 'Consolidation is missing development commits. Review before merging.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
