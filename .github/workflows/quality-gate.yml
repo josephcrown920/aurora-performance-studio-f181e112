@@ -1,0 +1,31 @@
+name: Aurora quality gate
+on:
+  push:
+    branches: [main, Main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: bun install --frozen-lockfile
+      - name: Unit and integration tests
+        run: bun test src/
+      - name: TypeScript
+        run: bun run typecheck
+      - name: Lint
+        run: bun run lint
+      - name: Migration checks
+        run: bash scripts/check-migrations.sh
+      - name: Worker entry audit
+        run: node scripts/ci/audit-worker-entry.mjs
+      - name: Production build
+        run: bun run build
