@@ -1,0 +1,62 @@
+name: Propose Aurora Global fixes to Lovable source
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: aurora-global-to-lovable-review
+  cancel-in-progress: false
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check existing sync credential
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_PAT }}
+        run: |
+          test -n "$SYNC_TOKEN" || { echo "::error::SYNC_PAT missing"; exit 1; }
+      - name: Checkout Lovable-connected source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Checkout Aurora Global
+        uses: actions/checkout@v4
+        with:
+          repository: josephcrown920/Auroraglobal
+          ref: Main
+          path: .aurora-global-source
+          token: ${{ secrets.SYNC_PAT }}
+          persist-credentials: false
+      - name: Stage reviewable Aurora Global source snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p integrations/auroraglobal-review
+          rsync -a --delete --exclude='.git' --exclude='.github' --exclude='.env*' \
+            --exclude='node_modules' --exclude='dist' --exclude='.output' \
+            --exclude='*.mp4' --exclude='*.mov' --exclude='*.zip' \
+            .aurora-global-source/ integrations/auroraglobal-review/
+          printf '%s\n' 'josephcrown920/Auroraglobal@Main' > integrations/auroraglobal-review/SYNC_SOURCE.txt
+          (cd .aurora-global-source && git rev-parse HEAD) > integrations/auroraglobal-review/SYNC_COMMIT.txt
+          rm -rf .aurora-global-source
+      - name: Create review PR without changing live Lovable app
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'aurora-sync[bot]'
+          git config user.email 'aurora-sync[bot]@users.noreply.github.com'
+          git checkout -B sync/auroraglobal-review
+          git add integrations/auroraglobal-review
+          if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
+          git commit -m 'sync: stage Aurora Global updates for Lovable review'
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/josephcrown920/aurora-performance-studio-f181e112.git"
+          git push --force-with-lease origin HEAD:refs/heads/sync/auroraglobal-review
+          if ! gh pr list -R josephcrown920/aurora-performance-studio-f181e112 --head sync/auroraglobal-review --state open --json number --jq '.[0].number' | grep -q '[0-9]'; then
+            gh pr create -R josephcrown920/aurora-performance-studio-f181e112 --base main --head sync/auroraglobal-review \
+              --title 'Review Aurora Global updates for Lovable' \
+              --body 'Review-only snapshot: this does not modify live application routes. Selectively integrate tested fixes before merging.'
+          fi
