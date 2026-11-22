@@ -1,0 +1,66 @@
+name: Propose Lovable updates to Auroraglobal
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: auroraglobal-lovable-sync
+  cancel-in-progress: false
+
+jobs:
+  propose-sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Lovable source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check destination access
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::Set SYNC_PAT as an Actions secret with Contents and Pull requests write access to josephcrown920/Auroraglobal"
+            exit 1
+          fi
+          gh api repos/josephcrown920/Auroraglobal --jq .default_branch
+
+      - name: Propose source snapshot as reviewable pull request
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "aurora-sync[bot]"
+          git config user.email "aurora-sync[bot]@users.noreply.github.com"
+          git remote add destination "https://x-access-token:${GH_TOKEN}@github.com/josephcrown920/Auroraglobal.git"
+          git fetch destination Main
+          git checkout -B lovable-sync destination/Main
+          # Preserve the destination history. Copy source files as a proposal;
+          # do not delete destination-only files or overwrite its default branch.
+          git ls-tree -r --name-only "$SOURCE_SHA" | while IFS= read -r path; do
+            case "$path" in
+              .git/*|.github/workflows/mirror.yml) continue ;;
+            esac
+            mkdir -p "$(dirname "$path")"
+            git show "$SOURCE_SHA:$path" > "$path"
+            git add -- "$path"
+          done
+          if git diff --cached --quiet; then
+            echo "No source-file differences to propose."
+            exit 0
+          fi
+          git commit -m "chore(sync): propose Lovable changes from ${SOURCE_SHA}"
+          git push destination HEAD:refs/heads/lovable-sync
+          if ! gh pr list -R josephcrown920/Auroraglobal --head lovable-sync --state open --json number --jq '.[0].number' | grep -q '[0-9]'; then
+            gh pr create -R josephcrown920/Auroraglobal --base Main --head lovable-sync \
+              --title "Review Lovable updates before merging into Auroraglobal" \
+              --body "Automated proposal from the Lovable-connected repository. Review changes and CI before merging. This workflow never force-pushes to Main."
+          fi
