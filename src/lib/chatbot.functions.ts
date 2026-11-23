@@ -2,7 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { generateText } from "ai";
-import { modelArkEnabled, modelArkResponses, modelArkText, modelArkTextModel } from "@/lib/modelark.server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const SYSTEM = `You are Aurora Prime, Aurora Studio's conversational creative director.
@@ -34,34 +33,23 @@ export const auroraChat = createServerFn({ method: "POST" })
     const nameLine = data.firstName ? `\n\nThe user's first name is ${data.firstName}. Address them naturally.` : "";
 
     try {
-      if (modelArkEnabled()) {
-        const response = await modelArkResponses({
-          model: modelArkTextModel(),
-          input: [
-            { role: "system", content: [{ type: "input_text", text: SYSTEM + nameLine }] },
-            ...data.messages.map((message) => ({
-              role: message.role,
-              content: [{ type: "input_text", text: message.content }],
-            })),
-          ],
-        });
-        const reply = modelArkText(response);
-        if (reply) return { reply };
-      }
-
-      const apiKey = process.env.LOVABLE_API_KEY;
-      if (!apiKey) throw new Error("Aurora chat is unavailable: configure ARK_API_KEY or LOVABLE_API_KEY.");
+      // Only the explicitly configured OpenRouter provider is used.
+      // Do not silently fall back to a paid Lovable or BytePlus gateway.
+      const apiKey = process.env.OPENROUTER_API_KEY?.trim();
+      if (!apiKey) throw new Error("Aurora Prime is not configured: set OPENROUTER_API_KEY on the server.");
+      const model = process.env.OPENROUTER_CHAT_MODEL?.trim() || "openrouter/auto";
       const gateway = createOpenAICompatible({
-        name: "lovable",
-        baseURL: "https://ai.gateway.lovable.dev/v1",
-        headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
+        name: "openrouter",
+        baseURL: "https://openrouter.ai/api/v1",
+        headers: { Authorization: `Bearer ${apiKey}` },
       });
       const { text } = await generateText({
-        model: gateway("google/gemini-2.5-flash"),
+        model: gateway(model),
         system: SYSTEM + nameLine,
         messages: data.messages,
       });
-      return { reply: text };
+      if (!text?.trim()) throw new Error("Aurora Prime received an empty reply.");
+      return { reply: text, provider: "OpenRouter", model };
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Concierge failed";
       if (msg.includes("429")) throw new Error("Concierge is rate-limited. Try again in a moment.");
