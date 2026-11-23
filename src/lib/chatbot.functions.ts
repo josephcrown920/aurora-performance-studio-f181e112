@@ -37,7 +37,7 @@ export const auroraChat = createServerFn({ method: "POST" })
       // Do not silently fall back to a paid Lovable or BytePlus gateway.
       const apiKey = process.env.OPENROUTER_API_KEY?.trim();
       if (!apiKey) throw new Error("Aurora Prime is not configured: set OPENROUTER_API_KEY on the server.");
-      const model = process.env.OPENROUTER_CHAT_MODEL?.trim() || "openrouter/auto";
+      const model = process.env.OPENROUTER_CHAT_MODEL?.trim() || "openrouter/free";
       const gateway = createOpenAICompatible({
         name: "openrouter",
         baseURL: "https://openrouter.ai/api/v1",
