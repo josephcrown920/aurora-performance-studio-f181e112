@@ -3,15 +3,19 @@ import { z } from "zod";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { generateText } from "ai";
 import { modelArkEnabled, modelArkResponses, modelArkText, modelArkTextModel } from "@/lib/modelark.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const SYSTEM = `You are AURORA CONCIERGE — the friendly in-app assistant for Aurora Studio,
-a premium AI creative platform (cinematic photos, video, lip-sync, UGC ads, virtual try-on,
-visual campaigns). Speak warmly, briefly, and concretely. Address the user by their first
-name when one is provided. If they ask "what can you do?", suggest Studio (image),
-Canvas (node workflows), Lipsync, UGC, Colors, Gallery, Gifts. New users get 5 free credits.
-1 credit ≈ 1 image; videos cost 5 (5s) or 10 (10s); lip-sync is 1 credit/second.
-Commercial license is included on all paid plans. Never invent features that don't exist.
-Keep replies under 120 words unless the user asks for more detail.`;
+const SYSTEM = `You are Aurora Prime, Aurora Studio's conversational creative director.
+Understand the user's intent before proposing any generation. A greeting, unclear phrase,
+question, or brainstorming request is a conversation, NOT a generation instruction.
+For unclear input ask one short clarifying question. For explicit image, video, audio,
+or editing requests, help refine the brief and explain which Aurora tool fits.
+You cannot directly launch paid generation from this chat endpoint. Never claim that
+content was generated or credits were deducted. Generation requires a separate,
+server-validated exact Aura quote and explicit user confirmation.
+Never invent credit prices, free allowances, model availability, or capabilities.
+If the price is unavailable, say that generation must wait for a verified quote.
+Be helpful, concise, and conversational. Keep responses under 120 words unless asked.`;
 
 const Msg = z.object({
   role: z.enum(["user", "assistant"]),
@@ -19,6 +23,7 @@ const Msg = z.object({
 });
 
 export const auroraChat = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
     z.object({
       firstName: z.string().trim().max(60).optional(),
@@ -26,15 +31,6 @@ export const auroraChat = createServerFn({ method: "POST" })
     }).parse(d)
   )
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("Aurora concierge is offline (no API key)");
-
-    const gateway = createOpenAICompatible({
-      name: "lovable",
-      baseURL: "https://ai.gateway.lovable.dev/v1",
-      headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
-    });
-
     const nameLine = data.firstName ? `\n\nThe user's first name is ${data.firstName}. Address them naturally.` : "";
 
     try {
@@ -53,6 +49,13 @@ export const auroraChat = createServerFn({ method: "POST" })
         if (reply) return { reply };
       }
 
+      const apiKey = process.env.LOVABLE_API_KEY;
+      if (!apiKey) throw new Error("Aurora chat is unavailable: configure ARK_API_KEY or LOVABLE_API_KEY.");
+      const gateway = createOpenAICompatible({
+        name: "lovable",
+        baseURL: "https://ai.gateway.lovable.dev/v1",
+        headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
+      });
       const { text } = await generateText({
         model: gateway("google/gemini-2.5-flash"),
         system: SYSTEM + nameLine,
