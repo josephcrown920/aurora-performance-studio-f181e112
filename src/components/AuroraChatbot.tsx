@@ -11,6 +11,21 @@ import { track } from "@/lib/tracking";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+function activeAuroraContext(pathname: string) {
+  const path = pathname.toLowerCase();
+  if (/perform-anywhere|genjutsu/.test(path)) return "perform-anywhere";
+  if (/video-agent|videoagent/.test(path)) return "video-agent";
+  if (/video-studio|video-editor/.test(path)) return "video-studio";
+  if (/imagine|image-studio/.test(path)) return "imagine";
+  if (/lipsync|lip-sync/.test(path)) return "lipsync";
+  if (/aurora-soul|\/soul/.test(path)) return "soul";
+  if (/canvas/.test(path)) return "canvas";
+  if (/ugc/.test(path)) return "ugc";
+  if (/colors/.test(path)) return "colors";
+  if (/audio|puremix|mastering/.test(path)) return "audio";
+  return "general";
+}
+
 const GREETED_KEY = "aurora.chatbot.greeted";
 const SHOWN_TIPS_KEY = "aurora.chatbot.shown_tips";
 const OFFER_START_KEY = "aurora_offer_start";
@@ -180,7 +195,7 @@ export function AuroraChatbot() {
     setLoading(true);
     void track("chatbot_message_sent", { length: text.length });
     try {
-      const { reply, provider, model } = await chat({ data: { firstName, messages: next } });
+      const { reply, provider, model } = await chat({ data: { firstName, messages: next, context: activeAuroraContext(window.location.pathname) } });
       if (!reply.trim() || /^\s*\{\s*"error"\s*:/i.test(reply)) {
         throw new Error("Aurora Prime could not complete that reply. Please try again.");
       }
