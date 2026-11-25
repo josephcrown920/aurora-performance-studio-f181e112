@@ -1,4 +1,4 @@
-import { Clapperboard, Film, Layers3, Workflow, Wand2 } from "lucide-react";
+import { Camera, Clapperboard, Film, Layers3, Workflow, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,7 @@ const MODES = [
   { mode: "canvas", label: "Canvas", icon: Film },
   { mode: "layers", label: "Layers", icon: Layers3 },
   { mode: "workflows", label: "Workflows", icon: Workflow },
-  { mode: "perform", label: "Perform", icon: Film },
+  { mode: "perform", label: "Perform", icon: Camera },
   { mode: "creative", label: "Creative tools", icon: Wand2 },
 ] as const;
 
@@ -18,7 +18,7 @@ export function StudioModeDock({ mode, onMode }: { mode: StudioMode | "start"; o
   return (
     <nav
       aria-label="Studio spaces"
-      className="studio-dock flex w-[76px] shrink-0 flex-col items-center gap-1 border-r border-border bg-card/75 px-1.5 py-3 backdrop-blur-xl sm:w-[84px]"
+      className="studio-dock flex w-16 shrink-0 flex-col items-center gap-1 border-r border-border bg-card/75 px-1 py-3 backdrop-blur-xl sm:w-20"
     >
       <span className="sr-only">Studio spaces</span>
       {MODES.map(({ mode: value, label, icon: Icon }) => (
