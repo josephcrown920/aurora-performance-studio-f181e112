@@ -1028,7 +1028,9 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
         </div>
       </header>
       {saveNotice && <div role="status" className="shrink-0 border-b border-border bg-card px-3 py-2 text-xs text-foreground">{saveNotice}</div>}
-      <StudioModeDock mode={mode} onMode={setMode} />
+      <div className="flex min-h-0 min-w-0 flex-1">
+        <StudioModeDock mode={mode} onMode={setMode} />
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       <div id="main" className="flex min-w-0 flex-1 flex-col">
       <div className="hidden h-10 items-center gap-2 border-b border-border px-4 text-xs lg:flex">
         <span className="font-semibold">{sessionName}</span>
@@ -1805,6 +1807,8 @@ function Editor({ initialMode }: { initialMode: StudioMode }) {
           </aside>
         </main>
       )}
+      </div>
+        </div>
       </div>
     </div>
   );
