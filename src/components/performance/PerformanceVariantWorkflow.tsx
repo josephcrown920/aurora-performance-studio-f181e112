@@ -46,6 +46,9 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
   const catalog = PERFORMANCE_VARIANT_CATALOG[kind];
   const [draft, setDraft] = useState(() => initial(kind, mode));
   const [revision, setRevision] = useState(0);
+  const revisionRef = useRef(0);
+  const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const [pendingSaves, setPendingSaves] = useState(0);
   const [ready, setReady] = useState(false);
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const [pickerSlot, setPickerSlot] = useState<"location" | "interior" | null>(null);
@@ -74,6 +77,21 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
   const generateFn = useServerFn(generatePerformanceVariantPlate);
   const motionFn = useServerFn(generateMimicMotion);
   const listFn = useServerFn(listGenerations);
+
+  // Serialize automatic saves and render actions. Motion transfer validates the
+  // saved approval provenance, so starting before the debounce finished made
+  // valid scene approvals fail intermittently.
+  function persistDraft(payload: PerformanceVariantPayload) {
+    setPendingSaves((count) => count + 1);
+    const queued = saveQueueRef.current.then(async () => {
+      const result = await saveFn({ data: { expectedRevision: revisionRef.current, payload } });
+      revisionRef.current = result.revision;
+      setRevision(result.revision);
+      return result;
+    });
+    saveQueueRef.current = queued.then(() => undefined, () => undefined);
+    return queued.finally(() => setPendingSaves((count) => Math.max(0, count - 1)));
+  }
   const generations = useQuery({
     queryKey: ["performance-variant-generations", user?.id],
     queryFn: () => listFn(),
@@ -88,6 +106,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
       const loaded = result.payload ?? initial(kind, mode);
       // Colors Studio: the palette picked on the page is the scene location.
       setDraft(studioLocation ? { ...loaded, settings: { ...loaded.settings, location: studioLocation } } : loaded);
+      revisionRef.current = result.revision;
       setRevision(result.revision);
       setReady(true);
     }).catch((error) => toast.error(error instanceof Error ? error.message : "Could not load workflow"));
@@ -95,15 +114,15 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
 
   useEffect(() => {
     if (!ready || !user) return;
+    let active = true;
     const timer = setTimeout(() => {
-      saveFn({ data: { expectedRevision: revision, payload: draft } }).then((result) => {
+      void persistDraft(draft).then((result) => {
+        if (!active) return;
         if (!result.ok) {
           setDraft(result.payload);
-          setRevision(result.revision);
           toast.error("This workflow changed elsewhere. Loaded the newest saved version.");
           return;
         }
-        setRevision(result.revision);
         if (
           result.payload.base?.generationId !== draft.base?.generationId ||
           result.payload.angles.map((item) => item.generationId).join() !== draft.angles.map((item) => item.generationId).join()
@@ -111,9 +130,11 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
           setDraft(result.payload);
           toast.info("Changed inputs invalidated affected approvals.");
         }
-      }).catch((error) => toast.error(error instanceof Error ? error.message : "Could not save workflow"));
+      }).catch((error) => {
+        if (active) toast.error(error instanceof Error ? error.message : "Could not save workflow");
+      });
     }, 650);
-    return () => clearTimeout(timer);
+    return () => { active = false; clearTimeout(timer); };
   }, [draft, ready, user]);
 
   async function upload(original: File, slot: string, media: "image" | "video" | "audio", skipIfSet = false) {
@@ -147,7 +168,13 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
   }
 
   const plateMutation = useMutation({
-    mutationFn: (presetId?: string) => generateFn({ data: { payload: draft, ...(presetId ? { presetId } : {}) } }),
+    mutationFn: async (presetId?: string) => {
+      if (presetId) {
+        const saved = await persistDraft(draft);
+        if (!saved.ok) { setDraft(saved.payload); throw new Error("Workflow changed elsewhere. Review the loaded draft and try again."); }
+      }
+      return generateFn({ data: { payload: draft, ...(presetId ? { presetId } : {}) } });
+    },
     onSuccess: (result) => setDraft((value) => result.presetId
       ? {
           ...value,
@@ -160,6 +187,8 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
 
   const motionMutation = useMutation({
     mutationFn: async (presetId: string) => {
+      const saved = await persistDraft(draft);
+      if (!saved.ok) { setDraft(saved.payload); throw new Error("Workflow changed elsewhere. Review the loaded draft and try again."); }
       const plate = presetId === "base" ? draft.base : draft.angles.find((item) => item.presetId === presetId);
       if (!plate?.approved || !draft.phoneVideoUrl) throw new Error("Approve the plate and upload the original phone performance first");
       const prior = draft.motions.find((item) => item.presetId === presetId);
@@ -251,7 +280,7 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
     const hasPose = catalog.references.some((r) => r.id === "composition");
     return (
       <GenjutsuSheet subtitle={kind === "luxury_interior" ? "Luxury interior · Genjutsu" : "Motion transfer · Genjutsu"} footer={<>
-        <span>Drafts save automatically to your account. Each render shows its Aura price before it starts.</span>
+        <span>{pendingSaves ? "Saving your workflow…" : "Drafts save automatically to your account. Each render shows its Aura price before it starts."}</span>
         {finalUrl && <Button asChild variant="outline"><a href={finalUrl} download><Download className="size-4" />Download final render</a></Button>}
       </>}>
         <GenjutsuStep n="01" title="Build your scene" badge="SCENE BUILDER" description="Prepare the approved target image before transferring your performance." boxed>
@@ -282,12 +311,12 @@ export function PerformanceVariantWorkflow({ kind, mode, compact = false, studio
           </div>
           <Button disabled={!requiredReady || plateMutation.isPending} onClick={() => plateMutation.mutate(undefined)}>{plateMutation.isPending ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}Build scene</Button>
           {!requiredReady && <p className="text-xs text-muted-foreground">Add every reference to build the scene.</p>}
-          {draft.base && <PlateCard label="Base scene" plate={draft.base} motion={draft.motions.find((item) => item.presetId === "base")} generations={generations.data?.items ?? []} busy={motionMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, base: d.base && { ...d.base, approved: true } }))} onAnimate={() => motionMutation.mutate("base")} />}
+          {draft.base && <PlateCard label="Base scene" plate={draft.base} motion={draft.motions.find((item) => item.presetId === "base")} generations={generations.data?.items ?? []} busy={motionMutation.isPending || pendingSaves > 0} onApprove={() => setDraft((d) => ({ ...d, base: d.base && { ...d.base, approved: true } }))} onAnimate={() => motionMutation.mutate("base")} />}
           {draft.base?.approved && draft.selectedAngles.map((id) => {
             const preset = [...REANGLE_PRESETS, ...LUXURY_INTERIOR_PRESETS].find((item) => item.id === id);
             if (!preset) return null;
             const plate = draft.angles.find((item) => item.presetId === id);
-            return plate ? <PlateCard key={id} label={preset.label} plate={plate} motion={draft.motions.find((item) => item.presetId === id)} generations={generations.data?.items ?? []} busy={motionMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, angles: d.angles.map((item) => item.presetId === id ? { ...item, approved: true } : item) }))} onAnimate={() => motionMutation.mutate(id)} /> : <Button key={id} variant="outline" disabled={plateMutation.isPending} onClick={() => plateMutation.mutate(id)}>Generate {preset.label}</Button>;
+            return plate ? <PlateCard key={id} label={preset.label} plate={plate} motion={draft.motions.find((item) => item.presetId === id)} generations={generations.data?.items ?? []} busy={motionMutation.isPending} onApprove={() => setDraft((d) => ({ ...d, angles: d.angles.map((item) => item.presetId === id ? { ...item, approved: true } : item) }))} onAnimate={() => motionMutation.mutate(id)} /> : <Button key={id} variant="outline" disabled={plateMutation.isPending || pendingSaves > 0} onClick={() => plateMutation.mutate(id)}>Generate {preset.label}</Button>;
           })}
         </GenjutsuStep>
 
