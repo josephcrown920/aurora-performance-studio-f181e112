@@ -39,7 +39,7 @@ export function StudioModeDock({ mode, onMode }: { mode: StudioMode | "start"; o
         >
           <Icon className="size-4" />
           <span className="sr-only">{label}</span>
-          {mode === value && <span aria-hidden="true" className="absolute -left-[7px] top-2 h-7 w-1 rounded-r bg-primary" />}
+          {mode === value && <span aria-hidden="true" className="absolute left-0 top-2 h-7 w-1 rounded-r bg-primary" />}
         </Button>
       ))}
     </nav>
