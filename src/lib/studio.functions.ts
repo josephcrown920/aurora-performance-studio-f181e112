@@ -33,10 +33,10 @@ import { NATIVE_SEEDANCE_25 } from "./byteplus-video-contract";
 // between this flat-priced studio path and every other charge point.
 export const COST_IMAGE = computeCost({ features: ["image"] }).total;
 
-// Shown when no GPU worker advertises the "motion" capability. Surfaced verbatim
-// to the UI / MCP caller; credits are never reserved when this fires.
+// Genjutsu motion now runs through Kie.ai; report the missing cloud credential
+// accurately before reserving credits.
 export const NO_MOTION_BACKEND_MSG =
-  "No motion-capable GPU backend is connected yet. Connect a GPU worker with the \"motion\" capability to enable MimicMotion and Performance Shots.";
+  "Kie.ai motion is not configured. Add the KIE_API_KEY secret to enable Genjutsu motion transfer.";
 
 async function trackServer(name: string, userId: string | null, payload?: Record<string, unknown>) {
   try {
