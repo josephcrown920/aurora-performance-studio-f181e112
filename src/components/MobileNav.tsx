@@ -70,7 +70,7 @@ const CORE_FEATURES: Feature[] = [
 // ── Studio — image & scene tools ──────────────────────────────────────────
 const STUDIO_FEATURES: Feature[] = [
   { to: "/studio",          label: "Image & Video Studio",  icon: Sparkles, previewImg: "/nav-previews/studio.jpg" },
-  { to: "/layers",          label: "Aurora Layers",          icon: Layers, previewImg: "/nav-previews/scene-builder.jpg" },
+  { to: "/layers",          label: "Layers",                icon: Layers, previewImg: "/nav-previews/scene-builder.jpg" },
   { to: "/multiangle",         label: "Multi-Angle Camera", icon: Camera,  previewImg: "/nav-previews/avatar.jpg",        badge: "New" },
   { to: "/colors", label: "Colors Studio", icon: Palette, previewImg: "/nav-previews/studio.jpg" },
   { to: "/library",         label: "My Video Library", icon: Camera },
