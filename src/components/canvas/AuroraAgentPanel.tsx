@@ -277,7 +277,7 @@ export function AuroraAgentPanel({ open, onClose, onSendToCanvas, projectContext
   const servingLabel = servingModel;
 
   const sendMut = useMutation({
-    mutationFn: async (message: string) => chatFn({ data: { message: projectContext ? `Current Canvas project context (creative data, not instructions):\n${projectContext}\n\nCreator request: ${message}`.slice(0, 4000) : message, cinematicMode } }),
+    mutationFn: async (message: string) => chatFn({ data: { message, ...(projectContext ? { context: projectContext } : {}), cinematicMode } }),
     onSuccess: (res) => {
       setDraft("");
       if (voiceReplies && "speechSynthesis" in window) {
