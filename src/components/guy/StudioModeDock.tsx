@@ -18,7 +18,7 @@ export function StudioModeDock({ mode, onMode }: { mode: StudioMode | "start"; o
   return (
     <nav
       aria-label="Studio spaces"
-      className="studio-dock flex w-16 shrink-0 flex-col items-center gap-1 border-r border-border bg-card/75 px-1 py-3 backdrop-blur-xl sm:w-20"
+      className="studio-dock flex w-[76px] shrink-0 flex-col items-center gap-1 border-r border-border bg-card/75 px-1.5 py-3 backdrop-blur-xl sm:w-[84px]"
     >
       <span className="sr-only">Studio spaces</span>
       {MODES.map(({ mode: value, label, icon: Icon }) => (
@@ -31,14 +31,14 @@ export function StudioModeDock({ mode, onMode }: { mode: StudioMode | "start"; o
           aria-pressed={mode === value}
           title={label}
           className={cn(
-            "relative flex h-[58px] w-full shrink-0 flex-col items-center justify-center gap-1 rounded-lg border px-1 py-1 transition-colors motion-reduce:transition-none",
+            "relative flex h-16 w-full shrink-0 flex-col items-center justify-center gap-1 rounded-lg border px-1 py-1 transition-colors motion-reduce:transition-none",
             mode === value
               ? "border-primary bg-primary/15 text-primary ring-1 ring-primary/50"
               : "border-transparent text-muted-foreground hover:border-border hover:bg-background hover:text-foreground",
           )}
         >
           <Icon className="size-4" />
-          <span className="max-w-full text-center text-[9px] leading-tight">{label}</span>
+          <span className="max-w-full text-center text-[10px] leading-tight">{label}</span>
           {mode === value && <span aria-hidden="true" className="absolute left-0 top-2 h-7 w-1 rounded-r bg-primary" />}
         </Button>
       ))}
